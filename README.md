@@ -23,6 +23,12 @@ The full documentation is available on the official website: http://sferes2.isir
 
 We are in the process of porting it to the github wiki: https://github.com/jbmouret/sferes2/wiki
 
+Optional modules
+---------------
+- evolvable neural networks: https://github.com/jbmouret/nn2
+- khepera-like simulator: https://github.com/jbmouret/fastsim
+
+
 Design
 -----
 The following choices were made in the initial design:
