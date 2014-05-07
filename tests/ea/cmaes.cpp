@@ -32,10 +32,10 @@
 //| The fact that you are presently reading this means that you have
 //| had knowledge of the CeCILL license and that you accept its terms.
 
-
-
-
+#ifndef NO_PARALLEL
 #define NO_PARALLEL
+#endif
+
 #define BOOST_TEST_DYN_LINK 
 #define BOOST_TEST_MODULE cmaes
 
@@ -59,20 +59,20 @@ struct Params
 {
   struct pop
   {
-    static const size_t size = 1;//not used by CMAES
-    static const unsigned nb_gen = 650;
-    static const int dump_period = -1;
+    SFERES_CONST size_t size = 1;//not used by CMAES
+    SFERES_CONST unsigned nb_gen = 650;
+    SFERES_CONST int dump_period = -1;
   };
   struct cmaes
   {
-    static const float sigma = 0.5f;
-    static const float max_value = -1e-10;
+    SFERES_CONST float sigma = 0.5f;
+    SFERES_CONST float max_value = -1e-10;
   };
   
  struct parameters
   {
-    static const float min = 0.0f;
-    static const float max = 1.0f;
+    SFERES_CONST float min = 0.0f;
+    SFERES_CONST float max = 1.0f;
   };
 };
 

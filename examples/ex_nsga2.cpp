@@ -15,24 +15,24 @@ struct Params
 {
   struct evo_float
   {
-    static const float cross_rate = 0.5f;
-    static const float mutation_rate = 0.1f;
-    static const float eta_m = 15.0f;
-    static const float eta_c = 10.0f;
-    static const mutation_t mutation_type = polynomial;
-    static const cross_over_t cross_over_type = sbx;
+    SFERES_CONST float cross_rate = 0.5f;
+    SFERES_CONST float mutation_rate = 0.1f;
+    SFERES_CONST float eta_m = 15.0f;
+    SFERES_CONST float eta_c = 10.0f;
+    SFERES_CONST mutation_t mutation_type = polynomial;
+    SFERES_CONST cross_over_t cross_over_type = sbx;
   };
   struct pop
   {
-    static const unsigned size = 300;
-    static const unsigned nb_gen = 500;
-    static const int dump_period = 50;
-    static const int initial_aleat = 1;
+    SFERES_CONST unsigned size = 300;
+    SFERES_CONST unsigned nb_gen = 500;
+    SFERES_CONST int dump_period = 50;
+    SFERES_CONST int initial_aleat = 1;
   };
   struct parameters
   {
-    static const float min = 0.0f;
-    static const float max = 1.0f;
+    SFERES_CONST float min = 0.0f;
+    SFERES_CONST float max = 1.0f;
   };
 };
 

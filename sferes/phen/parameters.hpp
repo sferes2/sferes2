@@ -57,8 +57,8 @@ namespace sferes
 #endif
       Parameters() : _params((*this)._gen.size()) { }
       typedef float type_t;
-      static const float max_p = Params::parameters::max;
-      static const float min_p = Params::parameters::min;
+      SFERES_CONST float max_p = Params::parameters::max;
+      SFERES_CONST float min_p = Params::parameters::min;
       void develop()
       {
 	for (unsigned i = 0; i < _params.size(); ++i)

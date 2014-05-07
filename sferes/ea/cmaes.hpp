@@ -180,7 +180,7 @@ namespace sferes
 
         }
       protected:
-        static const size_t N = Phen::gen_t::es_size;
+        SFERES_CONST size_t N = Phen::gen_t::es_size;
         typedef Eigen::Matrix<float, N, 1> vector_t;
         typedef Eigen::Matrix<float, N, N> matrix_t;
 

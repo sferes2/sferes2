@@ -160,7 +160,7 @@ namespace sferes
       {
 	void operator()(Ev& ev, size_t i)
 	{
-	  static const float eta_m = Ev::params_t::evo_float::eta_m;
+	  SFERES_CONST float eta_m = Ev::params_t::evo_float::eta_m;
 	  assert(eta_m != -1.0f);
 	  float ri = misc::rand<float>();
 	  float delta_i = ri < 0.5 ?
@@ -179,7 +179,7 @@ namespace sferes
       {
 	void operator()(Ev& ev, size_t i)
 	{
-	  static const float sigma = Ev::params_t::evo_float::sigma;
+	  SFERES_CONST float sigma = Ev::params_t::evo_float::sigma;
 	  float f = ev.data(i) 
 	    + misc::gaussian_rand<float>(0, sigma * sigma);
 	  ev.data(i, misc::put_in_range(f, 0.0f, 1.0f));
@@ -191,7 +191,7 @@ namespace sferes
       {
 	void operator()(Ev& ev, size_t i)
 	{
-	  static const float max = Ev::params_t::evo_float::max;
+	  SFERES_CONST float max = Ev::params_t::evo_float::max;
 	  float f = ev.data(i) 
 	    + misc::rand<float>(max) - max / 2.0f;
 	  ev.data(i, misc::put_in_range(f, 0.0f, 1.0f));
@@ -238,14 +238,14 @@ namespace sferes
       {
 	void operator()(const Ev& f1, const Ev& f2, Ev &child1, Ev &child2)
 	{
-	  static const float eta_c = Ev::params_t::evo_float::eta_c;
+	  SFERES_CONST float eta_c = Ev::params_t::evo_float::eta_c;
 	  assert(eta_c != -1);
 	  for (unsigned int i = 0; i < f1.size(); i++)
 	    {
 	      float y1 = std::min(f1.data(i), f2.data(i));
 	      float y2 = std::max(f1.data(i), f2.data(i));
-	      static const float yl = 0.0;
-	      static const float yu = 1.0;		
+	      SFERES_CONST float yl = 0.0;
+	      SFERES_CONST float yu = 1.0;		
 	      if (fabs(y1 - y2) > std::numeric_limits<float>::epsilon())
 		{
 		  float rand = misc::rand<float>();

@@ -16,42 +16,42 @@ struct Params
   struct evo_float
   {
     // we choose the polynomial mutation type
-    static const mutation_t mutation_type = polynomial;
+    SFERES_CONST mutation_t mutation_type = polynomial;
     // we choose the polynomial cross-over type
-    static const cross_over_t cross_over_type = sbx;
+    SFERES_CONST cross_over_t cross_over_type = sbx;
     // the mutation rate of the real-valued vector
-    static const float mutation_rate = 0.1f;
+    SFERES_CONST float mutation_rate = 0.1f;
     // the cross rate of the real-valued vector
-    static const float cross_rate = 0.5f;
+    SFERES_CONST float cross_rate = 0.5f;
     // a parameter of the polynomial mutation
-    static const float eta_m = 15.0f;
+    SFERES_CONST float eta_m = 15.0f;
     // a parameter of the polynomial cross-over
-    static const float eta_c = 10.0f;
+    SFERES_CONST float eta_c = 10.0f;
   };
   struct pop
   {
     // size of the population
-    static const unsigned size = 200;
+    SFERES_CONST unsigned size = 200;
     // number of generations
-    static const unsigned nb_gen = 2000;
+    SFERES_CONST unsigned nb_gen = 2000;
     // how often should the result file be written (here, each 5
     // generation)
-    static const int dump_period = 5;
+    SFERES_CONST int dump_period = 5;
     // how many individuals should be created during the random
     // generation process?
-    static const int initial_aleat = 1;
+    SFERES_CONST int initial_aleat = 1;
     // used by RankSimple to select the pressure
-    static const float coeff = 1.1f;
+    SFERES_CONST float coeff = 1.1f;
     // the number of individuals that are kept from on generation to
     // another (elitism)
-    static const float keep_rate = 0.6f;    
+    SFERES_CONST float keep_rate = 0.6f;
   };
   struct parameters
   {
     // maximum value of parameters
-    static const float min = -10.0f;
+    SFERES_CONST float min = -10.0f;
     // minimum value
-    static const float max = 10.0f;
+    SFERES_CONST float max = 10.0f;
   };
 };
 
@@ -60,7 +60,7 @@ SFERES_FITNESS(FitTest, sferes::fit::Fitness)
  public:
   // indiv will have the type defined in the main (phen_t)
   template<typename Indiv>
-    void eval(const Indiv& ind) 
+    void eval(const Indiv& ind)
   {
     float v = 0;
     for (unsigned i = 0; i < ind.size(); ++i)

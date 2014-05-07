@@ -69,9 +69,9 @@ struct Params1
 {
   struct bit_string
   {
-    static const size_t nb_bits = 8;
-    static const float mutation_rate = 0.1f;
-    static const float mutation_rate_bit = 0.1f;    
+    SFERES_CONST size_t nb_bits = 8;
+    SFERES_CONST float mutation_rate = 0.1f;
+    SFERES_CONST float mutation_rate_bit = 0.1f;    
   };
 };
 
@@ -80,9 +80,9 @@ struct Params2
 {
   struct bit_string
   {
-    static const size_t nb_bits = 50;
-    static const float mutation_rate = 0.1f;
-    static const float mutation_rate_bit = 0.1f;    
+    SFERES_CONST size_t nb_bits = 50;
+    SFERES_CONST float mutation_rate = 0.1f;
+    SFERES_CONST float mutation_rate_bit = 0.1f;    
   };
 };
 

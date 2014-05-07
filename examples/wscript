@@ -1,13 +1,5 @@
 #! /usr/bin/env python    
-def build(bld):
-    # ex_agent
-    obj = bld.new_task_gen('cxx', 'program')
-    obj.source = 'ex_agent.cpp'
-    obj.includes = '../'
-    obj.uselib_local = 'sferes2'
-    obj.target = 'ex_agent'
-    obj.uselib = 'TBB BOOST BOOST_UNIT_TEST_FRAMEWORK EIGEN2'
-    
+def build(bld):    
     # ex_ea
     obj = bld.new_task_gen('cxx', 'program')
     obj.source = 'ex_ea.cpp'

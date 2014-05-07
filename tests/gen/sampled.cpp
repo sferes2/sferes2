@@ -47,9 +47,9 @@ struct Params1
   struct sampled
   {
     SFERES_ARRAY(float, values, 0, 1, 2, 3, 4);
-    static const float mutation_rate = 0.1f;
-    static const float cross_rate = 0.25f;
-    static const bool ordered = false;
+    SFERES_CONST float mutation_rate = 0.1f;
+    SFERES_CONST float cross_rate = 0.25f;
+    SFERES_CONST bool ordered = false;
   };
 };
 
@@ -58,9 +58,9 @@ struct Params2
   struct sampled
   {
     SFERES_ARRAY(int, values, 0, 1, 2, 3, 4);
-    static const float mutation_rate = 0.1f;
-    static const float cross_rate = 0.25f;
-    static const bool ordered = false;
+    SFERES_CONST float mutation_rate = 0.1f;
+    SFERES_CONST float cross_rate = 0.25f;
+    SFERES_CONST bool ordered = false;
   };
 };
 

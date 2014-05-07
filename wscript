@@ -70,7 +70,6 @@ def set_options(opt):
     # sferes specific
     opt.add_option('--bullet', type='string', help='path to bullet', dest='bullet')
     opt.add_option('--apple', type='string', help='enable apple support', dest='apple')
-    opt.add_option('--64bits', type='string', help='enable 64 bits support', dest='bits64')
     opt.add_option('--ppc', type='string', help='enable PPC bits support', dest='ppc')
     opt.add_option('--rpath', type='string', help='set rpath', dest='rpath')
     opt.add_option('--includes', type='string', help='add an include path, e.g. /home/mandor/include', dest='includes')
@@ -169,9 +168,7 @@ def configure(conf):
 
     # Mac OS specific options
     if Options.options.apple:
-        conf.env.append_value("LINKFLAGS_OPENGL","-framework OpenGL -framework GLUT -dylib_file /System/Library/Frameworks/OpenGL.framework/Versions/A/Libraries/libGL.dylib:/System/Library/Frameworks/OpenGL.framework/Versions/A/Libraries/libGL.dylib")
-        conf.env.append_value("LINKFLAGS", "-undefined dynamic_lookup")
-
+	common_flags += ' -Wno-gnu-static-float-init '
 
     conf.env['LIB_TCMALLOC'] = 'tcmalloc'
     conf.env['LIB_PTMALLOC'] = 'ptmalloc3'
@@ -195,10 +192,6 @@ def configure(conf):
     if Options.options.libs:
         conf.env.append_value("LINKFLAGS", "-L" + Options.options.libs)
 
-    # compilation flags
-    if Options.options.bits64:
-	common_flags += ' -m64  -DBOOST_NO_INTRINSIC_INT64_T '
-	conf.env.append_value("LINKFLAGS", "-m64")
 
     if Options.options.ppc:
 	common_flags += ' -mpower2 -malign-power  -maltivec '
@@ -213,14 +206,12 @@ def configure(conf):
     if conf.env['EIGEN2_FOUND']:
         common_flags += '-DEIGEN2_ENABLED '
 
-    common_flags += " -DSFERES_ROOT=\"" + os.getcwd() + "\" "
+    common_flags += "-DSFERES_ROOT=\"" + os.getcwd() + "\" "
 
     cxxflags = conf.env['CXXFLAGS']
     # release
     conf.setenv('default')
-    opt_flags = common_flags +  ' -DNDEBUG -O3 -fomit-frame-pointer -finline-functions -ftracer -funroll-loops -fvariable-expansion-in-unroller -fstrict-aliasing '# -ffast-math
-    if not Options.options.ppc:
-        opt_flags += '-mfpmath=sse -march=core2 -msse2'
+    opt_flags = common_flags +  ' -DNDEBUG -O3 -ffast-math'
 
     conf.env['CXXFLAGS'] = cxxflags + opt_flags.split(' ')
     conf.env['SFERES_ROOT'] = os.getcwd()

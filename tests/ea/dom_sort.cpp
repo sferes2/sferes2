@@ -32,7 +32,10 @@
 //| The fact that you are presently reading this means that you have
 //| had knowledge of the CeCILL license and that you accept its terms.
 
+#ifndef NO_PARALLEL
 #define NO_PARALLEL
+#endif
+
 #define BOOST_TEST_DYN_LINK
 #define BOOST_TEST_MODULE dom_sort
 
@@ -58,17 +61,17 @@ struct Params
 {
   struct evo_float
   {
-    static const float cross_rate = 0.5f;
-    static const float mutation_rate = 1.0f / 30.0f;
-    static const float eta_m = 15.0f;
-    static const float eta_c = 10.0f;
-    static const mutation_t mutation_type = polynomial;
-    static const cross_over_t cross_over_type = sbx;
+    SFERES_CONST float cross_rate = 0.5f;
+    SFERES_CONST float mutation_rate = 1.0f / 30.0f;
+    SFERES_CONST float eta_m = 15.0f;
+    SFERES_CONST float eta_c = 10.0f;
+    SFERES_CONST mutation_t mutation_type = polynomial;
+    SFERES_CONST cross_over_t cross_over_type = sbx;
   };
   struct parameters
   {
-    static const float min = 0.0f;
-    static const float max = 1.0f;
+    SFERES_CONST float min = 0.0f;
+    SFERES_CONST float max = 1.0f;
   };
 };
 

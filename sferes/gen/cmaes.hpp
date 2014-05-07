@@ -77,7 +77,7 @@ namespace sferes
       typedef Cmaes<Size, Params, Exact> this_t;
       typedef Eigen::Matrix<float, Size, 1> vector_t;
       typedef Eigen::Matrix<float, Size, Size> matrix_t;
-      static const size_t es_size = Size;
+      SFERES_CONST size_t es_size = Size;
       Cmaes() : _arx(vector_t::Zero()) { }
 
       void random() 

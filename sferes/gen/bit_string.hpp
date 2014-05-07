@@ -86,12 +86,12 @@ namespace sferes
       template<long K, long N>
       struct _pow
       {
-        static const double result = K * _pow<K, N - 1>::result;
+        SFERES_CONST double result = K * _pow<K, N - 1>::result;
       };
       template<long K>
       struct _pow<K, 1>
       {
-        static const double result = K;
+        SFERES_CONST double result = K;
       };
 
     }
@@ -103,7 +103,7 @@ namespace sferes
         typedef Params params_t;
         typedef BitString<Size, Params, Exact> this_t;
         typedef std::bitset<Params::bit_string::nb_bits> bs_t;
-        static const double bs_max = _bitstring::_pow<2, Params::bit_string::nb_bits>::result - 1;
+        SFERES_CONST double bs_max = _bitstring::_pow<2, Params::bit_string::nb_bits>::result - 1;
 
         BitString() : _data(Size)
         {

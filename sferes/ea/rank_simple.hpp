@@ -51,7 +51,7 @@ namespace sferes
     SFERES_EA(RankSimple, Ea)
     {
     public:
-      static const unsigned nb_keep = (unsigned)(Params::pop::keep_rate * Params::pop::size);
+      SFERES_CONST unsigned nb_keep = (unsigned)(Params::pop::keep_rate * Params::pop::size);
 
       void random_pop()
       {
@@ -94,8 +94,8 @@ namespace sferes
     protected:
       unsigned _random_rank()
       {
-	static const float kappa = pow(Params::pop::coeff, nb_keep + 1.0f) - 1.0f;
-	static const float facteur = nb_keep / ::log(kappa + 1);
+	SFERES_CONST float kappa = pow(Params::pop::coeff, nb_keep + 1.0f) - 1.0f;
+	SFERES_CONST float facteur = nb_keep / ::log(kappa + 1);
 	return (unsigned) (this->_pop.size() - facteur * log(misc::rand<float>(1) * kappa + 1));
       }
     };

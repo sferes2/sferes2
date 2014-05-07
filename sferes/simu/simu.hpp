@@ -47,7 +47,7 @@ namespace sferes
     SFERES_CLASS(Simu)
     {
     public:
-      static const float dt = Params::simu::dt;
+      SFERES_CONST float dt = Params::simu::dt;
 
       Simu() {}
 

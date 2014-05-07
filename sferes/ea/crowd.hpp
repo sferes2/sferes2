@@ -44,7 +44,7 @@ namespace sferes
   {
     namespace crowd
     {
-      static const float inf = 1.0e14;
+      SFERES_CONST float inf = 1.0e14;
 
       template<typename Indiv>
       class assign_crowd
