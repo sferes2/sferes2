@@ -41,6 +41,7 @@ def create_variants(bld, source, uselib_local, target,
       code = open(c_src + source, 'r')
       for line in code: f.write(line)
       bin_name = src_fname.replace('.cpp', '')
+      bin_name = os.path.basename(bin_name)
       # create build
       tgt = bld.new_task_gen('cxx', 'program')
       tgt.source = src_fname
