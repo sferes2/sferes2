@@ -4,13 +4,13 @@
 //|
 //| This software is a computer program whose purpose is to facilitate
 //| experiments in evolutionary computation and evolutionary robotics.
-//| 
+//|
 //| This software is governed by the CeCILL license under French law
 //| and abiding by the rules of distribution of free software.  You
 //| can use, modify and/ or redistribute the software under the terms
 //| of the CeCILL license as circulated by CEA, CNRS and INRIA at the
 //| following URL "http://www.cecill.info".
-//| 
+//|
 //| As a counterpart to the access to the source code and rights to
 //| copy, modify and redistribute granted by the license, users are
 //| provided only with a limited warranty and the software's author,
@@ -48,59 +48,54 @@
 #include <boost/archive/tmpdir.hpp>
 
 // a generic serialize test to be used in test suites
-namespace sferes
-{
-  namespace tests
-  {
-    
+namespace sferes {
+  namespace tests {
+
     // pass this if you don't want to write the equality test
-    struct check_nothing
-    {
+    struct check_nothing {
       template<typename T>
-      void operator()(const T& x1, const T& x2) const
-      {}
+      void operator()(const T& x1, const T& x2) const {
+      }
     };
 
 
     template<typename T, typename CheckEqual, typename Ia, typename Oa>
-    void check_serialize(const T& src, T& dest, const CheckEqual &check_equal)
-    {
+    void check_serialize(const T& src, T& dest, const CheckEqual &check_equal) {
       BOOST_CHECK(true);
       std::string filename = boost::archive::tmpdir();
       filename += "/serialize_g.xml";
       std::ofstream ofs(filename.c_str());
       BOOST_CHECK(true);
       {
-	Oa oa(ofs);
-	BOOST_CHECK(true);
-	oa << boost::serialization::make_nvp("gen", src); 
-	BOOST_CHECK(true);
+        Oa oa(ofs);
+        BOOST_CHECK(true);
+        oa << boost::serialization::make_nvp("gen", src);
+        BOOST_CHECK(true);
       }
       {
-	BOOST_CHECK(true);
-	std::ifstream ifs(filename.c_str());
-	BOOST_CHECK(true);
-	Ia ia(ifs);
-	BOOST_CHECK(true);
-	ia >> boost::serialization::make_nvp("gen", dest);
-	BOOST_CHECK(true);
+        BOOST_CHECK(true);
+        std::ifstream ifs(filename.c_str());
+        BOOST_CHECK(true);
+        Ia ia(ifs);
+        BOOST_CHECK(true);
+        ia >> boost::serialization::make_nvp("gen", dest);
+        BOOST_CHECK(true);
       }
       check_equal(src, dest);
     }
     template<typename T, typename CheckEqual>
-    void check_serialize(const T& src, T& dest, const CheckEqual &check_equal)
-    {
+    void check_serialize(const T& src, T& dest, const CheckEqual &check_equal) {
       typedef boost::archive::xml_oarchive oa_xml_t;
       typedef boost::archive::xml_iarchive ia_xml_t;
       typedef boost::archive::text_oarchive oa_text_t;
       typedef boost::archive::text_iarchive ia_text_t;
       typedef boost::archive::binary_oarchive oa_bin_t;
       typedef boost::archive::binary_iarchive ia_bin_t;
-      
+
       check_serialize<T, CheckEqual, ia_xml_t, oa_xml_t>(src, dest, check_equal);
       check_serialize<T, CheckEqual, ia_text_t, oa_text_t>(src, dest, check_equal);
       check_serialize<T, CheckEqual, ia_bin_t, oa_bin_t>(src, dest, check_equal);
-      
+
     }
   }
 }

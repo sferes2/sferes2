@@ -4,13 +4,13 @@
 //|
 //| This software is a computer program whose purpose is to facilitate
 //| experiments in evolutionary computation and evolutionary robotics.
-//| 
+//|
 //| This software is governed by the CeCILL license under French law
 //| and abiding by the rules of distribution of free software.  You
 //| can use, modify and/ or redistribute the software under the terms
 //| of the CeCILL license as circulated by CEA, CNRS and INRIA at the
 //| following URL "http://www.cecill.info".
-//| 
+//|
 //| As a counterpart to the access to the source code and rights to
 //| copy, modify and redistribute granted by the license, users are
 //| provided only with a limited warranty and the software's author,
@@ -35,7 +35,7 @@
 
 
 
-#define BOOST_TEST_DYN_LINK 
+#define BOOST_TEST_DYN_LINK
 #define BOOST_TEST_MODULE rank_simple2
 
 
@@ -53,10 +53,8 @@
 using namespace sferes;
 using namespace sferes::gen::evo_float;
 
-struct Params
-{
-  struct evo_float
-  {
+struct Params {
+  struct evo_float {
     SFERES_CONST float cross_rate = 0.5f;
     SFERES_CONST float mutation_rate = 0.5f;
     SFERES_CONST float eta_m = 15.0f;
@@ -64,25 +62,22 @@ struct Params
     SFERES_CONST mutation_t mutation_type = polynomial;
     SFERES_CONST cross_over_t cross_over_type = sbx;
   };
-  struct pop
-  {
+  struct pop {
     SFERES_CONST unsigned size = 100;
     SFERES_CONST unsigned nb_gen = 300;
     SFERES_CONST float initial_aleat = 2.0f;
     SFERES_CONST int dump_period = -1;
     SFERES_CONST float coeff = 1.1f;
-    SFERES_CONST float keep_rate = 0.6f;    
+    SFERES_CONST float keep_rate = 0.6f;
   };
-  struct parameters
-  {
+  struct parameters {
     SFERES_CONST float min = 0.0f;
     SFERES_CONST float max = 1.0f;
   };
 };
 
 template<typename Indiv>
-float _g(const Indiv &ind)
-{
+float _g(const Indiv &ind) {
   float g = 0.0f;
   assert(ind.size() == 30);
   for (size_t i = 1; i < 30; ++i)
@@ -92,13 +87,11 @@ float _g(const Indiv &ind)
   return g;
 }
 
-SFERES_FITNESS(FitZDT2, sferes::fit::Fitness)
-{
- public:
+SFERES_FITNESS(FitZDT2, sferes::fit::Fitness) {
+public:
   FitZDT2() : _this(this) {}
   template<typename Indiv>
-    void eval(Indiv& ind) 
-  {
+  void eval(Indiv& ind) {
     assert(this == _this);
     this->_objs.resize(2);
     float f1 = ind.data(0);
@@ -113,9 +106,8 @@ SFERES_FITNESS(FitZDT2, sferes::fit::Fitness)
 };
 
 
-BOOST_AUTO_TEST_CASE(test_rank_simple2)
-{
-  srand(time(0));  
+BOOST_AUTO_TEST_CASE(test_rank_simple2) {
+  srand(time(0));
   typedef gen::EvoFloat<30, Params> gen_t;
   typedef phen::Parameters<gen_t, FitZDT2<Params>, Params> phen_t;
   typedef eval::Parallel<Params> eval_t;
@@ -125,6 +117,6 @@ BOOST_AUTO_TEST_CASE(test_rank_simple2)
   ea_t ea;
 
   ea.run();
-  
+
 }
 

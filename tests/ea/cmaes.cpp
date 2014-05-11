@@ -4,13 +4,13 @@
 //|
 //| This software is a computer program whose purpose is to facilitate
 //| experiments in evolutionary computation and evolutionary robotics.
-//| 
+//|
 //| This software is governed by the CeCILL license under French law
 //| and abiding by the rules of distribution of free software.  You
 //| can use, modify and/ or redistribute the software under the terms
 //| of the CeCILL license as circulated by CEA, CNRS and INRIA at the
 //| following URL "http://www.cecill.info".
-//| 
+//|
 //| As a counterpart to the access to the source code and rights to
 //| copy, modify and redistribute granted by the license, users are
 //| provided only with a limited warranty and the software's author,
@@ -36,7 +36,7 @@
 #define NO_PARALLEL
 #endif
 
-#define BOOST_TEST_DYN_LINK 
+#define BOOST_TEST_DYN_LINK
 #define BOOST_TEST_MODULE cmaes
 
 #include <boost/test/unit_test.hpp>
@@ -55,29 +55,24 @@
 using namespace sferes;
 
 
-struct Params
-{
-  struct pop
-  {
+struct Params {
+  struct pop {
     SFERES_CONST size_t size = 1;//not used by CMAES
     SFERES_CONST unsigned nb_gen = 650;
     SFERES_CONST int dump_period = -1;
   };
-  struct cmaes
-  {
+  struct cmaes {
     SFERES_CONST float sigma = 0.5f;
     SFERES_CONST float max_value = -1e-10;
   };
 
- struct parameters
-  {
+  struct parameters {
     SFERES_CONST float min = 0.0f;
     SFERES_CONST float max = 1.0f;
   };
 };
 
-float felli(const std::vector<float>& xx)
-{
+float felli(const std::vector<float>& xx) {
   Eigen::VectorXf x = Eigen::VectorXf::Zero(xx.size());
   for (size_t i = 0; i < xx.size(); ++i)
     x[i] = xx[i];
@@ -87,23 +82,26 @@ float felli(const std::vector<float>& xx)
   return v.dot((x.array() * x.array()).matrix());
 }
 
-SFERES_FITNESS(FitElli, sferes::fit::Fitness)
-{
- public:
-  FitElli(const FitElli& f) { assert(0); BOOST_ERROR("copy constructors should be useless"); }
-  FitElli& operator=(const FitElli& f) { BOOST_ERROR("= operator should be useless"); return *this; }
+SFERES_FITNESS(FitElli, sferes::fit::Fitness) {
+public:
+  FitElli(const FitElli& f) {
+    assert(0);
+    BOOST_ERROR("copy constructors should be useless");
+  }
+  FitElli& operator=(const FitElli& f) {
+    BOOST_ERROR("= operator should be useless");
+    return *this;
+  }
   FitElli() : _this(this) {}
   template<typename Indiv>
-    void eval(Indiv& ind) 
-  {
+  void eval(Indiv& ind) {
     this->_value = -felli(ind.data());
   }
   FitElli* _this;
 };
 
 
-BOOST_AUTO_TEST_CASE(test_cmaes)
-{
+BOOST_AUTO_TEST_CASE(test_cmaes) {
   srand(time(0));
   typedef gen::Float<10, Params> gen_t;
   typedef phen::Parameters<gen_t, FitElli<Params>, Params> phen_t;

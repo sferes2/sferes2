@@ -57,10 +57,8 @@
 using namespace sferes;
 using namespace sferes::gen::evo_float;
 
-struct Params
-{
-  struct evo_float
-  {
+struct Params {
+  struct evo_float {
     SFERES_CONST float cross_rate = 0.5f;
     SFERES_CONST float mutation_rate = 1.0f / 30.0f;
     SFERES_CONST float eta_m = 15.0f;
@@ -68,29 +66,25 @@ struct Params
     SFERES_CONST mutation_t mutation_type = polynomial;
     SFERES_CONST cross_over_t cross_over_type = sbx;
   };
-  struct parameters
-  {
+  struct parameters {
     SFERES_CONST float min = 0.0f;
     SFERES_CONST float max = 1.0f;
   };
 };
 
-SFERES_FITNESS(FitRand, sferes::fit::Fitness)
-{
-  public:
-    template<typename Indiv>
-    void eval(Indiv& ind)
-    {
-      this->_objs.resize(3);
-      this->_objs[0] = sferes::misc::rand<float>(10);
-      this->_objs[1] = sferes::misc::rand<float>(10);
-      this->_objs[2] = sferes::misc::rand<float>(10);
-    }
+SFERES_FITNESS(FitRand, sferes::fit::Fitness) {
+public:
+  template<typename Indiv>
+  void eval(Indiv& ind) {
+    this->_objs.resize(3);
+    this->_objs[0] = sferes::misc::rand<float>(10);
+    this->_objs[1] = sferes::misc::rand<float>(10);
+    this->_objs[2] = sferes::misc::rand<float>(10);
+  }
 };
 
 
-BOOST_AUTO_TEST_CASE(test_domsort)
-{
+BOOST_AUTO_TEST_CASE(test_domsort) {
   srand(time(0));
   typedef gen::EvoFloat<30, Params> gen_t;
   typedef phen::Parameters<gen_t, FitRand<Params>, Params> phen_t;
@@ -98,34 +92,31 @@ BOOST_AUTO_TEST_CASE(test_domsort)
   typedef std::vector<pphen_t> pop_t;
 
   pop_t pop;
-  for (size_t i = 0; i < 2000; ++i)
-  {
+  for (size_t i = 0; i < 2000; ++i) {
     boost::shared_ptr<phen_t> ind(new phen_t());
     ind->random();
     ind->fit().eval(*ind);
     pop.push_back(ind);
   }
-   // basic
+  // basic
   std::vector<pop_t> fronts_basic;
   std::vector<size_t> ranks;
   boost::timer tbasic;
   ea::dom_sort_basic(pop, fronts_basic, ranks);
   std::cout << "dom sort basic (2000 indivs):"
             << tbasic.elapsed() << " s" << std::endl;
-   // standard
+  // standard
   std::vector<pop_t> fronts;
   boost::timer tstd;
   ea::dom_sort(pop, fronts, ranks);
   std::cout << "dom sort deb (2000 indivs):"
             << tstd.elapsed() << " s" << std::endl;
   BOOST_CHECK_EQUAL(fronts.size(), fronts_basic.size());
-  for (size_t i = 0; i < fronts.size(); ++i)
-  {
+  for (size_t i = 0; i < fronts.size(); ++i) {
     BOOST_CHECK_EQUAL(fronts[i].size(), fronts_basic[i].size());
     std::sort(fronts[i].begin(), fronts[i].end());
     std::sort(fronts_basic[i].begin(), fronts_basic[i].end());
-    for (size_t j = 0; j < fronts[i].size(); ++j)
-    {
+    for (size_t j = 0; j < fronts[i].size(); ++j) {
       BOOST_CHECK_EQUAL(fronts[i][j]->fit().obj(0),
                         fronts_basic[i][j]->fit().obj(0));
       BOOST_CHECK_EQUAL(fronts[i][j]->fit().obj(1),

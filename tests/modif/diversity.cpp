@@ -4,13 +4,13 @@
 //|
 //| This software is a computer program whose purpose is to facilitate
 //| experiments in evolutionary computation and evolutionary robotics.
-//| 
+//|
 //| This software is governed by the CeCILL license under French law
 //| and abiding by the rules of distribution of free software.  You
 //| can use, modify and/ or redistribute the software under the terms
 //| of the CeCILL license as circulated by CEA, CNRS and INRIA at the
 //| following URL "http://www.cecill.info".
-//| 
+//|
 //| As a counterpart to the access to the source code and rights to
 //| copy, modify and redistribute granted by the license, users are
 //| provided only with a limited warranty and the software's author,
@@ -36,7 +36,7 @@
 
 
 #define NO_PARALLEL
-#define BOOST_TEST_DYN_LINK 
+#define BOOST_TEST_DYN_LINK
 #define BOOST_TEST_MODULE nsga2_diversity
 
 
@@ -54,10 +54,8 @@
 using namespace sferes;
 using namespace sferes::gen::evo_float;
 
-struct Params
-{
-  struct evo_float
-  {
+struct Params {
+  struct evo_float {
 
     SFERES_CONST float cross_rate = 0.5f;
     SFERES_CONST float mutation_rate = 0.5f;
@@ -66,23 +64,20 @@ struct Params
     SFERES_CONST mutation_t mutation_type = polynomial;
     SFERES_CONST cross_over_t cross_over_type = sbx;
   };
-  struct pop
-  {
+  struct pop {
     SFERES_CONST unsigned size = 200;
     SFERES_CONST unsigned nb_gen = 600;
     SFERES_CONST float initial_aleat = 2.0f;
     SFERES_CONST int dump_period = -1;
   };
-  struct parameters
-  {
+  struct parameters {
     SFERES_CONST float min = 0.0f;
     SFERES_CONST float max = 1.0f;
   };
 };
 
 template<typename Indiv>
-float _g(const Indiv &ind)
-{
+float _g(const Indiv &ind) {
   float g = 0.0f;
   assert(ind.size() == 30);
   for (size_t i = 1; i < 30; ++i)
@@ -92,15 +87,19 @@ float _g(const Indiv &ind)
   return g;
 }
 
-SFERES_FITNESS(FitZDT2, sferes::fit::Fitness)
-{
- public:
-  FitZDT2(const FitZDT2& f) { assert(0); BOOST_ERROR("copy constructors should be useless"); }
-  FitZDT2& operator=(const FitZDT2& f) { BOOST_ERROR("= operator should be useless"); return *this; }
+SFERES_FITNESS(FitZDT2, sferes::fit::Fitness) {
+public:
+  FitZDT2(const FitZDT2& f) {
+    assert(0);
+    BOOST_ERROR("copy constructors should be useless");
+  }
+  FitZDT2& operator=(const FitZDT2& f) {
+    BOOST_ERROR("= operator should be useless");
+    return *this;
+  }
   FitZDT2() : _this(this) {}
   template<typename Indiv>
-    void eval(Indiv& ind) 
-  {
+  void eval(Indiv& ind) {
     assert(this == _this);
     this->_objs.resize(3);// resize for div
     float f1 = ind.data(0);
@@ -114,11 +113,10 @@ SFERES_FITNESS(FitZDT2, sferes::fit::Fitness)
 };
 
 
-BOOST_AUTO_TEST_CASE(test_nsga2)
-{
+BOOST_AUTO_TEST_CASE(test_nsga2) {
   srand(time(0));
   dbg::out(dbg::info)<<"running ex_ea ..."<<std::endl;
-  
+
   typedef gen::EvoFloat<30, Params> gen_t;
   typedef phen::Parameters<gen_t, FitZDT2<Params>, Params> phen_t;
   typedef eval::Parallel<Params> eval_t;
@@ -132,10 +130,9 @@ BOOST_AUTO_TEST_CASE(test_nsga2)
   ea.stat<0>().show_all(std::cout, 0);
   BOOST_CHECK(ea.stat<0>().pareto_front().size() > 50);
 
-  BOOST_FOREACH(boost::shared_ptr<phen_t> p, ea.stat<0>().pareto_front())
-    {
-      BOOST_CHECK_EQUAL(p->fit().objs().size(), 3);
-    }
-  
+  BOOST_FOREACH(boost::shared_ptr<phen_t> p, ea.stat<0>().pareto_front()) {
+    BOOST_CHECK_EQUAL(p->fit().objs().size(), 3);
+  }
+
 }
 

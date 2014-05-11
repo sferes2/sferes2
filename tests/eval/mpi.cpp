@@ -4,13 +4,13 @@
 //|
 //| This software is a computer program whose purpose is to facilitate
 //| experiments in evolutionary computation and evolutionary robotics.
-//| 
+//|
 //| This software is governed by the CeCILL license under French law
 //| and abiding by the rules of distribution of free software.  You
 //| can use, modify and/ or redistribute the software under the terms
 //| of the CeCILL license as circulated by CEA, CNRS and INRIA at the
 //| following URL "http://www.cecill.info".
-//| 
+//|
 //| As a counterpart to the access to the source code and rights to
 //| copy, modify and redistribute granted by the license, users are
 //| provided only with a limited warranty and the software's author,
@@ -35,7 +35,7 @@
 
 
 
-#define BOOST_TEST_DYN_LINK 
+#define BOOST_TEST_DYN_LINK
 #define BOOST_TEST_MODULE parallel
 #include <iostream>
 #include <boost/test/unit_test.hpp>
@@ -57,10 +57,8 @@ using namespace sferes;
 using namespace sferes::gen::evo_float;
 
 
-struct Params
-{
-  struct evo_float
-  {
+struct Params {
+  struct evo_float {
 
     SFERES_CONST float mutation_rate = 0.1f;
     SFERES_CONST float eta_m = 15.0f;
@@ -68,40 +66,34 @@ struct Params
     SFERES_CONST mutation_t mutation_type = polynomial;
     SFERES_CONST cross_over_t cross_over_type = sbx;
   };
-  struct pop
-  {
+  struct pop {
     SFERES_CONST unsigned size = 100;
     SFERES_CONST unsigned nb_gen = 1000;
     SFERES_CONST int dump_period = -1;
     SFERES_CONST int initial_aleat = 1;
     SFERES_CONST float coeff = 1.1f;
-    SFERES_CONST float keep_rate = 0.6f;    
+    SFERES_CONST float keep_rate = 0.6f;
   };
-  struct parameters
-  {
+  struct parameters {
     SFERES_CONST float min = -10.0f;
     SFERES_CONST float max = 10.0f;
   };
 };
- 
-SFERES_FITNESS(FitTest, sferes::fit::Fitness)
-{
- public:
+
+SFERES_FITNESS(FitTest, sferes::fit::Fitness) {
+public:
   template<typename Indiv>
-    void eval(Indiv& ind) 
-  {
+  void eval(Indiv& ind) {
     float v = 0;
-    for (unsigned i = 0; i < ind.size(); ++i)
-      {
-	float p = ind.data(i);
-	v += p * p * p * p;
-      }
+    for (unsigned i = 0; i < ind.size(); ++i) {
+      float p = ind.data(i);
+      v += p * p * p * p;
+    }
     this->_value = -v;
   }
 };
 
-BOOST_AUTO_TEST_CASE(test_mpi)
-{
+BOOST_AUTO_TEST_CASE(test_mpi) {
   dbg::out(dbg::info)<<"running test_mpi ..."<<std::endl;
 
   typedef gen::EvoFloat<10, Params> gen_t;
@@ -114,14 +106,13 @@ BOOST_AUTO_TEST_CASE(test_mpi)
   ea.run();
 
   std::cout<<"==> best fitness ="<<ea.stat<0>().best()->fit().value()<<std::endl;
-  std::cout<<"==> mean fitness ="<<ea.stat<1>().mean()<<std::endl; 
+  std::cout<<"==> mean fitness ="<<ea.stat<1>().mean()<<std::endl;
 }
- 
+
 #else
-BOOST_AUTO_TEST_CASE(test_mpi)
-{
+BOOST_AUTO_TEST_CASE(test_mpi) {
 
   std::cout<<"MPI is disabled"<<std::endl;
 }
 #endif
- 
+
