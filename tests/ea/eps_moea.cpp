@@ -69,7 +69,7 @@ struct Params {
     SFERES_ARRAY(float, eps, 0.0075f, 0.0075f);
     SFERES_ARRAY(float, min_fit, 0.0f, 0.0f);
     SFERES_CONST size_t grain = size / 4;
-    SFERES_CONST unsigned nb_gen = 20000 / grain;
+    SFERES_CONST unsigned nb_gen = 60000 / grain;
   };
   struct parameters {
     SFERES_CONST float min = 0.0f;
@@ -117,7 +117,7 @@ BOOST_AUTO_TEST_CASE(test_epsmoea) {
   ea.run();
 
   ea.stat<0>().show_all(std::cout, 0);
-  BOOST_CHECK(ea.stat<0>().pareto_front().size() == 101);
+  BOOST_CHECK(ea.stat<0>().pareto_front().size() >= 101);
   std::cout<<"elite size :"<<ea.stat<0>().pareto_front().size()<<std::endl;
 
   BOOST_FOREACH(boost::shared_ptr<phen_t> p, ea.stat<0>().pareto_front()) {

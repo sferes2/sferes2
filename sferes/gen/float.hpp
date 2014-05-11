@@ -95,7 +95,7 @@ namespace sferes {
       //@}
       template<class Archive>
       void serialize(Archive & ar, const unsigned int version) {
-        ar & BOOST_SERIALIZATION_NVP(this->_data);
+        ar & BOOST_SERIALIZATION_NVP(_data);
       }
      protected:
       std::vector<float> _data;

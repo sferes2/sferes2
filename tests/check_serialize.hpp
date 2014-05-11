@@ -64,9 +64,11 @@ namespace sferes {
       BOOST_CHECK(true);
       std::string filename = boost::archive::tmpdir();
       filename += "/serialize_g.xml";
-      std::ofstream ofs(filename.c_str());
+
       BOOST_CHECK(true);
       {
+        std::ofstream ofs(filename.c_str());
+        std::cout<<filename.c_str()<<std::endl;
         Oa oa(ofs);
         BOOST_CHECK(true);
         oa << boost::serialization::make_nvp("gen", src);
@@ -92,8 +94,11 @@ namespace sferes {
       typedef boost::archive::binary_oarchive oa_bin_t;
       typedef boost::archive::binary_iarchive ia_bin_t;
 
+      std::cout<<"XML archive"<<std::endl;
       check_serialize<T, CheckEqual, ia_xml_t, oa_xml_t>(src, dest, check_equal);
+      std::cout<<"test archive"<<std::endl;
       check_serialize<T, CheckEqual, ia_text_t, oa_text_t>(src, dest, check_equal);
+      std::cout<<"binary archive" <<std::endl;
       check_serialize<T, CheckEqual, ia_bin_t, oa_bin_t>(src, dest, check_equal);
 
     }
