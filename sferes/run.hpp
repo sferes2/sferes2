@@ -46,7 +46,12 @@ namespace sferes
 {
 
   template<typename Ea>
-  static void run_ea(int argc, char **argv, Ea& ea, bool init_rand = true)
+  static void run_ea(int argc, 
+		     char **argv, 
+		     Ea& ea, 
+		     const boost::program_options::options_description& add_opts = 
+			boost::program_options::options_description(), 
+		     bool init_rand = true)
   {
     namespace po = boost::program_options;
     std::cout<<"sferes2 svn version: "<<SVN_VERSION<<std::endl;
@@ -56,7 +61,8 @@ namespace sferes
 	std::cout<<"seed: " << t << std::endl;
 	srand(t);
       }
-    po::options_description desc("Allowed options");
+    po::options_description desc("Allowed sferes2 options");
+    desc.add(add_opts);
     desc.add_options()
       ("help,h", "produce help message")
       ("stat,s", po::value<int>(), "statistic number")
@@ -133,3 +139,5 @@ namespace sferes
 
 
 #endif
+
+

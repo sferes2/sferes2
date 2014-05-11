@@ -23,7 +23,7 @@ def detect_mpi(conf):
 		conf.env['LIBPATH_MPI'] = Options.options.mpi + '/lib'
 	else:
 		conf.env['CPPPATH_MPI'] = ['/usr/include/mpi', '/usr/local/include/mpi', '/usr/include', '/usr/local/include']
-		conf.env['LIBPATH_MPI'] = ['/usr/lib', '/usr/local/lib']
+		conf.env['LIBPATH_MPI'] = ['/usr/lib', '/usr/local/lib', '/usr/lib/openmpi']
 
 	res = Configure.find_file('mpi.h', conf.env['CPPPATH_MPI'] )
 	conf.check_message('header','mpi.h', (res != '') , res)
