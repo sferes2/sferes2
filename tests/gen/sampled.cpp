@@ -80,6 +80,22 @@ void test() {
 
 }
 
+
+struct check_sampled_eq {
+  template<typename T>
+  void operator()(const T& gen1, const T& gen2) const {
+    BOOST_CHECK_EQUAL(gen1.size(), gen2.size());
+    for (size_t i = 0; i < gen1.size(); ++i)
+      BOOST_CHECK_EQUAL(gen1.data(i), gen2.data(i));
+  }
+};
+
+BOOST_AUTO_TEST_CASE(polynomial_sbx_serialize) {
+  sferes::gen::Sampled<100, Params1> gen1, gen2;
+  gen1.random();
+  sferes::tests::check_serialize(gen1, gen2, check_sampled_eq());
+}
+
 BOOST_AUTO_TEST_CASE(sampled_gen_ordered) {
   test<Params1>();
 }
