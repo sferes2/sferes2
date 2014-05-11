@@ -63,17 +63,16 @@ def set_options(opt):
     opt.tool_options('boost')
     opt.tool_options('tbb')
     opt.tool_options('mpi')
-    opt.tool_options('eigen2')
-#    opt.tool_options('UnitTest')
+    opt.tool_options('eigen3')
     opt.tool_options('unittest')
 
     # sferes specific
     opt.add_option('--bullet', type='string', help='path to bullet', dest='bullet')
     opt.add_option('--apple', type='string', help='enable apple support', dest='apple')
-    opt.add_option('--ppc', type='string', help='enable PPC bits support', dest='ppc')
     opt.add_option('--rpath', type='string', help='set rpath', dest='rpath')
     opt.add_option('--includes', type='string', help='add an include path, e.g. /home/mandor/include', dest='includes')
     opt.add_option('--libs', type='string', help='add a lib path, e.g. /home/mandor/lib', dest='libs')
+    opt.add_option('--cpp11', type='string', help='force c++-11 compilation [--cpp11=yes]', dest='cpp11')
 
     # exp commands
     opt.add_option('--create', type='string', help='create a new exp', dest='create_exp')
@@ -84,7 +83,6 @@ def set_options(opt):
     opt.add_option('--status', type='string', help='config file to status', dest='status')
     opt.add_option('--qsub', type='string', help='config file (json) to submit to torque', dest='qsub')
     opt.add_option('--ll', type='string', help='config file (json) to submit to loadleveler', dest='loadleveler')
-
 
     for i in modules:
         print 'module : [' + i + ']'
@@ -103,25 +101,20 @@ def configure(conf):
     conf.check_tool('compiler_cxx')
 
     common_flags = "-D_REENTRANT -Wall -fPIC -ftemplate-depth-1024 -Wno-sign-compare -Wno-deprecated  -Wno-unused "
-
-    # everything should be static
-    #    conf.env['FULLSTATIC'] = True
-    # No .a version of tbb currently :/
+    if Options.options.cpp11 and Options.options.cpp11 == 'yes':
+        common_flags += '-std=c++11 '
 
     # boost
     conf.check_tool('boost')
     conf.check_boost(lib='serialization filesystem system unit_test_framework program_options graph mpi python thread',
                      min_version='1.35')
-    #quick fix of a bug in the automatic detection...
-    #  conf.env['LIB_BOOST_GRAPH']='boost_graph'
     # tbb
     conf.check_tool('tbb')
 
     # mpi.h
     mpi_found = conf.check_tool('mpi')
 
-    conf.env['CXXFLAGS']=[]
-
+    # boost mpi
     if (len(conf.env['LIB_BOOST_MPI']) != 0 and conf.env['MPI_FOUND']):
         conf.env['MPI_ENABLED'] = True
     else:
@@ -142,9 +135,10 @@ def configure(conf):
     conf.env['LIB_SDL_gfx']=['SDL_gfx']
     conf.env['HAVE_SDL_gfx']=1
 
-    eigen2_found = conf.check_tool('eigen2')
+    # eigen 3 (optional)
+    eigen3_found = conf.check_tool('eigen3')
 
-    # ode (optional)
+    # ode (optiona)
     ode_found = conf.check_tool('ode')
 
     # gsl (optional)
@@ -167,8 +161,8 @@ def configure(conf):
 
 
     # Mac OS specific options
-    if Options.options.apple:
-	common_flags += ' -Wno-gnu-static-float-init '
+    if Options.options.apple and Options.options.apple == 'yes':
+        common_flags += ' -Wno-gnu-static-float-init '
 
     conf.env['LIB_TCMALLOC'] = 'tcmalloc'
     conf.env['LIB_PTMALLOC'] = 'ptmalloc3'
@@ -181,21 +175,15 @@ def configure(conf):
     conf.env['LIB_OPENGL'] = ['GL', 'GLU', 'glut']
 
     if Options.options.rpath:
-	 conf.env.append_value("LINKFLAGS", "--rpath="+Options.options.rpath)
+        conf.env.append_value("LINKFLAGS", "--rpath="+Options.options.rpath)
 
     # modules
     for i in modules:
         conf.sub_config(i)
 
-
     # link flags
     if Options.options.libs:
         conf.env.append_value("LINKFLAGS", "-L" + Options.options.libs)
-
-
-    if Options.options.ppc:
-	common_flags += ' -mpower2 -malign-power  -maltivec '
-	conf.env.append_value("LINKFLAGS", "-m64")
 
     if Options.options.includes :
         common_flags += " -I" + Options.options.includes + ' '
@@ -203,8 +191,8 @@ def configure(conf):
         common_flags += '-DMPI_ENABLED '
     if not conf.env['TBB_ENABLED']:
         common_flags += '-DNO_PARALLEL '
-    if conf.env['EIGEN2_FOUND']:
-        common_flags += '-DEIGEN2_ENABLED '
+    if conf.env['EIGEN3_FOUND']:
+        common_flags += '-DEIGEN3_ENABLED '
 
     common_flags += "-DSFERES_ROOT=\"" + os.getcwd() + "\" "
 

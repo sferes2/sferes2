@@ -50,4 +50,4 @@ def build(bld):
         obj.target = fname
         obj.unit_test = 1
         obj.uselib_local = 'sferes2'
-        obj.uselib = 'TBB BOOST BOOST_UNIT_TEST_FRAMEWORK EIGEN2'
+        obj.uselib = 'TBB BOOST BOOST_UNIT_TEST_FRAMEWORK EIGEN3'

@@ -6,7 +6,7 @@ def build(bld):
     obj.includes = '../'
     obj.target = 'ex_ea'
     obj.uselib_local = 'sferes2'
-    obj.uselib = 'TBB BOOST BOOST_UNIT_TEST_FRAMEWORK EIGEN2'
+    obj.uselib = 'TBB BOOST BOOST_UNIT_TEST_FRAMEWORK EIGEN3'
 
     # ex_ea
     obj = bld.new_task_gen('cxx', 'program')
@@ -14,7 +14,7 @@ def build(bld):
     obj.includes = '../'
     obj.target = 'ex_ea_mpi'
     obj.uselib_local = 'sferes2'
-    obj.uselib = 'TBB BOOST BOOST_UNIT_TEST_FRAMEWORK EIGEN2'
+    obj.uselib = 'TBB BOOST BOOST_UNIT_TEST_FRAMEWORK EIGEN3'
 
     # ex_nsga2
     obj = bld.new_task_gen('cxx', 'program')
@@ -22,7 +22,7 @@ def build(bld):
     obj.includes = '../'
     obj.target = 'ex_nsga2'
     obj.uselib_local = 'sferes2'
-    obj.uselib = 'TBB BOOST BOOST_UNIT_TEST_FRAMEWORK EIGEN2'
+    obj.uselib = 'TBB BOOST BOOST_UNIT_TEST_FRAMEWORK EIGEN3'
 
     # ex_eps_moea
     obj = bld.new_task_gen('cxx', 'program')
@@ -30,4 +30,4 @@ def build(bld):
     obj.includes = '../'
     obj.target = 'ex_eps_moea'
     obj.uselib_local = 'sferes2'
-    obj.uselib = 'TBB BOOST BOOST_UNIT_TEST_FRAMEWORK EIGEN2'
+    obj.uselib = 'TBB BOOST BOOST_UNIT_TEST_FRAMEWORK EIGEN3'

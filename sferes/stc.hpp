@@ -129,9 +129,9 @@ namespace stc
 // - size_t my_name_size()
 // and a typedef my_type my_name_t
 #define SFERES_ARRAY(T, A, ...)						\
-  SFERES_CONST T A(size_t i)						\
+  static const T A(size_t i)						\
   { assert(i < A##_size()); SFERES_CONST T _##A[] = { __VA_ARGS__ }; return _##A[i]; } \
-  SFERES_CONST size_t A##_size()					\
+  static const size_t A##_size()					\
   { SFERES_CONST T _##A[] = { __VA_ARGS__ }; return sizeof(_##A) / sizeof(T); } \
   typedef T A##_t;
 

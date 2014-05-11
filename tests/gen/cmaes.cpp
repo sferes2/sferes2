@@ -38,7 +38,7 @@
 #define BOOST_TEST_DYN_LINK 
 #define BOOST_TEST_MODULE CMAES_gen
 
-#ifdef EIGEN2_ENABLED
+#ifdef EIGEN3_ENABLED
 
 #include <boost/test/unit_test.hpp>
 #include <sferes/gen/cmaes.hpp>
@@ -73,6 +73,6 @@ BOOST_AUTO_TEST_CASE(es)
   sferes::tests::check_serialize(gen1, gen2, check_es_eq());  
 }
 #else
-#warning Eigen2 is disabled -> no CMAES
+#warning EIGEN3 is disabled -> no CMAES
 int main() { return 0; }
 #endif

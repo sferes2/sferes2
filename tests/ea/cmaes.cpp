@@ -39,13 +39,13 @@
 #define BOOST_TEST_DYN_LINK 
 #define BOOST_TEST_MODULE cmaes
 
-#ifdef EIGEN2_ENABLED
-
 #include <boost/test/unit_test.hpp>
 #include <cmath>
 #include <iostream>
+#include <Eigen/Core>
+
 #include <sferes/phen/parameters.hpp>
-#include <sferes/gen/cmaes.hpp>
+#include <sferes/gen/float.hpp>
 #include <sferes/ea/cmaes.hpp>
 #include <sferes/eval/eval.hpp>
 #include <sferes/stat/best_fit.hpp>
@@ -68,7 +68,7 @@ struct Params
     SFERES_CONST float sigma = 0.5f;
     SFERES_CONST float max_value = -1e-10;
   };
-  
+
  struct parameters
   {
     SFERES_CONST float min = 0.0f;
@@ -84,7 +84,7 @@ float felli(const std::vector<float>& xx)
   Eigen::VectorXf v = Eigen::VectorXf::Zero(x.size());
   for (size_t i = 0; i < v.size(); ++i)
     v[i] = powf(1e6, i / (x.size() - 1.0f));
-  return v.dot(x.cwise() * x);
+  return v.dot((x.array() * x.array()).matrix());
 }
 
 SFERES_FITNESS(FitElli, sferes::fit::Fitness)
@@ -105,7 +105,7 @@ SFERES_FITNESS(FitElli, sferes::fit::Fitness)
 BOOST_AUTO_TEST_CASE(test_cmaes)
 {
   srand(time(0));
-  typedef gen::Cmaes<10, Params> gen_t;
+  typedef gen::Float<10, Params> gen_t;
   typedef phen::Parameters<gen_t, FitElli<Params>, Params> phen_t;
   typedef eval::Parallel<Params> eval_t;
   typedef boost::fusion::vector<stat::BestFit<phen_t, Params> >  stat_t;
@@ -120,7 +120,3 @@ BOOST_AUTO_TEST_CASE(test_cmaes)
 
 }
 
-#else
-#warning Eigen2 is disabled -> no CMAES
-int main() { return 0; }
-#endif

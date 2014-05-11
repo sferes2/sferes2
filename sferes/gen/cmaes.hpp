@@ -38,7 +38,7 @@
 #ifndef GEN_CMAES_HPP_
 #define GEN_CMAES_HPP_
 
-#ifdef EIGEN2_ENABLED
+#ifdef EIGEN3_ENABLED
 
 #include <iostream>
 #include <cmath>
@@ -50,7 +50,6 @@
 #include <boost/static_assert.hpp>
 
 #include <Eigen/Core>
-#include <Eigen/Array>
 #include <Eigen/QR>
 
 #include <sferes/dbg/dbg.hpp>
@@ -62,7 +61,7 @@ namespace sferes
 {
   namespace gen
   {
-    // this class requires Eigen2 (libeigen2-dev)
+    // this class requires EIGEN3 (libEIGEN3-dev)
     // REFERENCE:
     // Hansen, N. and S. Kern (2004). Evaluating the CMA Evolution
     // Strategy on Multimodal Test Functions.  Eighth International
@@ -128,7 +127,7 @@ namespace sferes
 } // sferes
 
 #else
-#warning Eigen2 is disabled -> no CMAES
+#warning Eigen3 is disabled -> no CMAES
 #endif
 
 #endif

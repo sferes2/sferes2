@@ -46,6 +46,7 @@
 #include <sferes/stc.hpp>
 #include <sferes/misc.hpp>
 #include <sferes/dbg/dbg.hpp>
+#include <sferes/gen/float.hpp>
 #include <iostream>
 #include <cmath>
 namespace sferes
@@ -71,13 +72,15 @@ namespace sferes
 
     /// in range [0;1]
     template<int Size, typename Params, typename Exact = stc::Itself> 
-    class EvoFloat : public stc::Any<Exact>
+    class EvoFloat : 
+    	public Float<Size, Params, 
+    				typename stc::FindExact<Float<Size, Params, Exact>, Exact>::ret>
     {
     public:
       typedef Params params_t;
       typedef EvoFloat<Size, Params, Exact> this_t;
 
-      EvoFloat() : _data(Size) {}
+      EvoFloat() {}
 
       //@{
       void mutate() 
@@ -106,41 +109,18 @@ namespace sferes
       }
       void random() 
       { 
-	BOOST_FOREACH(float &v, _data) v = misc::rand<float>(); 
+	BOOST_FOREACH(float &v, this->_data) v = misc::rand<float>(); 
 	_check_invariant(); 
       }
       //@}
       
-      //@{
-      float data(size_t i) const 
-      { 
-	assert(_data.size());
-	assert(i < _data.size()); 
-	_check_invariant(); 
-	return _data[i]; 
-      }
-      void  data(size_t i, float v)
-      { 
-	assert(_data.size());
-	assert(i < _data.size()); 
-	_data[i] = v; 
-	_check_invariant(); 
-      }
-      size_t size() const { return Size; }
-      //@}
-      template<class Archive>
-      void serialize(Archive & ar, const unsigned int version)
-      {
-        ar & BOOST_SERIALIZATION_NVP(_data);
-      }
     protected:
-      std::vector<float> _data;
       evo_float::Mutation_f<this_t, Params::evo_float::mutation_type> _mutation_op;
       evo_float::CrossOver_f<this_t, Params::evo_float::cross_over_type> _cross_over_op;
       void _check_invariant() const
       {
 #ifdef DBG_ENABLED
-	BOOST_FOREACH(float p, _data)
+	BOOST_FOREACH(float p, this->_data)
 	  {
 	    assert(!std::isnan(p)); 
 	    assert(!std::isinf(p)); 

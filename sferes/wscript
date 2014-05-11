@@ -36,7 +36,7 @@
 def build(bld):
     # sferes
     sferes = bld.new_task_gen('cxx', 'staticlib')
-    sferes.source = 'dbg/dbg.cpp'
+    sferes.source = 'dbg/dbg.cpp ea/cmaes.cpp'
     sferes.includes = '. dbg'
     sferes.target = 'sferes2'
     sferes.want_libtool = 1
