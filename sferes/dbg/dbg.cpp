@@ -4,13 +4,13 @@
 //|
 //| This software is a computer program whose purpose is to facilitate
 //| experiments in evolutionary computation and evolutionary robotics.
-//| 
+//|
 //| This software is governed by the CeCILL license under French law
 //| and abiding by the rules of distribution of free software.  You
 //| can use, modify and/ or redistribute the software under the terms
 //| of the CeCILL license as circulated by CEA, CNRS and INRIA at the
 //| following URL "http://www.cecill.info".
-//| 
+//|
 //| As a counterpart to the access to the source code and rights to
 //| copy, modify and redistribute granted by the license, users are
 //| provided only with a limited warranty and the software's author,
@@ -71,22 +71,20 @@
 #include <execinfo.h>
 
 #define MAX_RETADDR 30
-void print_stack()
-{
+void print_stack() {
   void* retaddr[MAX_RETADDR];
   char **funcnames;
 
   int stackdepth;
-  
+
   stackdepth = backtrace(retaddr, MAX_RETADDR);
   funcnames = backtrace_symbols(retaddr, stackdepth);
-  
+
   int i = 0;
-  while (i < stackdepth)
-    {
-      std::cout << funcnames[i] << std::endl;
-      i++;
-    }
+  while (i < stackdepth) {
+    std::cout << funcnames[i] << std::endl;
+    i++;
+  }
 }
 
 /**********************************************************************
@@ -162,36 +160,32 @@ void print_stack()
  * General dbg library private declarations
  *****************************************************************************/
 
-namespace
-{
+namespace {
   /**************************************************************************
    * Constants
    *************************************************************************/
 
-  const char *LEVEL_NAMES[] =
-    {
-      "info",
-      "warning",
-      "error",
-      "fatal",
-      "tracing",
-      "debug",
-      "none",
-      "all"
-    };
-  const char *BEHAVIOUR_NAMES[] =
-    {
-      "assertions_abort",
-      "assertions_throw",
-      "assertions_continue"
-    };
-  enum constraint_type
-    {
-      why_assertion,
-      why_sentinel,
-      why_unimplemented,
-      why_check_ptr
-    };
+  const char *LEVEL_NAMES[] = {
+    "info",
+    "warning",
+    "error",
+    "fatal",
+    "tracing",
+    "debug",
+    "none",
+    "all"
+  };
+  const char *BEHAVIOUR_NAMES[] = {
+    "assertions_abort",
+    "assertions_throw",
+    "assertions_continue"
+  };
+  enum constraint_type {
+    why_assertion,
+    why_sentinel,
+    why_unimplemented,
+    why_check_ptr
+  };
 
   const char         *TRACE_IN         = "->";
   const char         *TRACE_OUT        = "<-";
@@ -212,8 +206,7 @@ namespace
    *
    * @internal
    */
-  struct period_data
-  {
+  struct period_data {
     size_t          no_triggers;
     STDCLK::clock_t triggered_at;
 
@@ -225,26 +218,18 @@ namespace
    *
    * @internal
    */
-  struct lt_sp
-  {
+  struct lt_sp {
     bool operator()(const dbg::source_pos &a, const dbg::source_pos &b)
-      const
-    {
-      if (a.file == b.file)
-	{
-	  if (a.func == b.func)
-	    {
-	      return a.line < b.line;
-	    }
-	  else
-	    {
-	      return a.func < b.func;
-	    }
-	}
-      else
-	{
-	  return a.file < b.file;
-	}
+    const {
+      if (a.file == b.file) {
+        if (a.func == b.func) {
+          return a.line < b.line;
+        } else {
+          return a.func < b.func;
+        }
+      } else {
+        return a.file < b.file;
+      }
     }
   };
 
@@ -259,21 +244,22 @@ namespace
    *
    * @internal
    */
-  class dbg_streambuf : public std::streambuf
-  {
-  public:
+  class dbg_streambuf : public std::streambuf {
+   public:
 
     dbg_streambuf(std::vector<std::ostream*> &ostreams, int bsize = 0);
     ~dbg_streambuf();
 
-    int pubsync() { return sync(); }
+    int pubsync() {
+      return sync();
+    }
 
-  protected:
+   protected:
 
     int overflow(int);
     int sync();
 
-  private:
+   private:
 
     void put_buffer(void);
     void put_char(int);
@@ -291,17 +277,20 @@ namespace
    *
    * @internal
    */
-  class null_streambuf : public std::streambuf
-  {
-  public:
+  class null_streambuf : public std::streambuf {
+   public:
 
     null_streambuf()  {}
     ~null_streambuf() {}
 
-  protected:
+   protected:
 
-    int overflow(int) { return 0; }
-    int sync()        { return 0; }
+    int overflow(int) {
+      return 0;
+    }
+    int sync()        {
+      return 0;
+    }
   };
 
   /**
@@ -313,15 +302,14 @@ namespace
    *
    * @internal
    */
-  class dbg_ostream : public std::ostream
-  {
-  public:
+  class dbg_ostream : public std::ostream {
+   public:
 
 #ifndef _MSC_VER
     dbg_ostream() : std::ostream(&dbg_buf), dbg_buf(streams) {}
     dbg_ostream(const dbg_ostream &rhs)
       : std::ostream(&dbg_buf), streams(rhs.streams),
-	dbg_buf(streams) {}
+        dbg_buf(streams) {}
 #else
     // MSVC workaround. Sigh. It won't let us call the parent ctor as
     // "ostream" - it doesn't like the use of a typedef. On the other
@@ -331,15 +319,17 @@ namespace
       : std::basic_ostream<char>(&dbg_buf), dbg_buf(streams) {}
     dbg_ostream(const dbg_ostream &rhs)
       : std::basic_ostream<char>(&dbg_buf), streams(rhs.streams),
-	dbg_buf(streams) {}
+        dbg_buf(streams) {}
 #endif
-    ~dbg_ostream() { dbg_buf.pubsync(); }
+    ~dbg_ostream() {
+      dbg_buf.pubsync();
+    }
 
     void add(std::ostream &o);
     void remove(std::ostream &o);
     void clear();
 
-  private:
+   private:
 
     dbg_ostream &operator=(const dbg_ostream&);
 
@@ -361,20 +351,18 @@ namespace
    *
    * @internal
    */
-  class source_info
-  {
-  public:
+  class source_info {
+   public:
 
     /**
      * The source_info can either be constructed as a copy of the
      * default_source or not. The only time we choose not to is
      * when constructing default_source!
      */
-    enum ConstructionStyle
-      {
-	ConstructTheDefaultSource    = 0,
-	ConstructCopyOfDefaultSource = 1
-      };
+    enum ConstructionStyle {
+      ConstructTheDefaultSource    = 0,
+      ConstructCopyOfDefaultSource = 1
+    };
 
     source_info(ConstructionStyle cs = ConstructCopyOfDefaultSource);
     source_info(const source_info &rhs);
@@ -389,8 +377,7 @@ namespace
     /**
      * Returns whether or not the level is enabled.
      */
-    bool enabled(dbg::level lvl) const
-    {
+    bool enabled(dbg::level lvl) const {
       return (levels & dbg_source_mask(lvl)) != 0;
     }
 
@@ -415,14 +402,13 @@ namespace
      */
     std::ostream &out(dbg::level lvl);
 
-  private:
+   private:
 
     /**
      * Creates a unsigned int mask that is used as the second value
      * of the sources map.
      */
-    static unsigned int dbg_source_mask(dbg::level lvl)
-    {
+    static unsigned int dbg_source_mask(dbg::level lvl) {
       return (lvl != dbg::all) ? 1 << lvl : ALL_SOURCES_MASK;
     }
 
@@ -443,8 +429,7 @@ namespace
       dbg_ostream   *dbg_streams;
       unsigned char  raw_dbg_streams[sizeof(array_type)];
     */
-    struct array_type
-    {
+    struct array_type {
       // I wrap this up in an enclosing struct to make it obvious
       // how to destroy the array "in place". To be honest I couldn't
       // figure the syntax for the corresponding delete for a
@@ -454,12 +439,10 @@ namespace
     dbg_ostream   *dbg_streams;
     unsigned char  raw_dbg_streams[sizeof(array_type)];
 
-    array_type &raw_cast()
-    {
+    array_type &raw_cast() {
       return *reinterpret_cast<array_type*>(raw_dbg_streams);
     }
-    const array_type &raw_cast() const
-    {
+    const array_type &raw_cast() const {
       return *reinterpret_cast<const array_type*>(raw_dbg_streams);
     }
   };
@@ -474,30 +457,34 @@ namespace
    *
    * @internal
    */
-  class source_map_type
-  {
-  public:
+  class source_map_type {
+   public:
 
     typedef std::map<std::string, source_info> map_type;
     typedef map_type::iterator                 iterator;
     typedef map_type::key_type                 key_type;
     typedef source_info                        data_type;
-    source_map_type()
-    {
+    source_map_type() {
       // Insert the default_source into the map
       _map.insert(
-		  std::make_pair(dbg::default_source,
-				 source_info(source_info::ConstructTheDefaultSource)));
+        std::make_pair(dbg::default_source,
+                       source_info(source_info::ConstructTheDefaultSource)));
       // Insert the unnamed source into the map too
       _map.insert(
-		  std::make_pair(dbg::dbg_source(""),
-				 source_info(source_info::ConstructTheDefaultSource)));
+        std::make_pair(dbg::dbg_source(""),
+                       source_info(source_info::ConstructTheDefaultSource)));
     }
-    iterator   begin()                  { return _map.begin(); }
-    iterator   end()                    { return _map.end();   }
-    data_type &operator[](key_type key) { return _map[key];    }
+    iterator   begin()                  {
+      return _map.begin();
+    }
+    iterator   end()                    {
+      return _map.end();
+    }
+    data_type &operator[](key_type key) {
+      return _map[key];
+    }
 
-  private:
+   private:
 
     map_type _map;
   };
@@ -511,17 +498,16 @@ namespace
   // The stream to write to when no output is required.
   std::ostream null_ostream(new null_streambuf());
 
-  dbg::assertion_behaviour behaviour[dbg::all+1] =
-    {
-      dbg::assertions_abort,
-      dbg::assertions_abort,
-      dbg::assertions_abort,
-      dbg::assertions_abort,
-      dbg::assertions_abort,
-      dbg::assertions_abort,
-      dbg::assertions_abort,
-      dbg::assertions_abort
-    };
+  dbg::assertion_behaviour behaviour[dbg::all+1] = {
+    dbg::assertions_abort,
+    dbg::assertions_abort,
+    dbg::assertions_abort,
+    dbg::assertions_abort,
+    dbg::assertions_abort,
+    dbg::assertions_abort,
+    dbg::assertions_abort,
+    dbg::assertions_abort
+  };
 
   unsigned int    indent_depth  = 0;
   std::string     indent_prefix = PREFIX;
@@ -557,7 +543,7 @@ namespace
    * is triggered, then this will be called.
    */
   void do_assertion_behaviour(dbg::level lvl, constraint_type why,
-			      const dbg::source_pos &pos);
+                              const dbg::source_pos &pos);
 
   /**
    * Produces a level prefix for the specified level to the
@@ -578,8 +564,7 @@ namespace
    * This is a small inline function to make code that uses the period
    * implementation easier to read.
    */
-  inline bool period_allows(const dbg::source_pos &where)
-  {
+  inline bool period_allows(const dbg::source_pos &where) {
     return !period || period_allows_impl(where);
   }
 
@@ -602,45 +587,40 @@ dbg::dbg_source dbg::default_source = "dbg::private::default_source";
 /******************************************************************************
  * Enable/disable dbg facilities
  *****************************************************************************/
-void dbg::init()
-{
-  // debug 
+void dbg::init() {
+  // debug
   enable_level_prefix(true);
   enable_all(dbg::all, true);
   set_prefix("|");
 
 }
 
-void dbg::enable(dbg::level lvl, bool enabled)
-{
+void dbg::enable(dbg::level lvl, bool enabled) {
   out(debug) << prefix(debug) << "dbg::enable(" << LEVEL_NAMES[lvl]
-	     << "," << (enabled ? TRUE_STRING : FALSE_STRING) << ")\n";
+             << "," << (enabled ? TRUE_STRING : FALSE_STRING) << ")\n";
 
   source_map[""].enable(lvl, enabled);
 }
 
 
-void dbg::enable(dbg::level lvl, dbg::dbg_source src, bool enabled)
-{
+void dbg::enable(dbg::level lvl, dbg::dbg_source src, bool enabled) {
   out(debug) << prefix(debug) << "dbg::enable(" << LEVEL_NAMES[lvl]
-	     << ",\"" << src << "\","
-	     << (enabled ? TRUE_STRING : FALSE_STRING) << ")\n";
+             << ",\"" << src << "\","
+             << (enabled ? TRUE_STRING : FALSE_STRING) << ")\n";
 
   source_map[src].enable(lvl, enabled);
 }
 
 
-void dbg::enable_all(dbg::level lvl, bool enabled)
-{
+void dbg::enable_all(dbg::level lvl, bool enabled) {
   out(debug) << prefix(debug) << "dbg::enable_all("
-	     << LEVEL_NAMES[lvl] << ","
-	     << (enabled ? TRUE_STRING : FALSE_STRING) << ")\n";
+             << LEVEL_NAMES[lvl] << ","
+             << (enabled ? TRUE_STRING : FALSE_STRING) << ")\n";
 
   source_map_type::iterator i = source_map.begin();
-  for ( ; i != source_map.end(); ++i)
-    {
-      (i->second).enable(lvl, enabled);
-    }
+  for ( ; i != source_map.end(); ++i) {
+    (i->second).enable(lvl, enabled);
+  }
 }
 
 
@@ -648,8 +628,7 @@ void dbg::enable_all(dbg::level lvl, bool enabled)
  * Logging
  *****************************************************************************/
 
-std::ostream &dbg::out(dbg::level lvl, dbg::dbg_source src)
-{
+std::ostream &dbg::out(dbg::level lvl, dbg::dbg_source src) {
   if (!src)
     return (source_map[""].out(lvl)<<prefix(lvl)<<END_COLOR);
   else
@@ -657,61 +636,55 @@ std::ostream &dbg::out(dbg::level lvl, dbg::dbg_source src)
 }
 
 
-void dbg::attach_ostream(dbg::level lvl, std::ostream &o)
-{
+void dbg::attach_ostream(dbg::level lvl, std::ostream &o) {
   out(debug) << prefix(debug) << "dbg::attach_ostream("
-	     << LEVEL_NAMES[lvl] << ",ostream)\n";
+             << LEVEL_NAMES[lvl] << ",ostream)\n";
 
   source_map[""].add_ostream(lvl, o);
 }
 
 
-void dbg::attach_ostream(dbg::level lvl, dbg::dbg_source src, std::ostream &o)
-{
+void dbg::attach_ostream(dbg::level lvl, dbg::dbg_source src, std::ostream &o) {
   out(debug) << prefix(debug) << "dbg::attach_ostream("
-	     << LEVEL_NAMES[lvl]
-	     << ", \"" << src
-	     << "\" ,ostream)\n";
+             << LEVEL_NAMES[lvl]
+             << ", \"" << src
+             << "\" ,ostream)\n";
 
   source_map[src].add_ostream(lvl, o);
 }
 
 
-void dbg::detach_ostream(dbg::level lvl, std::ostream &o)
-{
+void dbg::detach_ostream(dbg::level lvl, std::ostream &o) {
   out(debug) << prefix(debug) << "dbg::detach_ostream("
-	     << LEVEL_NAMES[lvl] << ")\n";
+             << LEVEL_NAMES[lvl] << ")\n";
 
   source_map[""].remove_ostream(lvl, o);
 }
 
 
-void dbg::detach_ostream(dbg::level lvl, dbg::dbg_source src, std::ostream &o)
-{
+void dbg::detach_ostream(dbg::level lvl, dbg::dbg_source src, std::ostream &o) {
   out(debug) << prefix(debug) << "dbg::detach_ostream("
-	     << LEVEL_NAMES[lvl]
-	     << ", \"" << src
-	     << "\" ,ostream)\n";
+             << LEVEL_NAMES[lvl]
+             << ", \"" << src
+             << "\" ,ostream)\n";
 
   source_map[src].remove_ostream(lvl, o);
 }
 
 
-void dbg::detach_all_ostreams(dbg::level lvl)
-{
+void dbg::detach_all_ostreams(dbg::level lvl) {
   out(debug) << prefix(debug) << "dbg::detach_all_ostreams("
-	     << LEVEL_NAMES[lvl]
-	     << ")\n";
+             << LEVEL_NAMES[lvl]
+             << ")\n";
 
   source_map[""].clear_ostream(lvl);
 }
 
 
-void dbg::detach_all_ostreams(dbg::level lvl, dbg::dbg_source src)
-{
+void dbg::detach_all_ostreams(dbg::level lvl, dbg::dbg_source src) {
   out(debug) << prefix(debug) << "dbg::detach_all_ostreams("
-	     << LEVEL_NAMES[lvl]
-	     << ", \"" << src << "\")\n";
+             << LEVEL_NAMES[lvl]
+             << ", \"" << src << "\")\n";
 
   source_map[src].clear_ostream(lvl);
 }
@@ -721,42 +694,37 @@ void dbg::detach_all_ostreams(dbg::level lvl, dbg::dbg_source src)
  * Output formatting
  *****************************************************************************/
 
-void dbg::set_prefix(const char *pfx)
-{
+void dbg::set_prefix(const char *pfx) {
   out(debug) << prefix(debug) << "dbg::set_prefix(" << pfx << ")\n";
 
   indent_prefix = pfx;
 }
 
 
-void dbg::enable_level_prefix(bool enabled)
-{
+void dbg::enable_level_prefix(bool enabled) {
   out(debug) << prefix(debug) << "dbg::enable_level_prefix("
-	     << (enabled ? TRUE_STRING : FALSE_STRING) << ")\n";
+             << (enabled ? TRUE_STRING : FALSE_STRING) << ")\n";
 
   level_prefix = enabled;
 }
 
 
-void dbg::enable_time_prefix(bool enabled)
-{
+void dbg::enable_time_prefix(bool enabled) {
   out(debug) << prefix(debug) << "dbg::enable_time_prefix("
-	     << (enabled ? TRUE_STRING : FALSE_STRING) << ")\n";
+             << (enabled ? TRUE_STRING : FALSE_STRING) << ")\n";
 
   time_prefix = enabled;
 }
 
 
-std::ostream &dbg::operator<<(std::ostream &s, const prefix &p)
-{
+std::ostream &dbg::operator<<(std::ostream &s, const prefix &p) {
   s << indent_prefix.c_str();
   do_prefix(p.l, s);
   return s;
 }
 
 
-std::ostream &dbg::operator<<(std::ostream &s, const indent &i)
-{
+std::ostream &dbg::operator<<(std::ostream &s, const indent &i) {
   s << indent_prefix.c_str();
   //do_prefix(i.l, s);
   for (unsigned int n = 0; n < indent_depth; n++) s << INDENT;
@@ -764,8 +732,7 @@ std::ostream &dbg::operator<<(std::ostream &s, const indent &i)
 }
 
 
-std::ostream &dbg::operator<<(std::ostream &s, const source_pos &pos)
-{
+std::ostream &dbg::operator<<(std::ostream &s, const source_pos &pos) {
   print_pos(s, pos);
   return s;
 }
@@ -775,45 +742,37 @@ std::ostream &dbg::operator<<(std::ostream &s, const source_pos &pos)
  * Behaviour
  *****************************************************************************/
 
-void dbg::set_assertion_behaviour(level lvl, dbg::assertion_behaviour b)
-{
+void dbg::set_assertion_behaviour(level lvl, dbg::assertion_behaviour b) {
   out(debug) << prefix(debug) << "dbg::set_assertion_behaviour("
-	     << LEVEL_NAMES[lvl] << "," << BEHAVIOUR_NAMES[b] << ")\n";
+             << LEVEL_NAMES[lvl] << "," << BEHAVIOUR_NAMES[b] << ")\n";
 
-  if (lvl < dbg::all)
-    {
-      behaviour[lvl] = b;
+  if (lvl < dbg::all) {
+    behaviour[lvl] = b;
+  } else {
+    for (int n = 0; n < dbg::all; n++) {
+      behaviour[n] = b;
     }
-  else
-    {
-      for (int n = 0; n < dbg::all; n++)
-        {
-	  behaviour[n] = b;
-        }
-    }
+  }
 }
 
 
-void dbg::set_assertion_period(dbgclock_t p)
-{
+void dbg::set_assertion_period(dbgclock_t p) {
   out(debug) << prefix(debug) << "dbg::set_assertion_period("
-	     << p << ")\n";
+             << p << ")\n";
 
-  if (!p && period)
-    {
-      period_map.clear();
-    }
+  if (!p && period) {
+    period_map.clear();
+  }
 
   period = p;
 
-  if (p && STDCLK::clock() == -1)
-    {
-      period = p;
-      out(debug) << prefix(debug)
-		 << "*** WARNING ***\n"
-		 << "Platform does not support std::clock, and so\n"
-		 << "dbg::set_assertion_period is not supported.\n";
-    }
+  if (p && STDCLK::clock() == -1) {
+    period = p;
+    out(debug) << prefix(debug)
+               << "*** WARNING ***\n"
+               << "Platform does not support std::clock, and so\n"
+               << "dbg::set_assertion_period is not supported.\n";
+  }
 }
 
 
@@ -822,26 +781,23 @@ void dbg::set_assertion_period(dbgclock_t p)
  *****************************************************************************/
 
 void dbg::assertion(dbg::level lvl, dbg::dbg_source src,
-                    const assert_info &info)
-{
+                    const assert_info &info) {
   determine_source(src, info);
 
-  if (source_map[src].enabled(lvl) && !info.asserted && period_allows(info))
-    {
-      std::ostream &o = out(lvl, src);
+  if (source_map[src].enabled(lvl) && !info.asserted && period_allows(info)) {
+    std::ostream &o = out(lvl, src);
 
-      o << indent(lvl) << "assertion \"" << info.text << "\" failed ";
-      if (strcmp(src, ""))
-        {
-	  o << "for \"" << src << "\" ";
-        }
-      o << "at ";
-      print_pos(o, info);
-      print_period_info(o, info);
-      o << "\n";
-
-      do_assertion_behaviour(lvl, why_assertion, info);
+    o << indent(lvl) << "assertion \"" << info.text << "\" failed ";
+    if (strcmp(src, "")) {
+      o << "for \"" << src << "\" ";
     }
+    o << "at ";
+    print_pos(o, info);
+    print_period_info(o, info);
+    o << "\n";
+
+    do_assertion_behaviour(lvl, why_assertion, info);
+  }
 }
 
 
@@ -849,20 +805,18 @@ void dbg::assertion(dbg::level lvl, dbg::dbg_source src,
  * Sentinel
  *****************************************************************************/
 
-void dbg::sentinel(dbg::level lvl, dbg::dbg_source src, const source_pos &here)
-{
+void dbg::sentinel(dbg::level lvl, dbg::dbg_source src, const source_pos &here) {
   determine_source(src, here);
 
-  if (source_map[src].enabled(lvl) && period_allows(here))
-    {
-      std::ostream &o = out(lvl, src);
-      o << indent(lvl) << "sentinel reached at ";
-      print_pos(o, here);
-      print_period_info(o, here);
-      o << "\n";
+  if (source_map[src].enabled(lvl) && period_allows(here)) {
+    std::ostream &o = out(lvl, src);
+    o << indent(lvl) << "sentinel reached at ";
+    print_pos(o, here);
+    print_period_info(o, here);
+    o << "\n";
 
-      do_assertion_behaviour(lvl, why_sentinel, here);
-    }
+    do_assertion_behaviour(lvl, why_sentinel, here);
+  }
 }
 
 
@@ -871,20 +825,18 @@ void dbg::sentinel(dbg::level lvl, dbg::dbg_source src, const source_pos &here)
  *****************************************************************************/
 
 void dbg::unimplemented(dbg::level lvl, dbg::dbg_source src,
-                        const source_pos &here)
-{
+                        const source_pos &here) {
   determine_source(src, here);
 
-  if (source_map[src].enabled(lvl) && period_allows(here))
-    {
-      std::ostream &o = out(lvl, src);
-      o << indent(lvl) << "behaviour not yet implemented at ";
-      print_pos(o, here);
-      print_period_info(o, here);
-      o << "\n";
+  if (source_map[src].enabled(lvl) && period_allows(here)) {
+    std::ostream &o = out(lvl, src);
+    o << indent(lvl) << "behaviour not yet implemented at ";
+    print_pos(o, here);
+    print_period_info(o, here);
+    o << "\n";
 
-      do_assertion_behaviour(lvl, why_unimplemented, here);
-    }
+    do_assertion_behaviour(lvl, why_unimplemented, here);
+  }
 }
 
 
@@ -893,20 +845,18 @@ void dbg::unimplemented(dbg::level lvl, dbg::dbg_source src,
  *****************************************************************************/
 
 void dbg::check_ptr(dbg::level lvl, dbg::dbg_source src,
-                    void *p, const source_pos &here)
-{
+                    void *p, const source_pos &here) {
   determine_source(src, here);
 
-  if (source_map[src].enabled(lvl) && p == 0 && period_allows(here))
-    {
-      std::ostream &o = out(lvl, src);
-      o << indent(lvl) << "pointer is zero at ";
-      print_pos(o, here);
-      print_period_info(o, here);
-      o << "\n";
+  if (source_map[src].enabled(lvl) && p == 0 && period_allows(here)) {
+    std::ostream &o = out(lvl, src);
+    o << indent(lvl) << "pointer is zero at ";
+    print_pos(o, here);
+    print_period_info(o, here);
+    o << "\n";
 
-      do_assertion_behaviour(lvl, why_check_ptr, here);
-    }
+    do_assertion_behaviour(lvl, why_check_ptr, here);
+  }
 }
 
 
@@ -915,23 +865,21 @@ void dbg::check_ptr(dbg::level lvl, dbg::dbg_source src,
  *****************************************************************************/
 
 void dbg::check_bounds(dbg::level lvl, dbg::dbg_source src,
-                       int index, int bound, const source_pos &here)
-{
+                       int index, int bound, const source_pos &here) {
   determine_source(src, here);
 
   if (source_map[src].enabled(lvl)
       && index >= 0 && index >= bound
-      && period_allows(here))
-    {
-      std::ostream &o = out(lvl, src);
-      o << indent(lvl) << "index " << index << " is out of bounds ("
-	<< bound << ") at ";
-      print_pos(o, here);
-      print_period_info(o, here);
-      o << "\n";
+      && period_allows(here)) {
+    std::ostream &o = out(lvl, src);
+    o << indent(lvl) << "index " << index << " is out of bounds ("
+      << bound << ") at ";
+    print_pos(o, here);
+    print_period_info(o, here);
+    o << "\n";
 
-      do_assertion_behaviour(lvl, why_check_ptr, here);
-    }
+    do_assertion_behaviour(lvl, why_check_ptr, here);
+  }
 }
 
 
@@ -940,76 +888,62 @@ void dbg::check_bounds(dbg::level lvl, dbg::dbg_source src,
  *****************************************************************************/
 
 dbg::trace::trace(func_name_t name)
-  : m_src(0), m_name(name), m_pos(DBG_HERE), m_triggered(false)
-{
+  : m_src(0), m_name(name), m_pos(DBG_HERE), m_triggered(false) {
   determine_source(m_src, m_pos);
 
-  if (source_map[m_src].enabled(dbg::tracing))
-    {
-      trace_begin();
-    }
+  if (source_map[m_src].enabled(dbg::tracing)) {
+    trace_begin();
+  }
 }
 
 
 dbg::trace::trace(dbg_source src, func_name_t name)
-  : m_src(src), m_name(name), m_pos(DBG_HERE), m_triggered(false)
-{
+  : m_src(src), m_name(name), m_pos(DBG_HERE), m_triggered(false) {
   determine_source(m_src, m_pos);
 
-  if (source_map[m_src].enabled(dbg::tracing))
-    {
-      trace_begin();
-    }
+  if (source_map[m_src].enabled(dbg::tracing)) {
+    trace_begin();
+  }
 }
 
 
 dbg::trace::trace(const source_pos &where)
-  : m_src(0), m_name(0), m_pos(where), m_triggered(false)
-{
+  : m_src(0), m_name(0), m_pos(where), m_triggered(false) {
   determine_source(m_src, m_pos);
 
-  if (source_map[m_src].enabled(dbg::tracing))
-    {
-      trace_begin();
-    }
+  if (source_map[m_src].enabled(dbg::tracing)) {
+    trace_begin();
+  }
 }
 
 
 dbg::trace::trace(dbg_source src, const source_pos &where)
-  : m_src(src), m_name(0), m_pos(where), m_triggered(false)
-{
+  : m_src(src), m_name(0), m_pos(where), m_triggered(false) {
   determine_source(m_src, m_pos);
 
-  if (source_map[src].enabled(dbg::tracing))
-    {
-      trace_begin();
-    }
+  if (source_map[src].enabled(dbg::tracing)) {
+    trace_begin();
+  }
 }
 
 
-dbg::trace::~trace()
-{
-  if (m_triggered)
-    {
-      trace_end();
-    }
+dbg::trace::~trace() {
+  if (m_triggered) {
+    trace_end();
+  }
 }
 
 
-void dbg::trace::trace_begin()
-{
+void dbg::trace::trace_begin() {
   std::ostream &o = out(dbg::tracing, m_src);
   o << indent(tracing);
   indent_depth++;
   o << TRACE_IN;
-  if (m_name)
-    {
-      o << m_name;
-    }
-  else
-    {
-      print_pos_short(o, m_pos);
-    }
+  if (m_name) {
+    o << m_name;
+  } else {
+    print_pos_short(o, m_pos);
+  }
   //  if (m_src && strcmp(m_src, ""))
   //  {
   //    o << " (for \"" << m_src << "\")";
@@ -1020,20 +954,16 @@ void dbg::trace::trace_begin()
 }
 
 
-void dbg::trace::trace_end()
-{
+void dbg::trace::trace_end() {
   std::ostream &o = out(dbg::tracing, m_src);
   indent_depth--;
   o << indent(tracing);
   o << TRACE_OUT;
-  if (m_name)
-    {
-      o << m_name;
-    }
-  else
-    {
-      print_pos_short(o, m_pos);
-    }
+  if (m_name) {
+    o << m_name;
+  } else {
+    print_pos_short(o, m_pos);
+  }
   // if (m_src && strcmp(m_src, ""))
   //  {
   //    o << " (for \"" << m_src << "\")";
@@ -1046,78 +976,61 @@ void dbg::trace::trace_end()
  * Internal implementation
  *****************************************************************************/
 
-namespace
-{
+namespace {
   /**************************************************************************
    * dbg_streambuf
    *************************************************************************/
 
   dbg_streambuf::dbg_streambuf(std::vector<std::ostream*> &o, int bsize)
-    : ostreams(o)
-  {
-    if (bsize)
-      {
-	char *ptr = new char[bsize];
-	setp(ptr, ptr + bsize);
-      }
-    else
-      {
-	setp(0, 0);
-      }
+    : ostreams(o) {
+    if (bsize) {
+      char *ptr = new char[bsize];
+      setp(ptr, ptr + bsize);
+    } else {
+      setp(0, 0);
+    }
     setg(0, 0, 0);
   }
 
-  dbg_streambuf::~dbg_streambuf()
-  {
+  dbg_streambuf::~dbg_streambuf() {
     sync();
     delete [] pbase();
   }
 
-  int dbg_streambuf::overflow(int c)
-  {
+  int dbg_streambuf::overflow(int c) {
     put_buffer();
-    if (c != EOF)
-      {
-	if (pbase() == epptr())
-	  {
-	    put_char(c);
-	  }
-	else
-	  {
-	    sputc(c);
-	  }
+    if (c != EOF) {
+      if (pbase() == epptr()) {
+        put_char(c);
+      } else {
+        sputc(c);
       }
+    }
     return 0;
   }
 
-  int dbg_streambuf::sync()
-  {
+  int dbg_streambuf::sync() {
     put_buffer();
     return 0;
   }
 
-  void dbg_streambuf::put_buffer(void)
-  {
-    if (pbase() != pptr())
-      {
-	std::vector<std::ostream *>::iterator i = ostreams.begin();
-	while (i != ostreams.end())
-	  {
-	    (*i)->write(pbase(), pptr() - pbase());
-	    ++i;
-	  }
-	setp(pbase(), epptr());
+  void dbg_streambuf::put_buffer(void) {
+    if (pbase() != pptr()) {
+      std::vector<std::ostream *>::iterator i = ostreams.begin();
+      while (i != ostreams.end()) {
+        (*i)->write(pbase(), pptr() - pbase());
+        ++i;
       }
+      setp(pbase(), epptr());
+    }
   }
 
-  void dbg_streambuf::put_char(int c)
-  {
+  void dbg_streambuf::put_char(int c) {
     std::vector<std::ostream *>::iterator i = ostreams.begin();
-    while (i != ostreams.end())
-      {
-	(**i) << static_cast<char>(c);
-	++i;
-      }
+    while (i != ostreams.end()) {
+      (**i) << static_cast<char>(c);
+      ++i;
+    }
   }
 
 
@@ -1125,26 +1038,21 @@ namespace
    * dbg_ostream
    *************************************************************************/
 
-  void dbg_ostream::add(std::ostream &o)
-  {
-    if (std::find(streams.begin(), streams.end(), &o) == streams.end())
-      {
-	streams.push_back(&o);
-      }
+  void dbg_ostream::add(std::ostream &o) {
+    if (std::find(streams.begin(), streams.end(), &o) == streams.end()) {
+      streams.push_back(&o);
+    }
   }
 
-  void dbg_ostream::remove(std::ostream &o)
-  {
+  void dbg_ostream::remove(std::ostream &o) {
     stream_vec_type::iterator i
       = std::find(streams.begin(), streams.end(), &o);
-    if (i != streams.end())
-      {
-	streams.erase(i);
-      }
+    if (i != streams.end()) {
+      streams.erase(i);
+    }
   }
 
-  void dbg_ostream::clear()
-  {
+  void dbg_ostream::clear() {
     streams.clear();
   }
 
@@ -1155,97 +1063,70 @@ namespace
 
   source_info::source_info(ConstructionStyle cs)
     : levels(cs ? source_map[dbg::default_source].levels : 0),
-      dbg_streams(raw_cast().dbg_streams)
-  {
-    if (cs)
-      {
-	new (raw_dbg_streams)
-	  array_type(source_map[dbg::default_source].raw_cast());
-      }
-    else
-      {
-	new (raw_dbg_streams) array_type;
-	// add cerr to the error and fatal levels.
-	add_ostream(dbg::error, std::cerr);
-	add_ostream(dbg::fatal, std::cerr);
-      }
+      dbg_streams(raw_cast().dbg_streams) {
+    if (cs) {
+      new (raw_dbg_streams)
+      array_type(source_map[dbg::default_source].raw_cast());
+    } else {
+      new (raw_dbg_streams) array_type;
+      // add cerr to the error and fatal levels.
+      add_ostream(dbg::error, std::cerr);
+      add_ostream(dbg::fatal, std::cerr);
+    }
   }
 
   source_info::source_info(const source_info &rhs)
-    : levels(rhs.levels), dbg_streams(raw_cast().dbg_streams)
-  {
+    : levels(rhs.levels), dbg_streams(raw_cast().dbg_streams) {
     new (raw_dbg_streams) array_type(rhs.raw_cast());
   }
 
-  source_info::~source_info()
-  {
+  source_info::~source_info() {
     raw_cast().~array_type();
   }
 
-  void source_info::enable(dbg::level lvl, bool status)
-  {
+  void source_info::enable(dbg::level lvl, bool status) {
     levels &= ~dbg_source_mask(lvl);
-    if (status)
-      {
-	levels |= dbg_source_mask(lvl);
-      }
+    if (status) {
+      levels |= dbg_source_mask(lvl);
+    }
   }
 
-  void source_info::add_ostream(dbg::level lvl, std::ostream &o)
-  {
-    if (lvl == dbg::all)
-      {
-	for (unsigned int n = 0; n < NUM_DBG_LEVELS; ++n)
-	  {
-	    dbg_streams[n].add(o);
-	  }
+  void source_info::add_ostream(dbg::level lvl, std::ostream &o) {
+    if (lvl == dbg::all) {
+      for (unsigned int n = 0; n < NUM_DBG_LEVELS; ++n) {
+        dbg_streams[n].add(o);
       }
-    else
-      {
-	dbg_streams[lvl].add(o);
-      }
+    } else {
+      dbg_streams[lvl].add(o);
+    }
   }
 
-  void source_info::remove_ostream(dbg::level lvl, std::ostream &o)
-  {
-    if (lvl == dbg::all)
-      {
-	for (unsigned int n = 0; n < NUM_DBG_LEVELS; ++n)
-	  {
-	    dbg_streams[n].remove(o);
-	  }
+  void source_info::remove_ostream(dbg::level lvl, std::ostream &o) {
+    if (lvl == dbg::all) {
+      for (unsigned int n = 0; n < NUM_DBG_LEVELS; ++n) {
+        dbg_streams[n].remove(o);
       }
-    else
-      {
-	dbg_streams[lvl].remove(o);
-      }
+    } else {
+      dbg_streams[lvl].remove(o);
+    }
   }
 
-  void source_info::clear_ostream(dbg::level lvl)
-  {
-    if (lvl == dbg::all)
-      {
-	for (unsigned int n = 0; n < NUM_DBG_LEVELS; ++n)
-	  {
-	    dbg_streams[n].clear();
-	  }
+  void source_info::clear_ostream(dbg::level lvl) {
+    if (lvl == dbg::all) {
+      for (unsigned int n = 0; n < NUM_DBG_LEVELS; ++n) {
+        dbg_streams[n].clear();
       }
-    else
-      {
-	dbg_streams[lvl].clear();
-      }
+    } else {
+      dbg_streams[lvl].clear();
+    }
   }
 
-  std::ostream &source_info::out(dbg::level lvl)
-  {
-    if (lvl == dbg::none || !enabled(lvl))
-      {
-	return null_ostream;
-      }
-    else
-      {
-	return dbg_streams[lvl];
-      }
+  std::ostream &source_info::out(dbg::level lvl) {
+    if (lvl == dbg::none || !enabled(lvl)) {
+      return null_ostream;
+    } else {
+      return dbg_streams[lvl];
+    }
   }
 
 
@@ -1254,8 +1135,7 @@ namespace
    *************************************************************************/
 
   period_data::period_data()
-    : no_triggers(0), triggered_at(STDCLK::clock() - period*2)
-  {
+    : no_triggers(0), triggered_at(STDCLK::clock() - period*2) {
   }
 
 
@@ -1263,152 +1143,137 @@ namespace
    * Functions
    *************************************************************************/
 
-  void print_pos(std::ostream &out, const dbg::source_pos &where)
-  {
-    if (where.file)
-      {
-	if (where.func)
-	  {
-	    out << "function: " << where.func << ", ";
-	  }
-	out << "line: " << where.line << ", file: "    << where.file;
+  void print_pos(std::ostream &out, const dbg::source_pos &where) {
+    if (where.file) {
+      if (where.func) {
+        out << "function: " << where.func << ", ";
       }
+      out << "line: " << where.line << ", file: "    << where.file;
+    }
   }
 
-  void print_pos_short(std::ostream &out, const dbg::source_pos &where)
-  {
-    if (where.file)
-      {
-	if (where.func)
-	  {
-	    out << where.func << " (" << where.line
-		<< " in " << where.file << ")";
-	  }
-	else
-	  {
-	    out << "function at (" << where.line
-		<< " in "    << where.file << ")";
-	  }
+  void print_pos_short(std::ostream &out, const dbg::source_pos &where) {
+    if (where.file) {
+      if (where.func) {
+        out << where.func << " (" << where.line
+            << " in " << where.file << ")";
+      } else {
+        out << "function at (" << where.line
+            << " in "    << where.file << ")";
       }
+    }
   }
 
-  void print_period_info(std::ostream &out, const dbg::source_pos &where)
-  {
-    if (period)
-      {
-	size_t no_triggers = period_map[where].no_triggers;
-	out << " (triggered " << no_triggers << " time";
-	if (no_triggers > 1)
-	  {
-	    out << "s)";
-	  }
-	else
-	  {
-	    out << ")";
-	  }
+  void print_period_info(std::ostream &out, const dbg::source_pos &where) {
+    if (period) {
+      size_t no_triggers = period_map[where].no_triggers;
+      out << " (triggered " << no_triggers << " time";
+      if (no_triggers > 1) {
+        out << "s)";
+      } else {
+        out << ")";
       }
+    }
   }
 
   void do_assertion_behaviour(dbg::level lvl, constraint_type why,
-			      const dbg::source_pos &pos)
-  {
-    switch (lvl != dbg::fatal ? behaviour[lvl] : dbg::assertions_abort)
-      {
-      case dbg::assertions_abort:
-	{
-	  abort();
-	  break;
-	}
-      case dbg::assertions_throw:
-	{
-	  switch (why)
-	    {
-	    default:
-	    case why_assertion:
-	      {
-		throw dbg::assertion_exception(pos);
-		break;
-	      }
-	    case why_sentinel:
-	      {
-		throw dbg::sentinel_exception(pos);
-		break;
-	      }
-	    case why_unimplemented:
-	      {
-		throw dbg::unimplemented_exception(pos);
-		break;
-	      }
-	    case why_check_ptr:
-	      {
-		throw dbg::check_ptr_exception(pos);
-		break;
-	      }
-	    }
-	  break;
-	}
-      case dbg::assertions_continue:
+                              const dbg::source_pos &pos) {
+    switch (lvl != dbg::fatal ? behaviour[lvl] : dbg::assertions_abort) {
+    case dbg::assertions_abort: {
+      abort();
+      break;
+    }
+    case dbg::assertions_throw: {
+      switch (why) {
       default:
-	{
-	  break;
-	}
+      case why_assertion: {
+        throw dbg::assertion_exception(pos);
+        break;
       }
+      case why_sentinel: {
+        throw dbg::sentinel_exception(pos);
+        break;
+      }
+      case why_unimplemented: {
+        throw dbg::unimplemented_exception(pos);
+        break;
+      }
+      case why_check_ptr: {
+        throw dbg::check_ptr_exception(pos);
+        break;
+      }
+      }
+      break;
+    }
+    case dbg::assertions_continue:
+    default: {
+      break;
+    }
+    }
   }
 
-  void do_prefix(dbg::level lvl, std::ostream &s)
-  {
-    
-    if (level_prefix)
-      {
-	switch (lvl)
-	  {
-	  case dbg::info:    { s << COL_GREEN<< "info: "<<END_COLOR; break; }
-	  case dbg::warning: { s << "warning: "; break; }
-	  case dbg::error:   
-	    {
-	      s << COL_RED;
-	      if (time_prefix)
-		{
-		  STDCLK::time_t t = STDCLK::time(0);
-		  if (t != -1)
-		    {
-		      s << std::string(STDCLK::ctime(&t), 24) << ": ";
-		    }
-		}
-	      s << "error:";
-	      //	      print_stack();
-	      break; 
-	    }
-	  case dbg::fatal:   { s << "  fatal: "; break; }
-	  case dbg::tracing: { s << COL_CYAN << "trace: " << END_COLOR; break; }
-	  case dbg::debug:   { s << "debug: "; break; }
-	  case dbg::none:    {                   break; }
-	  case dbg::all:     { s << "all: "; break; }
-	  }
+  void do_prefix(dbg::level lvl, std::ostream &s) {
+
+    if (level_prefix) {
+      switch (lvl) {
+      case dbg::info:    {
+        s << COL_GREEN<< "info: "<<END_COLOR;
+        break;
       }
+      case dbg::warning: {
+        s << "warning: ";
+        break;
+      }
+      case dbg::error: {
+        s << COL_RED;
+        if (time_prefix) {
+          STDCLK::time_t t = STDCLK::time(0);
+          if (t != -1) {
+            s << std::string(STDCLK::ctime(&t), 24) << ": ";
+          }
+        }
+        s << "error:";
+        //	      print_stack();
+        break;
+      }
+      case dbg::fatal:   {
+        s << "  fatal: ";
+        break;
+      }
+      case dbg::tracing: {
+        s << COL_CYAN << "trace: " << END_COLOR;
+        break;
+      }
+      case dbg::debug:   {
+        s << "debug: ";
+        break;
+      }
+      case dbg::none:    {
+        break;
+      }
+      case dbg::all:     {
+        s << "all: ";
+        break;
+      }
+      }
+    }
   }
 
-  bool period_allows_impl(const dbg::source_pos &where)
-  {
+  bool period_allows_impl(const dbg::source_pos &where) {
     period_data &data = period_map[where];
     data.no_triggers++;
-    if (data.triggered_at < STDCLK::clock() - period)
-      {
-	data.triggered_at = STDCLK::clock();
-	return true;
-      }
-    else
-      {
-	return false;
-      }
+    if (data.triggered_at < STDCLK::clock() - period) {
+      data.triggered_at = STDCLK::clock();
+      return true;
+    } else {
+      return false;
+    }
   }
 
-  void determine_source(dbg::dbg_source &src, const dbg::source_pos &here)
-  {
+  void determine_source(dbg::dbg_source &src, const dbg::source_pos &here) {
     if (!src) src = "";
-    if (!strcmp(src,"") && here.src)
-      {
-	src = here.src;
-      }
+    if (!strcmp(src,"") && here.src) {
+      src = here.src;
+    }
   }
 }

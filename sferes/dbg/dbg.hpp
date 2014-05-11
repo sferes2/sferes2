@@ -4,13 +4,13 @@
 //|
 //| This software is a computer program whose purpose is to facilitate
 //| experiments in evolutionary computation and evolutionary robotics.
-//| 
+//|
 //| This software is governed by the CeCILL license under French law
 //| and abiding by the rules of distribution of free software.  You
 //| can use, modify and/ or redistribute the software under the terms
 //| of the CeCILL license as circulated by CEA, CNRS and INRIA at the
 //| following URL "http://www.cecill.info".
-//| 
+//|
 //| As a counterpart to the access to the source code and rights to
 //| copy, modify and redistribute granted by the license, users are
 //| provided only with a limited warranty and the software's author,
@@ -340,1714 +340,1699 @@
  * @author  Pete Goodliffe
  * @version 1.0
  */
-namespace dbg
-{
+namespace dbg {
+  /**
+   * This is the version number of the dbg library.
+   *
+   * The value is encoded as version * 100. This means that 100 represents
+   * version 1.00, for example.
+   */
+  const int version = 110;
+
+  /**************************************************************************
+   * Debugging declarations
+   *************************************************************************/
+
+  /**
+   * The various predefined debugging levels. The dbg API calls use these
+   * levels as parameters, and allow the user to sift the less interesting
+   * debugging levels out through @ref dbg::enable.
+   *
+   * These levels (and their intended uses) are:
+   *   @li info    - Informational, just for interest
+   *   @li warning - For warnings, bad things but recoverable
+   *   @li error   - For errors that can't be recovered from
+   *   @li fatal   - Errors at this level will cause the dbg library to abort
+   *                 program execution, no matter what the
+   *                 @ref assertion_behaviour is set to
+   *   @li tracing - Program execution tracing messages
+   *   @li debug   - Messages about the state of dbg library, you cannot
+   *                 generate messages at this level
+   *   @li none    - For APIs that use 'no level specified'
+   *   @li all     - Used in @ref enable and @ref attach_ostream to
+   *                 specify all levels
+   */
+  enum level {
+    info,
+    warning,
+    error,
+    fatal,
+    tracing,
+    debug,
+    none,
+    all
+  };
+
+  /**
+   * This enum type describes what happens when a debugging assertion
+   * fails. The behaviour can be:
+   *   @li assertions_abort    - Assertions cause a program abort
+   *   @li assertions_throw    - Assertions cause a @ref dbg_exception to
+   *                             be thrown
+   *   @li assertions_continue - Assertions cause the standard diagnostic
+   *                             printout to occur (the same as the above
+   *                             behaviours) but execution continues
+   *                             regardless
+   *
+   * The dbg library defaults to assertions_abort behaviour, like the
+   * standard C <code>assert</code>.
+   *
+   * @see dbg::set_assertion_behaviour
+   */
+  enum assertion_behaviour {
+    assertions_abort,
+    assertions_throw,
+    assertions_continue
+  };
+
+  /**
+   * typedef for a string that describes the "source" of a diagnostic. If
+   * you are working on a large project with many small code modules you may
+   * only want to enable debugging from particular source modules. This
+   * typedef facilitiates this.
+   *
+   * Depending on the desired granularity of your dbg sources you will use
+   * different naming conventions. For example, your dbg_sources might
+   * be filenames, that way you can switch off all debugging output from
+   * a particular file quite easily. It might be device driver names,
+   * component names, library names, or even function names. It's up to you.
+   *
+   * If you provide the DBG_SOURCE macro definition at compile time, then
+   * the DBG_HERE macro includes this source name, differentiating the
+   * sources for you automatically.
+   *
+   * @see dbg::enable(level,dbg_source,bool)
+   * @see dbg::enable_all
+   */
+  typedef const char * dbg_source;
+
+  /**************************************************************************
+   * source_pos
+   *************************************************************************/
+
+  /**
+   * Typedef used in the @ref source_pos data structure.
+   *
+   * Describes a line number in a source file.
+   *
+   * @see dbg::source_pos
+   */
+  typedef const unsigned int line_no_t;
+
+  /**
+   * Typedef used in the @ref source_pos data structure.
+   *
+   * Describes a function name in a source file. (Can be zero to
+   * indicate the function name cannot be assertained on this compiler).
+   *
+   * @see dbg::source_pos
+   */
+  typedef const char * func_name_t;
+
+  /**
+   * Typedef used in the @ref source_pos data structure.
+   *
+   * Describes a filename.
+   *
+   * @see dbg::source_pos
+   */
+  typedef const char * file_name_t;
+
+  /**
+   * Data structure describing a position in the source file. That is,
+   *   @li The line number
+   *   @li The function name (if the compiler supports this)
+   *   @li The filename
+   *   @li The @ref dbg_soruce specified by DBG_SOURCE compilation
+   *       parameter, if any (otherwise zero)
+   *
+   * To create a source_pos for the current position, you can use
+   * the DBG_HERE convenience macro.
+   *
+   * There is an empty constructor that allows you to create a source_pos
+   * that represents 'no position specified'.
+   *
+   * This structure should only be used in dbg library API calls.
+   *
+   * You can print a source_pos using the usual stream manipulator syntax.
+   */
+  struct source_pos {
+    line_no_t   line;
+    func_name_t func;
+    file_name_t file;
+    dbg_source  src;
+
     /**
-     * This is the version number of the dbg library.
-     *
-     * The value is encoded as version * 100. This means that 100 represents
-     * version 1.00, for example.
+     * Creates a source_pos struct. Use the DBG_HERE macro to
+     * call this constructor conveniently.
      */
-    const int version = 110;
-
-    /**************************************************************************
-     * Debugging declarations
-     *************************************************************************/
+    source_pos(line_no_t ln, func_name_t fn, file_name_t fl, dbg_source s)
+      : line(ln), func(fn), file(fl), src(s) {}
 
     /**
-     * The various predefined debugging levels. The dbg API calls use these
-     * levels as parameters, and allow the user to sift the less interesting
-     * debugging levels out through @ref dbg::enable.
-     *
-     * These levels (and their intended uses) are:
-     *   @li info    - Informational, just for interest
-     *   @li warning - For warnings, bad things but recoverable
-     *   @li error   - For errors that can't be recovered from
-     *   @li fatal   - Errors at this level will cause the dbg library to abort
-     *                 program execution, no matter what the
-     *                 @ref assertion_behaviour is set to
-     *   @li tracing - Program execution tracing messages
-     *   @li debug   - Messages about the state of dbg library, you cannot
-     *                 generate messages at this level
-     *   @li none    - For APIs that use 'no level specified'
-     *   @li all     - Used in @ref enable and @ref attach_ostream to
-     *                 specify all levels
+     * A 'null' source_pos for 'no position specified'
      */
-    enum level
-    {
-        info,
-        warning,
-        error,
-        fatal,
-        tracing,
-        debug,
-        none,
-        all
-    };
-
-    /**
-     * This enum type describes what happens when a debugging assertion
-     * fails. The behaviour can be:
-     *   @li assertions_abort    - Assertions cause a program abort
-     *   @li assertions_throw    - Assertions cause a @ref dbg_exception to
-     *                             be thrown
-     *   @li assertions_continue - Assertions cause the standard diagnostic
-     *                             printout to occur (the same as the above
-     *                             behaviours) but execution continues
-     *                             regardless
-     *
-     * The dbg library defaults to assertions_abort behaviour, like the
-     * standard C <code>assert</code>.
-     *
-     * @see dbg::set_assertion_behaviour
-     */
-    enum assertion_behaviour
-    {
-        assertions_abort,
-        assertions_throw,
-        assertions_continue
-    };
-
-    /**
-     * typedef for a string that describes the "source" of a diagnostic. If
-     * you are working on a large project with many small code modules you may
-     * only want to enable debugging from particular source modules. This
-     * typedef facilitiates this.
-     *
-     * Depending on the desired granularity of your dbg sources you will use
-     * different naming conventions. For example, your dbg_sources might
-     * be filenames, that way you can switch off all debugging output from
-     * a particular file quite easily. It might be device driver names,
-     * component names, library names, or even function names. It's up to you.
-     *
-     * If you provide the DBG_SOURCE macro definition at compile time, then
-     * the DBG_HERE macro includes this source name, differentiating the
-     * sources for you automatically.
-     *
-     * @see dbg::enable(level,dbg_source,bool)
-     * @see dbg::enable_all
-     */
-    typedef const char * dbg_source;
-
-    /**************************************************************************
-     * source_pos
-     *************************************************************************/
-
-    /**
-     * Typedef used in the @ref source_pos data structure.
-     *
-     * Describes a line number in a source file.
-     *
-     * @see dbg::source_pos
-     */
-    typedef const unsigned int line_no_t;
-
-    /**
-     * Typedef used in the @ref source_pos data structure.
-     *
-     * Describes a function name in a source file. (Can be zero to
-     * indicate the function name cannot be assertained on this compiler).
-     *
-     * @see dbg::source_pos
-     */
-    typedef const char * func_name_t;
-
-    /**
-     * Typedef used in the @ref source_pos data structure.
-     *
-     * Describes a filename.
-     *
-     * @see dbg::source_pos
-     */
-    typedef const char * file_name_t;
-
-    /**
-     * Data structure describing a position in the source file. That is,
-     *   @li The line number
-     *   @li The function name (if the compiler supports this)
-     *   @li The filename
-     *   @li The @ref dbg_soruce specified by DBG_SOURCE compilation
-     *       parameter, if any (otherwise zero)
-     *
-     * To create a source_pos for the current position, you can use
-     * the DBG_HERE convenience macro.
-     *
-     * There is an empty constructor that allows you to create a source_pos
-     * that represents 'no position specified'.
-     *
-     * This structure should only be used in dbg library API calls.
-     *
-     * You can print a source_pos using the usual stream manipulator syntax.
-     */
-    struct source_pos
-    {
-        line_no_t   line;
-        func_name_t func;
-        file_name_t file;
-        dbg_source  src;
-
-        /**
-         * Creates a source_pos struct. Use the DBG_HERE macro to
-         * call this constructor conveniently.
-         */
-        source_pos(line_no_t ln, func_name_t fn, file_name_t fl, dbg_source s)
-            : line(ln), func(fn), file(fl), src(s) {}
-
-        /**
-         * A 'null' source_pos for 'no position specified'
-         */
-        source_pos()
-            : line(0), func(0), file(0), src(0) {}
-    };
+    source_pos()
+      : line(0), func(0), file(0), src(0) {}
+  };
 
 #ifndef _MSC_VER
-    /**
-     * The dbgclock_t typedef is an unfortunate workaround for comptability
-     * purposes. One (unnamed) popular compiler platform supplies a
-     * <ctime> header file, but this header does NOT place the contents
-     * into the std namespace.
-     *
-     * This typedef is the most elegant work around for that problem. It is
-     * conditionally set to the appropriate clock_t definition.
-     *
-     * In an ideal world this would not exist.
-     *
-     * This is the version for sane, standards-compliant platforms.
-     */
-    typedef std::clock_t dbgclock_t;
+  /**
+   * The dbgclock_t typedef is an unfortunate workaround for comptability
+   * purposes. One (unnamed) popular compiler platform supplies a
+   * <ctime> header file, but this header does NOT place the contents
+   * into the std namespace.
+   *
+   * This typedef is the most elegant work around for that problem. It is
+   * conditionally set to the appropriate clock_t definition.
+   *
+   * In an ideal world this would not exist.
+   *
+   * This is the version for sane, standards-compliant platforms.
+   */
+  typedef std::clock_t dbgclock_t;
 #else
-    /**
-     * See dbgclock_t documentation above. This is the version for broken
-     * compiler platforms.
-     */
-    typedef clock_t dbgclock_t;
+  /**
+   * See dbgclock_t documentation above. This is the version for broken
+   * compiler platforms.
+   */
+  typedef clock_t dbgclock_t;
 #endif
 
-    /**************************************************************************
-     * Exceptions
-     *************************************************************************/
+  /**************************************************************************
+   * Exceptions
+   *************************************************************************/
 
-    /**
-     * The base type of exception thrown by dbg assertions (and other dbg
-     * library constraint checks) if the @ref assertion_behaviour is set to
-     * assertions_throw.
-     *
-     * The exception keeps a record of the source position of the trigger
-     * for this exception.
-     */
-    struct dbg_exception : public std::exception
-    {
-        dbg_exception(const source_pos &p) : pos(p) {}
-        const source_pos pos;
-    };
+  /**
+   * The base type of exception thrown by dbg assertions (and other dbg
+   * library constraint checks) if the @ref assertion_behaviour is set to
+   * assertions_throw.
+   *
+   * The exception keeps a record of the source position of the trigger
+   * for this exception.
+   */
+  struct dbg_exception : public std::exception {
+    dbg_exception(const source_pos &p) : pos(p) {}
+    const source_pos pos;
+  };
 
-    /**
-     * The type of exception thrown by @ref assertion.
-     *
-     * @see assertion
-     */
-    struct assertion_exception : public dbg_exception
-    {
-        assertion_exception(const source_pos &p) : dbg_exception(p) {}
-    };
+  /**
+   * The type of exception thrown by @ref assertion.
+   *
+   * @see assertion
+   */
+  struct assertion_exception : public dbg_exception {
+    assertion_exception(const source_pos &p) : dbg_exception(p) {}
+  };
 
-    /**
-     * The type of exception thrown by @ref sentinel.
-     *
-     * @see sentinel
-     */
-    struct sentinel_exception : public dbg_exception
-    {
-        sentinel_exception(const source_pos &p) : dbg_exception(p) {}
-    };
+  /**
+   * The type of exception thrown by @ref sentinel.
+   *
+   * @see sentinel
+   */
+  struct sentinel_exception : public dbg_exception {
+    sentinel_exception(const source_pos &p) : dbg_exception(p) {}
+  };
 
-    /**
-     * The type of exception thrown by @ref unimplemented.
-     *
-     * @see unimplemented
-     */
-    struct unimplemented_exception : public dbg_exception
-    {
-        unimplemented_exception(const source_pos &p) : dbg_exception(p) {}
-    };
+  /**
+   * The type of exception thrown by @ref unimplemented.
+   *
+   * @see unimplemented
+   */
+  struct unimplemented_exception : public dbg_exception {
+    unimplemented_exception(const source_pos &p) : dbg_exception(p) {}
+  };
 
-    /**
-     * The type of exception thrown by @ref check_ptr.
-     *
-     * @see check_ptr
-     */
-    struct check_ptr_exception : public dbg_exception
-    {
-        check_ptr_exception(const source_pos &p) : dbg_exception(p) {}
-    };
+  /**
+   * The type of exception thrown by @ref check_ptr.
+   *
+   * @see check_ptr
+   */
+  struct check_ptr_exception : public dbg_exception {
+    check_ptr_exception(const source_pos &p) : dbg_exception(p) {}
+  };
 
 #ifdef DBG_ENABLED
 
-    /**************************************************************************
-     * default_source
-     *************************************************************************/
+  /**************************************************************************
+   * default_source
+   *************************************************************************/
 
-    /**
-     * The name of a "template" debugging source that provides the default
-     * state for newly created sources. You can attach and detach logging
-     * streams here, and enable/disable logging levels.
-     *
-     * All source state is copied from the default_source to a new dbg_source.
-     *
-     * Whilst you can also use this source for diagnostic purposes this isn't
-     * it's intention, and it would be confusing to do so.
-     *
-     * See @ref dbg_source for discussion on the use of debugging sources in
-     * dbg.
-     *
-     * @see dbg_source
-     */
-     extern dbg_source default_source;
+  /**
+   * The name of a "template" debugging source that provides the default
+   * state for newly created sources. You can attach and detach logging
+   * streams here, and enable/disable logging levels.
+   *
+   * All source state is copied from the default_source to a new dbg_source.
+   *
+   * Whilst you can also use this source for diagnostic purposes this isn't
+   * it's intention, and it would be confusing to do so.
+   *
+   * See @ref dbg_source for discussion on the use of debugging sources in
+   * dbg.
+   *
+   * @see dbg_source
+   */
+  extern dbg_source default_source;
 
-    /**************************************************************************
-     * Debug version of the DBG_HERE macro
-     *************************************************************************/
+  /**************************************************************************
+   * Debug version of the DBG_HERE macro
+   *************************************************************************/
 
-    /*
-     * DBG_FUNCTION is defined to be a macro that expands to the name of
-     * the current function, or zero if the compiler is unable to supply that
-     * information. It's sad that this wasn't included in the C++ standard
-     * from the very beginning.
-     */
-    #if defined(__GNUC__)
-    #define DBG_FUNCTION __FUNCTION__
-    #else
-    #define DBG_FUNCTION 0
-    #endif
+  /*
+   * DBG_FUNCTION is defined to be a macro that expands to the name of
+   * the current function, or zero if the compiler is unable to supply that
+   * information. It's sad that this wasn't included in the C++ standard
+   * from the very beginning.
+   */
+#if defined(__GNUC__)
+#define DBG_FUNCTION __FUNCTION__
+#else
+#define DBG_FUNCTION 0
+#endif
 
-    #if !defined(DBG_SOURCE)
-    #define DBG_SOURCE 0
-    #endif
+#if !defined(DBG_SOURCE)
+#define DBG_SOURCE 0
+#endif
 
-    /*
-     * Handy macro to generate a @ref source_pos object containing the
-     * information of the current source line.
-     *
-     * @see dbg::source_pos
-     */
-    #define DBG_HERE \
+  /*
+   * Handy macro to generate a @ref source_pos object containing the
+   * information of the current source line.
+   *
+   * @see dbg::source_pos
+   */
+#define DBG_HERE \
         (::dbg::source_pos(__LINE__, DBG_FUNCTION, __FILE__, DBG_SOURCE))
 
-    /**************************************************************************
-     * Enable/disable dbg facilities
-     *************************************************************************/
+  /**************************************************************************
+   * Enable/disable dbg facilities
+   *************************************************************************/
 
+  /**
+   * Enables or disables a particular debugging level. The affects dbg
+   * library calls which don't specify a @ref dbg_source, i.e. from the
+   * unnamed source.
+   *
+   * Enabling affects both constraint checking and diagnostic log output.
+   *
+   * If you enable a debugging level twice you only need to disable it once.
+   *
+   * All diagnostic output is initially disabled. You can easily enable
+   * output in your main() thus:
+   * <pre>
+   *     dbg::enable(dbg::all, true);
+   * </pre>
+   *
+   * Note that if dbg library calls do specify a @ref dbg_source, or you
+   * provide a definition for the DBG_SOURCE macro on compilation, then you
+   * will instead need to enable output for that particular source. Use the
+   * overloaded version of enable. This version of enable doesn't affect
+   * these other @ref dbg_source calls.
+   *
+   * @param lvl     Diagnostic level to enable/disable
+   * @param enabled true to enable this diagnostic level, false to disable it
+   * @see   dbg::enable_all
+   * @see   dbg::out
+   * @see   dbg::attach_ostream
+   */
+  void enable(level lvl, bool enabled);
+
+  /**
+   * In addition to the above enable function, this overloaded version is
+   * used when you use dbg APIs with a @ref dbg_source specified. For these
+   * versions of the APIs no debugging will be performed unless you
+   * enable it with this API.
+   *
+   * To enable debugging for the "foobar" diagnostic source at the info
+   * level you need to do the following:
+   * <pre>
+   *     dbg::enable(dbg::info, "foobar", true);
+   * </pre>
+   *
+   * If you enable a level for a particular @ref dbg_source twice you only
+   * need to disable it once.
+   *
+   * @param lvl     Diagnostic level to enable/disable for the @ref dbg_source
+   * @param src     String describing the diagnostic source
+   * @param enabled true to enable this diagnostic level, false to disable it
+   * @see   dbg::out
+   */
+  void enable(level lvl, dbg_source src, bool enabled);
+
+  /**
+   * You may not know every single @ref dbg_source that is generating
+   * debugging in a particular code base. However, using this function
+   * you can enable a diagnostic level for all currently registered sources
+   * in one fell swoop.
+   *
+   * For example,
+   * <pre>
+   *     dbg::enable_all(dbg::all, true);
+   * </pre>
+   */
+  void enable_all(level lvl, bool enabled);
+
+  /**************************************************************************
+   * Logging
+   *************************************************************************/
+
+  /**
+   * Returns an ostream suitable for sending diagnostic messages to.
+   * Each diagnostic level has a different logging ostream which can be
+   * enabled/disabled independantly. In addition, each @ref dbg_source
+   * has separate enables/disables for each diagnostic level.
+   *
+   * This overloaded version of out is used when you are creating diagnostics
+   * that are tied to a particular @ref dbg_source.
+   *
+   * It allows you to write code like this:
+   * <pre>
+   *     dbg::out(dbg::info, "foobar") << "The foobar is flaky\n";
+   * </pre>
+   *
+   * If you want to prefix your diagnostics with the standard dbg library
+   * prefix (see @ref set_prefix) then use the @ref prefix or @ref indent
+   * stream manipulators.
+   *
+   * @param lvl Diagnostic level get get ostream for
+   * @param src String describing the diagnostic source
+   */
+  std::ostream &out(level lvl, dbg_source src);
+
+  /**
+   * Returns an ostream suitable for sending diagnostic messages to.
+   * Each diagnostic level has a different logging ostream which can be
+   * enabled/disabled independantly.
+   *
+   * You use this version of out when you are creating diagnostics
+   * that aren't tidied to a particular @ref dbg_source.
+   *
+   * Each diagnostic @ref dbg_source has a separate set of streams.
+   * This function returns the stream for the "unnamed" source. Use the
+   * overload below to obtain the stream for a named source.
+   *
+   * It allows you to write code like this:
+   * <pre>
+   *     dbg::out(dbg::info) << "The code is flaky\n";
+   * </pre>
+   *
+   * If you want to prefix your diagnostics with the standard dbg library
+   * prefix (see @ref set_prefix) then use the @ref prefix or @ref indent
+   * stream manipulators.
+   *
+   * @param lvl Diagnostic level get get ostream for
+   */
+  inline std::ostream &out(level lvl) {
+    return out(lvl, 0);
+  }
+
+  /**
+   * Attaches the specified ostream to the given diagnostic level
+   * for the "unnamed" debug source. Now when diagnostics are produced
+   * at that level, this ostream will recieve a copy.
+   *
+   * You can attach multiple ostreams to a diagnostic level. Be careful
+   * that they don't go to the same place (e.g. cout and cerr both going
+   * to your console) - this might confuse you!
+   *
+   * If you attach a ostream mutiple times it will only receive one
+   * copy of the diagnostics, and you will only need to call
+   * @ref detach_ostream once.
+   *
+   * Remember, don't destroy the ostream without first removing it from
+   * dbg libary, or Bad Things will happen.
+   *
+   * @param lvl Diagnostic level
+   * @param o   ostream to attach
+   * @see   dbg::detach_ostream
+   * @see   dbg::detach_all_ostreams
+   */
+  void attach_ostream(level lvl, std::ostream &o);
+
+  /**
+   * Attaches the specified ostream to the given diagnostic level
+   * for the specified debug source. Otherwise, similar to
+   * @ref dbg::attach_ostream above.
+   *
+   * @param lvl  Diagnostic level
+   * @param src  Debug source
+   * @param o    ostream to attach
+   * @see   dbg::detach_ostream
+   * @see   dbg::detach_all_ostreams
+   */
+  void attach_ostream(level lvl, dbg_source src, std::ostream &o);
+
+  /**
+   * Detaches the specified ostream from the given diagnostic level.
+   *
+   * If the ostream was not attached then no error is generated.
+   *
+   * If you attached the ostream twice, one call to detach_ostream will
+   * remove it completely.
+   *
+   * @param lvl Diagnostic level
+   * @param o   ostream to detach
+   * @see   dbg::attach_ostream
+   * @see   dbg::detach_all_ostreams
+   */
+  void detach_ostream(level lvl, std::ostream &o);
+
+  /**
+   * Detaches the specified ostream from the given diagnostic level
+   * for the specified debug source. Otherwise, similar to
+   * @ref dbg::detach_ostream above.
+   *
+   * @param lvl Diagnostic level
+   * @param src Debug source
+   * @param o   ostream to detach
+   * @see   dbg::attach_ostream
+   * @see   dbg::detach_all_ostreams
+   */
+  void detach_ostream(level lvl, dbg_source src, std::ostream &o);
+
+  /**
+   * Detaches all attached ostreams from the specified diagnostic level
+   * for the "unnamed" diagnostic source.
+   *
+   * @param lvl Diagnostic level
+   * @see   dbg::attach_ostream
+   * @see   dbg::detach_ostream
+   */
+  void detach_all_ostreams(level lvl);
+
+  /**
+   * Detaches all attached ostreams from the specified diagnostic level
+   * for the specified debug source. Otherwise, similar to
+   * @ref dbg::detach_all_ostreams above.
+   *
+   * @param lvl Diagnostic level
+   * @see   dbg::attach_ostream
+   * @see   dbg::detach_ostream
+   */
+  void detach_all_ostreams(level lvl, dbg_source src);
+
+  /**
+   * Convenience function that returns the ostream for the info
+   * @ref dbg::level for the "unnamed" source.
+   *
+   * @see dbg::out
+   */
+  inline std::ostream &info_out() {
+    return out(dbg::info);
+  }
+
+  /**
+   * Convenience function that returns the ostream for the warning
+   * @ref dbg::level for the "unnamed" source.
+   *
+   * @see dbg::out
+   */
+  inline std::ostream &warning_out() {
+    return out(dbg::warning);
+  }
+
+  /**
+   * Convenience function that returns the ostream for the error
+   * @ref dbg::level for the "unnamed" source.
+   *
+   * @see dbg::out
+   */
+  inline std::ostream &error_out() {
+    return out(dbg::error);
+  }
+
+  /**
+   * Convenience function that returns the ostream for the fatal
+   * @ref dbg::level for the "unnamed" source.
+   *
+   * @see dbg::out
+   */
+  inline std::ostream &fatal_out() {
+    return out(dbg::fatal);
+  }
+
+  /**
+   * Convenience function that returns the ostream for the tracing
+   * @ref dbg::level for the "unnamed" source.
+   *
+   * @see dbg::out
+   */
+  inline std::ostream &trace_out() {
+    return out(dbg::tracing);
+  }
+
+  /**************************************************************************
+   * Output formatting
+   *************************************************************************/
+
+  /**
+   * Sets the debugging prefix - the characters printed before any
+   * diagnostic output. Defaults to "*** ".
+   *
+   * @param prefix New prefix string
+   * @see   dbg::prefix
+   * @see   dbg::enable_level_prefix
+   * @see   dbg::enable_time_prefix
+   */
+  void set_prefix(const char *prefix);
+
+  /**
+   * The dbg library can add to the @ref prefix the name of the used
+   * diagnostic level (e.g. info, fatal, etc).
+   *
+   * By default, this facility is disabled. This function allows you to
+   * enable the facility.
+   *
+   * @param enabled true to enable level prefixing, false to disable
+   * @see   dbg::set_prefix
+   * @see   dbg::enable_time_prefix
+   */
+  void enable_level_prefix(bool enabled);
+
+  /**
+   * The dbg library can add to the @ref prefix the current time. This
+   * can be useful when debugging systems which remain active for long
+   * periods of time.
+   *
+   * By default, this facility is disabled. This function allows you to
+   * enable the facility.
+   *
+   * The time is produced in the format of the standard library ctime
+   * function.
+   *
+   * @param enabled true to enable time prefixing, false to disable
+   * @see   dbg::set_prefix
+   * @see   dbg::enable_level_prefix
+   */
+  void enable_time_prefix(bool enabled);
+
+  /**
+   * Used so that you can produce a prefix in your diagnostic output in the
+   * same way that the debugging library does.
+   *
+   * You can use it in one of two ways: with or without a diagnostic
+   * @ref level. For the latter, if level prefixing is enabled (see
+   * @ref enable_level_prefix) then produces a prefix including the
+   * specified diagnostic level text.
+   *
+   * Examples of use:
+   *
+   * <pre>
+   *     dbg::out(dbg::info) << dbg::prefix()
+   *                         << "A Bad Thing happened\n";
+   *
+   *     dbg::out(dbg::info) << dbg::prefix(dbg::info)
+   *                         << "A Bad Thing happened\n";
+   * </pre>
+   *
+   * @see dbg::indent
+   * @see dbg::set_prefix
+   * @see dbg::enable_level_prefix
+   * @see dbg::enable_time_prefix
+   */
+  struct prefix {
     /**
-     * Enables or disables a particular debugging level. The affects dbg
-     * library calls which don't specify a @ref dbg_source, i.e. from the
-     * unnamed source.
-     *
-     * Enabling affects both constraint checking and diagnostic log output.
-     *
-     * If you enable a debugging level twice you only need to disable it once.
-     *
-     * All diagnostic output is initially disabled. You can easily enable
-     * output in your main() thus:
-     * <pre>
-     *     dbg::enable(dbg::all, true);
-     * </pre>
-     *
-     * Note that if dbg library calls do specify a @ref dbg_source, or you
-     * provide a definition for the DBG_SOURCE macro on compilation, then you
-     * will instead need to enable output for that particular source. Use the
-     * overloaded version of enable. This version of enable doesn't affect
-     * these other @ref dbg_source calls.
-     *
-     * @param lvl     Diagnostic level to enable/disable
-     * @param enabled true to enable this diagnostic level, false to disable it
-     * @see   dbg::enable_all
-     * @see   dbg::out
-     * @see   dbg::attach_ostream
+     * Creates a prefix with no specified diagnostic @ref level.
+     * No diagnostic level text will be included in the prefix.
      */
-    void enable(level lvl, bool enabled);
+    prefix() : l(none) {}
 
     /**
-     * In addition to the above enable function, this overloaded version is
-     * used when you use dbg APIs with a @ref dbg_source specified. For these
-     * versions of the APIs no debugging will be performed unless you
-     * enable it with this API.
-     *
-     * To enable debugging for the "foobar" diagnostic source at the info
-     * level you need to do the following:
-     * <pre>
-     *     dbg::enable(dbg::info, "foobar", true);
-     * </pre>
-     *
-     * If you enable a level for a particular @ref dbg_source twice you only
-     * need to disable it once.
-     *
-     * @param lvl     Diagnostic level to enable/disable for the @ref dbg_source
-     * @param src     String describing the diagnostic source
-     * @param enabled true to enable this diagnostic level, false to disable it
-     * @see   dbg::out
+     * @param lvl Diagnostic @ref level to include in prefix
      */
-    void enable(level lvl, dbg_source src, bool enabled);
+    prefix(level lvl) : l(lvl) {}
 
+    level l;
+  };
+
+  /**
+   * This is called when you use the @ref prefix stream manipulator.
+   *
+   * @internal
+   * @see dbg::prefix
+   */
+  std::ostream &operator<<(std::ostream &s, const prefix &p);
+
+  /**
+   * Used so that you can indent your diagnostic output to the same level
+   * as the debugging library. This also produces the @ref prefix output.
+   *
+   * Examples of use:
+   *
+   * <pre>
+   *     dbg::out(dbg::info) << dbg::indent()
+   *                         << "A Bad Thing happened\n";
+   *
+   *     dbg::out(dbg::info) << dbg::indent(dbg::info)
+   *                         << "A Bad Thing happened\n";
+   * </pre>
+   *
+   * @see dbg::prefix
+   * @see dbg::set_prefix
+   * @see dbg::enable_level_prefix
+   * @see dbg::enable_time_prefix
+   */
+  struct indent {
     /**
-     * You may not know every single @ref dbg_source that is generating
-     * debugging in a particular code base. However, using this function
-     * you can enable a diagnostic level for all currently registered sources
-     * in one fell swoop.
-     *
-     * For example,
-     * <pre>
-     *     dbg::enable_all(dbg::all, true);
-     * </pre>
+     * Creates a indent with no specified diagnostic @ref level.
+     * No diagnostic level text will be included in the @ref prefix part.
      */
-    void enable_all(level lvl, bool enabled);
-
-    /**************************************************************************
-     * Logging
-     *************************************************************************/
+    indent() : l(none) {}
 
     /**
-     * Returns an ostream suitable for sending diagnostic messages to.
-     * Each diagnostic level has a different logging ostream which can be
-     * enabled/disabled independantly. In addition, each @ref dbg_source
-     * has separate enables/disables for each diagnostic level.
-     *
-     * This overloaded version of out is used when you are creating diagnostics
-     * that are tied to a particular @ref dbg_source.
-     *
-     * It allows you to write code like this:
-     * <pre>
-     *     dbg::out(dbg::info, "foobar") << "The foobar is flaky\n";
-     * </pre>
-     *
-     * If you want to prefix your diagnostics with the standard dbg library
-     * prefix (see @ref set_prefix) then use the @ref prefix or @ref indent
-     * stream manipulators.
-     *
-     * @param lvl Diagnostic level get get ostream for
-     * @param src String describing the diagnostic source
+     * @param lvl Diagnostic level to include in prefix
      */
-    std::ostream &out(level lvl, dbg_source src);
+    indent(level lvl) : l(lvl) {}
+
+    level l;
+  };
+
+  /**
+   * This is called when you use the @ref indent stream manipulator.
+   *
+   * @internal
+   * @see dbg::indent
+   */
+  std::ostream &operator<<(std::ostream &s, const indent &i);
+
+  /**
+   * This is called when you send a @ref source_pos to a diagnostic output.
+   * You can use this to easily check the flow of execcution in your
+   * program.
+   *
+   * For example,
+   * <pre>
+   *     dbg::out(dbg::tracing) << DBG_HERE << std::endl;
+   * </pre>
+   *
+   * Take care that you only send DBG_HERE to the diagnostic outputs
+   * (obtained with @ref dbg::out) and not "ordinary" streams like
+   * <code>std::cout</code>.
+   *
+   * In non debug builds, DBG_HERE is a "no-op" doing nothing, and so no
+   * useful output will be produced on cout.
+   *
+   * @internal
+   * @see dbg::indent
+   */
+  std::ostream &operator<<(std::ostream &s, const source_pos &pos);
+
+  /**************************************************************************
+   * Behaviour
+   *************************************************************************/
+
+  /**
+   * Sets what happens when assertions (or other constraints) trigger. There
+   * will always be diagnostic ouput. Assertions have 'abort' behaviour by
+   * default - like the ISO C standard, they cause an abort.
+   *
+   * If an assertion is encountered at the fatal level, the debugging library
+   * will abort the program regardless of this behaviour setting.
+   *
+   * If a diagnostic level is not enabled (see @ref enable) then the
+   * @ref assertion_behaviour is not enacted, and no output is produced.
+   *
+   * @param lvl       Diagnostic level to set behaviour for
+   * @param behaviour Assertion behaviour
+   * @see   dbg::set_assertion_period
+   * @see   dbg::enable
+   * @see   dbg::assertion
+   * @see   dbg::sentinel
+   * @see   dbg::unimplemented
+   * @see   dbg::check_ptr
+   */
+  void set_assertion_behaviour(level lvl, assertion_behaviour behaviour);
+
+  /**
+   * You may want an assertion to trigger once only and then for subsequent
+   * calls to remain inactive. For example, if there is an @ref assertion in
+   * a loop you may not want diagnostics produced for each loop iteration.
+   *
+   * To do this, you do the following:
+   * <pre>
+   *      // Prevent several thousand diagnostic print outs
+   *      dbg::set_assertion_period(CLOCKS_PER_SEC);
+   *
+   *      // Example loop
+   *      int array[LARGE_VALUE];
+   *      put_stuff_in_array(array);
+   *      for(unsigned int n = 0; n < LARGE_VALUE; n++)
+   *      {
+   *          dbg::assertion(DBG_ASSERT(array[n] != 0));
+   *          do_something(array[n]);
+   *      }
+   * </pre>
+   *
+   * set_assertion_period forces a certain time period between triggers of a
+   * particular constraint. The @ref assertion in the example above will only
+   * be triggered once a second (despite the fact that the constraint
+   * condition will be broken thousands of times a second). This will not
+   * affect any other @ref assertion - they will each have their own timeout
+   * periods.
+   *
+   * Setting a period of zero disables any constraint period.
+   *
+   * The default behaviour is to have no period.
+   *
+   * If a period is set then diagnostic printouts will include the number
+   * of times each constraint has been triggered (since the period was set).
+   * Using this, even if diagnostics don't always appear on the attached
+   * ostreams you have some indication of how often each constraint is
+   * triggered.
+   *
+   * This call only really makes sense if the @ref assertion_behaviour is
+   * set to @ref assertions_continue.
+   *
+   * @param period Time between triggerings of each assertion, or zero to
+   *               disable
+   * @see   dbg::set_assertion_behaviour
+   * @see   dbg::assertion
+   * @see   dbg::sentinel
+   * @see   dbg::unimplemented
+   * @see   dbg::check_ptr
+   */
+  void set_assertion_period(dbgclock_t period);
+
+  /**************************************************************************
+   * Assertion
+   *************************************************************************/
+
+  /**
+   * Describes an @ref assertion.
+   *
+   * This is an internal data structure, you do not need to create it
+   * directly. Use the DBG_ASSERTION macro to create it.
+   *
+   * @internal
+   * @see dbg::assertion
+   */
+  struct assert_info : public source_pos {
+    bool        asserted;
+    const char *text;
 
     /**
-     * Returns an ostream suitable for sending diagnostic messages to.
-     * Each diagnostic level has a different logging ostream which can be
-     * enabled/disabled independantly.
-     *
-     * You use this version of out when you are creating diagnostics
-     * that aren't tidied to a particular @ref dbg_source.
-     *
-     * Each diagnostic @ref dbg_source has a separate set of streams.
-     * This function returns the stream for the "unnamed" source. Use the
-     * overload below to obtain the stream for a named source.
-     *
-     * It allows you to write code like this:
-     * <pre>
-     *     dbg::out(dbg::info) << "The code is flaky\n";
-     * </pre>
-     *
-     * If you want to prefix your diagnostics with the standard dbg library
-     * prefix (see @ref set_prefix) then use the @ref prefix or @ref indent
-     * stream manipulators.
-     *
-     * @param lvl Diagnostic level get get ostream for
-     */
-    inline std::ostream &out(level lvl)
-    {
-        return out(lvl, 0);
-    }
-
-    /**
-     * Attaches the specified ostream to the given diagnostic level
-     * for the "unnamed" debug source. Now when diagnostics are produced
-     * at that level, this ostream will recieve a copy.
-     *
-     * You can attach multiple ostreams to a diagnostic level. Be careful
-     * that they don't go to the same place (e.g. cout and cerr both going
-     * to your console) - this might confuse you!
-     *
-     * If you attach a ostream mutiple times it will only receive one
-     * copy of the diagnostics, and you will only need to call
-     * @ref detach_ostream once.
-     *
-     * Remember, don't destroy the ostream without first removing it from
-     * dbg libary, or Bad Things will happen.
-     *
-     * @param lvl Diagnostic level
-     * @param o   ostream to attach
-     * @see   dbg::detach_ostream
-     * @see   dbg::detach_all_ostreams
-     */
-    void attach_ostream(level lvl, std::ostream &o);
-
-    /**
-     * Attaches the specified ostream to the given diagnostic level
-     * for the specified debug source. Otherwise, similar to
-     * @ref dbg::attach_ostream above.
-     *
-     * @param lvl  Diagnostic level
-     * @param src  Debug source
-     * @param o    ostream to attach
-     * @see   dbg::detach_ostream
-     * @see   dbg::detach_all_ostreams
-     */
-    void attach_ostream(level lvl, dbg_source src, std::ostream &o);
-
-    /**
-     * Detaches the specified ostream from the given diagnostic level.
-     *
-     * If the ostream was not attached then no error is generated.
-     *
-     * If you attached the ostream twice, one call to detach_ostream will
-     * remove it completely.
-     *
-     * @param lvl Diagnostic level
-     * @param o   ostream to detach
-     * @see   dbg::attach_ostream
-     * @see   dbg::detach_all_ostreams
-     */
-    void detach_ostream(level lvl, std::ostream &o);
-
-    /**
-     * Detaches the specified ostream from the given diagnostic level
-     * for the specified debug source. Otherwise, similar to
-     * @ref dbg::detach_ostream above.
-     *
-     * @param lvl Diagnostic level
-     * @param src Debug source
-     * @param o   ostream to detach
-     * @see   dbg::attach_ostream
-     * @see   dbg::detach_all_ostreams
-     */
-    void detach_ostream(level lvl, dbg_source src, std::ostream &o);
-
-    /**
-     * Detaches all attached ostreams from the specified diagnostic level
-     * for the "unnamed" diagnostic source.
-     *
-     * @param lvl Diagnostic level
-     * @see   dbg::attach_ostream
-     * @see   dbg::detach_ostream
-     */
-    void detach_all_ostreams(level lvl);
-
-    /**
-     * Detaches all attached ostreams from the specified diagnostic level
-     * for the specified debug source. Otherwise, similar to
-     * @ref dbg::detach_all_ostreams above.
-     *
-     * @param lvl Diagnostic level
-     * @see   dbg::attach_ostream
-     * @see   dbg::detach_ostream
-     */
-    void detach_all_ostreams(level lvl, dbg_source src);
-
-    /**
-     * Convenience function that returns the ostream for the info
-     * @ref dbg::level for the "unnamed" source.
-     *
-     * @see dbg::out
-     */
-    inline std::ostream &info_out()
-    {
-        return out(dbg::info);
-    }
-
-    /**
-     * Convenience function that returns the ostream for the warning
-     * @ref dbg::level for the "unnamed" source.
-     *
-     * @see dbg::out
-     */
-    inline std::ostream &warning_out()
-    {
-        return out(dbg::warning);
-    }
-
-    /**
-     * Convenience function that returns the ostream for the error
-     * @ref dbg::level for the "unnamed" source.
-     *
-     * @see dbg::out
-     */
-    inline std::ostream &error_out()
-    {
-        return out(dbg::error);
-    }
-
-    /**
-     * Convenience function that returns the ostream for the fatal
-     * @ref dbg::level for the "unnamed" source.
-     *
-     * @see dbg::out
-     */
-    inline std::ostream &fatal_out()
-    {
-        return out(dbg::fatal);
-    }
-
-    /**
-     * Convenience function that returns the ostream for the tracing
-     * @ref dbg::level for the "unnamed" source.
-     *
-     * @see dbg::out
-     */
-    inline std::ostream &trace_out()
-    {
-        return out(dbg::tracing);
-    }
-
-    /**************************************************************************
-     * Output formatting
-     *************************************************************************/
-
-    /**
-     * Sets the debugging prefix - the characters printed before any
-     * diagnostic output. Defaults to "*** ".
-     *
-     * @param prefix New prefix string
-     * @see   dbg::prefix
-     * @see   dbg::enable_level_prefix
-     * @see   dbg::enable_time_prefix
-     */
-    void set_prefix(const char *prefix);
-
-    /**
-     * The dbg library can add to the @ref prefix the name of the used
-     * diagnostic level (e.g. info, fatal, etc).
-     *
-     * By default, this facility is disabled. This function allows you to
-     * enable the facility.
-     *
-     * @param enabled true to enable level prefixing, false to disable
-     * @see   dbg::set_prefix
-     * @see   dbg::enable_time_prefix
-     */
-    void enable_level_prefix(bool enabled);
-
-    /**
-     * The dbg library can add to the @ref prefix the current time. This
-     * can be useful when debugging systems which remain active for long
-     * periods of time.
-     *
-     * By default, this facility is disabled. This function allows you to
-     * enable the facility.
-     *
-     * The time is produced in the format of the standard library ctime
-     * function.
-     *
-     * @param enabled true to enable time prefixing, false to disable
-     * @see   dbg::set_prefix
-     * @see   dbg::enable_level_prefix
-     */
-    void enable_time_prefix(bool enabled);
-
-    /**
-     * Used so that you can produce a prefix in your diagnostic output in the
-     * same way that the debugging library does.
-     *
-     * You can use it in one of two ways: with or without a diagnostic
-     * @ref level. For the latter, if level prefixing is enabled (see
-     * @ref enable_level_prefix) then produces a prefix including the
-     * specified diagnostic level text.
-     *
-     * Examples of use:
-     *
-     * <pre>
-     *     dbg::out(dbg::info) << dbg::prefix()
-     *                         << "A Bad Thing happened\n";
-     *
-     *     dbg::out(dbg::info) << dbg::prefix(dbg::info)
-     *                         << "A Bad Thing happened\n";
-     * </pre>
-     *
-     * @see dbg::indent
-     * @see dbg::set_prefix
-     * @see dbg::enable_level_prefix
-     * @see dbg::enable_time_prefix
-     */
-    struct prefix
-    {
-        /**
-         * Creates a prefix with no specified diagnostic @ref level.
-         * No diagnostic level text will be included in the prefix.
-         */
-        prefix() : l(none) {}
-
-        /**
-         * @param lvl Diagnostic @ref level to include in prefix
-         */
-        prefix(level lvl) : l(lvl) {}
-
-        level l;
-    };
-
-    /**
-     * This is called when you use the @ref prefix stream manipulator.
+     * Do not call this directly. Use the DBG_ASSERTION macro.
      *
      * @internal
-     * @see dbg::prefix
      */
-    std::ostream &operator<<(std::ostream &s, const prefix &p);
+    assert_info(bool a, const char *t,
+                line_no_t line, func_name_t func,
+                file_name_t file, dbg_source spos)
+      : source_pos(line, func, file, spos), asserted(a), text(t) {}
 
     /**
-     * Used so that you can indent your diagnostic output to the same level
-     * as the debugging library. This also produces the @ref prefix output.
-     *
-     * Examples of use:
-     *
-     * <pre>
-     *     dbg::out(dbg::info) << dbg::indent()
-     *                         << "A Bad Thing happened\n";
-     *
-     *     dbg::out(dbg::info) << dbg::indent(dbg::info)
-     *                         << "A Bad Thing happened\n";
-     * </pre>
-     *
-     * @see dbg::prefix
-     * @see dbg::set_prefix
-     * @see dbg::enable_level_prefix
-     * @see dbg::enable_time_prefix
-     */
-    struct indent
-    {
-        /**
-         * Creates a indent with no specified diagnostic @ref level.
-         * No diagnostic level text will be included in the @ref prefix part.
-         */
-        indent() : l(none) {}
-
-        /**
-         * @param lvl Diagnostic level to include in prefix
-         */
-        indent(level lvl) : l(lvl) {}
-
-        level l;
-    };
-
-    /**
-     * This is called when you use the @ref indent stream manipulator.
+     * Do not call this directly. Use the DBG_ASSERTION macro.
      *
      * @internal
-     * @see dbg::indent
      */
-    std::ostream &operator<<(std::ostream &s, const indent &i);
+    assert_info(bool a, const char *b, const source_pos &sp)
+      : source_pos(sp), asserted(a), text(b) {}
+  };
 
-    /**
-     * This is called when you send a @ref source_pos to a diagnostic output.
-     * You can use this to easily check the flow of execcution in your
-     * program.
-     *
-     * For example,
-     * <pre>
-     *     dbg::out(dbg::tracing) << DBG_HERE << std::endl;
-     * </pre>
-     *
-     * Take care that you only send DBG_HERE to the diagnostic outputs
-     * (obtained with @ref dbg::out) and not "ordinary" streams like
-     * <code>std::cout</code>.
-     *
-     * In non debug builds, DBG_HERE is a "no-op" doing nothing, and so no
-     * useful output will be produced on cout.
-     *
-     * @internal
-     * @see dbg::indent
-     */
-    std::ostream &operator<<(std::ostream &s, const source_pos &pos);
+  /*
+   * Utility macro used by the DBG_ASSERTION macro - it converts a
+   * macro parameter into a character string.
+   */
+#define DBG_STRING(a) #a
 
-    /**************************************************************************
-     * Behaviour
-     *************************************************************************/
-
-    /**
-     * Sets what happens when assertions (or other constraints) trigger. There
-     * will always be diagnostic ouput. Assertions have 'abort' behaviour by
-     * default - like the ISO C standard, they cause an abort.
-     *
-     * If an assertion is encountered at the fatal level, the debugging library
-     * will abort the program regardless of this behaviour setting.
-     *
-     * If a diagnostic level is not enabled (see @ref enable) then the
-     * @ref assertion_behaviour is not enacted, and no output is produced.
-     *
-     * @param lvl       Diagnostic level to set behaviour for
-     * @param behaviour Assertion behaviour
-     * @see   dbg::set_assertion_period
-     * @see   dbg::enable
-     * @see   dbg::assertion
-     * @see   dbg::sentinel
-     * @see   dbg::unimplemented
-     * @see   dbg::check_ptr
-     */
-    void set_assertion_behaviour(level lvl, assertion_behaviour behaviour);
-
-    /**
-     * You may want an assertion to trigger once only and then for subsequent
-     * calls to remain inactive. For example, if there is an @ref assertion in
-     * a loop you may not want diagnostics produced for each loop iteration.
-     *
-     * To do this, you do the following:
-     * <pre>
-     *      // Prevent several thousand diagnostic print outs
-     *      dbg::set_assertion_period(CLOCKS_PER_SEC);
-     *
-     *      // Example loop
-     *      int array[LARGE_VALUE];
-     *      put_stuff_in_array(array);
-     *      for(unsigned int n = 0; n < LARGE_VALUE; n++)
-     *      {
-     *          dbg::assertion(DBG_ASSERT(array[n] != 0));
-     *          do_something(array[n]);
-     *      }
-     * </pre>
-     *
-     * set_assertion_period forces a certain time period between triggers of a
-     * particular constraint. The @ref assertion in the example above will only
-     * be triggered once a second (despite the fact that the constraint
-     * condition will be broken thousands of times a second). This will not
-     * affect any other @ref assertion - they will each have their own timeout
-     * periods.
-     *
-     * Setting a period of zero disables any constraint period.
-     *
-     * The default behaviour is to have no period.
-     *
-     * If a period is set then diagnostic printouts will include the number
-     * of times each constraint has been triggered (since the period was set).
-     * Using this, even if diagnostics don't always appear on the attached
-     * ostreams you have some indication of how often each constraint is
-     * triggered.
-     *
-     * This call only really makes sense if the @ref assertion_behaviour is
-     * set to @ref assertions_continue.
-     *
-     * @param period Time between triggerings of each assertion, or zero to
-     *               disable
-     * @see   dbg::set_assertion_behaviour
-     * @see   dbg::assertion
-     * @see   dbg::sentinel
-     * @see   dbg::unimplemented
-     * @see   dbg::check_ptr
-     */
-    void set_assertion_period(dbgclock_t period);
-
-    /**************************************************************************
-     * Assertion
-     *************************************************************************/
-
-    /**
-     * Describes an @ref assertion.
-     *
-     * This is an internal data structure, you do not need to create it
-     * directly. Use the DBG_ASSERTION macro to create it.
-     *
-     * @internal
-     * @see dbg::assertion
-     */
-    struct assert_info : public source_pos
-    {
-        bool        asserted;
-        const char *text;
-
-        /**
-         * Do not call this directly. Use the DBG_ASSERTION macro.
-         *
-         * @internal
-         */
-        assert_info(bool a, const char *t,
-                    line_no_t line, func_name_t func,
-                    file_name_t file, dbg_source spos)
-            : source_pos(line, func, file, spos), asserted(a), text(t) {}
-
-        /**
-         * Do not call this directly. Use the DBG_ASSERTION macro.
-         *
-         * @internal
-         */
-        assert_info(bool a, const char *b, const source_pos &sp)
-            : source_pos(sp), asserted(a), text(b) {}
-    };
-
-    /*
-     * Utility macro used by the DBG_ASSERTION macro - it converts a
-     * macro parameter into a character string.
-     */
-    #define DBG_STRING(a) #a
-
-    /*
-     * Handy macro used by clients of the @ref dbg::assertion function.
-     * It use is described in the @ref assertion documentation.
-     *
-     * @see dbg::assertion
-     */
-    #define DBG_ASSERTION(a) \
+  /*
+   * Handy macro used by clients of the @ref dbg::assertion function.
+   * It use is described in the @ref assertion documentation.
+   *
+   * @see dbg::assertion
+   */
+#define DBG_ASSERTION(a) \
         ::dbg::assert_info(a, DBG_STRING(a), DBG_HERE)
-  
+
   // PATCH by mandor
   void init();
 
-    /**
-     * Used to assert a constraint in your code. Use the DBG_ASSERTION macro
-     * to generate the third parameter.
-     *
-     * This version creates an assertion bound to a particular @ref dbg_source.
-     *
-     * The assertion is the most general constraint utility - there are others
-     * which have more specific purposes (like @ref check_ptr to ensure a
-     * pointer is non-null). assertion allows you to test any boolean
-     * expression.
-     *
-     * To use assertion for a @ref dbg_source "foobar" you write code like:
-     * <pre>
-     *     int i = 0;
-     *     dbg::assertion(info, "foobar", DBG_ASSERTION(i != 0));
-     * </pre>
-     *
-     * If you build with debugging enabled (see @ref dbg) the program will
-     * produce diagnostic output to the relevant output stream if the
-     * constraint fails, and the appropriate @ref assertion_behaviour
-     * is enacted.
-     *
-     * Since in non-debug builds the expression in the DBG_ASSERTION macro
-     * will not be evaluated, it is important that the expression has no
-     * side effects.
-     *
-     * @param lvl Diagnostic level to assert at
-     * @param src String describing the diagnostic source
-     * @param ai  assert_info structure created with DBG_ASSERTION
-     */
-    void assertion(level lvl, dbg_source src, const assert_info &ai);
+  /**
+   * Used to assert a constraint in your code. Use the DBG_ASSERTION macro
+   * to generate the third parameter.
+   *
+   * This version creates an assertion bound to a particular @ref dbg_source.
+   *
+   * The assertion is the most general constraint utility - there are others
+   * which have more specific purposes (like @ref check_ptr to ensure a
+   * pointer is non-null). assertion allows you to test any boolean
+   * expression.
+   *
+   * To use assertion for a @ref dbg_source "foobar" you write code like:
+   * <pre>
+   *     int i = 0;
+   *     dbg::assertion(info, "foobar", DBG_ASSERTION(i != 0));
+   * </pre>
+   *
+   * If you build with debugging enabled (see @ref dbg) the program will
+   * produce diagnostic output to the relevant output stream if the
+   * constraint fails, and the appropriate @ref assertion_behaviour
+   * is enacted.
+   *
+   * Since in non-debug builds the expression in the DBG_ASSERTION macro
+   * will not be evaluated, it is important that the expression has no
+   * side effects.
+   *
+   * @param lvl Diagnostic level to assert at
+   * @param src String describing the diagnostic source
+   * @param ai  assert_info structure created with DBG_ASSERTION
+   */
+  void assertion(level lvl, dbg_source src, const assert_info &ai);
+
+  /**
+   * Overloaded version of @ref assertion that is not bound to a particular
+   * @ref dbg_source.
+   *
+   * @param lvl Diagnostic level to assert at
+   * @param ai  assert_info structure created with DBG_ASSERTION
+   */
+  inline void assertion(level lvl, const assert_info &ai) {
+    assertion(lvl, 0, ai);
+  }
+
+  /**
+   * Overloaded version of @ref assertion that defaults to the
+   * warning @ref level.
+   *
+   * @param src String describing the diagnostic source
+   * @param ai assert_info structure created with DBG_ASSERTION
+   */
+  inline void assertion(dbg_source src, const assert_info &ai) {
+    assertion(warning, src, ai);
+  }
+
+  /**
+   * Overloaded version of @ref assertion that defaults to the
+   * warning @ref level and is not bound to a particular @ref dbg_source.
+   *
+   * @param ai assert_info structure created with DBG_ASSERTION
+   */
+  inline void assertion(const assert_info &ai) {
+    assertion(warning, 0, ai);
+  }
+
+  /**************************************************************************
+   * Sentinel
+   *************************************************************************/
+
+  /**
+   * You should put this directly after a "should never get here" comment.
+   *
+   * <pre>
+   *      int i = 5;
+   *      if (i == 5)
+   *      {
+   *          std::cout << "Correct program behaviour\n";
+   *      }
+   *      else
+   *      {
+   *          dbg::sentinel(dbg::error, "foobar", DBG_HERE);
+   *      }
+   * </pre>
+   *
+   * @param lvl  Diagnostic level to assert at
+   * @param src  String describing the diagnostic source
+   * @param here Supply DBG_HERE
+   */
+  void sentinel(level lvl, dbg_source src, const source_pos &here);
+
+  /**
+   * Overloaded version of @ref sentinel that is not bound to a particular
+   * @ref dbg_source.
+   *
+   * @param lvl  Diagnostic level to assert at
+   * @param here Supply DBG_HERE
+   */
+  inline void sentinel(level lvl, const source_pos &here) {
+    sentinel(lvl, 0, here);
+  }
+
+  /**
+   * Overloaded version of @ref sentinel that defaults to the warning
+   * @ref level and is not bound to a particular @ref dbg_source.
+   *
+   * @param src  String describing the diagnostic source
+   * @param here Supply DBG_HERE
+   */
+  inline void sentinel(dbg_source src, const source_pos &here) {
+    sentinel(warning, src, here);
+  }
+
+  /**
+   * Overloaded version of @ref sentinel that defaults to the warning
+   * @ref level and is not bound to a particular @ref dbg_source.
+   *
+   * @param here Supply DBG_HERE
+   */
+  inline void sentinel(const source_pos &here) {
+    sentinel(warning, 0, here);
+  }
+
+  /**************************************************************************
+   * Unimplemented
+   *************************************************************************/
+
+  /**
+   * You should put this directly after a "this has not been implemented
+   * (yet)" comment.
+   *
+   * <pre>
+   *      switch (variable)
+   *      {
+   *          ...
+   *          case SOMETHING:
+   *          {
+   *              dbg::unimplemented(dbg::warning, "foobar", DBG_HERE);
+   *              break;
+   *          }
+   *          ...
+   *      }
+   * </pre>
+   *
+   * Note the "break;" above - if the @ref assertion_behaviour is non-fatal
+   * then execution will continue. You wouldn't want unintentional
+   * fall-through.
+   *
+   * @param lvl  Diagnostic level to assert at
+   * @param src  String describing the diagnostic source
+   * @param here Supply DBG_HERE
+   *
+   */
+  void unimplemented(level lvl, dbg_source src, const source_pos &here);
+
+  /**
+   * Overloaded version of @ref unimplemented that is not bound to a
+   * particular @ref dbg_source.
+   *
+   * @param lvl  Diagnostic level to assert at
+   * @param here Supply DBG_HERE
+   */
+  inline void unimplemented(level lvl, const source_pos &here) {
+    unimplemented(lvl, 0, here);
+  }
+
+  /**
+   * Overloaded version of @ref unimplemented that defaults to the
+   * warning @ref level.
+   *
+   * @param src  String describing the diagnostic source
+   * @param here Supply DBG_HERE
+   */
+  inline void unimplemented(dbg_source src, const source_pos &here) {
+    unimplemented(warning, src, here);
+  }
+
+  /**
+   * Overloaded version of @ref unimplemented that defaults to the
+   * warning @ref level and is not bound to a particular @ref dbg_source.
+   *
+   * @param here Supply DBG_HERE
+   */
+  inline void unimplemented(const source_pos &here) {
+    unimplemented(warning, 0, here);
+  }
+
+  /**************************************************************************
+   * Pointer checking
+   *************************************************************************/
+
+  /**
+   * A diagnostic function to assert that a pointer is not zero.
+   *
+   * To use it you write code like:
+   * <pre>
+   *     void *p = 0;
+   *     dbg::check_ptr(dbg::info, "foobar", p, DBG_HERE);
+   * </pre>
+   *
+   * It's better to use this than a general purpose @ref assertion. It
+   * reads far more intuitively in your code.
+   *
+   * @param lvl  Diagnostic level to assert at
+   * @param src  String describing the diagnostic source
+   * @param p    Pointer to check
+   * @param here Supply DBG_HERE
+   */
+  void check_ptr(level lvl, dbg_source src, void *p, const source_pos &here);
+
+  /**
+   * Overloaded version of @ref check_ptr that is not bound to a particular
+   * @ref dbg_source.
+   *
+   * @param lvl  Diagnostic level to assert at
+   * @param p    Pointer to check
+   * @param here Supply DBG_HERE
+   */
+  inline void check_ptr(level lvl, void *p, const source_pos &here) {
+    check_ptr(lvl, 0, p, here);
+  }
+
+  /**
+   * Overloaded version of @ref check_ptr that defaults to the
+   * warning @ref level.
+   *
+   * @param src  String describing the diagnostic source
+   * @param p    Pointer to check
+   * @param here Supply DBG_HERE
+   */
+  inline void check_ptr(dbg_source src, void *p, const source_pos &here) {
+    check_ptr(warning, src, p, here);
+  }
+
+  /**
+   * Overloaded version of @ref check_ptr that defaults to the
+   * warning @ref level and is not bound to a particular @ref dbg_source.
+   *
+   * @param p    Pointer to check
+   * @param here Supply DBG_HERE
+   */
+  inline void check_ptr(void *p, const source_pos &here) {
+    check_ptr(warning, 0, p, here);
+  }
+
+  /**************************************************************************
+   * Bounds checking
+   *************************************************************************/
+
+  /**
+   * Utility that determines the number of elements in an array. Used
+   * by the @ref check_bounds constraint utility function.
+   *
+   * This is not available in non-debug versions, so do not use it
+   * directly.
+   *
+   * @param  array Array to determine size of
+   * @return The number of elements in the array
+   * @internal
+   */
+  template <class T>
+  inline unsigned int array_size(T &array) {
+    return sizeof(array)/sizeof(array[0]);
+  }
+
+  /**
+   * A diagnostic function to assert that an array access is not out
+   * of bounds.
+   *
+   * You probably want to use the more convenient check_bounds versions
+   * below if you are accessing an array whose definition is in scope -
+   * the compiler will then safely detrmine the size of the array for you.
+   *
+   * @param lvl   Diagnostic level to assert at
+   * @param src   String describing the diagnostic source
+   * @param index Test index
+   * @param bound Boundary value (index must be < bound, and >= 0)
+   * @param here  Supply DBG_HERE
+   */
+  void check_bounds(level lvl, dbg_source src,
+                    int index, int bound, const source_pos &here);
+  /**
+   * A diagnostic function to assert that an array access is not out
+   * of bounds. With this version you can specify the minimum and maximum
+   * bound value.
+   *
+   * You probably want to use the more convenient check_bounds version
+   * below if you are accessing an array whose definition is in scope -
+   * the compiler will then safely detrmine the size of the array for you.
+   *
+   * @param lvl      Diagnostic level to assert at
+   * @param src      String describing the diagnostic source
+   * @param index    Test index
+   * @param minbound Minimum bound (index must be >= minbound
+   * @param maxbound Minimum bound (index must be < maxbound)
+   * @param here     Supply DBG_HERE
+   */
+  inline void check_bounds(level lvl, dbg_source src,
+                           int index, int minbound, int maxbound,
+                           const source_pos &here) {
+    check_bounds(lvl, src, index-minbound, maxbound, here);
+  }
+
+  /**
+   * Overloaded version of check_bounds that can automatically determine the
+   * size of an array if it within the current scope.
+   *
+   * You use it like this:
+   * <pre>
+   *     int a[10];
+   *     int index = 10;
+   *     dbg::check_bounds(dbg::error, index, a, DBG_HERE);
+   *     a[index] = 5;
+   * </pre>
+   *
+   * @param lvl   Diagnostic level to assert at
+   * @param src  String describing the diagnostic source
+   * @param index Test index
+   * @param array Array index is applied to
+   * @param here  Supply DBG_HERE
+   */
+  template <class T>
+  void check_bounds(level lvl, dbg_source src,
+                    int index, T &array, const source_pos &here) {
+    check_bounds(lvl, src, index, array_size(array), here);
+  }
+
+  /**
+   * Overloaded version of @ref check_bounds that is not bound to a
+   * particular @ref dbg_source.
+   *
+   * @param lvl   Diagnostic level to assert at
+   * @param index Test index
+   * @param array Array index is applied to
+   * @param here  Supply DBG_HERE
+   */
+  template <class T>
+  void check_bounds(level lvl, int index, T &array, const source_pos &here) {
+    check_bounds(lvl, 0, index, array_size(array), here);
+  }
+
+  /**
+   * Overloaded version of @ref check_bounds that defaults to the
+   * warning @ref level.
+   *
+   * @param src   String describing the diagnostic source
+   * @param index Test index
+   * @param array Array index is applied to
+   * @param here  Supply DBG_HERE
+   */
+  template <class T>
+  void check_bounds(dbg_source src, int index, T &array,
+                    const source_pos &here) {
+    check_bounds(warning, src, index, array_size(array), here);
+  }
+
+  /**
+   * Overloaded version of @ref check_bounds that defaults to the
+   * warning @ref level and is not bound to a particular @ref dbg_source.
+   *
+   * @param index Test index
+   * @param array Array index is applied to
+   * @param here  Supply DBG_HERE
+   */
+  template <class T>
+  void check_bounds(int index, T &array, const source_pos &here) {
+    check_bounds(warning, 0, index, array_size(array), here);
+  }
+
+  /**************************************************************************
+   * Tracing
+   *************************************************************************/
+
+  /**
+   * The trace class allows you to easily produce tracing diagnostics.
+   *
+   * When the ctor is called, it prints "->" and the name of the
+   * function, increasing the indent level. When the object is deleted
+   * it prints "<-" followed again by the name of the function.
+   *
+   * You can use the name of the current function gathered via the
+   * DBG_HERE macro, or some other tracing string you supply.
+   *
+   * Diagnostics are produced at the tracing @ref level.
+   *
+   * For example, if you write the following code:
+   *
+   * <pre>
+   *     void foo()
+   *     {
+   *         dbg::trace t1(DBG_HERE);
+   *         // do some stuff
+   *         {
+   *             dbg::trace t2("sub block");
+   *             // do some stuff
+   *             dbg::out(tracing) << dbg::prefix() << "Hello!\n";
+   *         }
+   *         dbg::out(tracing) << dbg::prefix() << "Hello again!\n";
+   *         // more stuff
+   *     }
+   * </pre>
+   *
+   * You will get the following tracing information:
+   *
+   * <pre>
+   *     *** ->foo (0 in foo.cpp)
+   *     ***   ->sub block
+   *     ***     Hello!
+   *     ***   <-sub block
+   *     ***   Hello again!
+   *     *** <-foo (0 in foo.cpp)
+   * </pre>
+   *
+   * Don't forget to create named dbg::trace objects. If you create
+   * anonymous objects (i.e. you just wrote "dbg::trace(DBG_HERE);")
+   * then the destructor will be called immediately, rather than at the
+   * end of the block scope, causing invalid trace output.
+   *
+   * Tracing does not cause assertions to trigger, therefore you will
+   * never generate an abort or exception using this object.
+   *
+   * If you disable the tracing diagnostic @ref level before the trace
+   * object's destructor is called you will still get the closing trace
+   * output. This is important, otherwise the indentation level of the
+   * library would get out of sync. In this case, the closing diagnostic
+   * output will have a "note" attached to indicate what has happened.
+   *
+   * Similarly, if tracing diagnostics are off when the trace object is
+   * created, yet subsequencently enabled before the destructor there will
+   * be no closing tracing ouput.
+   */
+  class trace {
+   public:
 
     /**
-     * Overloaded version of @ref assertion that is not bound to a particular
+     * Provide the function name, or some other tracing string.
+     *
+     * This will not tie the trace object to a particular
      * @ref dbg_source.
      *
-     * @param lvl Diagnostic level to assert at
-     * @param ai  assert_info structure created with DBG_ASSERTION
+     * @param name Tracing block name
      */
-    inline void assertion(level lvl, const assert_info &ai)
-    {
-        assertion(lvl, 0, ai);
-    }
+    trace(func_name_t name);
 
     /**
-     * Overloaded version of @ref assertion that defaults to the
-     * warning @ref level.
-     *
-     * @param src String describing the diagnostic source
-     * @param ai assert_info structure created with DBG_ASSERTION
-     */
-    inline void assertion(dbg_source src, const assert_info &ai)
-    {
-        assertion(warning, src, ai);
-    }
-
-    /**
-     * Overloaded version of @ref assertion that defaults to the
-     * warning @ref level and is not bound to a particular @ref dbg_source.
-     *
-     * @param ai assert_info structure created with DBG_ASSERTION
-     */
-    inline void assertion(const assert_info &ai)
-    {
-        assertion(warning, 0, ai);
-    }
-
-    /**************************************************************************
-     * Sentinel
-     *************************************************************************/
-
-    /**
-     * You should put this directly after a "should never get here" comment.
-     *
-     * <pre>
-     *      int i = 5;
-     *      if (i == 5)
-     *      {
-     *          std::cout << "Correct program behaviour\n";
-     *      }
-     *      else
-     *      {
-     *          dbg::sentinel(dbg::error, "foobar", DBG_HERE);
-     *      }
-     * </pre>
-     *
-     * @param lvl  Diagnostic level to assert at
      * @param src  String describing the diagnostic source
-     * @param here Supply DBG_HERE
+     * @param name Tracing block name
      */
-    void sentinel(level lvl, dbg_source src, const source_pos &here);
+    trace(dbg_source src, func_name_t name);
 
     /**
-     * Overloaded version of @ref sentinel that is not bound to a particular
+     * This will not tie the trace object to a particular
      * @ref dbg_source.
      *
-     * @param lvl  Diagnostic level to assert at
      * @param here Supply DBG_HERE
      */
-    inline void sentinel(level lvl, const source_pos &here)
-    {
-        sentinel(lvl, 0, here);
-    }
+    trace(const source_pos &here);
 
     /**
-     * Overloaded version of @ref sentinel that defaults to the warning
-     * @ref level and is not bound to a particular @ref dbg_source.
-     *
      * @param src  String describing the diagnostic source
      * @param here Supply DBG_HERE
      */
-    inline void sentinel(dbg_source src, const source_pos &here)
-    {
-        sentinel(warning, src, here);
-    }
+    trace(dbg_source src, const source_pos &here);
+
+    ~trace();
+
+   private:
+
+    trace(const trace &);
+    trace &operator=(const trace &);
+
+    void trace_begin();
+    void trace_end();
+
+    dbg_source        m_src;
+    const char       *m_name;
+    const source_pos  m_pos;
+    bool              m_triggered;
+  };
+
+  /**************************************************************************
+   * Post conditions
+   *************************************************************************/
+
+  /**
+   * A post condition class. This utility automates the checking of
+   * post conditions using @ref assertion. It requires a member function
+   * with the signature:
+   * <pre>
+   *     bool some_class::invariant() const;
+   * </pre>
+   *
+   * When you create a post_mem_fun object you specify a post condition
+   * member function. When the post_mem_fun object is destroyed the
+   * postconsition is asserted.
+   *
+   * This is useful for methods where there are a number of exit points
+   * which would make it tedious to put the same @ref dbg::assertion
+   * in multiple places.
+   *
+   * It is also handy when an exception might be thrown and propagated by a
+   * funciton, ensuring that a postcondition is first checked. Bear in mind
+   * that Bad Things can happen if the @ref assertion_behaviour is
+   * assertions_throw and this is triggered via a propagating exception.
+   *
+   * An example of usage, the do_test method below uses the post_mem_fun
+   * object:
+   * <pre>
+   *     class test
+   *     {
+   *         public:
+   *             test() : a(10) {}
+   *             do_test()
+   *             {
+   *                 dbg::post_mem_fun<test>
+   *                    post(dbg::info, this, &test::invariant, DBG_HERE);
+   *                 a = 9;
+   *                 if (SOME_CONDITION)
+   *                 {
+   *                     return;                                      // (*)
+   *                 }
+   *                 else if (SOME_OTHER_CONDITION)
+   *                 {
+   *                     throw std::exception();                      // (*)
+   *                 }
+   *                                                                  // (*)
+   *             }
+   *         private:
+   *             bool invariant()
+   *             {
+   *                 return a == 10;
+   *             }
+   *             int a;
+   *     };
+   * </pre>
+   * The post condition will be asserted at each point marked (*).
+   *
+   * @see dbg::post
+   */
+  template <class obj_t>
+  class post_mem_fun {
+   public:
 
     /**
-     * Overloaded version of @ref sentinel that defaults to the warning
-     * @ref level and is not bound to a particular @ref dbg_source.
-     *
+     * The type of the contraint function. It returns a bool and
+     * takes no parameters.
+     */
+    typedef bool (obj_t::*fn_t)();
+
+    /**
+     * @param lvl  Diagnostic level
+     * @param obj  Object to invoke @p fn on (usually "this")
+     * @param fn   Post condition member function
      * @param here Supply DBG_HERE
      */
-    inline void sentinel(const source_pos &here)
-    {
-        sentinel(warning, 0, here);
-    }
-
-    /**************************************************************************
-     * Unimplemented
-     *************************************************************************/
+    post_mem_fun(level lvl, obj_t *obj, fn_t fn, const source_pos &pos)
+      : m_lvl(lvl), m_src(0), m_obj(obj), m_fn(fn), m_pos(pos) {}
 
     /**
-     * You should put this directly after a "this has not been implemented
-     * (yet)" comment.
-     *
-     * <pre>
-     *      switch (variable)
-     *      {
-     *          ...
-     *          case SOMETHING:
-     *          {
-     *              dbg::unimplemented(dbg::warning, "foobar", DBG_HERE);
-     *              break;
-     *          }
-     *          ...
-     *      }
-     * </pre>
-     *
-     * Note the "break;" above - if the @ref assertion_behaviour is non-fatal
-     * then execution will continue. You wouldn't want unintentional
-     * fall-through.
-     *
-     * @param lvl  Diagnostic level to assert at
+     * @param lvl  Diagnostic level
      * @param src  String describing the diagnostic source
-     * @param here Supply DBG_HERE
-     *
-     */
-    void unimplemented(level lvl, dbg_source src, const source_pos &here);
-
-    /**
-     * Overloaded version of @ref unimplemented that is not bound to a
-     * particular @ref dbg_source.
-     *
-     * @param lvl  Diagnostic level to assert at
+     * @param obj  Object to invoke @p fn on (usually "this")
+     * @param fn   Post condition member function
      * @param here Supply DBG_HERE
      */
-    inline void unimplemented(level lvl, const source_pos &here)
-    {
-        unimplemented(lvl, 0, here);
-    }
+    post_mem_fun(level lvl, dbg_source src,
+                 obj_t *obj, fn_t fn, const source_pos &pos)
+      : m_lvl(lvl), m_src(src), m_obj(obj), m_fn(fn), m_pos(pos) {}
 
     /**
-     * Overloaded version of @ref unimplemented that defaults to the
-     * warning @ref level.
+     * Overloaded version of constructor which defaults to the
+     * @ref warning diagnostic level.
+     *
+     * @param obj  Object to invoke @p fn on (usually "this")
+     * @param fn   Post condition member function
+     * @param here Supply DBG_HERE
+     */
+    post_mem_fun(obj_t *obj, fn_t fn, const source_pos &pos)
+      : m_lvl(dbg::warning), m_src(0),
+        m_obj(obj), m_fn(fn), m_pos(pos) {}
+
+    /**
+     * Overloaded version of constructor which defaults to the
+     * @ref warning diagnostic level.
      *
      * @param src  String describing the diagnostic source
+     * @param obj  Object to invoke @p fn on (usually "this")
+     * @param fn   Post condition member function
      * @param here Supply DBG_HERE
      */
-    inline void unimplemented(dbg_source src, const source_pos &here)
-    {
-        unimplemented(warning, src, here);
-    }
+    post_mem_fun(dbg_source src, obj_t *obj, fn_t fn,
+                 const source_pos &pos)
+      : m_lvl(dbg::warning), m_src(src),
+        m_obj(obj), m_fn(fn), m_pos(pos) {}
 
     /**
-     * Overloaded version of @ref unimplemented that defaults to the
-     * warning @ref level and is not bound to a particular @ref dbg_source.
-     *
+     * The destructor asserts the post condition.
+     */
+    ~post_mem_fun() {
+      assertion(m_lvl, m_src,
+                assert_info((m_obj->*m_fn)(), "post condition",
+                            m_pos.line, m_pos.func, m_pos.file, m_pos.src));
+    }
+
+   private:
+
+    const level       m_lvl;
+    const dbg_source  m_src;
+    obj_t            *m_obj;
+    fn_t              m_fn;
+    const source_pos  m_pos;
+  };
+
+  /**
+   * A post condition class. Unlike @ref post_mem_fun, this class
+   * calls a non-member function with signature:
+   * <pre>
+   *     bool some_function();
+   * </pre>
+   *
+   * Otherwise, use it identically to the @ref post_mem_fun.
+   *
+   * @see dbg::post_mem_fun
+   */
+  class post {
+   public:
+
+    /**
+     * The type of the contraint function. It returns a bool and
+     * takes no parameters.
+     */
+    typedef bool (*fn_t)();
+
+    /**
+     * @param lvl  Diagnostic level
+     * @param fn   Post condition function
      * @param here Supply DBG_HERE
      */
-    inline void unimplemented(const source_pos &here)
-    {
-        unimplemented(warning, 0, here);
-    }
-
-    /**************************************************************************
-     * Pointer checking
-     *************************************************************************/
+    post(level lvl, fn_t fn, const source_pos &pos)
+      : m_lvl(lvl), m_src(0), m_fn(fn), m_pos(pos) {}
 
     /**
-     * A diagnostic function to assert that a pointer is not zero.
-     *
-     * To use it you write code like:
-     * <pre>
-     *     void *p = 0;
-     *     dbg::check_ptr(dbg::info, "foobar", p, DBG_HERE);
-     * </pre>
-     *
-     * It's better to use this than a general purpose @ref assertion. It
-     * reads far more intuitively in your code.
-     *
-     * @param lvl  Diagnostic level to assert at
+     * @param lvl  Diagnostic level
      * @param src  String describing the diagnostic source
-     * @param p    Pointer to check
+     * @param fn   Post condition function
      * @param here Supply DBG_HERE
      */
-    void check_ptr(level lvl, dbg_source src, void *p, const source_pos &here);
+    post(level lvl, dbg_source src, fn_t fn, const source_pos &pos)
+      : m_lvl(lvl), m_src(src), m_fn(fn), m_pos(pos) {}
 
     /**
-     * Overloaded version of @ref check_ptr that is not bound to a particular
-     * @ref dbg_source.
+     * Overloaded version of constructor which defaults to the
+     * @ref warning diagnostic level.
      *
-     * @param lvl  Diagnostic level to assert at
-     * @param p    Pointer to check
+     * @param fn   Post condition function
      * @param here Supply DBG_HERE
      */
-    inline void check_ptr(level lvl, void *p, const source_pos &here)
-    {
-        check_ptr(lvl, 0, p, here);
-    }
+    post(fn_t fn, const source_pos &pos)
+      : m_lvl(dbg::warning), m_src(0), m_fn(fn), m_pos(pos) {}
 
     /**
-     * Overloaded version of @ref check_ptr that defaults to the
-     * warning @ref level.
+     * Overloaded version of constructor which defaults to the
+     * @ref warning diagnostic level.
      *
      * @param src  String describing the diagnostic source
-     * @param p    Pointer to check
+     * @param fn   Post condition function
      * @param here Supply DBG_HERE
      */
-    inline void check_ptr(dbg_source src, void *p, const source_pos &here)
-    {
-        check_ptr(warning, src, p, here);
+    post(dbg_source src, fn_t fn, const source_pos &pos)
+      : m_lvl(dbg::warning), m_src(src), m_fn(fn), m_pos(pos) {}
+
+    /**
+     * The destructor asserts the post condition.
+     */
+    ~post() {
+      assertion(m_lvl, m_src,
+                assert_info(m_fn(), "post condition",
+                            m_pos.line, m_pos.func, m_pos.file, m_pos.src));
     }
 
-    /**
-     * Overloaded version of @ref check_ptr that defaults to the
-     * warning @ref level and is not bound to a particular @ref dbg_source.
-     *
-     * @param p    Pointer to check
-     * @param here Supply DBG_HERE
-     */
-    inline void check_ptr(void *p, const source_pos &here)
-    {
-        check_ptr(warning, 0, p, here);
-    }
+   private:
 
-    /**************************************************************************
-     * Bounds checking
-     *************************************************************************/
+    level            m_lvl;
+    const dbg_source m_src;
+    fn_t             m_fn;
+    const source_pos m_pos;
+  };
 
-    /**
-     * Utility that determines the number of elements in an array. Used
-     * by the @ref check_bounds constraint utility function.
-     *
-     * This is not available in non-debug versions, so do not use it
-     * directly.
-     *
-     * @param  array Array to determine size of
-     * @return The number of elements in the array
-     * @internal
-     */
-    template <class T>
-    inline unsigned int array_size(T &array)
-    {
-        return sizeof(array)/sizeof(array[0]);
-    }
+  /**************************************************************************
+   * Compile time assertions
+   *************************************************************************/
 
-    /**
-     * A diagnostic function to assert that an array access is not out
-     * of bounds.
-     *
-     * You probably want to use the more convenient check_bounds versions
-     * below if you are accessing an array whose definition is in scope -
-     * the compiler will then safely detrmine the size of the array for you.
-     *
-     * @param lvl   Diagnostic level to assert at
-     * @param src   String describing the diagnostic source
-     * @param index Test index
-     * @param bound Boundary value (index must be < bound, and >= 0)
-     * @param here  Supply DBG_HERE
-     */
-    void check_bounds(level lvl, dbg_source src,
-                      int index, int bound, const source_pos &here);
-    /**
-     * A diagnostic function to assert that an array access is not out
-     * of bounds. With this version you can specify the minimum and maximum
-     * bound value.
-     *
-     * You probably want to use the more convenient check_bounds version
-     * below if you are accessing an array whose definition is in scope -
-     * the compiler will then safely detrmine the size of the array for you.
-     *
-     * @param lvl      Diagnostic level to assert at
-     * @param src      String describing the diagnostic source
-     * @param index    Test index
-     * @param minbound Minimum bound (index must be >= minbound
-     * @param maxbound Minimum bound (index must be < maxbound)
-     * @param here     Supply DBG_HERE
-     */
-    inline void check_bounds(level lvl, dbg_source src,
-                             int index, int minbound, int maxbound,
-                             const source_pos &here)
-    {
-        check_bounds(lvl, src, index-minbound, maxbound, here);
-    }
-
-    /**
-     * Overloaded version of check_bounds that can automatically determine the
-     * size of an array if it within the current scope.
-     *
-     * You use it like this:
-     * <pre>
-     *     int a[10];
-     *     int index = 10;
-     *     dbg::check_bounds(dbg::error, index, a, DBG_HERE);
-     *     a[index] = 5;
-     * </pre>
-     *
-     * @param lvl   Diagnostic level to assert at
-     * @param src  String describing the diagnostic source
-     * @param index Test index
-     * @param array Array index is applied to
-     * @param here  Supply DBG_HERE
-     */
-    template <class T>
-    void check_bounds(level lvl, dbg_source src,
-                      int index, T &array, const source_pos &here)
-    {
-        check_bounds(lvl, src, index, array_size(array), here);
-    }
-
-    /**
-     * Overloaded version of @ref check_bounds that is not bound to a
-     * particular @ref dbg_source.
-     *
-     * @param lvl   Diagnostic level to assert at
-     * @param index Test index
-     * @param array Array index is applied to
-     * @param here  Supply DBG_HERE
-     */
-    template <class T>
-    void check_bounds(level lvl, int index, T &array, const source_pos &here)
-    {
-        check_bounds(lvl, 0, index, array_size(array), here);
-    }
-
-    /**
-     * Overloaded version of @ref check_bounds that defaults to the
-     * warning @ref level.
-     *
-     * @param src   String describing the diagnostic source
-     * @param index Test index
-     * @param array Array index is applied to
-     * @param here  Supply DBG_HERE
-     */
-    template <class T>
-    void check_bounds(dbg_source src, int index, T &array,
-                      const source_pos &here)
-    {
-        check_bounds(warning, src, index, array_size(array), here);
-    }
-
-    /**
-     * Overloaded version of @ref check_bounds that defaults to the
-     * warning @ref level and is not bound to a particular @ref dbg_source.
-     *
-     * @param index Test index
-     * @param array Array index is applied to
-     * @param here  Supply DBG_HERE
-     */
-    template <class T>
-    void check_bounds(int index, T &array, const source_pos &here)
-    {
-        check_bounds(warning, 0, index, array_size(array), here);
-    }
-
-    /**************************************************************************
-     * Tracing
-     *************************************************************************/
-
-    /**
-     * The trace class allows you to easily produce tracing diagnostics.
-     *
-     * When the ctor is called, it prints "->" and the name of the
-     * function, increasing the indent level. When the object is deleted
-     * it prints "<-" followed again by the name of the function.
-     *
-     * You can use the name of the current function gathered via the
-     * DBG_HERE macro, or some other tracing string you supply.
-     *
-     * Diagnostics are produced at the tracing @ref level.
-     *
-     * For example, if you write the following code:
-     *
-     * <pre>
-     *     void foo()
-     *     {
-     *         dbg::trace t1(DBG_HERE);
-     *         // do some stuff
-     *         {
-     *             dbg::trace t2("sub block");
-     *             // do some stuff
-     *             dbg::out(tracing) << dbg::prefix() << "Hello!\n";
-     *         }
-     *         dbg::out(tracing) << dbg::prefix() << "Hello again!\n";
-     *         // more stuff
-     *     }
-     * </pre>
-     *
-     * You will get the following tracing information:
-     *
-     * <pre>
-     *     *** ->foo (0 in foo.cpp)
-     *     ***   ->sub block
-     *     ***     Hello!
-     *     ***   <-sub block
-     *     ***   Hello again!
-     *     *** <-foo (0 in foo.cpp)
-     * </pre>
-     *
-     * Don't forget to create named dbg::trace objects. If you create
-     * anonymous objects (i.e. you just wrote "dbg::trace(DBG_HERE);")
-     * then the destructor will be called immediately, rather than at the
-     * end of the block scope, causing invalid trace output.
-     *
-     * Tracing does not cause assertions to trigger, therefore you will
-     * never generate an abort or exception using this object.
-     *
-     * If you disable the tracing diagnostic @ref level before the trace
-     * object's destructor is called you will still get the closing trace
-     * output. This is important, otherwise the indentation level of the
-     * library would get out of sync. In this case, the closing diagnostic
-     * output will have a "note" attached to indicate what has happened.
-     *
-     * Similarly, if tracing diagnostics are off when the trace object is
-     * created, yet subsequencently enabled before the destructor there will
-     * be no closing tracing ouput.
-     */
-    class trace
-    {
-        public:
-
-            /**
-             * Provide the function name, or some other tracing string.
-             *
-             * This will not tie the trace object to a particular
-             * @ref dbg_source.
-             *
-             * @param name Tracing block name
-             */
-            trace(func_name_t name);
-
-            /**
-             * @param src  String describing the diagnostic source
-             * @param name Tracing block name
-             */
-            trace(dbg_source src, func_name_t name);
-
-            /**
-             * This will not tie the trace object to a particular
-             * @ref dbg_source.
-             *
-             * @param here Supply DBG_HERE
-             */
-            trace(const source_pos &here);
-
-            /**
-             * @param src  String describing the diagnostic source
-             * @param here Supply DBG_HERE
-             */
-            trace(dbg_source src, const source_pos &here);
-
-            ~trace();
-
-        private:
-
-            trace(const trace &);
-            trace &operator=(const trace &);
-
-            void trace_begin();
-            void trace_end();
-
-            dbg_source        m_src;
-            const char       *m_name;
-            const source_pos  m_pos;
-            bool              m_triggered;
-    };
-
-    /**************************************************************************
-     * Post conditions
-     *************************************************************************/
-
-    /**
-     * A post condition class. This utility automates the checking of
-     * post conditions using @ref assertion. It requires a member function
-     * with the signature:
-     * <pre>
-     *     bool some_class::invariant() const;
-     * </pre>
-     *
-     * When you create a post_mem_fun object you specify a post condition
-     * member function. When the post_mem_fun object is destroyed the
-     * postconsition is asserted.
-     *
-     * This is useful for methods where there are a number of exit points
-     * which would make it tedious to put the same @ref dbg::assertion
-     * in multiple places.
-     *
-     * It is also handy when an exception might be thrown and propagated by a
-     * funciton, ensuring that a postcondition is first checked. Bear in mind
-     * that Bad Things can happen if the @ref assertion_behaviour is
-     * assertions_throw and this is triggered via a propagating exception.
-     *
-     * An example of usage, the do_test method below uses the post_mem_fun
-     * object:
-     * <pre>
-     *     class test
-     *     {
-     *         public:
-     *             test() : a(10) {}
-     *             do_test()
-     *             {
-     *                 dbg::post_mem_fun<test>
-     *                    post(dbg::info, this, &test::invariant, DBG_HERE);
-     *                 a = 9;
-     *                 if (SOME_CONDITION)
-     *                 {
-     *                     return;                                      // (*)
-     *                 }
-     *                 else if (SOME_OTHER_CONDITION)
-     *                 {
-     *                     throw std::exception();                      // (*)
-     *                 }
-     *                                                                  // (*)
-     *             }
-     *         private:
-     *             bool invariant()
-     *             {
-     *                 return a == 10;
-     *             }
-     *             int a;
-     *     };
-     * </pre>
-     * The post condition will be asserted at each point marked (*).
-     *
-     * @see dbg::post
-     */
-    template <class obj_t>
-    class post_mem_fun
-    {
-        public:
-
-            /**
-             * The type of the contraint function. It returns a bool and
-             * takes no parameters.
-             */
-            typedef bool (obj_t::*fn_t)();
-
-            /**
-             * @param lvl  Diagnostic level
-             * @param obj  Object to invoke @p fn on (usually "this")
-             * @param fn   Post condition member function
-             * @param here Supply DBG_HERE
-             */
-            post_mem_fun(level lvl, obj_t *obj, fn_t fn, const source_pos &pos)
-                : m_lvl(lvl), m_src(0), m_obj(obj), m_fn(fn), m_pos(pos) {}
-
-            /**
-             * @param lvl  Diagnostic level
-             * @param src  String describing the diagnostic source
-             * @param obj  Object to invoke @p fn on (usually "this")
-             * @param fn   Post condition member function
-             * @param here Supply DBG_HERE
-             */
-            post_mem_fun(level lvl, dbg_source src,
-                         obj_t *obj, fn_t fn, const source_pos &pos)
-                : m_lvl(lvl), m_src(src), m_obj(obj), m_fn(fn), m_pos(pos) {}
-
-            /**
-             * Overloaded version of constructor which defaults to the
-             * @ref warning diagnostic level.
-             *
-             * @param obj  Object to invoke @p fn on (usually "this")
-             * @param fn   Post condition member function
-             * @param here Supply DBG_HERE
-             */
-            post_mem_fun(obj_t *obj, fn_t fn, const source_pos &pos)
-                : m_lvl(dbg::warning), m_src(0),
-                  m_obj(obj), m_fn(fn), m_pos(pos) {}
-
-            /**
-             * Overloaded version of constructor which defaults to the
-             * @ref warning diagnostic level.
-             *
-             * @param src  String describing the diagnostic source
-             * @param obj  Object to invoke @p fn on (usually "this")
-             * @param fn   Post condition member function
-             * @param here Supply DBG_HERE
-             */
-            post_mem_fun(dbg_source src, obj_t *obj, fn_t fn,
-                         const source_pos &pos)
-                : m_lvl(dbg::warning), m_src(src),
-                  m_obj(obj), m_fn(fn), m_pos(pos) {}
-
-            /**
-             * The destructor asserts the post condition.
-             */
-            ~post_mem_fun()
-            {
-                assertion(m_lvl, m_src,
-                          assert_info((m_obj->*m_fn)(), "post condition",
-                          m_pos.line, m_pos.func, m_pos.file, m_pos.src));
-            }
-
-        private:
-
-            const level       m_lvl;
-            const dbg_source  m_src;
-            obj_t            *m_obj;
-            fn_t              m_fn;
-            const source_pos  m_pos;
-    };
-
-     /**
-      * A post condition class. Unlike @ref post_mem_fun, this class
-      * calls a non-member function with signature:
-      * <pre>
-      *     bool some_function();
-      * </pre>
-      *
-      * Otherwise, use it identically to the @ref post_mem_fun.
-      *
-      * @see dbg::post_mem_fun
-      */
-    class post
-    {
-        public:
-
-            /**
-             * The type of the contraint function. It returns a bool and
-             * takes no parameters.
-             */
-            typedef bool (*fn_t)();
-
-            /**
-             * @param lvl  Diagnostic level
-             * @param fn   Post condition function
-             * @param here Supply DBG_HERE
-             */
-            post(level lvl, fn_t fn, const source_pos &pos)
-                : m_lvl(lvl), m_src(0), m_fn(fn), m_pos(pos) {}
-
-            /**
-             * @param lvl  Diagnostic level
-             * @param src  String describing the diagnostic source
-             * @param fn   Post condition function
-             * @param here Supply DBG_HERE
-             */
-            post(level lvl, dbg_source src, fn_t fn, const source_pos &pos)
-                : m_lvl(lvl), m_src(src), m_fn(fn), m_pos(pos) {}
-
-            /**
-             * Overloaded version of constructor which defaults to the
-             * @ref warning diagnostic level.
-             *
-             * @param fn   Post condition function
-             * @param here Supply DBG_HERE
-             */
-            post(fn_t fn, const source_pos &pos)
-                : m_lvl(dbg::warning), m_src(0), m_fn(fn), m_pos(pos) {}
-
-            /**
-             * Overloaded version of constructor which defaults to the
-             * @ref warning diagnostic level.
-             *
-             * @param src  String describing the diagnostic source
-             * @param fn   Post condition function
-             * @param here Supply DBG_HERE
-             */
-            post(dbg_source src, fn_t fn, const source_pos &pos)
-                : m_lvl(dbg::warning), m_src(src), m_fn(fn), m_pos(pos) {}
-
-            /**
-             * The destructor asserts the post condition.
-             */
-            ~post()
-            {
-                assertion(m_lvl, m_src,
-                          assert_info(m_fn(), "post condition",
-                          m_pos.line, m_pos.func, m_pos.file, m_pos.src));
-            }
-
-        private:
-
-            level            m_lvl;
-            const dbg_source m_src;
-            fn_t             m_fn;
-            const source_pos m_pos;
-    };
-
-    /**************************************************************************
-     * Compile time assertions
-     *************************************************************************/
-
-    /**
-     * If we need to assert a constraint that can be calculated at compile
-     * time, then it would be advantageous to do so - moving error detection
-     * to an earlier phase in development is always a Good Thing.
-     *
-     * This utility allows you to do this. You use it like this:
-     *
-     * <pre>
-     *     enum { foo = 4, bar = 6 };
-     *     compile_assertion<(foo > bar)>();
-     * </pre>
-     *
-     * There is a particular point to observe here. Although the
-     * expression is now a template parameter, it is important to contain it
-     * in parentheses. This is simply because the expression contains a ">"
-     * which otherwise would be taken by the compiler to be the closing of
-     * the template parameter. Although not all expressions require this,
-     * it is good practice to do it at all times.
-     */
-    template <bool expression>
-    class compile_assertion;
-    template <>
-    class compile_assertion<true> {};
+  /**
+   * If we need to assert a constraint that can be calculated at compile
+   * time, then it would be advantageous to do so - moving error detection
+   * to an earlier phase in development is always a Good Thing.
+   *
+   * This utility allows you to do this. You use it like this:
+   *
+   * <pre>
+   *     enum { foo = 4, bar = 6 };
+   *     compile_assertion<(foo > bar)>();
+   * </pre>
+   *
+   * There is a particular point to observe here. Although the
+   * expression is now a template parameter, it is important to contain it
+   * in parentheses. This is simply because the expression contains a ">"
+   * which otherwise would be taken by the compiler to be the closing of
+   * the template parameter. Although not all expressions require this,
+   * it is good practice to do it at all times.
+   */
+  template <bool expression>
+  class compile_assertion;
+  template <>
+  class compile_assertion<true> {};
 
 #else
 
-    /**************************************************************************
-     * Non-debug stub versions
-     *************************************************************************/
+  /**************************************************************************
+   * Non-debug stub versions
+   *************************************************************************/
 
-    /*
-     * With debugging switched off we generate null versions of the above
-     * definitions.
-     *
-     * Given a good compiler and a strong prevailing headwind, these will
-     * optimise away to nothing.
-     */
+  /*
+   * With debugging switched off we generate null versions of the above
+   * definitions.
+   *
+   * Given a good compiler and a strong prevailing headwind, these will
+   * optimise away to nothing.
+   */
 
-    #define DBG_HERE         ((void*)0)
-    #define DBG_ASSERTION(a) ((void*)0)
+#define DBG_HERE         ((void*)0)
+#define DBG_ASSERTION(a) ((void*)0)
 
-    //enum { default_source = 0xdead };
-    const dbg_source default_source = 0;
+  //enum { default_source = 0xdead };
+  const dbg_source default_source = 0;
 
-    /**
-     * In non-debug versions, this class is used to replace an ostream
-     * so that code will compile away. Do not use it directly.
-     *
-     * @internal
-     */
-    class null_stream
-    {
-        public:
+  /**
+   * In non-debug versions, this class is used to replace an ostream
+   * so that code will compile away. Do not use it directly.
+   *
+   * @internal
+   */
+  class null_stream {
+   public:
 #ifdef _MSC_VER
-            null_stream &operator<<(void *)        { return *this; }
-            null_stream &operator<<(const void *)  { return *this; }
-            null_stream &operator<<(long)          { return *this; }
+    null_stream &operator<<(void *)        {
+      return *this;
+    }
+    null_stream &operator<<(const void *)  {
+      return *this;
+    }
+    null_stream &operator<<(long)          {
+      return *this;
+    }
 #else
-            template <class otype>
-            null_stream &operator<<(const otype &) { return *this; }
+    template <class otype>
+    null_stream &operator<<(const otype &) {
+      return *this;
+    }
 #endif
 
-            template <class otype>
-            null_stream &operator<<(otype &)       { return *this; }
-      null_stream &operator<<(std::ostream& (*)(std::ostream&)) {return *this;}
-    };
+    template <class otype>
+    null_stream &operator<<(otype &)       {
+      return *this;
+    }
+    null_stream &operator<<(std::ostream& (*)(std::ostream&)) {
+      return *this;
+    }
+  };
 
-    struct prefix { prefix() {} prefix(level) {} };
-    struct indent { indent() {} indent(level) {} };
+  struct prefix {
+    prefix() {} prefix(level) {}
+  };
+  struct indent {
+    indent() {} indent(level) {}
+  };
 
-    inline void        enable(level, bool)                                 {}
-    inline void        enable(level, dbg_source, bool)                     {}
-    inline void        enable_all(level, bool)                             {}
-    inline null_stream out(level, dbg_source)         {return null_stream();}
-    inline null_stream out(level)                     {return null_stream();}
-    inline void        attach_ostream(level, std::ostream &)               {}
-    inline void        attach_ostream(level, dbg_source, std::ostream &)   {}
-    inline void        detach_ostream(level, std::ostream &)               {}
-    inline void        detach_ostream(level, dbg_source, std::ostream &)   {}
-    inline void        detach_all_ostreams(level)                          {}
-    inline void        detach_all_ostreams(level, dbg_source)              {}
-    inline null_stream info_out()                     {return null_stream();}
-    inline null_stream warning_out()                  {return null_stream();}
-    inline null_stream error_out()                    {return null_stream();}
-    inline null_stream fatal_out()                    {return null_stream();}
-    inline null_stream trace_out()                    {return null_stream();}
-    inline void        set_prefix(const char *)                            {}
-    inline void        enable_level_prefix(bool)                           {}
-    inline void        enable_time_prefix(bool)                            {}
+  inline void        enable(level, bool)                                 {}
+  inline void        enable(level, dbg_source, bool)                     {}
+  inline void        enable_all(level, bool)                             {}
+  inline null_stream out(level, dbg_source)         {
+    return null_stream();
+  }
+  inline null_stream out(level)                     {
+    return null_stream();
+  }
+  inline void        attach_ostream(level, std::ostream &)               {}
+  inline void        attach_ostream(level, dbg_source, std::ostream &)   {}
+  inline void        detach_ostream(level, std::ostream &)               {}
+  inline void        detach_ostream(level, dbg_source, std::ostream &)   {}
+  inline void        detach_all_ostreams(level)                          {}
+  inline void        detach_all_ostreams(level, dbg_source)              {}
+  inline null_stream info_out()                     {
+    return null_stream();
+  }
+  inline null_stream warning_out()                  {
+    return null_stream();
+  }
+  inline null_stream error_out()                    {
+    return null_stream();
+  }
+  inline null_stream fatal_out()                    {
+    return null_stream();
+  }
+  inline null_stream trace_out()                    {
+    return null_stream();
+  }
+  inline void        set_prefix(const char *)                            {}
+  inline void        enable_level_prefix(bool)                           {}
+  inline void        enable_time_prefix(bool)                            {}
 
-    inline void        set_assertion_behaviour(level, assertion_behaviour) {}
-    inline void        set_assertion_period(dbgclock_t)                    {}
-    inline void        assertion(level, dbg_source, void *)                {}
-    inline void        assertion(level, void *)                            {}
-    inline void        assertion(dbg_source, void *)                       {}
-    inline void        assertion(void *)                                   {}
-    inline void        sentinel(level, dbg_source, void *)                 {}
-    inline void        sentinel(level, void *)                             {}
-    inline void        sentinel(dbg_source, void *)                        {}
-    inline void        sentinel(void *)                                    {}
-    inline void        unimplemented(level, dbg_source, void *)            {}
-    inline void        unimplemented(level, void *)                        {}
-    inline void        unimplemented(dbg_source, void *)                   {}
-    inline void        unimplemented(void *)                               {}
-    inline void        check_ptr(level, dbg_source, void *, void *)        {}
-    inline void        check_ptr(level, void *, void *)                    {}
-    inline void        check_ptr(dbg_source, void *, void *)               {}
-    inline void        check_ptr(void *, void *)                           {}
-    inline void        check_bounds(level, void *, int, int, void *)       {}
-    inline void        check_bounds(level, dbg_source, int, void*, void*)  {}
-    inline void        check_bounds(level, dbg_source, int, int,
-                                    void *, void *)                        {}
-    inline void        check_bounds(level, int, void *, void*)             {}
-    inline void        check_bounds(void *, int, void *, void *)           {}
-    inline void        check_bounds(int, void *, void *)                   {}
+  inline void        set_assertion_behaviour(level, assertion_behaviour) {}
+  inline void        set_assertion_period(dbgclock_t)                    {}
+  inline void        assertion(level, dbg_source, void *)                {}
+  inline void        assertion(level, void *)                            {}
+  inline void        assertion(dbg_source, void *)                       {}
+  inline void        assertion(void *)                                   {}
+  inline void        sentinel(level, dbg_source, void *)                 {}
+  inline void        sentinel(level, void *)                             {}
+  inline void        sentinel(dbg_source, void *)                        {}
+  inline void        sentinel(void *)                                    {}
+  inline void        unimplemented(level, dbg_source, void *)            {}
+  inline void        unimplemented(level, void *)                        {}
+  inline void        unimplemented(dbg_source, void *)                   {}
+  inline void        unimplemented(void *)                               {}
+  inline void        check_ptr(level, dbg_source, void *, void *)        {}
+  inline void        check_ptr(level, void *, void *)                    {}
+  inline void        check_ptr(dbg_source, void *, void *)               {}
+  inline void        check_ptr(void *, void *)                           {}
+  inline void        check_bounds(level, void *, int, int, void *)       {}
+  inline void        check_bounds(level, dbg_source, int, void*, void*)  {}
+  inline void        check_bounds(level, dbg_source, int, int,
+                                  void *, void *)                        {}
+  inline void        check_bounds(level, int, void *, void*)             {}
+  inline void        check_bounds(void *, int, void *, void *)           {}
+  inline void        check_bounds(int, void *, void *)                   {}
   inline   void	       init() {}
-    class trace
-    {
-        public:
-            trace(const char *fn_name)                                     {}
-            trace(dbg_source, const char *fn_name)                         {}
-            trace(void *here)                                              {}
-            trace(dbg_source, void *here)                                  {}
-            ~trace()                                                       {}
-    };
+  class trace {
+   public:
+    trace(const char *fn_name)                                     {}
+    trace(dbg_source, const char *fn_name)                         {}
+    trace(void *here)                                              {}
+    trace(dbg_source, void *here)                                  {}
+    ~trace()                                                       {}
+  };
 
-    template <class obj_t>
-    class post_mem_fun
-    {
-        public:
-            typedef bool (obj_t::*fn_t)();
-            post_mem_fun(level, void *, fn_t, void *)                      {}
-            post_mem_fun(level, dbg_source, void *, fn_t, void *)          {}
-            post_mem_fun(void *, fn_t, void *)                             {}
-            post_mem_fun(dbg_source, void *, fn_t, void *)                 {}
-            ~post_mem_fun()                                                {}
-    };
-    class post
-    {
-        public:
-            typedef bool(*fn_t)();
-            post(level, fn_t, void *)                                      {}
-            post(level, dbg_source, fn_t, void *)                          {}
-            post(fn_t, void *)                                             {}
-            post(dbg_source, fn_t, void *)                                 {}
-            ~post()                                                        {}
-    };
+  template <class obj_t>
+  class post_mem_fun {
+   public:
+    typedef bool (obj_t::*fn_t)();
+    post_mem_fun(level, void *, fn_t, void *)                      {}
+    post_mem_fun(level, dbg_source, void *, fn_t, void *)          {}
+    post_mem_fun(void *, fn_t, void *)                             {}
+    post_mem_fun(dbg_source, void *, fn_t, void *)                 {}
+    ~post_mem_fun()                                                {}
+  };
+  class post {
+   public:
+    typedef bool(*fn_t)();
+    post(level, fn_t, void *)                                      {}
+    post(level, dbg_source, fn_t, void *)                          {}
+    post(fn_t, void *)                                             {}
+    post(dbg_source, fn_t, void *)                                 {}
+    ~post()                                                        {}
+  };
 
-    template <bool expression>
-    class compile_assertion {};
+  template <bool expression>
+  class compile_assertion {};
 
 #endif
 }

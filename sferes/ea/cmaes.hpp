@@ -68,20 +68,18 @@ namespace sferes {
         _cmaes_pop = cmaes_SamplePopulation(&_evo);
         // copy pop
         for (size_t i = 0; i < this->_pop.size(); ++i)
-          for (size_t j = 0; j < this->_pop[i]->size(); ++j)
-          {
+          for (size_t j = 0; j < this->_pop[i]->size(); ++j) {
             this->_pop[i]->gen().data(j, _cmaes_pop[i][j]);
             this->_pop[i]->develop();
           }
         // eval
         this->_eval.eval(this->_pop, 0, this->_pop.size());
         this->apply_modifier();
-        for (size_t i = 0; i < this->_pop.size(); ++i)
-        {
+        for (size_t i = 0; i < this->_pop.size(); ++i) {
           //warning: CMAES minimizes the fitness...
-          _ar_funvals[i] = - this->_pop[i]->fit().value(); 
+          _ar_funvals[i] = - this->_pop[i]->fit().value();
         }
-        // 
+        //
         cmaes_UpdateDistribution(&_evo, _ar_funvals);
       }
     protected:

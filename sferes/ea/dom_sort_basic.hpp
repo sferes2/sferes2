@@ -39,20 +39,14 @@
 #define DOM_SORT_BASIC_HPP
 
 
-namespace sferes
-{
-  namespace ea
-  {
-    namespace _dom_sort_basic
-    {
-      struct non_dominated_f
-      {
+namespace sferes {
+  namespace ea {
+    namespace _dom_sort_basic {
+      struct non_dominated_f {
         template<typename Indiv>
-        inline bool operator() (const Indiv& ind, const std::vector<Indiv>& pop) const
-        {
+        inline bool operator() (const Indiv& ind, const std::vector<Indiv>& pop) const {
 
-          BOOST_FOREACH(Indiv i, pop)
-          {
+          BOOST_FOREACH(Indiv i, pop) {
             assert(i);
             assert(ind);
             if (fit::dominate(i, ind))
@@ -66,23 +60,20 @@ namespace sferes
     inline void dom_sort_basic(const std::vector<Indiv>& pop,
                                std::vector<std::vector<Indiv> >& fronts,
                                const ND& nd,
-                               std::vector<size_t>& ranks)
-    {
+                               std::vector<size_t>& ranks) {
       std::vector<size_t> p(pop.size());
       for (size_t i = 0; i < p.size(); ++i)
         p[i] = i;
       ranks.resize(pop.size());
       int rank = 0;
-      while (!p.empty())
-      {
+      while (!p.empty()) {
         std::vector<size_t> non_dominated;
         std::vector<Indiv> non_dominated_ind;
         std::vector<Indiv> tmp_pop;
         for (size_t i = 0; i < p.size(); ++i)
           tmp_pop.push_back(pop[p[i]]);
         for (size_t i = 0; i < p.size(); ++i)
-          if (nd(pop[p[i]], tmp_pop))
-          {
+          if (nd(pop[p[i]], tmp_pop)) {
             non_dominated.push_back(p[i]);
             ranks[p[i]] = rank;
             non_dominated_ind.push_back(pop[p[i]]);
@@ -102,8 +93,7 @@ namespace sferes
     template<typename Indiv>
     inline void dom_sort_basic(const std::vector<Indiv>& pop,
                                std::vector<std::vector<Indiv> >& fronts,
-                               std::vector<size_t>& ranks)
-    {
+                               std::vector<size_t>& ranks) {
       dom_sort_basic(pop, fronts, _dom_sort_basic::non_dominated_f(), ranks);
     }
   }

@@ -4,13 +4,13 @@
 //|
 //| This software is a computer program whose purpose is to facilitate
 //| experiments in evolutionary computation and evolutionary robotics.
-//| 
+//|
 //| This software is governed by the CeCILL license under French law
 //| and abiding by the rules of distribution of free software.  You
 //| can use, modify and/ or redistribute the software under the terms
 //| of the CeCILL license as circulated by CEA, CNRS and INRIA at the
 //| following URL "http://www.cecill.info".
-//| 
+//|
 //| As a counterpart to the access to the source code and rights to
 //| copy, modify and redistribute granted by the license, users are
 //| provided only with a limited warranty and the software's author,
@@ -43,35 +43,29 @@
 #include <boost/shared_ptr.hpp>
 #include <sferes/stc.hpp>
 
-namespace sferes
-{
-  namespace stat
-  {   
+namespace sferes {
+  namespace stat {
     template<typename Phen, typename Params, typename Exact = stc::Itself>
-    class Stat
-    {
-    public:
+    class Stat {
+     public:
       template<typename E>
-      void refresh(const E& ea)
-      {
-	assert(!ea.pop().empty());
-	stc::exact(this)->refresh(ea); 
+      void refresh(const E& ea) {
+        assert(!ea.pop().empty());
+        stc::exact(this)->refresh(ea);
       }
-      void show(std::ostream& os, size_t k)
-      {}
+      void show(std::ostream& os, size_t k) {
+      }
       template<class Archive>
-      void serialize(Archive & ar, const unsigned int version)
-      {}
-    protected:
+      void serialize(Archive & ar, const unsigned int version) {
+      }
+     protected:
       boost::shared_ptr<std::ofstream> _log_file;
       template<typename E>
-      void _create_log_file(const E& ea, const std::string& name)
-      {
-	if (!_log_file && ea.dump_enabled())
-	  {
-	    std::string log = ea.res_dir() + "/" + name;
-	    _log_file = boost::shared_ptr<std::ofstream>(new std::ofstream(log.c_str()));
-	  }
+      void _create_log_file(const E& ea, const std::string& name) {
+        if (!_log_file && ea.dump_enabled()) {
+          std::string log = ea.res_dir() + "/" + name;
+          _log_file = boost::shared_ptr<std::ofstream>(new std::ofstream(log.c_str()));
+        }
       }
     };
 

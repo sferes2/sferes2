@@ -6,13 +6,13 @@
 //|
 //| This software is a computer program whose purpose is to facilitate
 //| experiments in evolutionary computation and evolutionary robotics.
-//| 
+//|
 //| This software is governed by the CeCILL license under French law
 //| and abiding by the rules of distribution of free software.  You
 //| can use, modify and/ or redistribute the software under the terms
 //| of the CeCILL license as circulated by CEA, CNRS and INRIA at the
 //| following URL "http://www.cecill.info".
-//| 
+//|
 //| As a counterpart to the access to the source code and rights to
 //| copy, modify and redistribute granted by the license, users are
 //| provided only with a limited warranty and the software's author,
@@ -48,14 +48,11 @@
 #include <boost/random.hpp>
 
 // someday we will have a real thread-safe random number generator...
-namespace sferes
-{
-  namespace misc
-  {
+namespace sferes {
+  namespace misc {
     // NOT Thread-safe !
-    template<typename T> 
-    inline T rand(T max = 1.0)
-    { 
+    template<typename T>
+    inline T rand(T max = 1.0) {
       assert(max > 0);
       T v;
       do
@@ -67,8 +64,7 @@ namespace sferes
 
 
     template<typename T>
-    inline T rand(T min, T max)
-    {
+    inline T rand(T min, T max) {
       assert(max != min);
       assert(max > min);
       T res = T(rand<double>() * ((long int) max - (long int) min) + min);
@@ -77,51 +73,48 @@ namespace sferes
       return res;
     }
 
-    template<typename T> 
-    inline T gaussian_rand(T m=0.0,T  v=1.0)
-    {
+    template<typename T>
+    inline T gaussian_rand(T m=0.0,T  v=1.0) {
       float facteur = sqrt(-2.0f * log(rand<float>()));
       float trigo  = 2.0f * M_PI * rand<float>();
-      
+
       return T(m + v * facteur * cos(trigo));
-      
+
     }
 
-    inline void rand_ind(std::vector<size_t>& a1, size_t size)
-    {
+    inline void rand_ind(std::vector<size_t>& a1, size_t size) {
       a1.resize(size);
       for (size_t i = 0; i < a1.size(); ++i)
         a1[i] = i;
-      for (size_t i = 0; i < a1.size(); ++i)
-	{
-	  size_t k = rand(i, a1.size());
-	  assert(k < a1.size());
-	  boost::swap(a1[i], a1[k]);
-	}
+      for (size_t i = 0; i < a1.size(); ++i) {
+        size_t k = rand(i, a1.size());
+        assert(k < a1.size());
+        boost::swap(a1[i], a1[k]);
+      }
     }
 
 
     /// return a random it in the list
     template<typename T>
-    inline typename std::list<T>::iterator rand_in_list(std::list<T>& l)
-    {
+    inline typename std::list<T>::iterator rand_in_list(std::list<T>& l) {
       int n = rand(l.size());
       typename std::list<T>::iterator it = l.begin();
       for (int i = 0; i < n; ++i)
-	++it;
+        ++it;
       return it;
     }
-    
-    
-    inline bool flip_coin() { return rand<float>() < 0.5f; }
+
+
+    inline bool flip_coin() {
+      return rand<float>() < 0.5f;
+    }
 
     template<typename L>
-    inline typename L::iterator rand_l(L& l)
-    {
+    inline typename L::iterator rand_l(L& l) {
       size_t k = rand(l.size());
       typename L::iterator it = l.begin();
       for (size_t i = 0; i < k; ++i)
-	++it;
+        ++it;
       return it;
     }
   }

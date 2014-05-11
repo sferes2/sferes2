@@ -50,18 +50,15 @@
 #include <iostream>
 
 namespace boost {
-  namespace serialization
-  {
+  namespace serialization {
     template<class Archive, size_t Nb>
-    void save(Archive& ar, const std::bitset<Nb>& bs, const unsigned int version)
-    {
+    void save(Archive& ar, const std::bitset<Nb>& bs, const unsigned int version) {
       std::string s = bs.to_string();
       ar << BOOST_SERIALIZATION_NVP(s);
     }
 
     template<class Archive, size_t Nb>
-    void load(Archive& ar, std::bitset<Nb>& bs, const unsigned int version)
-    {
+    void load(Archive& ar, std::bitset<Nb>& bs, const unsigned int version) {
       std::string s;
       ar >> BOOST_SERIALIZATION_NVP(s);
       assert(s.size() == bs.size());
@@ -70,126 +67,107 @@ namespace boost {
         bs[Nb - i - 1] = (s[i] == '1');
     }
     template<class Archive, size_t Nb>
-    void serialize(Archive& ar, std::bitset<Nb>& bs, const unsigned int version)
-    {
+    void serialize(Archive& ar, std::bitset<Nb>& bs, const unsigned int version) {
       boost::serialization::split_free(ar, bs, version);
     }
   }
 }
 
-namespace sferes
-{
-  namespace gen
-  {
-    namespace _bitstring
-    {
+namespace sferes {
+  namespace gen {
+    namespace _bitstring {
       template<long K, long N>
-      struct _pow
-      {
+      struct _pow {
         SFERES_CONST double result = K * _pow<K, N - 1>::result;
       };
       template<long K>
-      struct _pow<K, 1>
-      {
+      struct _pow<K, 1> {
         SFERES_CONST double result = K;
       };
 
     }
-     /// in range [0;1]
+    /// in range [0;1]
     template<int Size, typename Params, typename Exact = stc::Itself>
-    class BitString : public stc::Any<Exact>
-    {
-      public:
-        typedef Params params_t;
-        typedef BitString<Size, Params, Exact> this_t;
-        typedef std::bitset<Params::bit_string::nb_bits> bs_t;
-        SFERES_CONST double bs_max = _bitstring::_pow<2, Params::bit_string::nb_bits>::result - 1;
+    class BitString : public stc::Any<Exact> {
+     public:
+      typedef Params params_t;
+      typedef BitString<Size, Params, Exact> this_t;
+      typedef std::bitset<Params::bit_string::nb_bits> bs_t;
+      SFERES_CONST double bs_max = _bitstring::_pow<2, Params::bit_string::nb_bits>::result - 1;
 
-        BitString() : _data(Size)
-        {
-        }
+      BitString() : _data(Size) {
+      }
 
-         //@{
-        void mutate()
-        {
-          BOOST_FOREACH(bs_t & b, _data)
-          if (misc::rand<float>() < Params::bit_string::mutation_rate)
-            for (size_t i = 0; i < b.size(); ++i)
-              if (misc::rand<float>() < Params::bit_string::mutation_rate_bit)
-                b[i].flip();
-        }
-         // 1-point cross-over
-        void cross(const BitString& o, BitString& c1, BitString& c2)
-        {
-          assert(Size == _data.size());
-          assert(c1._data.size() == _data.size());
-          assert(c2._data.size() == _data.size());
+      //@{
+      void mutate() {
+        BOOST_FOREACH(bs_t & b, _data)
+        if (misc::rand<float>() < Params::bit_string::mutation_rate)
+          for (size_t i = 0; i < b.size(); ++i)
+            if (misc::rand<float>() < Params::bit_string::mutation_rate_bit)
+              b[i].flip();
+      }
+      // 1-point cross-over
+      void cross(const BitString& o, BitString& c1, BitString& c2) {
+        assert(Size == _data.size());
+        assert(c1._data.size() == _data.size());
+        assert(c2._data.size() == _data.size());
 
-          for (size_t i = 0; i < c1._data.size(); ++i)
-          {
-            size_t k = misc::rand(c1._data.size());
-            for (size_t j = 0; j < c1._data[i].size(); ++j)
-              if (j < k)
-              {
-                c1._data[i][j] = _data[i][j];
-                c2._data[i][j] = o._data[i][j];
-              }
-              else
-              {
-                c1._data[i][j] = o._data[i][j];
-                c2._data[i][j] = _data[i][j];
-              }
-          }
+        for (size_t i = 0; i < c1._data.size(); ++i) {
+          size_t k = misc::rand(c1._data.size());
+          for (size_t j = 0; j < c1._data[i].size(); ++j)
+            if (j < k) {
+              c1._data[i][j] = _data[i][j];
+              c2._data[i][j] = o._data[i][j];
+            } else {
+              c1._data[i][j] = o._data[i][j];
+              c2._data[i][j] = _data[i][j];
+            }
         }
-        void random()
-        {
-          BOOST_FOREACH(bs_t & v, _data)
-          for (size_t i = 0; i < v.size(); ++i)
-            v[i] = (int) misc::flip_coin();
-        }
-        //@}
+      }
+      void random() {
+        BOOST_FOREACH(bs_t & v, _data)
+        for (size_t i = 0; i < v.size(); ++i)
+          v[i] = (int) misc::flip_coin();
+      }
+      //@}
 
-         //@{
-        float data(size_t i) const
-        {
-          assert(bs_max != 0);
-          assert(i < _data.size());
-          return _to_double(_data[i]) / bs_max;
-        }
-        unsigned long int_data(size_t i) const
-        {
-          assert(i < _data.size());
-          return _data[i].to_ulong();
-        }
+      //@{
+      float data(size_t i) const {
+        assert(bs_max != 0);
+        assert(i < _data.size());
+        return _to_double(_data[i]) / bs_max;
+      }
+      unsigned long int_data(size_t i) const {
+        assert(i < _data.size());
+        return _data[i].to_ulong();
+      }
 
-        bs_t bs_data(size_t i) const
-        {
-          assert(i < _data.size());
-          return _data[i];
-        }
+      bs_t bs_data(size_t i) const {
+        assert(i < _data.size());
+        return _data[i];
+      }
 
-        size_t size() const { return Size; }
-        //@}
+      size_t size() const {
+        return Size;
+      }
+      //@}
 
-        template<class Archive>
-        void serialize(Archive& ar, const unsigned int version)
-        {
-          ar& BOOST_SERIALIZATION_NVP(_data);
+      template<class Archive>
+      void serialize(Archive& ar, const unsigned int version) {
+        ar& BOOST_SERIALIZATION_NVP(_data);
+      }
+     protected:
+      template<size_t N>
+      double _to_double(const std::bitset<N>& d) const {
+        double x = 0;
+        size_t k = 1;
+        for (size_t i = 0; i < N; ++i) {
+          x += d[i] * k;
+          k *= 2;
         }
-      protected:
-        template<size_t N>
-        double _to_double(const std::bitset<N>& d) const
-        {
-          double x = 0;
-          size_t k = 1;
-          for (size_t i = 0; i < N; ++i)
-          {
-            x += d[i] * k;
-            k *= 2;
-          }
-          return x;
-        }
-        std::vector<bs_t> _data;
+        return x;
+      }
+      std::vector<bs_t> _data;
     };
 
   } // gen

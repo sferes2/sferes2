@@ -4,13 +4,13 @@
 //|
 //| This software is a computer program whose purpose is to facilitate
 //| experiments in evolutionary computation and evolutionary robotics.
-//| 
+//|
 //| This software is governed by the CeCILL license under French law
 //| and abiding by the rules of distribution of free software.  You
 //| can use, modify and/ or redistribute the software under the terms
 //| of the CeCILL license as circulated by CEA, CNRS and INRIA at the
 //| following URL "http://www.cecill.info".
-//| 
+//|
 //| As a counterpart to the access to the source code and rights to
 //| copy, modify and redistribute granted by the license, users are
 //| provided only with a limited warranty and the software's author,
@@ -42,14 +42,11 @@
 #include <sferes/phen/indiv.hpp>
 #include <boost/foreach.hpp>
 
-namespace sferes
-{
-  namespace phen
-  {
-    SFERES_INDIV(Parameters, Indiv)
-    {
+namespace sferes {
+  namespace phen {
+    SFERES_INDIV(Parameters, Indiv) {
 
-    template<typename G, typename F, typename P, typename E> 
+      template<typename G, typename F, typename P, typename E>
       friend std::ostream& operator<<(std::ostream& output, const Parameters< G, F, P, E >& e);
     public:
 #ifdef EIGEN_CORE_H
@@ -59,38 +56,41 @@ namespace sferes
       typedef float type_t;
       SFERES_CONST float max_p = Params::parameters::max;
       SFERES_CONST float min_p = Params::parameters::min;
-      void develop()
-      {
-	for (unsigned i = 0; i < _params.size(); ++i)
-	  _params[i] = this->_gen.data(i) * (max_p - min_p) + min_p;
+      void develop() {
+        for (unsigned i = 0; i < _params.size(); ++i)
+          _params[i] = this->_gen.data(i) * (max_p - min_p) + min_p;
       }
-      float data(size_t i) const { assert(i < size()); return _params[i]; }
-      size_t size() const { return _params.size(); }
-      const std::vector<float>& data() const { return _params; }
+      float data(size_t i) const {
+        assert(i < size());
+        return _params[i];
+      }
+      size_t size() const {
+        return _params.size();
+      }
+      const std::vector<float>& data() const {
+        return _params;
+      }
       // squared Euclidean distance
-      float dist(const Parameters& params) const
-      {
-	assert(params.size() == size());
-	float d = 0.0f;
-	for (size_t i = 0; i < _params.size(); ++i)
-	  {
-	    float x = _params[i] - params._params[i];
-	    d += x * x;
-	  }
-	return d;
+      float dist(const Parameters& params) const {
+        assert(params.size() == size());
+        float d = 0.0f;
+        for (size_t i = 0; i < _params.size(); ++i) {
+          float x = _params[i] - params._params[i];
+          d += x * x;
+        }
+        return d;
       }
-      void show(std::ostream& os) const
-      {
-	BOOST_FOREACH(float p, _params)
-	  os<<p<<" ";
-	os<<std::endl;
+      void show(std::ostream& os) const {
+        BOOST_FOREACH(float p, _params)
+        os<<p<<" ";
+        os<<std::endl;
       }
     protected:
       std::vector<float> _params;
     };
-    template<typename G, typename F, typename P, typename E> 
+    template<typename G, typename F, typename P, typename E>
     std::ostream& operator<<(std::ostream& output, const Parameters< G, F, P, E >& e) {
-      for (size_t i = 0; i < e.size();++i)
+      for (size_t i = 0; i < e.size(); ++i)
         output <<" "<<e.data(i) ;
       return output;
     }

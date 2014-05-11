@@ -48,52 +48,65 @@
   class Class : public Parent<Gen, Fit, Params, typename stc::FindExact<Class<Gen, Fit, Params, Exact>, Exact>::ret>
 
 
-namespace sferes
-{
-  namespace phen
-  {
+namespace sferes {
+  namespace phen {
     template<typename Gen, typename Fit, typename Params, typename Exact = stc::Itself>
-      class Indiv
-    {
-    public:
+    class Indiv {
+     public:
       typedef Fit fit_t;
       typedef Gen gen_t;
 
-      Fit& fit() { return _fit; }
-      const Fit& fit() const { return _fit; }
-
-      Gen& gen()  { return _gen; }
-      const Gen& gen() const { return _gen; }
-      void mutate() { dbg::trace trace("phen", DBG_HERE); this->_gen.mutate(); }
-      void cross(const boost::shared_ptr<Exact> i2,
-		 boost::shared_ptr<Exact>& o1,
-		 boost::shared_ptr<Exact>& o2)
-      {
-	dbg::trace trace("phen", DBG_HERE);
-	if (!o1)
-	  o1 = boost::shared_ptr<Exact>(new Exact());
-	if (!o2)
-	  o2 = boost::shared_ptr<Exact>(new Exact());
-	_gen.cross(i2->gen(), o1->gen(), o2->gen());
+      Fit& fit() {
+        return _fit;
       }
-      void random() { dbg::trace trace("phen", DBG_HERE); this->_gen.random(); }
-      void develop() { dbg::trace trace("phen", DBG_HERE); stc::exact(this)->develop(); }
+      const Fit& fit() const {
+        return _fit;
+      }
+
+      Gen& gen()  {
+        return _gen;
+      }
+      const Gen& gen() const {
+        return _gen;
+      }
+      void mutate() {
+        dbg::trace trace("phen", DBG_HERE);
+        this->_gen.mutate();
+      }
+      void cross(const boost::shared_ptr<Exact> i2,
+                 boost::shared_ptr<Exact>& o1,
+                 boost::shared_ptr<Exact>& o2) {
+        dbg::trace trace("phen", DBG_HERE);
+        if (!o1)
+          o1 = boost::shared_ptr<Exact>(new Exact());
+        if (!o2)
+          o2 = boost::shared_ptr<Exact>(new Exact());
+        _gen.cross(i2->gen(), o1->gen(), o2->gen());
+      }
+      void random() {
+        dbg::trace trace("phen", DBG_HERE);
+        this->_gen.random();
+      }
+      void develop() {
+        dbg::trace trace("phen", DBG_HERE);
+        stc::exact(this)->develop();
+      }
 
       template<class Archive>
-      void serialize(Archive & ar, const unsigned int version)
-      {
-	dbg::trace trace("phen", DBG_HERE);
+      void serialize(Archive & ar, const unsigned int version) {
+        dbg::trace trace("phen", DBG_HERE);
         ar & BOOST_SERIALIZATION_NVP(_gen);
-       	ar & BOOST_SERIALIZATION_NVP(_fit);
+        ar & BOOST_SERIALIZATION_NVP(_fit);
       }
-      void show(std::ostream& os) { os<<"nothing to show in a basic individual"<<std::endl; }
-    protected:
+      void show(std::ostream& os) {
+        os<<"nothing to show in a basic individual"<<std::endl;
+      }
+     protected:
       Gen _gen;
       Fit _fit;
     };
 
-    SFERES_INDIV(Dummy, Indiv)
-    {
+    SFERES_INDIV(Dummy, Indiv) {
     public:
       void develop() {}
     };

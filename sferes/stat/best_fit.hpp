@@ -42,36 +42,32 @@
 #include <boost/serialization/nvp.hpp>
 #include <sferes/stat/stat.hpp>
 
-namespace sferes
-{
-  namespace stat
-  {
+namespace sferes {
+  namespace stat {
     // assume that the population is sorted !
-    SFERES_STAT(BestFit, Stat)
-    {
+    SFERES_STAT(BestFit, Stat) {
     public:
       template<typename E>
-	void refresh(const E& ea)
-      {
-	assert(!ea.pop().empty());
-	_best = *ea.pop().begin();
-	this->_create_log_file(ea, "bestfit.dat");
-	if (ea.dump_enabled())
-	  (*this->_log_file) << ea.gen() << " " << _best->fit().value() << std::endl;
+      void refresh(const E& ea) {
+        assert(!ea.pop().empty());
+        _best = *ea.pop().begin();
+        this->_create_log_file(ea, "bestfit.dat");
+        if (ea.dump_enabled())
+          (*this->_log_file) << ea.gen() << " " << _best->fit().value() << std::endl;
       }
-      void show(std::ostream& os, size_t k)
-      {
-	_best->develop();
-	_best->show(os);
-	_best->fit().set_mode(fit::mode::view);
-	_best->fit().eval(*_best);
+      void show(std::ostream& os, size_t k) {
+        _best->develop();
+        _best->show(os);
+        _best->fit().set_mode(fit::mode::view);
+        _best->fit().eval(*_best);
 
 
       }
-      const boost::shared_ptr<Phen> best() const { return _best; }
+      const boost::shared_ptr<Phen> best() const {
+        return _best;
+      }
       template<class Archive>
-      void serialize(Archive & ar, const unsigned int version)
-      {
+      void serialize(Archive & ar, const unsigned int version) {
         ar & BOOST_SERIALIZATION_NVP(_best);
       }
     protected:
