@@ -129,7 +129,7 @@ namespace stc {
   typedef T A##_t;
 
 // to simulate a string (to be used in Param)
-#define SFERES_STRING(N, V) SFERES_CONST char* N() { return V; }
+#define SFERES_STRING(N, V) static const char* N() { return V; }
 
 
 #define SFERES_CONST BOOST_STATIC_CONSTEXPR
