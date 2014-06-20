@@ -38,6 +38,8 @@
 #ifndef EVAL_HPP_
 #define EVAL_HPP_
 
+#include <vector>
+#include <boost/shared_ptr.hpp>
 #include <sferes/stc.hpp>
 
 namespace sferes {
