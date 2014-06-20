@@ -79,8 +79,8 @@ namespace sferes {
       A& _archive;
       template<typename T>
       void operator() (const T &x) const {
-        std::string version(SVN_VERSION);
-        _archive << boost::serialization::make_nvp("svn_version",
+        std::string version(VERSION);
+        _archive << boost::serialization::make_nvp("version",
                  version);
         _archive << BOOST_SERIALIZATION_NVP(x);
       }
@@ -94,11 +94,11 @@ namespace sferes {
       template<typename T>
       void operator() (T & x) const {
         std::string version;
-        _archive >> boost::serialization::make_nvp("svn_version", version);
-        if (version != std::string(SVN_VERSION))
+        _archive >> boost::serialization::make_nvp("version", version);
+        if (version != std::string(VERSION))
           std::cerr << "WARNING: your are loading a file made with sferes version "
                     << version << " while the current version is:"
-                    << SVN_VERSION
+                    << VERSION
                     << std::endl;
         _archive >> BOOST_SERIALIZATION_NVP(x);
       }

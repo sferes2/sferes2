@@ -46,7 +46,7 @@ from Constants import RUN_ME
 import unittestw, Utils
 import Configure
 
-VERSION='0.'+commands.getoutput('svnversion -n')
+VERSION='0.'+commands.getoutput('git rev-parse HEAD')
 APPNAME='sferes2'
 
 srcdir = '.'
@@ -238,9 +238,9 @@ def configure(conf):
     print "Please check the accompagnying COPYING file or http://www.cecill.info/"
 
 def build(bld):
-    v = commands.getoutput('svnversion -n')
-    bld.env_of_name('default')['CXXFLAGS'].append("-DSVN_VERSION=\"(const char*)\\\""+v+"\\\"\"")
-    bld.env_of_name('debug')['CXXFLAGS'].append("-DSVN_VERSION=\"(const char*)\\\""+v+"\\\"\"")
+    v = commands.getoutput('git rev-parse HEAD')
+    bld.env_of_name('default')['CXXFLAGS'].append("-DVERSION=\"(const char*)\\\""+v+"\\\"\"")
+    bld.env_of_name('debug')['CXXFLAGS'].append("-DVERSION=\"(const char*)\\\""+v+"\\\"\"")
 
     print ("Entering directory `" + os.getcwd() + "'")
     bld.add_subdirs('sferes examples tests')

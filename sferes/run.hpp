@@ -52,7 +52,7 @@ namespace sferes {
                        boost::program_options::options_description(),
                      bool init_rand = true) {
     namespace po = boost::program_options;
-    std::cout<<"sferes2 svn version: "<<SVN_VERSION<<std::endl;
+    std::cout<<"sferes2 version: "<<VERSION<<std::endl;
     if (init_rand) {
       time_t t = time(0) + ::getpid();
       std::cout<<"seed: " << t << std::endl;
