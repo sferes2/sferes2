@@ -17,7 +17,7 @@ The article is available here: http://www.isir.upmc.fr/files/2010ACTI1524.pdf
 	PAGES = {4079--4086}
 }
 
-Documentation
+Documentation (including instruction for compilation)
 -------------
 The full documentation is available on the official website: http://sferes2.isir.upmc.fr
 
@@ -40,6 +40,9 @@ The following choices were made in the initial design:
 - no configuration file: a fully optimized executable is built for each particular experiment.
 
 Sferes2 is extended via modules and experiments.
+
+Sferes2 work on most Unix systems (in particular, GNU/Linux and OSX). It successfully compiles with gcc, clang and icc.
+
 
 Authors
 -------
