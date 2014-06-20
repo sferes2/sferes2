@@ -41,6 +41,7 @@
 #include <boost/serialization/shared_ptr.hpp>
 #include <boost/serialization/nvp.hpp>
 #include <sferes/stat/stat.hpp>
+#include <sferes/fit/fitness.hpp>
 
 namespace sferes {
   namespace stat {

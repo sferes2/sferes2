@@ -47,6 +47,8 @@
 #include <boost/mpl/vector.hpp>
 #include <boost/fusion/support/is_sequence.hpp>
 #include <boost/fusion/include/is_sequence.hpp>
+#include <boost/fusion/algorithm/iteration/for_each.hpp>
+#include <boost/fusion/include/for_each.hpp>
 #include <boost/shared_ptr.hpp>
 #include <boost/archive/text_oarchive.hpp>
 #include <boost/archive/xml_oarchive.hpp>

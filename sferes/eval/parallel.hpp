@@ -40,6 +40,8 @@
 
 #include <sferes/parallel.hpp>
 #include<cmath>
+#include <sferes/eval/eval.hpp>
+
 namespace sferes {
 
   namespace eval {

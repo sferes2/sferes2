@@ -35,6 +35,9 @@
 #ifndef _RUN_HPP_
 #define _RUN_HPP_
 
+#include <iostream>
+#include <fstream>
+
 #include <boost/program_options.hpp>
 #include <boost/archive/xml_iarchive.hpp>
 #include <boost/foreach.hpp>

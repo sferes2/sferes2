@@ -40,6 +40,7 @@
 
 #include <vector>
 #include <boost/shared_ptr.hpp>
+#include <sferes/dbg/dbg.hpp>
 #include <sferes/stc.hpp>
 
 namespace sferes {
