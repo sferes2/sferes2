@@ -58,6 +58,7 @@ Academic papers that used Sferes2:
 (you can find a pdf for most of these publications on http://scholar.google.com).
 
 ### 2014
+- Lesaint, F., Sigaud, O., Clark, J. J., Flagel, S. B., & Khamassi, M. (2014). Experimental predictions drawn from a computational model of sign-trackers and goal-trackers. Journal of Physiology-Paris.
 - Lesaint, F., Sigaud, O., Flagel, S. B., Robinson, T. E., & Khamassi, M. (2014). Modelling Individual Differences in the Form of Pavlovian Conditioned Approach Responses: A Dual Learning Systems Approach with Factored Representations. PLoS computational biology, 10(2), e1003466.
 - Shrouf, F., Ordieres-Meré, J., García-Sánchez, A., & Ortega-Mier, M. (2014). Optimizing the production scheduling of a single machine to minimize total energy consumption costs. Journal of Cleaner Production, 67, 197-207.
 - Huizinga, J., Mouret, J. B., & Clune, J. (2014). Evolving Neural Networks That Are Both Modular and Regular: HyperNeat Plus the Connection Cost Technique. In Proceedings of GECCO (pp. 1-8).
