@@ -19,9 +19,8 @@ The article is available here: http://www.isir.upmc.fr/files/2010ACTI1524.pdf
 
 Documentation (including instruction for compilation)
 -------------
-The full documentation is available on the official website: http://sferes2.isir.upmc.fr
 
-We are in the process of porting it to the github wiki: https://github.com/jbmouret/sferes2/wiki
+We are in the process of porting the documentation to the github wiki: https://github.com/jbmouret/sferes2/wiki
 
 Optional modules
 ---------------
