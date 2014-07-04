@@ -238,7 +238,7 @@ def configure(conf):
     print "Please check the accompagnying COPYING file or http://www.cecill.info/"
 
 def build(bld):
-    v = commands.getoutput('git rev-parse HEAD')
+    v = VERSION
     bld.env_of_name('default')['CXXFLAGS'].append("-DVERSION=\"(const char*)\\\""+v+"\\\"\"")
     bld.env_of_name('debug')['CXXFLAGS'].append("-DVERSION=\"(const char*)\\\""+v+"\\\"\"")
 
