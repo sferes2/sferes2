@@ -153,9 +153,10 @@ namespace sferes {
       Ea() : _pop(Params::pop::size), _gen(0) {
         _make_res_dir();
       }
-      Ea(const fit_t& fit_proto) : _fit_proto(fit_proto){
+      void set_fit_proto(const fit_t& fit) {
+          _fit_proto = fit;
       }
-      
+
       void run() {
         dbg::trace trace("ea", DBG_HERE);
         random_pop();
