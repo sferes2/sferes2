@@ -48,14 +48,17 @@ namespace sferes {
     template<typename Phen>
     struct _parallel_evaluate {
       typedef std::vector<boost::shared_ptr<Phen> > pop_t;
+      typedef typename Phen::fit_t fit_t;
       pop_t _pop;
+      fit_t _fit;
 
       ~_parallel_evaluate() { }
-      _parallel_evaluate(pop_t& pop) : _pop(pop) {}
-      _parallel_evaluate(const _parallel_evaluate& ev) : _pop(ev._pop) {}
+      _parallel_evaluate(pop_t& pop, const fit_t& fit) : _pop(pop), _fit(fit) {}
+      _parallel_evaluate(const _parallel_evaluate& ev) : _pop(ev._pop), _fit(ev._fit) {}
       void operator() (const parallel::range_t& r) const {
         for (size_t i = r.begin(); i != r.end(); ++i) {
           assert(i < _pop.size());
+          _pop[i]->fit() = _fit;
           _pop[i]->develop();
           _pop[i]->fit().eval(*_pop[i]);
           for (size_t j = 0; j < _pop[i]->fit().objs().size(); ++j) {
@@ -68,14 +71,15 @@ namespace sferes {
     SFERES_CLASS(Parallel) {
     public:
       template<typename Phen>
-      void eval(std::vector<boost::shared_ptr<Phen> >& pop, size_t begin, size_t end) {
+      void eval(std::vector<boost::shared_ptr<Phen> >& pop, size_t begin, size_t end,
+                const typename Phen::fit_t& fit_proto) {
         dbg::trace trace("eval", DBG_HERE);
         assert(pop.size());
         assert(begin < pop.size());
         assert(end <= pop.size());
         parallel::init();
         parallel::p_for(parallel::range_t(begin, end),
-                        _parallel_evaluate<Phen>(pop));
+                        _parallel_evaluate<Phen>(pop, fit_proto));
       }
 
     };

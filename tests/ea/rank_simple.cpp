@@ -89,10 +89,9 @@ float _g(const Indiv &ind) {
 
 SFERES_FITNESS(FitZDT2, sferes::fit::Fitness) {
 public:
-  FitZDT2() : _this(this) {}
+  FitZDT2() {}
   template<typename Indiv>
   void eval(Indiv& ind) {
-    assert(this == _this);
     this->_objs.resize(2);
     float f1 = ind.data(0);
     float g = _g(ind);
@@ -102,7 +101,6 @@ public:
     this->_objs[1] = -f2;
     this->_value = -f1 -f2;
   }
-  FitZDT2* _this;
 };
 
 
@@ -119,4 +117,3 @@ BOOST_AUTO_TEST_CASE(test_rank_simple2) {
   ea.run();
 
 }
-

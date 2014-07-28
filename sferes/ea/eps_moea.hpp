@@ -60,7 +60,7 @@ namespace sferes {
         this->_pop.resize(Params::pop::size);
         parallel::p_for(parallel::range_t(0, this->_pop.size()),
                         random<Phen>(this->_pop));
-        this->_eval.eval(this->_pop, 0, this->_pop.size());
+        this->_eval_pop(this->_pop, 0, this->_pop.size());
 
         // create archive
         add_to_archive(this->_pop.front());
@@ -84,7 +84,7 @@ namespace sferes {
         parallel::p_for(parallel::range_t(0, indivs.size()),
                         mutate<Phen>(indivs));
 
-        this->_eval.eval(indivs, 0, indivs.size());
+        this->_eval_pop(indivs, 0, indivs.size());
 
         BOOST_FOREACH(indiv_t i, indivs)
         if (pop_acceptance(i))
@@ -349,5 +349,3 @@ namespace sferes {
   }
 }
 #endif
-
-

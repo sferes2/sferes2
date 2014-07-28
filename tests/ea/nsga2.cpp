@@ -88,18 +88,8 @@ float _g(const Indiv &ind) {
 
 SFERES_FITNESS(FitZDT2, sferes::fit::Fitness) {
 public:
-  FitZDT2(const FitZDT2& f) {
-    assert(0);
-    BOOST_ERROR("copy constructors should be useless");
-  }
-  FitZDT2& operator=(const FitZDT2& f) {
-    BOOST_ERROR("= operator should be useless");
-    return *this;
-  }
-  FitZDT2() : _this(this) {}
   template<typename Indiv>
   void eval(Indiv& ind) {
-    assert(this == _this);
     this->_objs.resize(2);
     float f1 = ind.data(0);
     float g = _g(ind);
@@ -108,7 +98,6 @@ public:
     this->_objs[0] = -f1;
     this->_objs[1] = -f2;
   }
-  FitZDT2* _this;
 };
 
 
@@ -137,4 +126,3 @@ BOOST_AUTO_TEST_CASE(test_nsga2) {
   }
 
 }
-
