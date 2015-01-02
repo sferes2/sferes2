@@ -1,7 +1,9 @@
 sferes2
 =======
 
-Sferes2 is a high-performance, lightweight, generic C++ framework for evolutionary computation.
+Sferes2 is a high-performance, multi-core, lightweight, generic C++98 framework for evolutionary computation. It is intently kept small to stay reliable and understandable.
+
+Sferes2 heavily relies on template-based meta-programming in C++ to get both abtraction and execution speed.
 
 **If you use this software in an academic article, please cite:**
 
@@ -20,7 +22,7 @@ The article is available here: http://www.isir.upmc.fr/files/2010ACTI1524.pdf
 Documentation (including instruction for compilation)
 -------------
 
-We are in the process of porting the documentation to the github wiki: https://github.com/jbmouret/sferes2/wiki
+We are in the process of porting the documentation to the github wiki (tutorials, installation instructions, reference manual, etc.): https://github.com/jbmouret/sferes2/wiki
 
 Optional modules
 ---------------
@@ -40,23 +42,29 @@ The following choices were made in the initial design:
 
 Sferes2 is extended via modules and experiments.
 
-Sferes2 work on most Unix systems (in particular, GNU/Linux and OSX). It successfully compiles with gcc, clang and icc.
+Sferes2 work on most Unix systems (in particular, GNU/Linux and OSX). It successfully compiles with gcc, clang and icc (if it is not the case, please file a bug report in the issue tracker).
 
 
-Authors
+Author
 -------
 - Jean-Baptiste Mouret mouret@isir.upmc.frfr: main author and maintainer
+
+Other contributors
+------------
 - Stephane Doncieux doncieux@isir.upmc.fr
 - Paul Tonellitonelli@isir.upmc.fr (documentation)
 - Many members of ISIR (http://isir.upmc.fr)
 
-Academic papers that used Sferes2:
------------------------------------
+Peer-reviewed academic papers that used Sferes2:
+------------------------------------------------
 *If you used Sferes2 in an academic paper, please send us an e-mail (mouret@isir.upmc.fr) so that we can add it here!*
 
 (you can find a pdf for most of these publications on http://scholar.google.com).
 
 ### 2014
+-  Doncieux, S. (2014). Knowledge Extraction from Learning Traces in Continuous Domains. AAAI 2014 fall Symposium ''Knowledge, Skill, and Behavior Transfer in Autonomous Robots''. Pages 1-8.
+- Nguyen A, Yosinski J, Clune J (2014) Deep Neural Networks are Easily Fooled: High Confidence Predictions for Unrecognizable Images. ArXiv 1412.1897v1
+- Cully, A. and Mouret, J.-B. (2014). Evolving a Behavioral Repertoire for a Walking Robot. Evolutionary Computation Journal. Vol to appear. Pages 1-33.
 - Lesaint, F., Sigaud, O., Clark, J. J., Flagel, S. B., & Khamassi, M. (2014). Experimental predictions drawn from a computational model of sign-trackers and goal-trackers. Journal of Physiology-Paris.
 - Lesaint, F., Sigaud, O., Flagel, S. B., Robinson, T. E., & Khamassi, M. (2014). Modelling Individual Differences in the Form of Pavlovian Conditioned Approach Responses: A Dual Learning Systems Approach with Factored Representations. PLoS computational biology, 10(2), e1003466.
 - Shrouf, F., Ordieres-Meré, J., García-Sánchez, A., & Ortega-Mier, M. (2014). Optimizing the production scheduling of a single machine to minimize total energy consumption costs. Journal of Cleaner Production, 67, 197-207.
