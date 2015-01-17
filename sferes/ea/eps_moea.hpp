@@ -38,6 +38,9 @@
 #ifndef EPSMOEA_HPP_
 #define EPSMOEA_HPP_
 
+#warning "DEPRECATED: eps_moea is likely to be removed in future versions (due to a lack of active users)"
+
+
 #include <algorithm>
 #include <limits>
 
@@ -349,5 +352,3 @@ namespace sferes {
   }
 }
 #endif
-
-

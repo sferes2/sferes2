@@ -44,6 +44,8 @@
 #include <sferes/ea/ea.hpp>
 #include <sferes/fit/fitness.hpp>
 
+#warning "DEPRECATED: rank_simple will be removed in future versions"
+
 namespace sferes {
   namespace ea {
     SFERES_EA(RankSimple, Ea) {
