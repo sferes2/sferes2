@@ -55,7 +55,7 @@ namespace sferes {
           for (size_t i = r.begin(); i != r.end(); ++i) {
             float d = 0.0f;
             for (size_t j = 0; j < _pop.size(); ++j)
-              d += _pop[i]->dist(*_pop[j]);
+              d += _pop[i]->fit().dist(*_pop[j]);
             d /= _pop.size();
             int l =  _pop[i]->fit().objs().size() - 1;
             assert(l > 0);
@@ -70,7 +70,7 @@ namespace sferes {
     // DOESN'T add the objective automatically)
     // you HAVE to initialize this value to a "good" one (depending on
     // your constraints scheme)
-    // you phenotype/individual class must have a float dist(const
+    // you FITNESS class must have a float dist(const
     // Phen& o) method (the dist method must be thread-safe)
     SFERES_CLASS(Diversity) {
     public:
