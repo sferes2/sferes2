@@ -106,19 +106,14 @@ namespace sferes {
           Eigen::VectorXf vd = distances.row(i);
 
           double n = 0.0;
-          if (vd.size() > Params::novelty::k) {
-            std::partial_sort(vd.data(),
-                              vd.data() + k,
-                              vd.data() + vd.size());
-            n = vd.head<k>().sum() / k;
-          } else {
-            n = vd.sum() / k;
-          }
-          n /= k;
-          ea.pop()[i]->fit().set_obj(nb_objs - 1, n);
+          std::partial_sort(vd.data(),
+                            vd.data() + k,
+                            vd.data() + vd.size());
 
+          n = vd.head<k>().sum() / k;
+          ea.pop()[i]->fit().set_obj(nb_objs - 1, n);
           // add to the archive
-          if (_archive.size() < k || n > _rho_min
+          if (n > _rho_min
               || misc::rand<float>() < Params::novelty::add_to_archive_prob) {
             _archive.push_back(ea.pop()[i]);
             _not_added = 0;
@@ -134,6 +129,7 @@ namespace sferes {
         if (_archive.size() > Params::novelty::k
             && added > Params::novelty::adding_tresh)//4
           _rho_min *= 1.05f;
+          std::cout<<"a size:"<<_archive.size()<<std::endl;
       }
      protected:
       typedef boost::shared_ptr<Phen> phen_t;
