@@ -15,10 +15,8 @@
 using namespace sferes;
 using namespace sferes::gen::evo_float;
 
-struct Params
-{
-  struct evo_float
-  {
+struct Params {
+  struct evo_float {
     SFERES_CONST float cross_rate = 0.5f;
     SFERES_CONST float mutation_rate = 0.1f;
     SFERES_CONST float eta_m = 15.0f;
@@ -26,36 +24,31 @@ struct Params
     SFERES_CONST mutation_t mutation_type = polynomial;
     SFERES_CONST cross_over_t cross_over_type = sbx;
   };
-  struct pop
-  {
+  struct pop {
     SFERES_CONST unsigned size = 200;
     SFERES_CONST unsigned nb_gen = 40;
     SFERES_CONST int dump_period = 5;
     SFERES_CONST int initial_aleat = 1;
     SFERES_CONST float coeff = 1.1f;
-    SFERES_CONST float keep_rate = 0.6f;    
+    SFERES_CONST float keep_rate = 0.6f;
   };
-  struct parameters
-  {
+  struct parameters {
     SFERES_CONST float min = -10.0f;
     SFERES_CONST float max = 10.0f;
   };
 };
 
-SFERES_FITNESS(FitTest, sferes::fit::Fitness)
-{
- public:
-  FitTest()
-    {}
+SFERES_FITNESS(FitTest, sferes::fit::Fitness) {
+public:
+  FitTest() {
+  }
   template<typename Indiv>
-    void eval(const Indiv& ind) 
-  {
+  void eval(const Indiv& ind) {
     float v = 0;
-    for (unsigned i = 0; i < ind.size(); ++i)
-      {
-	float p = ind.data(i);
-	v += p * p * p * p;
-      }
+    for (unsigned i = 0; i < ind.size(); ++i) {
+      float p = ind.data(i);
+      v += p * p * p * p;
+    }
     // slow down to simulate a slow fitness
     usleep(1e4);
     this->_value = -v;
@@ -64,8 +57,7 @@ SFERES_FITNESS(FitTest, sferes::fit::Fitness)
 
 
 
-int main(int argc, char **argv)
-{
+int main(int argc, char **argv) {
   dbg::out(dbg::info)<<"running ex_ea ... try --help for options (verbose)"<<std::endl;
   std::cout << "To run this example, you need to use mpirun" << std::endl;
   std::cout << "mpirun -x LD_LIBRARY_PATH=/home/creadapt/lib  -np 50 -machinefile machines.pinfo build/debug/examples/ex_ea_mpi" << std::endl;
@@ -85,8 +77,7 @@ int main(int argc, char **argv)
 }
 #else
 #warning MPI is disabled, ex_ea_mpi is not compiled
-int main()
-{
+int main() {
   std::cerr<<"MPI is disabled"<<std::endl;
   return 0;
 }

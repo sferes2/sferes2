@@ -11,10 +11,8 @@
 using namespace sferes;
 using namespace sferes::gen::evo_float;
 
-struct Params
-{
-  struct evo_float
-  {
+struct Params {
+  struct evo_float {
     // we choose the polynomial mutation type
     SFERES_CONST mutation_t mutation_type = polynomial;
     // we choose the polynomial cross-over type
@@ -28,8 +26,7 @@ struct Params
     // a parameter of the polynomial cross-over
     SFERES_CONST float eta_c = 10.0f;
   };
-  struct pop
-  {
+  struct pop {
     // size of the population
     SFERES_CONST unsigned size = 200;
     // number of generations
@@ -46,8 +43,7 @@ struct Params
     // another (elitism)
     SFERES_CONST float keep_rate = 0.6f;
   };
-  struct parameters
-  {
+  struct parameters {
     // maximum value of parameters
     SFERES_CONST float min = -10.0f;
     // minimum value
@@ -55,27 +51,23 @@ struct Params
   };
 };
 
-SFERES_FITNESS(FitTest, sferes::fit::Fitness)
-{
- public:
+SFERES_FITNESS(FitTest, sferes::fit::Fitness) {
+public:
   // indiv will have the type defined in the main (phen_t)
   template<typename Indiv>
-    void eval(const Indiv& ind)
-  {
+  void eval(const Indiv& ind) {
     float v = 0;
-    for (unsigned i = 0; i < ind.size(); ++i)
-      {
-	float p = ind.data(i);
-	v += p * p * p * p;
-      }
+    for (unsigned i = 0; i < ind.size(); ++i) {
+      float p = ind.data(i);
+      v += p * p * p * p;
+    }
     this->_value = -v;
   }
 };
 
 
 
-int main(int argc, char **argv)
-{
+int main(int argc, char **argv) {
   // Our fitness is the class FitTest (see above), that we will call
   // fit_t. Params is the set of parameters (struct Params) defined in
   // this file.

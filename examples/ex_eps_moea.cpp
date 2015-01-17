@@ -11,10 +11,8 @@
 using namespace sferes;
 using namespace sferes::gen::evo_float;
 
-struct Params
-{
-  struct evo_float
-  {
+struct Params {
+  struct evo_float {
 
     SFERES_CONST float mutation_rate = 0.1f;
     SFERES_CONST float cross_rate = 0.5f;
@@ -23,8 +21,7 @@ struct Params
     SFERES_CONST mutation_t mutation_type = polynomial;
     SFERES_CONST cross_over_t cross_over_type = sbx;
   };
-  struct pop
-  {
+  struct pop {
     SFERES_CONST unsigned size = 200;
     SFERES_CONST int dump_period = 50;
     SFERES_ARRAY(float, eps, 0.0075f, 0.0075f);
@@ -33,8 +30,7 @@ struct Params
     SFERES_CONST unsigned nb_gen = 2000;
   };
 
-  struct parameters
-  {
+  struct parameters {
     SFERES_CONST float min = 0.0f;
     SFERES_CONST float max = 1.0f;
   };
@@ -42,8 +38,7 @@ struct Params
 
 
 template<typename Indiv>
-float _g(const Indiv &ind)
-{
+float _g(const Indiv &ind) {
   float g = 0.0f;
   assert(ind.size() == 30);
   for (size_t i = 1; i < 30; ++i)
@@ -53,13 +48,11 @@ float _g(const Indiv &ind)
   return g;
 }
 
-SFERES_FITNESS(FitZDT2, sferes::fit::Fitness)
-{
- public:
+SFERES_FITNESS(FitZDT2, sferes::fit::Fitness) {
+public:
   FitZDT2()  {}
   template<typename Indiv>
-    void eval(Indiv& ind) 
-  {
+  void eval(Indiv& ind) {
     this->_objs.resize(2);
     float f1 = ind.data(0);
     float g = _g(ind);
@@ -73,8 +66,7 @@ SFERES_FITNESS(FitZDT2, sferes::fit::Fitness)
 
 
 
-int main(int argc, char **argv)
-{
+int main(int argc, char **argv) {
   std::cout<<"running "<<argv[0]<<" ... try --help for options (verbose)"<<std::endl;
 
   typedef gen::EvoFloat<30, Params> gen_t;

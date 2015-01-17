@@ -35,9 +35,9 @@
 
 
 
-#define NO_PARALLEL
+//#define NO_PARALLEL
 #define BOOST_TEST_DYN_LINK
-#define BOOST_TEST_MODULE nsga2_diversity
+#define BOOST_TEST_MODULE nsga2_novelty
 
 
 #include <boost/test/unit_test.hpp>
@@ -49,7 +49,7 @@
 #include <sferes/eval/eval.hpp>
 #include <sferes/stat/pareto_front.hpp>
 #include <sferes/eval/parallel.hpp>
-#include <sferes/modif/diversity.hpp>
+#include <sferes/modif/novelty.hpp>
 #include <Eigen/Core>
 
 using namespace sferes;
@@ -74,6 +74,13 @@ struct Params {
   struct parameters {
     SFERES_CONST float min = 0.0f;
     SFERES_CONST float max = 1.0f;
+  };
+  struct novelty {
+    SFERES_CONST float rho_min_init = 1.0;
+    SFERES_CONST size_t k = 8;
+    SFERES_CONST size_t stalled_tresh = 2500;
+    SFERES_CONST size_t adding_tresh = 4;
+    SFERES_CONST float add_to_archive_prob = 0;
   };
 };
 
@@ -113,7 +120,6 @@ public:
     this->_v = Eigen::VectorXf(ind.data().size());
     for (size_t i = 0; i < this->_v.size(); ++i)
       this->_v(i) = ind.data()[i];
-
   }
   template<typename Indiv>
   float dist(const Indiv& ind) {
@@ -132,7 +138,7 @@ BOOST_AUTO_TEST_CASE(test_nsga2) {
   typedef phen::Parameters<gen_t, FitZDT2<Params>, Params> phen_t;
   typedef eval::Parallel<Params> eval_t;
   typedef boost::fusion::vector<stat::ParetoFront<phen_t, Params> >  stat_t;
-  typedef modif::Diversity<> modifier_t;
+  typedef modif::Novelty<phen_t, Params> modifier_t;
   typedef ea::Nsga2<phen_t, eval_t, stat_t, modifier_t, Params> ea_t;
   ea_t ea;
 
