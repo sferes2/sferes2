@@ -50,6 +50,7 @@
 #include <sferes/stat/pareto_front.hpp>
 #include <sferes/eval/parallel.hpp>
 #include <sferes/modif/diversity.hpp>
+#include <Eigen/Core>
 
 using namespace sferes;
 using namespace sferes::gen::evo_float;
@@ -106,9 +107,19 @@ public:
     float g = _g(ind);
     float h = 1.0f - pow((f1 / g), 2.0);
     float f2 = g * h;
+
     this->_objs[0] = -f1;
     this->_objs[1] = -f2;
+    this->_v = Eigen::VectorXf(ind.data().size());
+    for (size_t i = 0; i < this->_v.size(); ++i)
+      this->_v(i) = ind.data()[i];
+
   }
+  template<typename Indiv>
+  float dist(const Indiv& ind){
+    return (_v - ind.fit()._v).squaredNorm();
+  }
+  Eigen::VectorXf _v;
   FitZDT2* _this;
 };
 
@@ -135,4 +146,3 @@ BOOST_AUTO_TEST_CASE(test_nsga2) {
   }
 
 }
-
