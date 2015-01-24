@@ -124,8 +124,10 @@ namespace sferes {
         } // end for all individuals
 
         // update rho_min
-        if (_not_added > Params::novelty::stalled_tresh)//2500
+        if (_not_added > Params::novelty::stalled_tresh){ //2500
           _rho_min *= 0.95;
+          _not_added = 0;
+        }
         if (_archive.size() > Params::novelty::k
             && added > Params::novelty::adding_tresh)//4
           _rho_min *= 1.05f;
