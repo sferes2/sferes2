@@ -61,8 +61,6 @@ namespace sferes {
         _best->show(os);
         _best->fit().set_mode(fit::mode::view);
         _best->fit().eval(*_best);
-
-
       }
       const boost::shared_ptr<Phen> best() const {
         return _best;

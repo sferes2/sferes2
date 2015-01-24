@@ -51,9 +51,11 @@ namespace sferes {
   static void run_ea(int argc,
                      char **argv,
                      Ea& ea,
+                     const typename Ea::phen_t::fit_t& fit_proto,
                      const boost::program_options::options_description& add_opts =
                        boost::program_options::options_description(),
                      bool init_rand = true) {
+    ea.set_fit_proto(fit_proto);
     namespace po = boost::program_options;
     std::cout<<"sferes2 version: "<<VERSION<<std::endl;
     if (init_rand) {
@@ -126,9 +128,18 @@ namespace sferes {
     } else
       ea.run();
   }
+
+  template<typename Ea>
+  static void run_ea(int argc,
+                     char **argv,
+                     Ea& ea,
+                     const boost::program_options::options_description& add_opts =
+                       boost::program_options::options_description(),
+                     bool init_rand = true) {
+          run_ea(argc, argv, ea, typename Ea::phen_t::fit_t(), add_opts, init_rand);
+    }
+
 }
 
 
 #endif
-
-

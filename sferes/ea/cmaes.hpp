@@ -73,7 +73,7 @@ namespace sferes {
             this->_pop[i]->develop();
           }
         // eval
-        this->_eval.eval(this->_pop, 0, this->_pop.size());
+        this->_eval_pop(this->_pop, 0, this->_pop.size());
         this->apply_modifier();
         for (size_t i = 0; i < this->_pop.size(); ++i) {
           //warning: CMAES minimizes the fitness...

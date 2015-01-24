@@ -149,9 +149,12 @@ namespace sferes {
             FitModifier,
             boost::fusion::vector<FitModifier> >::type modifier_t;
       typedef std::vector<boost::shared_ptr<Phen> > pop_t;
-
+      typedef typename phen_t::fit_t fit_t;
       Ea() : _pop(Params::pop::size), _gen(0) {
         _make_res_dir();
+      }
+      void set_fit_proto(const fit_t& fit) {
+          _fit_proto = fit;
       }
 
       void run() {
@@ -210,8 +213,6 @@ namespace sferes {
       void update_stats() {
         boost::fusion::for_each(_stat, RefreshStat_f<Exact>(stc::exact(*this)));
       }
-
-
       const std::string& res_dir() const {
         return _res_dir;
       }
@@ -234,6 +235,12 @@ namespace sferes {
       modifier_t _fit_modifier;
       std::string _res_dir;
       size_t _gen;
+      fit_t _fit_proto;
+
+      template<typename P>
+      void _eval_pop(P& p, size_t start, size_t end) {
+        this->_eval.eval(p, start, end, this->_fit_proto);
+      }
 
       void _make_res_dir() {
         if (Params::pop::dump_period == -1)

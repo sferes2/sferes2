@@ -70,7 +70,7 @@ namespace sferes {
         pop_t init_pop((size_t)(Params::pop::size * Params::pop::initial_aleat));
         parallel::p_for(parallel::range_t(0, init_pop.size()),
                         random<crowd::Indiv<Phen> >(init_pop));
-        _eval_pop(init_pop);
+        _eval_subpop(init_pop);
         _apply_modifier(init_pop);
         front_t fronts;
         _rank_crowd(init_pop, fronts);
@@ -84,11 +84,11 @@ namespace sferes {
         parallel::p_for(parallel::range_t(0, _child_pop.size()),
                         mutate<crowd::Indiv<Phen> >(_child_pop));
 #ifndef EA_EVAL_ALL
-        _eval_pop(_child_pop);
+        _eval_subpop(_child_pop);
         _merge(_parent_pop, _child_pop, _mixed_pop);
 #else
         _merge(_parent_pop, _child_pop, _mixed_pop);
-        _eval_pop(_mixed_pop);
+        _eval_subpop(_mixed_pop);
 #endif
         _apply_modifier(_mixed_pop);
 #ifndef NDEBUG
@@ -140,8 +140,8 @@ namespace sferes {
           pop2[i] = pop1[i];
       }
 
-      void _eval_pop(pop_t& pop) {
-        this->_eval.eval(pop, 0, pop.size());
+      void _eval_subpop(pop_t& pop) {
+        this->_eval_pop(pop, 0, pop.size());
       }
 
       void _apply_modifier(pop_t& pop) {
@@ -271,5 +271,3 @@ namespace sferes {
   }
 }
 #endif
-
-

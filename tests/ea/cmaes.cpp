@@ -84,20 +84,11 @@ float felli(const std::vector<float>& xx) {
 
 SFERES_FITNESS(FitElli, sferes::fit::Fitness) {
 public:
-  FitElli(const FitElli& f) {
-    assert(0);
-    BOOST_ERROR("copy constructors should be useless");
-  }
-  FitElli& operator=(const FitElli& f) {
-    BOOST_ERROR("= operator should be useless");
-    return *this;
-  }
-  FitElli() : _this(this) {}
+  FitElli() {}
   template<typename Indiv>
   void eval(Indiv& ind) {
     this->_value = -felli(ind.data());
   }
-  FitElli* _this;
 };
 
 
@@ -117,4 +108,3 @@ BOOST_AUTO_TEST_CASE(test_cmaes) {
   BOOST_CHECK(best > -1e-3);
 
 }
-

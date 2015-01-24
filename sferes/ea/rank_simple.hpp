@@ -51,14 +51,13 @@ namespace sferes {
     SFERES_EA(RankSimple, Ea) {
     public:
       SFERES_CONST unsigned nb_keep = (unsigned)(Params::pop::keep_rate * Params::pop::size);
-
       void random_pop() {
         this->_pop.resize(Params::pop::size * Params::pop::initial_aleat);
         BOOST_FOREACH(boost::shared_ptr<Phen>& indiv, this->_pop) {
           indiv = boost::shared_ptr<Phen>(new Phen());
           indiv->random();
         }
-        this->_eval.eval(this->_pop, 0, this->_pop.size());
+        this->_eval_pop(this->_pop, 0, this->_pop.size());
         this->apply_modifier();
         std::partial_sort(this->_pop.begin(), this->_pop.begin() + Params::pop::size,
                           this->_pop.end(), fit::compare());
@@ -77,9 +76,9 @@ namespace sferes {
           this->_pop[i + 1] = i2;
         }
 #ifndef EA_EVAL_ALL
-        this->_eval.eval(this->_pop, nb_keep, Params::pop::size);
+        this->_eval_pop(this->_pop, nb_keep, Params::pop::size);
 #else
-        this->_eval.eval(this->_pop, 0, Params::pop::size);
+        this->_eval_pop(this->_pop, 0, Params::pop::size);
 #endif
         this->apply_modifier();
         std::partial_sort(this->_pop.begin(), this->_pop.begin() + nb_keep,

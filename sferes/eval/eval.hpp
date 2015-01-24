@@ -48,12 +48,14 @@ namespace sferes {
     SFERES_CLASS(Eval) {
     public:
       template<typename Phen>
-      void eval(std::vector<boost::shared_ptr<Phen> >& pop, size_t begin, size_t end) {
+      void eval(std::vector<boost::shared_ptr<Phen> >& pop, size_t begin, size_t end,
+                const typename Phen::fit_t& fit_proto) {
         dbg::trace trace("eval", DBG_HERE);
         assert(pop.size());
         assert(begin < pop.size());
         assert(end <= pop.size());
         for (size_t i = begin; i < end; ++i) {
+          pop[i]->fit() = fit_proto;
           pop[i]->develop();
           pop[i]->fit().eval(*pop[i]);
         }

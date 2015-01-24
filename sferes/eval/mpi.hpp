@@ -66,12 +66,13 @@ namespace sferes {
       }
       template<typename Phen>
       void eval(std::vector<boost::shared_ptr<Phen> >& pop,
-                size_t begin, size_t end) {
+                size_t begin, size_t end,
+                const typename Phen::fit_t& fit_proto) {
         dbg::trace("mpi", DBG_HERE);
         if (_world->rank() == 0)
           _master_loop(pop, begin, end);
         else
-          _slave_loop<Phen>();
+          _slave_loop<Phen>(fit_proto);
       }
       ~Mpi() {
         MPI_INFO << "Finalizing MPI..."<<std::endl;
@@ -135,7 +136,7 @@ namespace sferes {
         return s;
       }
       template<typename Phen>
-      void _slave_loop() {
+      void _slave_loop(const typename Phen::fit_t& fit_proto) {
         dbg::trace("mpi", DBG_HERE);
         while(true) {
           Phen p;
@@ -148,6 +149,7 @@ namespace sferes {
             MPI_INFO <<"[slave] [rcv...] [" << getpid()<< "]" << std::endl;
             _world->recv(0, s.tag(), p.gen());
             MPI_INFO <<"[slave] [rcv ok] " << " tag="<<s.tag()<<std::endl;
+            p.fit() = fit_proto;
             p.develop();
             p.fit().eval(p);
             MPI_INFO <<"[slave] [send...]"<<" tag=" << s.tag()<<std::endl;
