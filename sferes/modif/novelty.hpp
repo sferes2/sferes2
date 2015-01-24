@@ -129,7 +129,6 @@ namespace sferes {
         if (_archive.size() > Params::novelty::k
             && added > Params::novelty::adding_tresh)//4
           _rho_min *= 1.05f;
-          std::cout<<"a size:"<<_archive.size()<<std::endl;
       }
      protected:
       typedef boost::shared_ptr<Phen> phen_t;
