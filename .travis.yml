@@ -4,7 +4,6 @@ compiler:
   - clang
 
 before_script:
- sudo apt-add-repository "deb http://archive.ubuntu.com/ubuntu/ trusty main restricted" -y
  sudo apt-get update -qq
  sudo apt-get install -qq libboost-dev libboost-test-dev libeigen3-dev libtbb-dev
 
