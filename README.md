@@ -52,7 +52,7 @@ Author
 Other contributors
 ------------
 - Stephane Doncieux doncieux@isir.upmc.fr
-- Paul Tonellitonelli@isir.upmc.fr (documentation)
+- Paul Tonelli tonelli@isir.upmc.fr (documentation)
 - Many members of ISIR (http://isir.upmc.fr)
 
 Peer-reviewed academic papers that used Sferes2:
