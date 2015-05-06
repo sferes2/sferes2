@@ -63,6 +63,7 @@ Peer-reviewed academic papers that used Sferes2:
 ### 2015
 - Shrouf, Fadi, Joaquin Ordieres-Meré, Alvaro García-Sánchez, and Miguel Ortega-Mier. "Optimizing the production scheduling of a single machine to minimize total energy consumption costs." Journal of Cleaner Production 67 (2014): 197-207.
 - Ellefsen, Kai Olav, Jean-Baptiste Mouret, and Jeff Clune. "Neural Modularity Helps Organisms Evolve to Learn New Skills without Forgetting Old Skills." PLoS Comput Biol 11.4 (2015): e1004128.
+- Cully, Antoine, and J-B. Mouret. "Evolving a Behavioral Repertoire for a Walking Robot." Evolutionary computation (2015).
 - Mouret, Jean-Baptiste, and Jeff Clune. "Illuminating search spaces by mapping elites." arXiv preprint arXiv:1504.04909 (2015).
 
 ### 2014
