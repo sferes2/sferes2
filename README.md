@@ -3,7 +3,7 @@ sferes2
 
 Sferes2 is a high-performance, multi-core, lightweight, generic C++98 framework for evolutionary computation. It is intently kept small to stay reliable and understandable.
 
-Sferes2 heavily relies on template-based meta-programming in C++ to get both abtraction and execution speed.
+Sferes2 heavily relies on template-based meta-programming in C++ to get both abstraction and execution speed.
 
 **If you use this software in an academic article, please cite:**
 
