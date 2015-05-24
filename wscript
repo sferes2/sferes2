@@ -46,7 +46,9 @@ from Constants import RUN_ME
 import unittestw, Utils
 import Configure
 
-VERSION='0.'+commands.getoutput('git rev-parse HEAD')
+VERSION=commands.getoutput('git rev-parse HEAD')
+if "No such " in VERSION or "fatal:" in VERSION:
+    VERSION="0.x"
 APPNAME='sferes2'
 
 srcdir = '.'
