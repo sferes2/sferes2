@@ -61,6 +61,10 @@
 #include <sferes/misc.hpp>
 #include <sferes/stc.hpp>
 
+#ifndef VERSION
+#define VERSION "version_unknown"
+#endif
+
 namespace sferes {
   namespace ea {
 
@@ -154,7 +158,7 @@ namespace sferes {
         _make_res_dir();
       }
       void set_fit_proto(const fit_t& fit) {
-          _fit_proto = fit;
+        _fit_proto = fit;
       }
 
       void run() {

@@ -42,7 +42,7 @@ The following choices were made in the initial design:
 
 Sferes2 is extended via modules and experiments.
 
-Sferes2 work on most Unix systems (in particular, GNU/Linux and OSX). It successfully compiles with gcc, clang and icc (if it is not the case, please file a bug report in the issue tracker).
+Sferes2 should work on most Unix systems (in particular, GNU/Linux and OSX). It successfully compiles with gcc, clang and icc (if it is not the case, please file a bug report in the issue tracker).
 
 
 Author

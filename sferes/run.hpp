@@ -136,8 +136,8 @@ namespace sferes {
                      const boost::program_options::options_description& add_opts =
                        boost::program_options::options_description(),
                      bool init_rand = true) {
-          run_ea(argc, argv, ea, typename Ea::phen_t::fit_t(), add_opts, init_rand);
-    }
+    run_ea(argc, argv, ea, typename Ea::phen_t::fit_t(), add_opts, init_rand);
+  }
 
 }
 

@@ -108,6 +108,6 @@ int main(int argc, char **argv) {
   // evolutionary algorithm (if a --load argument is passed, the file
   // is loaded; otherwise, the algorithm is launched).
   run_ea(argc, argv, ea, fit_t());//fit_t() is optionnal
-  //
+
   return 0;
 }
