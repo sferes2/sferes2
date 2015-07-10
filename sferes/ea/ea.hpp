@@ -52,8 +52,10 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/archive/text_oarchive.hpp>
 #include <boost/archive/xml_oarchive.hpp>
+#include <boost/archive/binary_oarchive.hpp>
 #include <boost/archive/text_iarchive.hpp>
 #include <boost/archive/xml_iarchive.hpp>
+#include <boost/archive/binary_iarchive.hpp>
 #include <boost/lexical_cast.hpp>
 #include <boost/filesystem.hpp>
 
@@ -171,6 +173,18 @@ namespace sferes {
             _write(_gen);
         }
       }
+      void restart(){
+        dbg::trace trace("ea", DBG_HERE);
+        // read pop
+        // read gen number
+        _gen = 0;
+        for (; _gen < Params::pop::nb_gen; ++_gen) {
+          epoch();
+          update_stats();
+          if (_gen % Params::pop::dump_period == 0)
+            _write(_gen);
+        }
+      }
       void random_pop() {
         dbg::trace trace("ea", DBG_HERE);
         stc::exact(this)->random_pop();
@@ -261,7 +275,11 @@ namespace sferes {
         std::string fname = _res_dir + std::string("/gen_")
                             + boost::lexical_cast<std::string>(gen);
         std::ofstream ofs(fname.c_str());
+#ifdef  SFERES_XML_WRITE
         typedef boost::archive::xml_oarchive oa_t;
+#else
+        typedef boost::archive::binary_oarchive oa_t;
+#endif
         oa_t oa(ofs);
         boost::fusion::for_each(_stat, WriteStat_f<oa_t>(oa));
         std::cout << fname << " written" << std::endl;
@@ -275,7 +293,11 @@ namespace sferes {
                     << "(does file exist ?)" << std::endl;
           exit(1);
         }
+#ifdef SFERES_XML_WRITE
         typedef boost::archive::xml_iarchive ia_t;
+#else
+        typedef boost::archive::binary_iarchive ia_t;
+#endif
         ia_t ia(ifs);
         boost::fusion::for_each(_stat, ReadStat_f<ia_t>(ia));
       }
