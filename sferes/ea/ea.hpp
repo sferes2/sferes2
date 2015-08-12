@@ -68,9 +68,6 @@
 #define VERSION "version_unknown"
 #endif
 
-template<typename T>       // declaration only for TD;
-class TD;
-
 namespace sferes {
   namespace ea {
 
