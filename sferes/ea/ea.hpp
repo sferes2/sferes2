@@ -62,10 +62,14 @@
 #include <sferes/dbg/dbg.hpp>
 #include <sferes/misc.hpp>
 #include <sferes/stc.hpp>
+#include <sferes/stat/state.hpp>
 
 #ifndef VERSION
 #define VERSION "version_unknown"
 #endif
+
+template<typename T>       // declaration only for TD;
+class TD;
 
 namespace sferes {
   namespace ea {
@@ -166,25 +170,21 @@ namespace sferes {
       void run() {
         dbg::trace trace("ea", DBG_HERE);
         random_pop();
-        for (_gen = 0; _gen < Params::pop::nb_gen; ++_gen) {
-          epoch();
-          update_stats();
-          if (_gen % Params::pop::dump_period == 0)
-            _write(_gen);
-        }
+        for (_gen = 0; _gen < Params::pop::nb_gen; ++_gen)
+          _iter();
       }
-      void restart(){
+
+      void resume(const std::string& fname) {
         dbg::trace trace("ea", DBG_HERE);
-        // read pop
-        // read gen number
-        _gen = 0;
-        for (; _gen < Params::pop::nb_gen; ++_gen) {
-          epoch();
-          update_stats();
-          if (_gen % Params::pop::dump_period == 0)
-            _write(_gen);
-        }
+        _load(fname);
+        // if you have no state in your stat vector, this will not compile!
+        stat::State<Phen, Params>& s = *boost::fusion::find<stat::State<Phen, Params>, stat_t>(_stat);
+        set_gen(s.gen());
+        set_pop(s.pop());
+        for (; _gen < Params::pop::nb_gen; ++_gen)
+          _iter();
       }
+
       void random_pop() {
         dbg::trace trace("ea", DBG_HERE);
         stc::exact(this)->random_pop();
@@ -192,6 +192,9 @@ namespace sferes {
       void epoch() {
         dbg::trace trace("ea", DBG_HERE);
         stc::exact(this)->epoch();
+      }
+      void set_pop(const pop_t& p) {
+        stc::exact(this)->set_pop(p);
       }
       const pop_t& pop() const {
         return _pop;
@@ -237,6 +240,9 @@ namespace sferes {
       size_t gen() const {
         return _gen;
       }
+      void set_gen(unsigned g) {
+        _gen = g;
+      }
       bool dump_enabled() const {
         return Params::pop::dump_period != -1;
       }
@@ -254,6 +260,13 @@ namespace sferes {
       std::string _res_dir;
       size_t _gen;
       fit_t _fit_proto;
+
+      void _iter() {
+        epoch();
+        update_stats();
+        if (_gen % Params::pop::dump_period == 0)
+          _write(_gen);
+      }
 
       template<typename P>
       void _eval_pop(P& p, size_t start, size_t end) {

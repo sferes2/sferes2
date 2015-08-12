@@ -32,9 +32,6 @@
 //| The fact that you are presently reading this means that you have
 //| had knowledge of the CeCILL license and that you accept its terms.
 
-
-
-
 #ifndef STAT_STATE_
 #define STAT_STATE_
 
@@ -63,7 +60,7 @@ namespace sferes {
         p->fit().set_mode(fit::mode::view);
         p->fit().eval(*p);
       }
-      const boost::shared_ptr<Phen> pop() const {
+      const std::vector<boost::shared_ptr<Phen>>& pop() const {
         return _pop;
       }
       size_t gen() const {

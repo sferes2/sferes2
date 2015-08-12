@@ -66,15 +66,17 @@ struct Params {
   };
   struct pop {
     SFERES_CONST unsigned size = 100;
-    SFERES_CONST unsigned nb_gen = 500;
+    static unsigned nb_gen;
     SFERES_CONST float initial_aleat = 2.0f;
-    SFERES_CONST int dump_period = -1;
+    SFERES_CONST int dump_period = 100; // we need to dump the file
   };
   struct parameters {
     SFERES_CONST float min = 0.0f;
     SFERES_CONST float max = 1.0f;
   };
 };
+
+
 
 template<typename Indiv>
 float _g(const Indiv &ind) {
@@ -101,10 +103,12 @@ public:
   }
 };
 
+unsigned Params::pop::nb_gen = 101;
 
 BOOST_AUTO_TEST_CASE(test_nsga2) {
   srand(time(0));
-  dbg::out(dbg::info)<<"running ex_ea ..."<<std::endl;
+
+  std::cout<<"running nsga2 ..."<<std::endl;
 
   typedef gen::EvoFloat<30, Params> gen_t;
   typedef phen::Parameters<gen_t, FitZDT2<Params>, Params> phen_t;
@@ -113,8 +117,7 @@ BOOST_AUTO_TEST_CASE(test_nsga2) {
   typedef modif::Dummy<> modifier_t;
   typedef ea::Nsga2<phen_t, eval_t, stat_t, modifier_t, Params> ea_t;
   ea_t ea;
-
-  ea.run();
+  ea.run();// 101 generations
 
   ea.stat<0>().show_all(std::cout, 0);
   BOOST_CHECK(ea.stat<0>().pareto_front().size() > 50);
@@ -123,7 +126,21 @@ BOOST_AUTO_TEST_CASE(test_nsga2) {
     std::cout<<_g(*p)<<std::endl;
     BOOST_CHECK(_g(*p) < 1.1);
     BOOST_CHECK(_g(*p) > 0.0);
-
   }
 
+  std::cout<<"nsga2 done, resuming"<<std::endl;
+  Params::pop::nb_gen = 201;
+  typedef ea::Nsga2<phen_t, eval_t, stat_t, modifier_t, Params> ea2_t;
+  ea2_t ea2;
+  ea2.resume(ea.res_dir() + "/gen_100");
+  ea2.stat<0>().show_all(std::cout, 0);
+  BOOST_CHECK(ea2.stat<0>().pareto_front().size() > 50);
+
+  BOOST_FOREACH(boost::shared_ptr<phen_t> p, ea2.stat<0>().pareto_front()) {
+    std::cout<<_g(*p)<<std::endl;
+    BOOST_CHECK(_g(*p) < 1.1);
+    BOOST_CHECK(_g(*p) > 0.0);
+  }
+  // cleanup
+  //boost::filesystem::remove_all()
 }

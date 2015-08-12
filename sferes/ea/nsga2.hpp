@@ -77,9 +77,18 @@ namespace sferes {
         _fill_nondominated_sort(init_pop, _parent_pop);
       }
 
+      // for resuming
+      void set_pop(const std::vector<boost::shared_ptr<Phen> >& pop) {
+        assert(!pop.empty());
+        _parent_pop.resize(pop.size());
+        for (size_t i = 0; i < pop.size(); ++i)
+          _parent_pop[i] = boost::shared_ptr<crowd::Indiv<Phen> >(new crowd::Indiv<Phen>(*pop[i]));
+      }
+
+      // a step
       void epoch() {
-        this->_pop.clear();
-        _pareto_front.clear();
+        // this->_pop.clear();
+        // _pareto_front.clear();
         _selection (_parent_pop, _child_pop);
         parallel::p_for(parallel::range_t(0, _child_pop.size()),
                         mutate<crowd::Indiv<Phen> >(_child_pop));
