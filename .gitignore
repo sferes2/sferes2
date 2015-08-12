@@ -1,0 +1,10 @@
+exp/
+.*
+build/
+modules/
+\#*#
+*.par
+*.orig
+tests/serialize_g.xml
+modules.conf
+*.pyc
