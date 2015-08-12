@@ -114,6 +114,8 @@ BOOST_AUTO_TEST_CASE(test_nsga2) {
   typedef phen::Parameters<gen_t, FitZDT2<Params>, Params> phen_t;
   typedef eval::Parallel<Params> eval_t;
   typedef boost::fusion::vector<stat::ParetoFront<phen_t, Params>, stat::State<phen_t, Params> >  stat_t;
+  //typedef boost::fusion::vector<stat::ParetoFront<phen_t, Params> >  stat_t;
+
   typedef modif::Dummy<> modifier_t;
   typedef ea::Nsga2<phen_t, eval_t, stat_t, modifier_t, Params> ea_t;
   ea_t ea;
@@ -142,5 +144,6 @@ BOOST_AUTO_TEST_CASE(test_nsga2) {
     BOOST_CHECK(_g(*p) > 0.0);
   }
   // cleanup
-  //boost::filesystem::remove_all()
+  boost::filesystem::remove_all(ea.res_dir());
+  boost::filesystem::remove_all(ea2.res_dir());
 }

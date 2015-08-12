@@ -3,6 +3,7 @@
 #include <sferes/gen/evo_float.hpp>
 #include <sferes/ea/rank_simple.hpp>
 #include <sferes/eval/eval.hpp>
+#include <sferes/stat/state.hpp>
 #include <sferes/stat/best_fit.hpp>
 #include <sferes/stat/mean_fit.hpp>
 #include <sferes/modif/dummy.hpp>
@@ -90,7 +91,10 @@ int main(int argc, char **argv) {
   // fitness, Pareto front, ...). Since they can also stores the best
   // individuals, they are the container of our results. We can add as
   // many statistics as required thanks to the boost::fusion::vector.
-  typedef boost::fusion::vector<stat::BestFit<phen_t, Params>, stat::MeanFit<Params> >  stat_t;
+  // To enable resuming, we need to add a State
+  typedef boost::fusion::vector<stat::BestFit<phen_t, Params>,
+                                stat::MeanFit<Params>,
+                                stat::State<phen_t, Params > >  stat_t;
   // Modifiers are functors that are run once all individuals have
   // been evalutated. Their typical use is to add some evolutionary
   // pressures towards diversity (e.g. fitness sharing). Here we don't

@@ -145,6 +145,25 @@ namespace sferes {
       }
     };
 
+    // we need this to resume only if there is a state
+    // (and we need to be able to compile without a State)
+    template<typename T, typename S>
+    struct Resume {
+      template<typename EA>
+      void resume(EA& ea) {
+        typedef stat::State<typename EA::phen_t, typename EA::params_t>  state_t;
+        const state_t& s = *boost::fusion::find<state_t>(ea.stat());
+        ea.set_gen(s.gen() + 1);
+        ea.set_pop(s.pop());
+      }
+    };
+    // do nothing if there is no state
+    template<typename T>
+    struct Resume<T, typename boost::fusion::result_of::end<T>::type> {
+      template<typename EA>
+      void resume(EA& ea) { }
+    };
+
     template<typename Phen, typename Eval, typename Stat, typename FitModifier,
              typename Params,
              typename Exact = stc::Itself>
@@ -158,6 +177,7 @@ namespace sferes {
       boost::mpl::if_<boost::fusion::traits::is_sequence<FitModifier>,
             FitModifier,
             boost::fusion::vector<FitModifier> >::type modifier_t;
+
       typedef std::vector<boost::shared_ptr<Phen> > pop_t;
       typedef typename phen_t::fit_t fit_t;
       Ea() : _pop(Params::pop::size), _gen(0) {
@@ -176,15 +196,18 @@ namespace sferes {
 
       void resume(const std::string& fname) {
         dbg::trace trace("ea", DBG_HERE);
+        if (boost::fusion::find<stat::State<Phen, Params> >(_stat) == boost::fusion::end(_stat)) {
+          std::cout<<"WARNING: no State found in stat_t, cannot resume" << std::endl;
+          return;
+        }
         _load(fname);
-        // if you have no state in your stat vector, this will not compile!
-        stat::State<Phen, Params>& s = *boost::fusion::find<stat::State<Phen, Params>, stat_t>(_stat);
-        set_gen(s.gen());
-        set_pop(s.pop());
+        typedef typename boost::fusion::result_of::find<stat_t, stat::State<Phen, Params>>::type has_state_t;
+        Resume<stat_t, has_state_t> r;
+        r.resume(*this);
+        assert(!_pop.empty());
         for (; _gen < Params::pop::nb_gen; ++_gen)
           _iter();
       }
-
       void random_pop() {
         dbg::trace trace("ea", DBG_HERE);
         stc::exact(this)->random_pop();
@@ -194,6 +217,7 @@ namespace sferes {
         stc::exact(this)->epoch();
       }
       void set_pop(const pop_t& p) {
+        dbg::trace trace("ea", DBG_HERE);
         stc::exact(this)->set_pop(p);
       }
       const pop_t& pop() const {
