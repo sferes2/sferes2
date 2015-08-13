@@ -223,10 +223,14 @@ namespace sferes {
         dbg::trace trace("ea", DBG_HERE);
         stc::exact(this)->epoch();
       }
+      // override _set_pop if you want to customize / add treatments
+      // (in that case, DO NOT FORGET to add SFERES_EA_FRIEND(YouAlgo);)
       void set_pop(const pop_t& p) {
         dbg::trace trace("ea", DBG_HERE);
-        stc::exact(this)->set_pop(p);
+        this->_pop = p;
+        stc::exact(this)->_set_pop(p);
       }
+
       const pop_t& pop() const {
         return _pop;
       };
@@ -301,10 +305,16 @@ namespace sferes {
 
       template<typename P>
       void _eval_pop(P& p, size_t start, size_t end) {
+        dbg::trace trace("ea", DBG_HERE);
         this->_eval.eval(p, start, end, this->_fit_proto);
       }
-
+      // override _set_pop if you want to customize / add treatments
+      // (in that case, DO NOT FORGET to add SFERES_EA_FRIEND(YouAlgo);)
+      void _set_pop(const pop_t& p) {
+        dbg::trace trace("ea", DBG_HERE);
+      }
       void _make_res_dir() {
+        dbg::trace trace("ea", DBG_HERE);
         if (Params::pop::dump_period == -1)
           return;
 
@@ -354,5 +364,10 @@ namespace sferes {
            typename Exact = stc::Itself>                                                       \
   class Class : public Parent < Phen, Eval, Stat, FitModifier, Params,                         \
   typename stc::FindExact<Class<Phen, Eval, Stat, FitModifier, Params, Exact>, Exact>::ret >
+
+// useful to call protected functions of derived classes from the Ea
+#define SFERES_EA_FRIEND(Class) \
+      friend class Ea< Phen, Eval, Stat, FitModifier, Params,                         \
+      typename stc::FindExact<Class<Phen, Eval, Stat, FitModifier, Params, Exact>, Exact>::ret >
 
 #endif
