@@ -58,6 +58,7 @@
 #include <boost/archive/binary_iarchive.hpp>
 #include <boost/lexical_cast.hpp>
 #include <boost/filesystem.hpp>
+#include <boost/mpl/joint_view.hpp>
 
 #include <sferes/dbg/dbg.hpp>
 #include <sferes/misc.hpp>
@@ -168,8 +169,17 @@ namespace sferes {
      public:
       typedef Phen phen_t;
       typedef Eval eval_t;
-      typedef Stat stat_t;
       typedef Params params_t;
+
+      // we automatically add a State to the stats
+#ifdef SFERES_NO_STATE
+      typedef Stat stat_t;
+#else
+      typedef typename boost::fusion::vector<stat::State<Phen, Params> > state_v_t;
+      typedef typename boost::fusion::joint_view<Stat, state_v_t> joint_t;
+      typedef typename boost::fusion::result_of::as_vector<joint_t>::type  stat_t;
+#endif
+
       typedef typename
       boost::mpl::if_<boost::fusion::traits::is_sequence<FitModifier>,
             FitModifier,
@@ -243,7 +253,7 @@ namespace sferes {
 
       // stats
       template<int I>
-      const typename boost::fusion::result_of::value_at_c<Stat, I>::type& stat() const {
+      const typename boost::fusion::result_of::value_at_c<stat_t, I>::type& stat() const {
         return boost::fusion::at_c<I>(_stat);
       }
       void load(const std::string& fname) {
