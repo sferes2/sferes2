@@ -14,5 +14,6 @@ install:
 
 
 # Change this to your needs
-script: 
+script:
+ dpkg -L libboost-serialization1.54-dev 
  ./waf configure && ./waf -v
