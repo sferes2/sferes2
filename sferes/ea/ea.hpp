@@ -171,7 +171,9 @@ namespace sferes {
       typedef Eval eval_t;
       typedef Params params_t;
 
-      // we automatically add a State to the stats
+      // default behavior: we automatically add a State to the stats
+      // define #SFERES_NO_STATE if you want to avoid this
+      // (e.g. the population is too big)
 #ifdef SFERES_NO_STATE
       typedef Stat stat_t;
 #else
@@ -187,7 +189,7 @@ namespace sferes {
 
       typedef std::vector<boost::shared_ptr<Phen> > pop_t;
       typedef typename phen_t::fit_t fit_t;
-      Ea() : _pop(Params::pop::size), _gen(0) {
+      Ea() : _pop(Params::pop::size), _gen(0), _stop(false) {
         _make_res_dir();
       }
       void set_fit_proto(const fit_t& fit) {
@@ -197,7 +199,7 @@ namespace sferes {
       void run() {
         dbg::trace trace("ea", DBG_HERE);
         random_pop();
-        for (_gen = 0; _gen < Params::pop::nb_gen; ++_gen)
+        for (_gen = 0; _gen < Params::pop::nb_gen && !_stop; ++_gen)
           _iter();
       }
 
@@ -212,7 +214,7 @@ namespace sferes {
         Resume<stat_t, has_state_t> r;
         r.resume(*this);
         assert(!_pop.empty());
-        for (; _gen < Params::pop::nb_gen; ++_gen)
+        for (; _gen < Params::pop::nb_gen && !_stop; ++_gen)
           _iter();
       }
       void random_pop() {
@@ -287,6 +289,7 @@ namespace sferes {
       void write(size_t g) const {
         _write(g);
       }
+      void stop() { _stop = true;}
      protected:
       pop_t _pop;
       eval_t _eval;
@@ -295,6 +298,7 @@ namespace sferes {
       std::string _res_dir;
       size_t _gen;
       fit_t _fit_proto;
+      bool _stop;
 
       void _iter() {
         epoch();

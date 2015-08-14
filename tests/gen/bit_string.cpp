@@ -32,9 +32,6 @@
 //| The fact that you are presently reading this means that you have
 //| had knowledge of the CeCILL license and that you accept its terms.
 
-
-
-
 #define BOOST_TEST_DYN_LINK
 #define BOOST_TEST_MODULE bit_string
 #include <boost/test/unit_test.hpp>
@@ -92,7 +89,10 @@ struct check_bitstring_eq {
   void operator()(const T& gen1, const T& gen2) const {
     BOOST_CHECK_EQUAL(gen1.size(), gen2.size());
     for (size_t i = 0; i < gen1.size(); ++i)
+    {
+      std::cout<<gen1.data(i)<<" vs "<<gen2.data(i)<<std::endl;
       BOOST_CHECK(fabs(gen1.data(i) - gen2.data(i) < 0.001));
+    }
   }
 };
 
@@ -110,5 +110,3 @@ BOOST_AUTO_TEST_CASE(bitstring_serialize_long) {
   gen1.random();
   sferes::tests::check_serialize(gen1, gen2, check_bitstring_eq());
 }
-
-

@@ -42,10 +42,34 @@
 #include <boost/archive/xml_iarchive.hpp>
 #include <boost/foreach.hpp>
 
-#include <sferes/eval/parallel.hpp>
+// this is UGLY hack to avoid the name clash between
+// the C function stat() [man 2 stat] and our stat::
+// namespace
+// (asio include stat but we do not use it...)
+#define stat stat_test
+#include <boost/asio/signal_set.hpp>
+#undef stat
+
+#include <boost/bind.hpp>
+#include <boost/thread.hpp>
+
+#include <sferes/parallel.hpp>
 #include <sferes/dbg/dbg.hpp>
 
 namespace sferes {
+  template<typename EA>
+  static void _sig_handler(EA& ea,
+                    const boost::system::error_code& error,
+                    int signal_number) {
+  if (!error) {
+      std::cout<<"received signal:"<<signal_number<<std::endl;
+      std::cout<<"ea.gen():"<<ea.gen()<<std::endl;
+      ea.write();
+      ea.stop();
+   }
+   else
+    std::cerr<<"error in sig handler:" << error.message() << std::endl;
+  }
 
   template<typename Ea>
   static void run_ea(int argc,
@@ -56,6 +80,16 @@ namespace sferes {
                        boost::program_options::options_description(),
                      bool init_rand = true) {
     ea.set_fit_proto(fit_proto);
+
+    // handler (dump in case of sigterm/sigkill)
+    boost::asio::io_service io_service;
+    boost::asio::signal_set signals(io_service, SIGINT, SIGTERM, SIGQUIT);
+    signals.async_wait(boost::bind(_sig_handler<Ea>, boost::ref(ea), _1, _2));
+    boost::shared_ptr<boost::asio::io_service::work> work(new boost::asio::io_service::work(io_service));
+    boost::thread t(boost::bind(&boost::asio::io_service::run, &io_service));
+    t.detach();
+
+    // command-line options
     namespace po = boost::program_options;
     std::cout<<"sferes2 version: "<<VERSION<<std::endl;
     if (init_rand) {
@@ -63,7 +97,7 @@ namespace sferes {
       std::cout<<"seed: " << t << std::endl;
       srand(t);
     }
-    po::options_description desc("Allowed sferes2 options");
+    po::options_description desc("Available sferes2 options");
     desc.add(add_opts);
     desc.add_options()
     ("help,h", "produce help message")
