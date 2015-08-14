@@ -7,6 +7,13 @@ addons:
     packages:
     - libboost-dev
     - libboost-test-dev 
+    - libboost-graph-dev 
+    - libboost-iostreams-dev l
+    - libboost-math-dev
+    - libboost-program-options-dev
+    - libboost-serialization-dev
+    - libboost-system-dev 
+    - libboost-thread-dev
     - libeigen3-dev
     - libtbb-dev
 
