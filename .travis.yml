@@ -2,8 +2,16 @@ language: cpp
 compiler:
   - gcc
   - clang
+addons:
+  apt:
+    packages:
+    - libboost-dev
+    - libboost-test-dev 
+    - libeigen3-dev
+    - libtbb-dev
 
-install: sudo apt-get update -qq && sudo apt-get install -qq libboost-dev libboost-test-dev libeigen3-dev libtbb-dev
+install: 
+
 
 # Change this to your needs
 script: 
