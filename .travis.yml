@@ -8,7 +8,7 @@ addons:
     - libboost-dev
     - libboost-test-dev 
     - libboost-graph-dev 
-    - libboost-iostreams-dev l
+    - libboost-iostreams-dev
     - libboost-math-dev
     - libboost-program-options-dev
     - libboost-serialization-dev
@@ -22,5 +22,4 @@ install:
 
 # Change this to your needs
 script:
- dpkg -L libboost-serialization1.54-dev 
- ./waf configure && ./waf -v
+  dpkg -L libboost-serialization-dev && ./waf configure && ./waf -v
