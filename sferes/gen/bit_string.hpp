@@ -41,6 +41,7 @@
 #include <vector>
 #include <limits>
 #include <bitset>
+#include <boost/version.hpp>
 #include <boost/foreach.hpp>
 #include <boost/serialization/vector.hpp>
 #include <boost/serialization/nvp.hpp>
@@ -48,6 +49,10 @@
 #include <sferes/misc.hpp>
 #include <sferes/dbg/dbg.hpp>
 #include <iostream>
+
+#if BOOST_VERSION == 105800 // bug in boost 1.58  (serialization)
+# warning DO NOT use bit_string with boost 1.58 (bug in the serialization library)
+#endif
 
 namespace boost {
   namespace serialization {
@@ -154,7 +159,9 @@ namespace sferes {
 
       template<class Archive>
       void serialize(Archive& ar, const unsigned int version) {
-        ar& BOOST_SERIALIZATION_NVP(_data);
+        assert(_data.size() == Size);
+        ar & BOOST_SERIALIZATION_NVP(_data);
+        assert(_data.size() == Size);
       }
      protected:
       template<size_t N>
