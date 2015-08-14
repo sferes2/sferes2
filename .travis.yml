@@ -15,4 +15,4 @@ install:
 
 # Change this to your needs
 script: 
- ./waf configure && ./waf
+ ./waf configure && ./waf -v

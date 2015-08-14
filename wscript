@@ -62,7 +62,7 @@ def init():
 def set_options(opt):
     # tools
     opt.tool_options('compiler_cxx')
-    opt.tool_options('boost')
+    opt.tool_options('boost_sferes')
     opt.tool_options('tbb')
     opt.tool_options('mpi')
     opt.tool_options('eigen3')
@@ -107,7 +107,7 @@ def configure(conf):
         common_flags += '-std=c++11 '
 
     # boost
-    conf.check_tool('boost')
+    conf.check_tool('boost_sferes')
     conf.check_boost(lib='serialization filesystem system unit_test_framework program_options graph mpi python thread',
                      min_version='1.35')
     # tbb
