@@ -92,7 +92,7 @@ int main(int argc, char **argv) {
   // many statistics as required thanks to the boost::fusion::vector.
   // we need sferes:: because of a name clash with the C function stat()...
   typedef boost::fusion::vector<stat::BestFit<phen_t, Params>,
-                                stat::MeanFit<Params> >  stat_t;
+          stat::MeanFit<Params> >  stat_t;
   // Modifiers are functors that are run once all individuals have
   // been evalutated. Their typical use is to add some evolutionary
   // pressures towards diversity (e.g. fitness sharing). Here we don't

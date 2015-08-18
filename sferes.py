@@ -8,15 +8,16 @@ try:
 except:
    json_ok = False
    print "WARNING simplejson not found some function may not work"
-
+   # todo : there is now a json module in python !!
+   # https://docs.python.org/2/library/json.html
+ 
 import glob
-#import xml.etree.cElementTree as etree
 import Options
 
 
 
-def create_variants(bld, source, uselib_local, target, 
-                    uselib, variants, includes=". ../../", 
+def create_variants(bld, source, uselib_local, target,
+                    uselib, variants, includes=". ../../",
                     cxxflags='',
                     json=''):
    # the basic one
@@ -68,7 +69,7 @@ def build(bld):
    os.system("cp examples/ex_ea.cpp exp/" + name + "/" + name + ".cpp")
    wscript = open('exp/' + name + "/wscript", "w")
    wscript.write(ws_tpl.replace('@exp', name))
-   
+
 
 def parse_modules():
    if (not os.path.exists("modules.conf")):
@@ -119,17 +120,17 @@ exec @exec
    try: args = conf['args']
    except: args = ''
    email = conf['email']
-   if (use_mpi == "true"): 
+   if (use_mpi == "true"):
       ppn = '1'
       mpirun = 'mpirun'
    else:
-      nb_cores = 1; 
+      nb_cores = 1;
       ppn = '8'
       mpirun = ''
-   
+
    for i in range(0, nb_runs):
       for e in exps:
-         directory = res_dir + "/" + e + "/exp_" + str(i) 
+         directory = res_dir + "/" + e + "/exp_" + str(i)
          try:
             os.makedirs(directory)
          except:
@@ -155,10 +156,10 @@ exec @exec
 def loadleveler(conf_file):
    tpl = """
 # @ job_name=<name>
-# @ output = $(job_name).$(jobid) 
-# @ error = $(output) 
-# @ job_type = serial 
-# @ class = <class> 
+# @ output = $(job_name).$(jobid)
+# @ error = $(output)
+# @ job_type = serial
+# @ class = <class>
 # @ resources=ConsumableMemory(<memory>) ConsumableCpus(<cpu>)
 # @ queue
 export LD_LIBRARY_PATH=<ld_library_path>
@@ -187,10 +188,10 @@ cd <initial_dir>
       cpu=conf['cpu']
    except:
       cpu=1
-   
+
    for i in range(0, nb_runs):
       for e in exps:
-         directory = res_dir + "/" + e + "/exp_" + str(i) 
+         directory = res_dir + "/" + e + "/exp_" + str(i)
          try:
             os.makedirs(directory)
          except:
@@ -318,7 +319,7 @@ def launch_exp(conf_file):
    exp = conf['exp']
    directory = conf['dir']
    debug = conf['debug']
-   
+
    args = ""
    if 'args' in conf : args=conf['args']
    print 'exp = ' + exp
@@ -346,7 +347,7 @@ def launch_exp(conf_file):
    print 'dirs created'
 
    # make a svn diff
-   status, version = commands.getstatusoutput('svnversion') 
+   status, version = commands.getstatusoutput('svnversion')
    if version[len(version)-1] == 'M':
       version = version[0:len(version)-1]
    os.system('svn diff >' + directory + '/' + version + '.diff')
@@ -364,7 +365,7 @@ def launch_exp(conf_file):
    k = 0
    pids = []
    for m in machines.iterkeys() :
-      pid = os.fork() 
+      pid = os.fork()
       if (pid == 0): #son
          for i in range(0, machines[m]):
             if m == 'localhost':
@@ -380,7 +381,7 @@ def launch_exp(conf_file):
                    " 1> stdout 2> stderr'"
             print 'run ' + str(i + k) + ' on ' + m
 	    print s
-            ret = subprocess.call(s, shell=True)            
+            ret = subprocess.call(s, shell=True)
             print "ret = " + str(ret)
          exit(0)
       pids += [pid]

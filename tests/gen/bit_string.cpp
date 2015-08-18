@@ -88,8 +88,7 @@ struct check_bitstring_eq {
   template<typename T>
   void operator()(const T& gen1, const T& gen2) const {
     BOOST_CHECK_EQUAL(gen1.size(), gen2.size());
-    for (size_t i = 0; i < gen1.size(); ++i)
-    {
+    for (size_t i = 0; i < gen1.size(); ++i) {
       std::cout<<gen1.data(i)<<" vs "<<gen2.data(i)<<std::endl;
       BOOST_CHECK(fabs(gen1.data(i) - gen2.data(i) < 0.001));
     }

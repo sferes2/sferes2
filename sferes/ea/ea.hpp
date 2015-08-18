@@ -274,6 +274,10 @@ namespace sferes {
       const std::string& res_dir() const {
         return _res_dir;
       }
+      void set_res_dir(const std::string& new_dir) {
+        _res_dir = new_dir;
+        _make_res_dir();
+      }
       size_t gen() const {
         return _gen;
       }
@@ -289,7 +293,9 @@ namespace sferes {
       void write(size_t g) const {
         _write(g);
       }
-      void stop() { _stop = true;}
+      void stop() {
+        _stop = true;
+      }
      protected:
       pop_t _pop;
       eval_t _eval;
@@ -321,8 +327,8 @@ namespace sferes {
         dbg::trace trace("ea", DBG_HERE);
         if (Params::pop::dump_period == -1)
           return;
-
-        _res_dir = misc::hostname() + "_" + misc::date() + "_" + misc::getpid();
+        if (_res_dir.empty())
+          _res_dir = misc::hostname() + "_" + misc::date() + "_" + misc::getpid();
         boost::filesystem::path my_path(_res_dir);
         boost::filesystem::create_directory(my_path);
       }
