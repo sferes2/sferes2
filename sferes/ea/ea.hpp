@@ -190,7 +190,6 @@ namespace sferes {
       typedef std::vector<boost::shared_ptr<Phen> > pop_t;
       typedef typename phen_t::fit_t fit_t;
       Ea() : _pop(Params::pop::size), _gen(0), _stop(false) {
-        _make_res_dir();
       }
       void set_fit_proto(const fit_t& fit) {
         _fit_proto = fit;
@@ -198,6 +197,7 @@ namespace sferes {
 
       void run() {
         dbg::trace trace("ea", DBG_HERE);
+        _make_res_dir();
         random_pop();
         for (_gen = 0; _gen < Params::pop::nb_gen && !_stop; ++_gen)
           _iter();
@@ -205,6 +205,7 @@ namespace sferes {
 
       void resume(const std::string& fname) {
         dbg::trace trace("ea", DBG_HERE);
+        _make_res_dir();
         if (boost::fusion::find<stat::State<Phen, Params> >(_stat) == boost::fusion::end(_stat)) {
           std::cout<<"WARNING: no State found in stat_t, cannot resume" << std::endl;
           return;
