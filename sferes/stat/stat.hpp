@@ -64,7 +64,7 @@ namespace sferes {
       void _create_log_file(const E& ea, const std::string& name) {
         if (!_log_file && ea.dump_enabled()) {
           std::string log = ea.res_dir() + "/" + name;
-          _log_file = boost::shared_ptr<std::ofstream>(new std::ofstream(log.c_str()));
+          _log_file = boost::shared_ptr<std::ofstream>(new std::ofstream(log.c_str(), std::fstream::app));
         }
       }
     };
