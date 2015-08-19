@@ -215,6 +215,7 @@ namespace sferes {
         Resume<stat_t, has_state_t> r;
         r.resume(*this);
         assert(!_pop.empty());
+        std::cout<<"resuming at:"<< gen() << std::endl;
         for (; _gen < Params::pop::nb_gen && !_stop; ++_gen)
           _iter();
       }

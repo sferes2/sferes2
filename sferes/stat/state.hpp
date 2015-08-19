@@ -68,12 +68,14 @@ namespace sferes {
       }
       template<class Archive>
       void serialize(Archive & ar, const unsigned int version) {
+        _last_written_gen = _gen;
         ar & BOOST_SERIALIZATION_NVP(_gen);
         ar & BOOST_SERIALIZATION_NVP(_pop);
       }
     protected:
       std::vector<boost::shared_ptr<Phen> > _pop;
       size_t _gen;
+      size_t _last_written_gen;
     };
   }
 }

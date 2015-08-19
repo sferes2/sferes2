@@ -64,11 +64,8 @@ namespace sferes {
                              const boost::system::error_code& error,
                              int signal_number) {
       if (!error) {
-        std::cout<<"received signal:"<<signal_number<<std::endl;
-        std::cout<<"ea.gen():"<<ea.gen()<<std::endl;
-        ea.write();
+        std::cout<<"sferes received signal:"<<signal_number<<std::endl;
         ea.stop();
-        usleep(1000);
       } else
         std::cerr<<"error in sig handler:" << error.message() << std::endl;
     }
@@ -182,8 +179,12 @@ namespace sferes {
       run::_load(vm, ea);
     } else if (vm.count("resume")) {
       ea.resume(vm["resume"].as<std::string>());
+      ea.write();
+      std::cout<<"final state written -- "<<ea.gen()<<std::endl;
     } else {
       ea.run();
+      ea.write();
+      std::cout<<"final state written -- "<<ea.gen()<<std::endl;
     }
   }
 
