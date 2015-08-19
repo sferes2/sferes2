@@ -44,7 +44,6 @@ def last_gen_file(res_dir, exp):
 def sig_handler(signum, frame, process, exp, res_dir):
     print sys.argv[0], 'Signal handler called with signal', signum
     # we kill our experiment (this is unfortunate!)
-    # we mark our experiment as interrupted
     process.send_signal(signum)
     print sys.argv[0], ' -> exiting (signal sent to the child)'
     exit(0)
