@@ -198,14 +198,18 @@ namespace sferes {
       void run() {
         dbg::trace trace("ea", DBG_HERE);
         _make_res_dir();
+        _set_status("running");
         random_pop();
         for (_gen = 0; _gen < Params::pop::nb_gen && !_stop; ++_gen)
           _iter();
+        if (!_stop)
+          _set_status("finished");
       }
 
       void resume(const std::string& fname) {
         dbg::trace trace("ea", DBG_HERE);
         _make_res_dir();
+        _set_status("resumed");
         if (boost::fusion::find<stat::State<Phen, Params> >(_stat) == boost::fusion::end(_stat)) {
           std::cout<<"WARNING: no State found in stat_t, cannot resume" << std::endl;
           return;
@@ -218,6 +222,8 @@ namespace sferes {
         std::cout<<"resuming at:"<< gen() << std::endl;
         for (; _gen < Params::pop::nb_gen && !_stop; ++_gen)
           _iter();
+        if (!_stop)
+          _set_status("finished");
       }
       void random_pop() {
         dbg::trace trace("ea", DBG_HERE);
@@ -297,7 +303,12 @@ namespace sferes {
       }
       void stop() {
         _stop = true;
+        _set_status("interrupted");
       }
+      bool is_stopped() const {
+        return _stop;
+      }
+
      protected:
       pop_t _pop;
       eval_t _eval;
@@ -313,6 +324,16 @@ namespace sferes {
         update_stats();
         if (_gen % Params::pop::dump_period == 0)
           _write(_gen);
+      }
+
+      // the status is a file that tells the state of the experiment
+      // it is useful to tell to the rest of the world if the experiment has
+      // been interrupted
+      // typical values: "running", "interrupted", "finished"
+      void _set_status(const std::string& status) const {
+        std::string s = _res_dir + "/status";
+        std::ofstream ofs(s.c_str());
+        ofs << status;
       }
 
       template<typename P>
