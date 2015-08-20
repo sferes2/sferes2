@@ -238,6 +238,8 @@ namespace sferes {
       void set_pop(const pop_t& p) {
         dbg::trace trace("ea", DBG_HERE);
         this->_pop = p;
+        for (size_t i = 0; i < this->_pop.size(); ++i)
+          this->_pop[i]->develop();
         stc::exact(this)->_set_pop(p);
       }
 
