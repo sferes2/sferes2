@@ -62,6 +62,7 @@ Peer-reviewed academic papers that used Sferes2:
 (you can find a pdf for most of these publications on http://scholar.google.com).
 ### 2015
 - Cully, Antoine, Jeff Clune, Danesh Tarapore, and Jean-Baptiste Mouret. "Robots that can adapt like animals." Nature 521, no. 7553 (2015): 503-507.
+- Viejo, Guillaume, Mehdi Khamassi, Andrea Brovelli, and Benoît Girard. "Modeling choice and reaction time during arbitrary visuomotor learning through the coordination of adaptive working memory and reinforcement learning." Frontiers in behavioral neuroscience 9 (2015).
 - Nguyen, Anh, Jason Yosinski, and Jeff Clune. "Innovation engines: Automated creativity and improved stochastic optimization via deep learning." In Proceedings of the Genetic and Evolutionary Computation Conference. 2015.
 - Maestre, Carlos, Antoine Cully, Christophe Gonzales, and Stephane Doncieux. "Bootstrapping interactions with objects from raw sensorimotor data: a Novelty Search based approach." In IEEE International Conference on Developmental and Learning and on Epigenetic Robotics. 2015.
 - Shrouf, Fadi, Joaquin Ordieres-Meré, Alvaro García-Sánchez, and Miguel Ortega-Mier. "Optimizing the production scheduling of a single machine to minimize total energy consumption costs." Journal of Cleaner Production 67 (2014): 197-207.
