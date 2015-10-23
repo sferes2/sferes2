@@ -62,7 +62,7 @@ def init():
 def set_options(opt):
     # tools
     opt.tool_options('compiler_cxx')
-    opt.tool_options('boost')
+    opt.tool_options('boost_sferes')
     opt.tool_options('tbb')
     opt.tool_options('mpi')
     opt.tool_options('eigen3')
@@ -79,15 +79,11 @@ def set_options(opt):
     # exp commands
     opt.add_option('--create', type='string', help='create a new exp', dest='create_exp')
     opt.add_option('--exp', type='string', help='exp to build', dest='exp')
-    opt.add_option('--launch', type='string', help='config file to launch', dest='launch')
-    opt.add_option('--time_travel', type='string', help='config file to time-travel', dest='time_travel')
-    opt.add_option('--kill', type='string', help='config file to kill', dest='kill')
-    opt.add_option('--status', type='string', help='config file to status', dest='status')
     opt.add_option('--qsub', type='string', help='config file (json) to submit to torque', dest='qsub')
-    opt.add_option('--ll', type='string', help='config file (json) to submit to loadleveler', dest='loadleveler')
+    opt.add_option('--oar', type='string', help='config file (json) to submit to oar', dest='oar')
 
     for i in modules:
-        print 'module : [' + i + ']'
+        print 'options for module : [' + i + ']'
         opt.sub_options(i)
 
 
@@ -107,7 +103,7 @@ def configure(conf):
         common_flags += '-std=c++11 '
 
     # boost
-    conf.check_tool('boost')
+    conf.check_tool('boost_sferes')
     conf.check_boost(lib='serialization filesystem system unit_test_framework program_options graph mpi python thread',
                      min_version='1.35')
     # tbb
@@ -136,6 +132,9 @@ def configure(conf):
     conf.env['CXXDEFINES_SDL_gfx']=['_GNU_SOURCE=1', '_REENTRANT']
     conf.env['LIB_SDL_gfx']=['SDL_gfx']
     conf.env['HAVE_SDL_gfx']=1
+
+    conf.env['LIB_PTHREAD']=['pthread']
+
 
     # eigen 3 (optional)
     eigen3_found = conf.check_tool('eigen3')
@@ -181,6 +180,7 @@ def configure(conf):
 
     # modules
     for i in modules:
+        print 'configuring module: ',i
         conf.sub_config(i)
 
     # link flags
@@ -258,18 +258,10 @@ def build(bld):
 def shutdown ():
     if Options.options.create_exp:
         sferes.create_exp(Options.options.create_exp)
-    if Options.options.launch:
-        sferes.launch_exp(Options.options.launch)
-    if Options.options.status:
-        sferes.status(Options.options.status)
-    if Options.options.time_travel:
-        sferes.time_travel(Options.options.time_travel)
-    if Options.options.kill:
-        sferes.kill(Options.options.kill)
     if Options.options.qsub:
         sferes.qsub(Options.options.qsub)
-    if Options.options.loadleveler:
-        sferes.loadleveler(Options.options.loadleveler)
+    if Options.options.oar:
+        sferes.oar(Options.options.oar)
 
 
 def check(self):

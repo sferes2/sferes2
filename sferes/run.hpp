@@ -129,12 +129,12 @@ namespace sferes {
     ea.set_fit_proto(fit_proto);
 
     // handler (dump in case of sigterm/sigkill)
-    boost::asio::io_service io_service;
+    /*    boost::asio::io_service io_service;
     boost::asio::signal_set signals(io_service, SIGINT, SIGTERM, SIGQUIT);
     signals.async_wait(boost::bind(run::_sig_handler<Ea>, boost::ref(ea), _1, _2));
     boost::shared_ptr<boost::asio::io_service::work> work(new boost::asio::io_service::work(io_service));
     boost::thread t(boost::bind(&boost::asio::io_service::run, &io_service));
-    t.detach();
+    t.detach();*/
 
     // command-line options
     namespace po = boost::program_options;
