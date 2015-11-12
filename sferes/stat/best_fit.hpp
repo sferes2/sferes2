@@ -45,13 +45,13 @@
 
 namespace sferes {
   namespace stat {
-    // assume that the population is sorted !
     SFERES_STAT(BestFit, Stat) {
     public:
       template<typename E>
       void refresh(const E& ea) {
         assert(!ea.pop().empty());
-        _best = *ea.pop().begin();
+        _best = *std::max_element(ea.pop().begin(), ea.pop().end(), fit::compare_max());
+        
         this->_create_log_file(ea, "bestfit.dat");
         if (ea.dump_enabled())
           (*this->_log_file) << ea.gen() << " " << _best->fit().value() << std::endl;

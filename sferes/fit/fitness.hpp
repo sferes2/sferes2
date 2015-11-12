@@ -100,10 +100,28 @@ namespace sferes {
       mode::mode_t _mode;
     };
 
+    /// this comparator is to use with sort, NOT with std::max_element
+    // Binary function that accepts two elements in the range as arguments,
+    // and returns a value convertible to bool. The value returned indicates
+    // whether the element passed as first argument is considered to go before
+    // the second in the specific strict weak ordering it defines.
+    // see: http://www.cplusplus.com/reference/algorithm/sort/
     struct compare {
       template<typename I>
       bool operator()(const boost::shared_ptr<I> i1, const boost::shared_ptr<I> i2) const {
         return i1->fit().value() > i2->fit().value();
+      }
+    };
+
+    // comparator for max_element. This is not for std::sort! (see above)
+    // comparison function object (i.e. an object that satisfies the
+    // requirements of Compare) which returns ​true if the first argument
+    // is less than the second.
+    // see: http://en.cppreference.com/w/cpp/algorithm/max_element
+    struct compare_max {
+      template<typename I>
+      bool operator()(const boost::shared_ptr<I> i1, const boost::shared_ptr<I> i2) const {
+        return i1->fit().value() < i2->fit().value();
       }
     };
 
