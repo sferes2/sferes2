@@ -215,7 +215,7 @@ namespace sferes {
           return;
         }
         _load(fname);
-        typedef typename boost::fusion::result_of::find<stat_t, stat::State<Phen, Params>>::type has_state_t;
+        typedef typename boost::fusion::result_of::find<stat_t, stat::State<Phen, Params> >::type has_state_t;
         Resume<stat_t, has_state_t> r;
         r.resume(*this);
         assert(!_pop.empty());

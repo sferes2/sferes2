@@ -60,7 +60,7 @@ namespace sferes {
         p->fit().set_mode(fit::mode::view);
         p->fit().eval(*p);
       }
-      const std::vector<boost::shared_ptr<Phen>>& pop() const {
+      const std::vector<boost::shared_ptr<Phen> >& pop() const {
         return _pop;
       }
       size_t gen() const {
