@@ -15,7 +15,7 @@ import glob
 
 
 
-def create_variants(bld, source, uselib_local, target,
+def create_variants(bld, source, use, target,
                     uselib, variants, includes=". ../../",
                     cxxflags='',
                     json=''):
@@ -36,7 +36,7 @@ def create_variants(bld, source, uselib_local, target,
                target=tmp,
                includes=includes,
                uselib=uselib,
-               use=uselib_local)
+               use=use)
    c_src = bld.path.abspath() + '/'
    for v in variants:
       # create file
@@ -45,23 +45,23 @@ def create_variants(bld, source, uselib_local, target,
          suff += d.lower() + '_'
          src_fname = tmp + '_' + suff[0:len(suff) - 1] + '.cpp'
          bin_fname = tmp + '_' + suff[0:len(suff) - 1]
-         f = open(c_src + src_fname, 'w')
-         f.write("// THIS IS A GENERATED FILE - DO NOT EDIT\n")
-         for d in v.split(' '):
-            f.write("#define " + d + "\n")
+      f = open(c_src + src_fname, 'w')
+      f.write("// THIS IS A GENERATED FILE - DO NOT EDIT\n")
+      for d in v.split(' '):
+         f.write("#define " + d + "\n")
          f.write("#line 1 \"" + c_src + source + "\"\n")
-         code = open(c_src + source, 'r')
-         for line in code:
-            f.write(line)
-         bin_name = src_fname.replace('.cpp', '')
-         bin_name = os.path.basename(bin_name)
-         # create build
-         bld.program(features='cxx',
+      code = open(c_src + source, 'r')
+      for line in code:
+         f.write(line)
+      bin_name = src_fname.replace('.cpp', '')
+      bin_name = os.path.basename(bin_name)
+      # create build
+      bld.program(features='cxx',
                      source=src_fname,
                      target=bin_fname,
                      includes=includes,
                      uselib=uselib,
-                     use=uselib_local)
+                     use=use)
 
 
 def create_exp(name):
