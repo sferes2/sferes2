@@ -34,17 +34,9 @@
 #| had knowledge of the CeCILL license and that you accept its terms.
 
 
-import Options
-import copy
-import os, glob, types
-import sferes
-import tbb
 import sys
+sys.path.insert(0, './waf_tools')
 import commands
-import TaskGen, Task, Utils
-from Constants import RUN_ME
-import unittestw, Utils
-import Configure
 
 VERSION=commands.getoutput('git rev-parse HEAD')
 if "No such " in VERSION or "fatal:" in VERSION:
@@ -54,19 +46,19 @@ APPNAME='sferes2'
 srcdir = '.'
 blddir = 'build'
 
+import copy
+import os, glob, types
+import sferes
+from waflib.Build import BuildContext
+
 modules = sferes.parse_modules()
 
-def init():
-    pass
-
-def set_options(opt):
+def options(opt):
     # tools
-    opt.tool_options('compiler_cxx')
-    opt.tool_options('boost_sferes')
-    opt.tool_options('tbb')
-    opt.tool_options('mpi')
-    opt.tool_options('eigen3')
-    opt.tool_options('unittest')
+    opt.load('compiler_cxx boost waf_unit_test')
+    opt.load('tbb')
+    opt.load('mpi')
+    opt.load('eigen')
 
     # sferes specific
     opt.add_option('--bullet', type='string', help='path to bullet', dest='bullet')
@@ -84,7 +76,11 @@ def set_options(opt):
 
     for i in modules:
         print 'options for module : [' + i + ']'
-        opt.sub_options(i)
+        opt.recurse(i)
+
+    for i in glob.glob('exp/*'):
+        print 'options for exp : [' + i + ']'
+        opt.recurse(i)
 
 
 def configure(conf):
@@ -96,21 +92,21 @@ def configure(conf):
     args.write("\n")
     args.close()
 
-    conf.check_tool('compiler_cxx')
+    conf.load('compiler_cxx')
 
     common_flags = "-D_REENTRANT -Wall -fPIC -ftemplate-depth-1024 -Wno-sign-compare -Wno-deprecated  -Wno-unused "
-    if Options.options.cpp11 and Options.options.cpp11 == 'yes':
+    if conf.options.cpp11 and conf.options.cpp11 == 'yes':
         common_flags += '-std=c++11 '
 
     # boost
-    conf.check_tool('boost_sferes')
+    conf.load('boost')
     conf.check_boost(lib='serialization filesystem system unit_test_framework program_options graph mpi python thread',
                      min_version='1.35')
     # tbb
-    conf.check_tool('tbb')
+    conf.load('tbb')
 
     # mpi.h
-    mpi_found = conf.check_tool('mpi')
+    conf.check_mpi()
 
     # boost mpi
     if (len(conf.env['LIB_BOOST_MPI']) != 0 and conf.env['MPI_FOUND']):
@@ -137,10 +133,12 @@ def configure(conf):
 
 
     # eigen 3 (optional)
-    eigen3_found = conf.check_tool('eigen3')
+    conf.load('eigen')
+    conf.check_eigen()
 
-    # ode (optiona)
-    ode_found = conf.check_tool('ode')
+    # ode (optional)
+    conf.load('ode')
+    conf.check_ode()
 
     # gsl (optional)
     conf.check_cfg(package='gsl',
@@ -151,9 +149,9 @@ def configure(conf):
 
     # bullet (optional)
     conf.env['LIB_BULLET'] = ['bulletdynamics', 'bulletcollision', 'bulletmath']
-    if Options.options.bullet :
-        conf.env['LIBPATH_BULLET'] = Options.options.bullet + '/lib'
-        conf.env['CPPPATH_BULLET'] = Options.options.bullet + '/src'
+    if conf.options.bullet :
+        conf.env['LIBPATH_BULLET'] = conf.options.bullet + '/lib'
+        conf.env['CPPPATH_BULLET'] = conf.options.bullet + '/src'
 
     # osg (optional)
     conf.env['LIB_OSG'] = ['osg', 'osgDB', 'osgUtil',
@@ -162,7 +160,7 @@ def configure(conf):
 
 
     # Mac OS specific options
-    if Options.options.apple and Options.options.apple == 'yes':
+    if conf.options.apple and conf.options.apple == 'yes':
         common_flags += ' -Wno-gnu-static-float-init '
 
     conf.env['LIB_TCMALLOC'] = 'tcmalloc'
@@ -175,44 +173,49 @@ def configure(conf):
     conf.env['LIBPATH_OPENGL'] = '/usr/X11R6/lib'
     conf.env['LIB_OPENGL'] = ['GL', 'GLU', 'glut']
 
-    if Options.options.rpath:
-        conf.env.append_value("LINKFLAGS", "--rpath="+Options.options.rpath)
+    if conf.options.rpath:
+        conf.env.append_value("LINKFLAGS", "--rpath="+conf.options.rpath)
 
     # modules
     for i in modules:
-        print 'configuring module: ',i
-        conf.sub_config(i)
+        print 'configuring module: ', i
+        conf.recurse(i)
+
+    if conf.options.exp:
+        for i in conf.options.exp.split(','):
+            print 'configuring for exp: ' + i
+            conf.recurse('exp/' + i)
 
     # link flags
-    if Options.options.libs:
-        conf.env.append_value("LINKFLAGS", "-L" + Options.options.libs)
+    if conf.options.libs:
+        conf.env.append_value("LINKFLAGS", "-L" + conf.options.libs)
 
-    if Options.options.includes :
-        common_flags += " -I" + Options.options.includes + ' '
+    if conf.options.includes :
+        common_flags += " -I" + conf.options.includes + ' '
     if conf.env['MPI_ENABLED']:
         common_flags += '-DMPI_ENABLED '
     if not conf.env['TBB_ENABLED']:
         common_flags += '-DNO_PARALLEL '
-    if conf.env['EIGEN3_FOUND']:
+    if conf.env['EIGEN_FOUND']:
         common_flags += '-DEIGEN3_ENABLED '
 
     common_flags += "-DSFERES_ROOT=\"" + os.getcwd() + "\" "
 
     cxxflags = conf.env['CXXFLAGS']
     # release
-    conf.setenv('default')
+    #conf.setenv('default')
     opt_flags = common_flags +  ' -DNDEBUG -O3 -ffast-math'
 
     conf.env['CXXFLAGS'] = cxxflags + opt_flags.split(' ')
     conf.env['SFERES_ROOT'] = os.getcwd()
 
     # debug
-    env = conf.env.copy()
-    env.set_variant('debug')
-    conf.set_env_name('debug', env)
-    conf.setenv('debug')
-    debug_flags = common_flags + '-O1 -ggdb3 -DDBG_ENABLED'
-    conf.env['CXXFLAGS'] = cxxflags + debug_flags.split(' ')
+    #env = conf.env.copy()
+    #env.set_variant('debug')
+    #conf.set_env_name('debug', env)
+    #conf.setenv('debug')
+    #debug_flags = common_flags + '-O1 -ggdb3 -DDBG_ENABLED'
+    #conf.env['CXXFLAGS'] = cxxflags + debug_flags.split(' ')
 
     # display flags
     def flat(list) :
@@ -226,42 +229,45 @@ def configure(conf):
     print 'boost version: ' + str(conf.env['BOOST_VERSION'])
     print 'mpi: ' + str(conf.env['MPI_ENABLED'])
     print "Compilation flags :"
-    conf.setenv('default')
+    #conf.setenv('default')
     print " * default:"
     print "   CXXFLAGS : " + flat(conf.env['CXXFLAGS'])
     print "   LINKFLAGS: " + flat(conf.env['LINKFLAGS'])
-    conf.setenv('debug')
-    print " * debug:"
-    print "   CXXFLAGS : " + flat(conf.env['CXXFLAGS'])
-    print "   LINKFLAGS: " + flat(conf.env['LINKFLAGS'])
-    print " "
+    #conf.setenv('debug')
+    #print " * debug:"
+    #print "   CXXFLAGS : " + flat(conf.env['CXXFLAGS'])
+    #print "   LINKFLAGS: " + flat(conf.env['LINKFLAGS'])
+    #print " "
     print "--- license ---"
     print "Sferes2 is distributed under the CECILL license (GPL-compatible)"
     print "Please check the accompagnying COPYING file or http://www.cecill.info/"
 
 def build(bld):
     v = commands.getoutput('git rev-parse HEAD')
-    bld.env_of_name('default')['CXXFLAGS'].append("-DVERSION=\"(const char*)\\\""+v+"\\\"\"")
-    bld.env_of_name('debug')['CXXFLAGS'].append("-DVERSION=\"(const char*)\\\""+v+"\\\"\"")
+    bld.env['CXXFLAGS'].append("-DVERSION=\"(const char*)\\\""+v+"\\\"\"")
+    #bld.env_of_name('default')['CXXFLAGS'].append("-DVERSION=\"(const char*)\\\""+v+"\\\"\"")
+    #bld.env_of_name('debug')['CXXFLAGS'].append("-DVERSION=\"(const char*)\\\""+v+"\\\"\"")
 
     print ("Entering directory `" + os.getcwd() + "'")
-    bld.add_subdirs('sferes examples tests')
-    if Options.options.exp:
-        print 'Building exp: ' + Options.options.exp
-        bld.add_subdirs('exp/' + Options.options.exp)
+    bld.recurse('sferes examples tests')
+    if bld.options.exp:
+        for i in bld.options.exp.split(','):
+            print 'Building exp: ' + i
+            bld.recurse('exp/' + i)
     for i in modules:
-        bld.add_subdirs(i)
-    for obj in copy.copy(bld.all_task_gen):
-        new_obj = obj.clone('debug')
-    bld.add_post_fun(unittestw.summary)
+        print 'Building module: ' + i
+        bld.recurse(i)
+    #for obj in copy.copy(bld.all_task_gen):
+    #    new_obj = obj.clone('debug')
+    #bld.add_post_fun(unittestw.summary)
 
-def shutdown ():
-    if Options.options.create_exp:
-        sferes.create_exp(Options.options.create_exp)
-    if Options.options.qsub:
-        sferes.qsub(Options.options.qsub)
-    if Options.options.oar:
-        sferes.oar(Options.options.oar)
+def shutdown (ctx):
+    if ctx.options.create_exp:
+        sferes.create_exp(ctx.options.create_exp)
+    if ctx.options.qsub:
+        sferes.qsub(ctx.options.qsub)
+    if ctx.options.oar:
+        sferes.oar(ctx.options.oar)
 
 
 def check(self):

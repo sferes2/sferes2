@@ -35,12 +35,12 @@
 
 def build(bld):
     # sferes
-    sferes = bld.new_task_gen('cxx', 'staticlib')
-    sferes.source = 'dbg/dbg.cpp ea/cmaes.cpp'
-    sferes.includes = '. dbg'
-    sferes.target = 'sferes2'
-    sferes.want_libtool = 1
-    sferes.uselib = 'BOOST BOOST_FILESYSTEM BOOST_SYSTEM BOOST_SERIALIZATION BOOST_PROGRAM_OPTIONS TBB PTHREAD'
-    mpi = bld.all_envs['default']['MPI_ENABLED']
+    libs = 'BOOST BOOST_FILESYSTEM BOOST_SYSTEM BOOST_SERIALIZATION BOOST_PROGRAM_OPTIONS TBB PTHREAD'
+    mpi = bld.env['MPI_ENABLED']
     if mpi:
-        sferes.uselib += ' MPI BOOST_MPI'
+        libs += ' MPI BOOST_MPI'
+    bld.stlib(features = 'cxx cxxstlib',
+              source = 'dbg/dbg.cpp ea/cmaes.cpp',
+              includes = '. dbg',
+              uselib = libs,
+              target = 'sferes2')

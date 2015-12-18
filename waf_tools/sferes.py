@@ -12,12 +12,11 @@ except:
 
 import glob
 #import xml.etree.cElementTree as etree
-import Options
 
 
 
-def create_variants(bld, source, uselib_local, target, 
-                    uselib, variants, includes=". ../../", 
+def create_variants(bld, source, uselib_local, target,
+                    uselib, variants, includes=". ../../",
                     cxxflags='',
                     json=''):
    # the basic one
@@ -28,29 +27,41 @@ def create_variants(bld, source, uselib_local, target,
    #   tgt.uselib = uselib
    #   tgt.target = target
    # the variants
+   if not target:
+      tmp = source.replace('.cpp', '')
+   else:
+      tmp = target
+   bld.program(features='cxx',
+               source=source,
+               target=tmp,
+               includes=includes,
+               uselib=uselib,
+               use=uselib_local)
    c_src = bld.path.abspath() + '/'
    for v in variants:
       # create file
       suff = ''
-      for d in v.split(' '): suff += d.lower() + '_'
-      tmp = source.replace('.cpp', '')
-      src_fname = tmp + '_' + suff[0:len(suff) - 1] + '.cpp'
-      f = open(c_src + src_fname, 'w')
-      f.write("// THIS IS A GENERATED FILE - DO NOT EDIT\n")
-      for d in v.split(' '): f.write("#define " + d + "\n")
-      f.write("#line 1 \"" + c_src + source + "\"\n")
-      code = open(c_src + source, 'r')
-      for line in code: f.write(line)
-      bin_name = src_fname.replace('.cpp', '')
-      bin_name = os.path.basename(bin_name)
-      # create build
-      tgt = bld.new_task_gen('cxx', 'program')
-      tgt.source = src_fname
-      tgt.includes = includes
-      tgt.uselib_local = uselib_local
-      tgt.uselib = uselib
-      tgt.target = bin_name
-      tgt.cxxflags = cxxflags
+      for d in v.split(' '):
+         suff += d.lower() + '_'
+         src_fname = tmp + '_' + suff[0:len(suff) - 1] + '.cpp'
+         bin_fname = tmp + '_' + suff[0:len(suff) - 1]
+         f = open(c_src + src_fname, 'w')
+         f.write("// THIS IS A GENERATED FILE - DO NOT EDIT\n")
+         for d in v.split(' '):
+            f.write("#define " + d + "\n")
+         f.write("#line 1 \"" + c_src + source + "\"\n")
+         code = open(c_src + source, 'r')
+         for line in code:
+            f.write(line)
+         bin_name = src_fname.replace('.cpp', '')
+         bin_name = os.path.basename(bin_name)
+         # create build
+         bld.program(features='cxx',
+                     source=src_fname,
+                     target=bin_fname,
+                     includes=includes,
+                     uselib=uselib,
+                     use=uselib_local)
 
 
 def create_exp(name):
@@ -69,7 +80,7 @@ def build(bld):
    os.system("cp examples/ex_ea.cpp exp/" + name + "/" + name + ".cpp")
    wscript = open('exp/' + name + "/wscript", "w")
    wscript.write(ws_tpl.replace('@exp', name))
-   
+
 
 def parse_modules():
    if (not os.path.exists("modules.conf")):

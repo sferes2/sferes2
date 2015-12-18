@@ -41,13 +41,11 @@ def build(bld):
     # compile & run every *.cpp automagically
     files = glob.glob("tests/*/*.cpp")
     for f in files:
-#        if not f.find('mpi'):
-        obj = bld.new_task_gen(features='cxx cprogram')
-        obj.source = '../' + f
-        obj.includes = '../'
         fname = f.replace('/', '_')
         fname = fname[0:-4]
-        obj.target = fname
-        obj.unit_test = 1
-        obj.uselib_local = 'sferes2'
-        obj.uselib = 'TBB BOOST BOOST_UNIT_TEST_FRAMEWORK BOOST_THREAD EIGEN3'
+        bld.program(features = 'cxx test',
+                       source = '../' + f,
+                       includes = '../',
+                       use = 'sferes2',
+                       uselib = 'TBB BOOST BOOST_THREAD EIGEN',
+                       target = fname)
