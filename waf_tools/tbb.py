@@ -33,4 +33,4 @@ def check_tbb(self, *k, **kw):
     self.env.LIBPATH_TBB = libpath_tbb
     self.env.LIB_TBB = ['tbb']
     self.env.INCLUDES_TBB = includes_tbb
-    self.env.DEFINES_TBB = ['USE_TBB']
+    self.env['TBB_ENABLED'] = True

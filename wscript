@@ -104,6 +104,7 @@ def configure(conf):
                      min_version='1.35')
     # tbb
     conf.load('tbb')
+    conf.check_tbb()
 
     # mpi.h
     conf.check_mpi()
