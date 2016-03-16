@@ -201,7 +201,7 @@ def configure(conf):
     cxxflags = conf.env['CXXFLAGS']
     # release
     conf.setenv('default')
-    opt_flags = common_flags +  ' -DNDEBUG -O3 -ffast-math'
+    opt_flags = common_flags +  ' -DNDEBUG -O3'
 
     conf.env['CXXFLAGS'] = cxxflags + opt_flags.split(' ')
     conf.env['SFERES_ROOT'] = os.getcwd()
