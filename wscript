@@ -86,8 +86,12 @@ def options(opt):
         opt.recurse(i)
 
     for i in glob.glob('exp/*'):
-        print 'options for exp : [' + i + ']'
-        opt.recurse(i)
+        print 'options for exp : [' + i + ']',
+        try:
+            opt.recurse(i)
+            print 'ok'
+        except:
+            print 'none'
 
 
 def configure(conf):
