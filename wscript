@@ -102,7 +102,7 @@ def configure(conf):
     conf.load('compiler_cxx')
 
     common_flags = "-D_REENTRANT -Wall -fPIC -ftemplate-depth-1024 -Wno-sign-compare -Wno-deprecated  -Wno-unused "
-    if conf.options.cpp11 and conf.options.cpp11 == 'yes':
+    if not conf.options.cpp11 or conf.options.cpp11 == 'yes':
         common_flags += '-std=c++11 '
 
     # boost
