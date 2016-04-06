@@ -52,5 +52,4 @@ def check_ode(conf):
             else:
                 env['CXXFLAGS_ODE']=word
 
-
     return 1
