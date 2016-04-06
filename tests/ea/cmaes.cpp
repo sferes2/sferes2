@@ -32,9 +32,9 @@
 //| The fact that you are presently reading this means that you have
 //| had knowledge of the CeCILL license and that you accept its terms.
 
-// #ifndef NO_PARALLEL
-// #define NO_PARALLEL
-// #endif
+#ifndef NO_PARALLEL
+#define NO_PARALLEL
+#endif
 
 #define BOOST_TEST_DYN_LINK
 #define BOOST_TEST_MODULE cmaes
@@ -114,7 +114,6 @@ BOOST_AUTO_TEST_CASE(test_cmaes) {
       errors++;
   }
 
-  std::cout<<"ERRORS: "<<errors<<std::endl;
   BOOST_CHECK(double(errors)/double(N) <= 0.3);
 
 }
