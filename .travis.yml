@@ -24,7 +24,6 @@ addons:
     - libboost-thread-dev
     - libboost-filesystem-dev
     - libboost-mpi-dev
-    - libboost-python-dev
     - libboost-regex-dev
     - libeigen3-dev
     - libtbb-dev
