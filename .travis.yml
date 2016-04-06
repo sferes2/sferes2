@@ -1,4 +1,12 @@
 language: cpp
+
+os:
+  - linux
+
+sudo: required
+
+dist: trusty
+
 compiler:
   - gcc
   - clang
@@ -17,6 +25,7 @@ addons:
     - libboost-filesystem-dev
     - libboost-mpi-dev
     - libboost-python-dev
+    - libbost-regex-dev
     - libeigen3-dev
     - libtbb-dev
 
@@ -25,4 +34,4 @@ install:
 
 # Change this to your needs
 script:
-  dpkg -L libboost-serialization-dev && ./waf configure && ./waf -v
+  ./waf configure && ./waf -v
