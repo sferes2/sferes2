@@ -50,6 +50,7 @@ import copy
 import os, glob, types
 import sferes
 from waflib.Build import BuildContext
+from waflib.Tools import waf_unit_test
 
 modules = sferes.parse_modules()
 
@@ -243,6 +244,17 @@ def configure(conf):
     print "Sferes2 is distributed under the CECILL license (GPL-compatible)"
     print "Please check the accompagnying COPYING file or http://www.cecill.info/"
 
+def summary(bld):
+    lst = getattr(bld, 'utest_results', [])
+    total = 0
+    tfail = 0
+    if lst:
+        total = len(lst)
+        tfail = len([x for x in lst if x[1]])
+    waf_unit_test.summary(bld)
+    if tfail > 0:
+        bld.fatal("Build failed! Some tests failed!")
+
 def build(bld):
     v = commands.getoutput('git rev-parse HEAD')
     bld.env['CXXFLAGS'].append("-DVERSION=\"(const char*)\\\""+v+"\\\"\"")
@@ -258,9 +270,8 @@ def build(bld):
     for i in modules:
         print 'Building module: ' + i
         bld.recurse(i)
-    #for obj in copy.copy(bld.all_task_gen):
-    #    new_obj = obj.clone('debug')
-    #bld.add_post_fun(unittestw.summary)
+
+    bld.add_post_fun(summary)
 
 def shutdown (ctx):
     if ctx.options.create_exp:
@@ -269,14 +280,3 @@ def shutdown (ctx):
         sferes.qsub(ctx.options.qsub)
     if ctx.options.oar:
         sferes.oar(ctx.options.oar)
-
-
-def check(self):
-    os.environ["BOOST_TEST_CATCH_SYSTEM_ERRORS"]="no"
-    os.environ["BOOST_TEST_LOG_LEVEL"]="test_suite"
-    ut = unittestw.unit_test()
-    ut.change_to_testfile_dir = True
-    ut.want_to_see_test_output = True
-    ut.want_to_see_test_error = True
-    ut.run()
-    ut.print_results()
