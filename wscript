@@ -81,6 +81,9 @@ def options(opt):
     # debug flags
     opt.add_option('--debug', type='string', help='compile with debugging symbols', dest='debug')
 
+    # tests
+    opt.add_option('--tests', type='string', help='compile tests or not', dest='tests')
+
 
     for i in modules:
         print 'options for module : [' + i + ']'
@@ -256,7 +259,9 @@ def build(bld):
         bld.env['CXXFLAGS'] += opt_flags.split(' ')
 
     print ("Entering directory `" + os.getcwd() + "'")
-    bld.recurse('sferes examples tests')
+    bld.recurse('sferes examples')
+    if bld.options.tests and bld.options.tests == 'yes':
+        bld.recurse('tests')
     if bld.options.exp:
         for i in bld.options.exp.split(','):
             print 'Building exp: ' + i
