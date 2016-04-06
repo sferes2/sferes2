@@ -17,15 +17,16 @@ def options(opt):
 @conf
 def check_ode(conf):
     env = conf.env
-    ret = conf.find_program('ode-config')
     conf.start_msg('Checking for ODE')
-    if not ret:
+    try:
+        ret = conf.find_program('ode-config')
+    except:
         conf.end_msg('not found', 'RED')
         return 0
     conf.end_msg('ok')
     res = commands.getoutput('ode-config --cflags --libs')
 # conf.parse_flags seems to do not parse anything at all.......
-    
+
     res=re.split(" |\n",res)
 #ugly handmade parser:
     for word in res:
