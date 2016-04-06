@@ -55,7 +55,7 @@ from waflib.Tools import waf_unit_test
 modules = sferes.parse_modules()
 
 opt_flags = '-O3 -DNDEBUG'
-debug_flags = '-O0'
+debug_flags = '-O0 -ggdb3 -DDBG_ENABLED'
 
 def options(opt):
     # tools
