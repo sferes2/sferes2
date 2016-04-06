@@ -6,18 +6,21 @@ addons:
   apt:
     packages:
     - libboost-dev
-    - libboost-test-dev 
-    - libboost-graph-dev 
+    - libboost-test-dev
+    - libboost-graph-dev
     - libboost-iostreams-dev
     - libboost-math-dev
     - libboost-program-options-dev
     - libboost-serialization-dev
-    - libboost-system-dev 
+    - libboost-system-dev
     - libboost-thread-dev
+    - libboost-filesystem-dev
+    - libboost-mpi-dev
+    - libboost-python-dev
     - libeigen3-dev
     - libtbb-dev
 
-install: 
+install:
 
 
 # Change this to your needs
