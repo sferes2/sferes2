@@ -114,6 +114,7 @@ BOOST_AUTO_TEST_CASE(test_cmaes) {
       errors++;
   }
 
-  BOOST_CHECK(double(errors)/double(N) <= 1.0);
+  std::cout<<"ERRORS: "<<errors<<std::endl;
+  BOOST_CHECK(double(errors)/double(N) <= 0.3);
 
 }

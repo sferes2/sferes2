@@ -35,3 +35,4 @@ install:
 script:
   - ./waf configure
   - ./waf --tests=yes -v
+  - ./build/tests/tests_ea_cmaes
