@@ -53,6 +53,9 @@ from waflib.Build import BuildContext
 
 modules = sferes.parse_modules()
 
+opt_flags = '-O3 -DNDEBUG'
+debug_flags = '-O0'
+
 def options(opt):
     # tools
     opt.load('compiler_cxx boost waf_unit_test')
@@ -74,13 +77,21 @@ def options(opt):
     opt.add_option('--qsub', type='string', help='config file (json) to submit to torque', dest='qsub')
     opt.add_option('--oar', type='string', help='config file (json) to submit to oar', dest='oar')
 
+    # debug flags
+    opt.add_option('--debug', type='string', help='compile with debugging symbols', dest='debug')
+
+
     for i in modules:
         print 'options for module : [' + i + ']'
         opt.recurse(i)
 
     for i in glob.glob('exp/*'):
-        print 'options for exp : [' + i + ']'
-        opt.recurse(i)
+        print 'options for exp : [' + i + ']',
+        try:
+            opt.recurse(i)
+            print 'ok'
+        except:
+            print 'none'
 
 
 def configure(conf):
@@ -95,7 +106,7 @@ def configure(conf):
     conf.load('compiler_cxx')
 
     common_flags = "-D_REENTRANT -Wall -fPIC -ftemplate-depth-1024 -Wno-sign-compare -Wno-deprecated  -Wno-unused "
-    if conf.options.cpp11 and conf.options.cpp11 == 'yes':
+    if not conf.options.cpp11 or conf.options.cpp11 == 'yes':
         common_flags += '-std=c++11 '
 
     # boost
@@ -202,21 +213,8 @@ def configure(conf):
 
     common_flags += "-DSFERES_ROOT=\"" + os.getcwd() + "\" "
 
-    cxxflags = conf.env['CXXFLAGS']
-    # release
-    #conf.setenv('default')
-    opt_flags = common_flags +  ' -DNDEBUG -O3 -ffast-math'
-
-    conf.env['CXXFLAGS'] = cxxflags + opt_flags.split(' ')
+    conf.env['CXXFLAGS'] = common_flags.split(' ')
     conf.env['SFERES_ROOT'] = os.getcwd()
-
-    # debug
-    #env = conf.env.copy()
-    #env.set_variant('debug')
-    #conf.set_env_name('debug', env)
-    #conf.setenv('debug')
-    #debug_flags = common_flags + '-O1 -ggdb3 -DDBG_ENABLED'
-    #conf.env['CXXFLAGS'] = cxxflags + debug_flags.split(' ')
 
     # display flags
     def flat(list) :
@@ -225,20 +223,14 @@ def configure(conf):
             str += i + ' '
         return str
     print '\n--- configuration ---'
-    print 'compiler:'
+    print 'compiler(s):'
     print' * CXX: ' + str(conf.env['CXX_NAME'])
     print 'boost version: ' + str(conf.env['BOOST_VERSION'])
     print 'mpi: ' + str(conf.env['MPI_ENABLED'])
     print "Compilation flags :"
     #conf.setenv('default')
-    print " * default:"
     print "   CXXFLAGS : " + flat(conf.env['CXXFLAGS'])
     print "   LINKFLAGS: " + flat(conf.env['LINKFLAGS'])
-    #conf.setenv('debug')
-    #print " * debug:"
-    #print "   CXXFLAGS : " + flat(conf.env['CXXFLAGS'])
-    #print "   LINKFLAGS: " + flat(conf.env['LINKFLAGS'])
-    #print " "
     print "--- license ---"
     print "Sferes2 is distributed under the CECILL license (GPL-compatible)"
     print "Please check the accompagnying COPYING file or http://www.cecill.info/"
@@ -246,8 +238,11 @@ def configure(conf):
 def build(bld):
     v = commands.getoutput('git rev-parse HEAD')
     bld.env['CXXFLAGS'].append("-DVERSION=\"(const char*)\\\""+v+"\\\"\"")
-    #bld.env_of_name('default')['CXXFLAGS'].append("-DVERSION=\"(const char*)\\\""+v+"\\\"\"")
-    #bld.env_of_name('debug')['CXXFLAGS'].append("-DVERSION=\"(const char*)\\\""+v+"\\\"\"")
+
+    if bld.options.debug:
+        bld.env['CXXFLAGS'] += debug_flags.split(' ')
+    else:
+        bld.env['CXXFLAGS'] += opt_flags.split(' ')
 
     print ("Entering directory `" + os.getcwd() + "'")
     bld.recurse('sferes examples tests')
@@ -258,9 +253,6 @@ def build(bld):
     for i in modules:
         print 'Building module: ' + i
         bld.recurse(i)
-    #for obj in copy.copy(bld.all_task_gen):
-    #    new_obj = obj.clone('debug')
-    #bld.add_post_fun(unittestw.summary)
 
 def shutdown (ctx):
     if ctx.options.create_exp:

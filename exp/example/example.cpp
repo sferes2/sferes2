@@ -13,7 +13,7 @@ using namespace sferes::gen::evo_float;
 
 struct Params {
   struct evo_float {
-
+    SFERES_CONST float cross_rate = 0.1f;
     SFERES_CONST float mutation_rate = 0.1f;
     SFERES_CONST float eta_m = 15.0f;
     SFERES_CONST float eta_c = 10.0f;
