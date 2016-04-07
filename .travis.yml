@@ -35,6 +35,6 @@ script:
   - sudo update-alternatives --set c++ /usr/bin/g++
   - sudo update-alternatives --set gcc "/usr/bin/gcc-4.9"
   - sudo update-alternatives --set g++ "/usr/bin/g++-4.9"
-  - which g++ 
+  - ls -l /usr/bin/g++
   - ./waf configure
   - ./waf --tests=yes -v
