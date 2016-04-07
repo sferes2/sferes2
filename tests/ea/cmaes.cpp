@@ -107,5 +107,4 @@ BOOST_AUTO_TEST_CASE(test_cmaes) {
   float best = ea.stat<0>().best()->fit().value();
   std::cout<<"best fit (cmaes):"<<best<<std::endl;
   BOOST_CHECK(best >= -1e-3);
-
 }

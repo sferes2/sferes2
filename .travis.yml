@@ -22,5 +22,18 @@ install:
 
 # Change this to your needs
 script:
+  - sudo add-apt-repository ppa:ubuntu-toolchain-r/test
+  - sudo apt-get update
+  - sudo apt-get install g++-4.9
+  - sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-4.8 10
+  - sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-4.9 20
+  - sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-4.8 10
+  - sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-4.9 20
+  - sudo update-alternatives --install /usr/bin/cc cc /usr/bin/gcc 30
+  - sudo update-alternatives --set cc /usr/bin/gcc
+  - sudo update-alternatives --install /usr/bin/c++ c++ /usr/bin/g++ 30
+  - sudo update-alternatives --set c++ /usr/bin/g++
+  - sudo update-alternatives --set gcc "/usr/bin/gcc-4.9"
+  - sudo update-alternatives --set g++ "/usr/bin/g++-4.9"
   - ./waf configure
   - ./waf --tests=yes -v
