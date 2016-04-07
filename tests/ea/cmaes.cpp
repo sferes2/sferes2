@@ -101,19 +101,11 @@ BOOST_AUTO_TEST_CASE(test_cmaes) {
   typedef modif::Dummy<> modifier_t;
   typedef ea::Cmaes<phen_t, eval_t, stat_t, modifier_t, Params> ea_t;
 
-  const size_t N = 20;
-  size_t errors = 0;
-  for(size_t i=0;i<N;i++)
-  {
-    ea_t ea;
+  ea_t ea;
 
-    ea.run();
-    float best = ea.stat<0>().best()->fit().value();
-    std::cout<<"best fit (cmaes):"<<best<<std::endl;
-    if(best < -1e-3)
-      errors++;
-  }
-
-  BOOST_CHECK(double(errors)/double(N) <= 0.3);
+  ea.run();
+  float best = ea.stat<0>().best()->fit().value();
+  std::cout<<"best fit (cmaes):"<<best<<std::endl;
+  BOOST_CHECK(best >= -1e-3);
 
 }
