@@ -13,7 +13,7 @@ compiler:
 addons:
   apt:
     packages:
-    - libboost1.58-all-dev
+    - libboost1.55-all-dev
     - libeigen3-dev
     - libtbb-dev
 
