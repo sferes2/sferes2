@@ -112,17 +112,26 @@ BOOST_AUTO_TEST_CASE(test_epsmoea) {
   typedef boost::fusion::vector<stat::ParetoFront<phen_t, Params> >  stat_t;
   typedef modif::Dummy<> modifier_t;
   typedef ea::EpsMOEA<phen_t, eval_t, stat_t, modifier_t, Params> ea_t;
-  ea_t ea;
 
-  ea.run();
+  const size_t N = 20;
+  size_t errors = 0;
+  for(size_t i=0;i<N;i++)
+  {
+    ea_t ea;
 
-  ea.stat<0>().show_all(std::cout, 0);
-  BOOST_CHECK(ea.stat<0>().pareto_front().size() >= 101);
-  std::cout<<"elite size :"<<ea.stat<0>().pareto_front().size()<<std::endl;
+    ea.run();
 
-  BOOST_FOREACH(boost::shared_ptr<phen_t> p, ea.stat<0>().pareto_front()) {
-    BOOST_CHECK(_g(*p) < 1.1);
+    ea.stat<0>().show_all(std::cout, 0);
+    if(ea.stat<0>().pareto_front().size() < 100)
+      errors++;
+    std::cout<<"elite size :"<<ea.stat<0>().pareto_front().size()<<std::endl;
+
+    BOOST_FOREACH(boost::shared_ptr<phen_t> p, ea.stat<0>().pareto_front()) {
+      if(_g(*p) >= 1.1)
+        errors++;
+    }
   }
 
-}
+  BOOST_CHECK(double(errors)/double(N) <= 0.3);
 
+}
