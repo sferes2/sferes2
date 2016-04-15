@@ -60,6 +60,7 @@ namespace sferes {
       typedef typename std::vector<indiv_t> pop_t;
       typedef typename pop_t::iterator it_t;
       typedef typename std::vector<std::vector<indiv_t> > front_t;
+      SFERES_EA_FRIEND(Nsga2);
 
       void random_pop() {
         parallel::init();
@@ -77,9 +78,10 @@ namespace sferes {
         _fill_nondominated_sort(init_pop, _parent_pop);
       }
 
+      // a step
       void epoch() {
-        this->_pop.clear();
-        _pareto_front.clear();
+        // this->_pop.clear();
+        // _pareto_front.clear();
         _selection (_parent_pop, _child_pop);
         parallel::p_for(parallel::range_t(0, _child_pop.size()),
                         mutate<crowd::Indiv<Phen> >(_child_pop));
@@ -121,14 +123,20 @@ namespace sferes {
       const pop_t& child_pop() {
         return _child_pop;
       }
+
     protected:
-
       std::vector<boost::shared_ptr<Phen> > _pareto_front;
-
       pop_t _parent_pop;
       pop_t _child_pop;
       pop_t _mixed_pop;
 
+      // for resuming
+      void _set_pop(const std::vector<boost::shared_ptr<Phen> >& pop) {
+        assert(!pop.empty());
+        _parent_pop.resize(pop.size());
+        for (size_t i = 0; i < pop.size(); ++i)
+          _parent_pop[i] = boost::shared_ptr<crowd::Indiv<Phen> >(new crowd::Indiv<Phen>(*pop[i]));
+      }
       void _update_pareto_front(const front_t& fronts) {
         _convert_pop(fronts.front(), _pareto_front);
       }

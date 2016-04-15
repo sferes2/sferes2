@@ -34,17 +34,9 @@
 #| had knowledge of the CeCILL license and that you accept its terms.
 
 
-import Options
-import copy
-import os, glob, types
-import sferes
-import tbb
 import sys
+sys.path.insert(0, './waf_tools')
 import commands
-import TaskGen, Task, Utils
-from Constants import RUN_ME
-import unittestw, Utils
-import Configure
 
 VERSION=commands.getoutput('git rev-parse HEAD')
 if "No such " in VERSION or "fatal:" in VERSION:
@@ -54,19 +46,23 @@ APPNAME='sferes2'
 srcdir = '.'
 blddir = 'build'
 
+import copy
+import os, glob, types
+import sferes
+from waflib.Build import BuildContext
+from waflib.Tools import waf_unit_test
+from waflib import Logs
 modules = sferes.parse_modules()
 
-def init():
-    pass
+opt_flags = '-O3 -DNDEBUG'
+debug_flags = '-O0 -ggdb3 -DDBG_ENABLED'
 
-def set_options(opt):
+def options(opt):
     # tools
-    opt.tool_options('compiler_cxx')
-    opt.tool_options('boost_sferes')
-    opt.tool_options('tbb')
-    opt.tool_options('mpi')
-    opt.tool_options('eigen3')
-    opt.tool_options('unittest')
+    opt.load('compiler_cxx boost waf_unit_test')
+    opt.load('tbb')
+    opt.load('mpi')
+    opt.load('eigen')
 
     # sferes specific
     opt.add_option('--bullet', type='string', help='path to bullet', dest='bullet')
@@ -79,16 +75,32 @@ def set_options(opt):
     # exp commands
     opt.add_option('--create', type='string', help='create a new exp', dest='create_exp')
     opt.add_option('--exp', type='string', help='exp to build', dest='exp')
-    opt.add_option('--launch', type='string', help='config file to launch', dest='launch')
-    opt.add_option('--time_travel', type='string', help='config file to time-travel', dest='time_travel')
-    opt.add_option('--kill', type='string', help='config file to kill', dest='kill')
-    opt.add_option('--status', type='string', help='config file to status', dest='status')
     opt.add_option('--qsub', type='string', help='config file (json) to submit to torque', dest='qsub')
-    opt.add_option('--ll', type='string', help='config file (json) to submit to loadleveler', dest='loadleveler')
+    opt.add_option('--oar', type='string', help='config file (json) to submit to oar', dest='oar')
+
+    # debug flags
+    opt.add_option('--debug', type='string', help='compile with debugging symbols', dest='debug')
+
+    # tests
+    opt.add_option('--tests', type='string', help='compile tests or not', dest='tests')
+
+    opt.logger = Logs.make_logger(blddir + 'options.log', 'mylogger')
 
     for i in modules:
-        print 'module : [' + i + ']'
-        opt.sub_options(i)
+        opt.start_msg('Command-line options for module [%s]' % i)
+        try:
+            opt.recurse(i)
+            opt.end_msg('OK')
+        except:
+            opt.end_msg(' -> no option found', 'YELLOW')
+
+    for i in glob.glob('exp/*'):
+        opt.start_msg('Command-line options for exp [%s]' % i)
+        try:
+            opt.recurse(i)
+            opt.end_msg(' -> OK')
+        except:
+            opt.end_msg(' -> no option found', 'YELLOW')
 
 
 def configure(conf):
@@ -100,21 +112,30 @@ def configure(conf):
     args.write("\n")
     args.close()
 
-    conf.check_tool('compiler_cxx')
+    conf.load('compiler_cxx')
 
     common_flags = "-D_REENTRANT -Wall -fPIC -ftemplate-depth-1024 -Wno-sign-compare -Wno-deprecated  -Wno-unused "
-    if Options.options.cpp11 and Options.options.cpp11 == 'yes':
-        common_flags += '-std=c++11 '
+    common_flags += "-DSFERES_ROOT=\"" + os.getcwd() + "\" "
+    conf.env['CXXFLAGS'] += common_flags.split(' ')
+
+    conf.env['SFERES_ROOT'] = os.getcwd()
+
+    # link flags
+    if conf.options.libs:
+        conf.env.append_value("LINKFLAGS", "-L" + conf.options.libs)
+
+
 
     # boost
-    conf.check_tool('boost_sferes')
-    conf.check_boost(lib='serialization filesystem system unit_test_framework program_options graph mpi python thread',
+    conf.load('boost')
+    conf.check_boost(lib='serialization filesystem system unit_test_framework program_options graph mpi thread regex',
                      min_version='1.35')
     # tbb
-    conf.check_tool('tbb')
+    conf.load('tbb')
+    conf.check_tbb()
 
     # mpi.h
-    mpi_found = conf.check_tool('mpi')
+    conf.check_mpi()
 
     # boost mpi
     if (len(conf.env['LIB_BOOST_MPI']) != 0 and conf.env['MPI_FOUND']):
@@ -122,97 +143,42 @@ def configure(conf):
     else:
         conf.env['MPI_ENABLED'] = False
 
-    # sdl (optional)
-    sdl = conf.check_cfg(package='sdl',
-                   args='--cflags --libs',
-                   msg="Checking for SDL (optional)",
-                   uselib_store='SDL',
-                   mandatory=False)
-    if sdl: common_flags += '-DUSE_SDL '
-
-    conf.env['CCDEFINES_SDL_gfx']=['_GNU_SOURCE=1', '_REENTRANT']
-    conf.env['CPPPATH_SDL_gfx']=['/usr/include/SDL']
-    conf.env['LIBPATH_SDL_gfx']=['/usr/lib']
-    conf.env['CXXDEFINES_SDL_gfx']=['_GNU_SOURCE=1', '_REENTRANT']
-    conf.env['LIB_SDL_gfx']=['SDL_gfx']
-    conf.env['HAVE_SDL_gfx']=1
-
     # eigen 3 (optional)
-    eigen3_found = conf.check_tool('eigen3')
+    conf.load('eigen')
+    conf.check_eigen()
 
-    # ode (optiona)
-    ode_found = conf.check_tool('ode')
-
-    # gsl (optional)
-    conf.check_cfg(package='gsl',
-                   args='--cflags --libs',
-                   msg="Checking for GSL (optional)",
-                   uselib_store='GSL',
-                   mandatory=False)
-
-    # bullet (optional)
-    conf.env['LIB_BULLET'] = ['bulletdynamics', 'bulletcollision', 'bulletmath']
-    if Options.options.bullet :
-        conf.env['LIBPATH_BULLET'] = Options.options.bullet + '/lib'
-        conf.env['CPPPATH_BULLET'] = Options.options.bullet + '/src'
-
-    # osg (optional)
-    conf.env['LIB_OSG'] = ['osg', 'osgDB', 'osgUtil',
-                           'osgViewer', 'OpenThreads',
-                           'osgFX', 'osgShadow']
-
-
-    # Mac OS specific options
-    if Options.options.apple and Options.options.apple == 'yes':
-        common_flags += ' -Wno-gnu-static-float-init '
-
-    conf.env['LIB_TCMALLOC'] = 'tcmalloc'
-    conf.env['LIB_PTMALLOC'] = 'ptmalloc3'
-
-    conf.env['LIB_EFENCE'] = 'efence'
-    conf.env['LIB_BZIP2'] = 'bz2'
-    conf.env['LIB_ZLIB'] = 'z'
-
-    conf.env['LIBPATH_OPENGL'] = '/usr/X11R6/lib'
-    conf.env['LIB_OPENGL'] = ['GL', 'GLU', 'glut']
-
-    if Options.options.rpath:
-        conf.env.append_value("LINKFLAGS", "--rpath="+Options.options.rpath)
+    if conf.options.rpath:
+        conf.env.append_value("LINKFLAGS", "--rpath="+conf.options.rpath)
 
     # modules
     for i in modules:
-        conf.sub_config(i)
+        Logs.info('Configuring for module: [%s]' % i),
+        try:
+            conf.recurse(i)
+            Logs.info('%s -> ok' % i)
+        except:
+            Logs.warn(' %s -> no configuration found' % i, 'YELLOW')
 
-    # link flags
-    if Options.options.libs:
-        conf.env.append_value("LINKFLAGS", "-L" + Options.options.libs)
+    if conf.options.exp:
+        for i in conf.options.exp.split(','):
+            Logs.inf('Configuring for exp [%s]' %s)
+            try:
+                conf.recurse('exp/' + i)
+                Logs.info('%s -> ok' % i)
+            except:
+                Logs.warn('%s -> no configuration found' % i, 'YELLOW')
 
-    if Options.options.includes :
-        common_flags += " -I" + Options.options.includes + ' '
+
+    if not conf.options.cpp11 or conf.options.cpp11 == 'yes':
+        conf.env['CXXFLAGS']  += ['-std=c++11']
+    if conf.options.includes :
+        conf.env['CXXFLAGS']  += ["-I" + conf.options.includes]
     if conf.env['MPI_ENABLED']:
-        common_flags += '-DMPI_ENABLED '
+        conf.env['CXXFLAGS']  += ['-DMPI_ENABLED']
     if not conf.env['TBB_ENABLED']:
-        common_flags += '-DNO_PARALLEL '
-    if conf.env['EIGEN3_FOUND']:
-        common_flags += '-DEIGEN3_ENABLED '
-
-    common_flags += "-DSFERES_ROOT=\"" + os.getcwd() + "\" "
-
-    cxxflags = conf.env['CXXFLAGS']
-    # release
-    conf.setenv('default')
-    opt_flags = common_flags +  ' -DNDEBUG -O3 -ffast-math'
-
-    conf.env['CXXFLAGS'] = cxxflags + opt_flags.split(' ')
-    conf.env['SFERES_ROOT'] = os.getcwd()
-
-    # debug
-    env = conf.env.copy()
-    env.set_variant('debug')
-    conf.set_env_name('debug', env)
-    conf.setenv('debug')
-    debug_flags = common_flags + '-O1 -ggdb3 -DDBG_ENABLED'
-    conf.env['CXXFLAGS'] = cxxflags + debug_flags.split(' ')
+        conf.env['CXXFLAGS']  += ['-DNO_PARALLEL']
+    if conf.env['EIGEN_FOUND']:
+        conf.env['CXXFLAGS']  += ['-DEIGEN3_ENABLED']
 
     # display flags
     def flat(list) :
@@ -221,63 +187,55 @@ def configure(conf):
             str += i + ' '
         return str
     print '\n--- configuration ---'
-    print 'compiler:'
+    print 'compiler(s):'
     print' * CXX: ' + str(conf.env['CXX_NAME'])
     print 'boost version: ' + str(conf.env['BOOST_VERSION'])
     print 'mpi: ' + str(conf.env['MPI_ENABLED'])
     print "Compilation flags :"
-    conf.setenv('default')
-    print " * default:"
     print "   CXXFLAGS : " + flat(conf.env['CXXFLAGS'])
     print "   LINKFLAGS: " + flat(conf.env['LINKFLAGS'])
-    conf.setenv('debug')
-    print " * debug:"
-    print "   CXXFLAGS : " + flat(conf.env['CXXFLAGS'])
-    print "   LINKFLAGS: " + flat(conf.env['LINKFLAGS'])
-    print " "
     print "--- license ---"
     print "Sferes2 is distributed under the CECILL license (GPL-compatible)"
     print "Please check the accompagnying COPYING file or http://www.cecill.info/"
 
+def summary(bld):
+    lst = getattr(bld, 'utest_results', [])
+    total = 0
+    tfail = 0
+    if lst:
+        total = len(lst)
+        tfail = len([x for x in lst if x[1]])
+    waf_unit_test.summary(bld)
+    if tfail > 0:
+        bld.fatal("Build failed, because some tests failed!")
+
 def build(bld):
     v = commands.getoutput('git rev-parse HEAD')
-    bld.env_of_name('default')['CXXFLAGS'].append("-DVERSION=\"(const char*)\\\""+v+"\\\"\"")
-    bld.env_of_name('debug')['CXXFLAGS'].append("-DVERSION=\"(const char*)\\\""+v+"\\\"\"")
+    bld.env['CXXFLAGS'].append("-DVERSION=\"(const char*)\\\""+v+"\\\"\"")
+
+    if bld.options.debug:
+        bld.env['CXXFLAGS'] += debug_flags.split(' ')
+    else:
+        bld.env['CXXFLAGS'] += opt_flags.split(' ')
 
     print ("Entering directory `" + os.getcwd() + "'")
-    bld.add_subdirs('sferes examples tests')
-    if Options.options.exp:
-        print 'Building exp: ' + Options.options.exp
-        bld.add_subdirs('exp/' + Options.options.exp)
+    bld.recurse('sferes examples')
+    if bld.options.tests and bld.options.tests == 'yes':
+        bld.recurse('tests')
+    if bld.options.exp:
+        for i in bld.options.exp.split(','):
+            Logs.info('Building exp: ' + i)
+            bld.recurse('exp/' + i)
     for i in modules:
-        bld.add_subdirs(i)
-    for obj in copy.copy(bld.all_task_gen):
-        new_obj = obj.clone('debug')
-    bld.add_post_fun(unittestw.summary)
+        Logs.info('Building module: ' + i)
+        bld.recurse(i)
 
-def shutdown ():
-    if Options.options.create_exp:
-        sferes.create_exp(Options.options.create_exp)
-    if Options.options.launch:
-        sferes.launch_exp(Options.options.launch)
-    if Options.options.status:
-        sferes.status(Options.options.status)
-    if Options.options.time_travel:
-        sferes.time_travel(Options.options.time_travel)
-    if Options.options.kill:
-        sferes.kill(Options.options.kill)
-    if Options.options.qsub:
-        sferes.qsub(Options.options.qsub)
-    if Options.options.loadleveler:
-        sferes.loadleveler(Options.options.loadleveler)
+    bld.add_post_fun(summary)
 
-
-def check(self):
-    os.environ["BOOST_TEST_CATCH_SYSTEM_ERRORS"]="no"
-    os.environ["BOOST_TEST_LOG_LEVEL"]="test_suite"
-    ut = unittestw.unit_test()
-    ut.change_to_testfile_dir = True
-    ut.want_to_see_test_output = True
-    ut.want_to_see_test_error = True
-    ut.run()
-    ut.print_results()
+def shutdown (ctx):
+    if ctx.options.create_exp:
+        sferes.create_exp(ctx.options.create_exp)
+    if ctx.options.qsub:
+        sferes.qsub(ctx.options.qsub)
+    if ctx.options.oar:
+        sferes.oar(ctx.options.oar)

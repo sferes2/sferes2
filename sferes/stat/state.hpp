@@ -32,52 +32,51 @@
 //| The fact that you are presently reading this means that you have
 //| had knowledge of the CeCILL license and that you accept its terms.
 
+#ifndef STAT_STATE_
+#define STAT_STATE_
 
-
-
-#ifndef _STAT_HPP_
-#define _STAT_HPP_
-
-#include <fstream>
-#include <string>
-#include <boost/shared_ptr.hpp>
-#include <sferes/stc.hpp>
+#include <boost/serialization/shared_ptr.hpp>
+#include <boost/serialization/nvp.hpp>
+#include <sferes/stat/stat.hpp>
+#include <sferes/fit/fitness.hpp>
 
 namespace sferes {
   namespace stat {
-    template<typename Phen, typename Params, typename Exact = stc::Itself>
-    class Stat {
-     public:
+    // a statistics class that saves the full population + gen number
+    // this is useful for restarting sferes when it is killed
+    SFERES_STAT(State, Stat) {
+    public:
       template<typename E>
       void refresh(const E& ea) {
-        assert(!ea.pop().empty());
-        stc::exact(this)->refresh(ea);
+        _pop = ea.pop();
+        _gen = ea.gen();
       }
+      // show the n-th individual from the population
       void show(std::ostream& os, size_t k) {
+        assert(k < _pop.size());
+        boost::shared_ptr<Phen> p = _pop[k];
+        p->develop();
+        p->show(os);
+        p->fit().set_mode(fit::mode::view);
+        p->fit().eval(*p);
+      }
+      const std::vector<boost::shared_ptr<Phen> >& pop() const {
+        return _pop;
+      }
+      size_t gen() const {
+        return _gen;
       }
       template<class Archive>
       void serialize(Archive & ar, const unsigned int version) {
+        _last_written_gen = _gen;
+        ar & BOOST_SERIALIZATION_NVP(_gen);
+        ar & BOOST_SERIALIZATION_NVP(_pop);
       }
-     protected:
-      boost::shared_ptr<std::ofstream> _log_file;
-      template<typename E>
-      void _create_log_file(const E& ea, const std::string& name) {
-        if (!_log_file && ea.dump_enabled()) {
-          std::string log = ea.res_dir() + "/" + name;
-          _log_file = boost::shared_ptr<std::ofstream>(new std::ofstream(log.c_str(), std::fstream::app));
-        }
-      }
+    protected:
+      std::vector<boost::shared_ptr<Phen> > _pop;
+      size_t _gen;
+      size_t _last_written_gen;
     };
-
   }
 }
-
-#define SFERES_STAT(Class, Parent)					\
-  template <typename Phen, typename Params, typename Exact = stc::Itself> \
-  class Class : public Parent<Phen, Params, typename stc::FindExact<Class<Phen, Params, Exact>, Exact>::ret>
-
-#define SFERES_STAT_PARENT(Class, Parent)				\
-  Parent<Phen, Params,  typename stc::FindExact<Class<Phen, Params, Exact>, Exact>::ret>
-
-
 #endif

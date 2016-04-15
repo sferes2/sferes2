@@ -52,14 +52,18 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/archive/text_oarchive.hpp>
 #include <boost/archive/xml_oarchive.hpp>
+#include <boost/archive/binary_oarchive.hpp>
 #include <boost/archive/text_iarchive.hpp>
 #include <boost/archive/xml_iarchive.hpp>
+#include <boost/archive/binary_iarchive.hpp>
 #include <boost/lexical_cast.hpp>
 #include <boost/filesystem.hpp>
+#include <boost/mpl/joint_view.hpp>
 
 #include <sferes/dbg/dbg.hpp>
 #include <sferes/misc.hpp>
 #include <sferes/stc.hpp>
+#include <sferes/stat/state.hpp>
 
 #ifndef VERSION
 #define VERSION "version_unknown"
@@ -139,6 +143,25 @@ namespace sferes {
       }
     };
 
+    // we need this to resume only if there is a state
+    // (and we need to be able to compile without a State)
+    template<typename T, typename S>
+    struct Resume {
+      template<typename EA>
+      void resume(EA& ea) {
+        typedef stat::State<typename EA::phen_t, typename EA::params_t>  state_t;
+        const state_t& s = *boost::fusion::find<state_t>(ea.stat());
+        ea.set_gen(s.gen() + 1);
+        ea.set_pop(s.pop());
+      }
+    };
+    // do nothing if there is no state
+    template<typename T>
+    struct Resume<T, typename boost::fusion::result_of::end<T>::type> {
+      template<typename EA>
+      void resume(EA& ea) { }
+    };
+
     template<typename Phen, typename Eval, typename Stat, typename FitModifier,
              typename Params,
              typename Exact = stc::Itself>
@@ -146,16 +169,27 @@ namespace sferes {
      public:
       typedef Phen phen_t;
       typedef Eval eval_t;
-      typedef Stat stat_t;
       typedef Params params_t;
+
+      // default behavior: we automatically add a State to the stats
+      // define #SFERES_NO_STATE if you want to avoid this
+      // (e.g. the population is too big)
+#ifdef SFERES_NO_STATE
+      typedef Stat stat_t;
+#else
+      typedef typename boost::fusion::vector<stat::State<Phen, Params> > state_v_t;
+      typedef typename boost::fusion::joint_view<Stat, state_v_t> joint_t;
+      typedef typename boost::fusion::result_of::as_vector<joint_t>::type  stat_t;
+#endif
+
       typedef typename
       boost::mpl::if_<boost::fusion::traits::is_sequence<FitModifier>,
             FitModifier,
             boost::fusion::vector<FitModifier> >::type modifier_t;
+
       typedef std::vector<boost::shared_ptr<Phen> > pop_t;
       typedef typename phen_t::fit_t fit_t;
-      Ea() : _pop(Params::pop::size), _gen(0) {
-        _make_res_dir();
+      Ea() : _pop(Params::pop::size), _gen(0), _stop(false) {
       }
       void set_fit_proto(const fit_t& fit) {
         _fit_proto = fit;
@@ -163,13 +197,33 @@ namespace sferes {
 
       void run() {
         dbg::trace trace("ea", DBG_HERE);
+        _make_res_dir();
+        _set_status("running");
         random_pop();
-        for (_gen = 0; _gen < Params::pop::nb_gen; ++_gen) {
-          epoch();
-          update_stats();
-          if (_gen % Params::pop::dump_period == 0)
-            _write(_gen);
+        for (_gen = 0; _gen < Params::pop::nb_gen && !_stop; ++_gen)
+          _iter();
+        if (!_stop)
+          _set_status("finished");
+      }
+
+      void resume(const std::string& fname) {
+        dbg::trace trace("ea", DBG_HERE);
+        _make_res_dir();
+        _set_status("resumed");
+        if (boost::fusion::find<stat::State<Phen, Params> >(_stat) == boost::fusion::end(_stat)) {
+          std::cout<<"WARNING: no State found in stat_t, cannot resume" << std::endl;
+          return;
         }
+        _load(fname);
+        typedef typename boost::fusion::result_of::find<stat_t, stat::State<Phen, Params> >::type has_state_t;
+        Resume<stat_t, has_state_t> r;
+        r.resume(*this);
+        assert(!_pop.empty());
+        std::cout<<"resuming at:"<< gen() << std::endl;
+        for (; _gen < Params::pop::nb_gen && !_stop; ++_gen)
+          _iter();
+        if (!_stop)
+          _set_status("finished");
       }
       void random_pop() {
         dbg::trace trace("ea", DBG_HERE);
@@ -179,6 +233,16 @@ namespace sferes {
         dbg::trace trace("ea", DBG_HERE);
         stc::exact(this)->epoch();
       }
+      // override _set_pop if you want to customize / add treatments
+      // (in that case, DO NOT FORGET to add SFERES_EA_FRIEND(YouAlgo);)
+      void set_pop(const pop_t& p) {
+        dbg::trace trace("ea", DBG_HERE);
+        this->_pop = p;
+        for (size_t i = 0; i < this->_pop.size(); ++i)
+          this->_pop[i]->develop();
+        stc::exact(this)->_set_pop(p);
+      }
+
       const pop_t& pop() const {
         return _pop;
       };
@@ -205,7 +269,7 @@ namespace sferes {
 
       // stats
       template<int I>
-      const typename boost::fusion::result_of::value_at_c<Stat, I>::type& stat() const {
+      const typename boost::fusion::result_of::value_at_c<stat_t, I>::type& stat() const {
         return boost::fusion::at_c<I>(_stat);
       }
       void load(const std::string& fname) {
@@ -220,8 +284,15 @@ namespace sferes {
       const std::string& res_dir() const {
         return _res_dir;
       }
+      void set_res_dir(const std::string& new_dir) {
+        _res_dir = new_dir;
+        _make_res_dir();
+      }
       size_t gen() const {
         return _gen;
+      }
+      void set_gen(unsigned g) {
+        _gen = g;
       }
       bool dump_enabled() const {
         return Params::pop::dump_period != -1;
@@ -232,6 +303,14 @@ namespace sferes {
       void write(size_t g) const {
         _write(g);
       }
+      void stop() {
+        _stop = true;
+        _set_status("interrupted");
+      }
+      bool is_stopped() const {
+        return _stop;
+      }
+
      protected:
       pop_t _pop;
       eval_t _eval;
@@ -240,17 +319,41 @@ namespace sferes {
       std::string _res_dir;
       size_t _gen;
       fit_t _fit_proto;
+      bool _stop;
+
+      void _iter() {
+        epoch();
+        update_stats();
+        if (_gen % Params::pop::dump_period == 0)
+          _write(_gen);
+      }
+
+      // the status is a file that tells the state of the experiment
+      // it is useful to tell to the rest of the world if the experiment has
+      // been interrupted
+      // typical values: "running", "interrupted", "finished"
+      void _set_status(const std::string& status) const {
+        std::string s = _res_dir + "/status";
+        std::ofstream ofs(s.c_str());
+        ofs << status;
+      }
 
       template<typename P>
       void _eval_pop(P& p, size_t start, size_t end) {
+        dbg::trace trace("ea", DBG_HERE);
         this->_eval.eval(p, start, end, this->_fit_proto);
       }
-
+      // override _set_pop if you want to customize / add treatments
+      // (in that case, DO NOT FORGET to add SFERES_EA_FRIEND(YouAlgo);)
+      void _set_pop(const pop_t& p) {
+        dbg::trace trace("ea", DBG_HERE);
+      }
       void _make_res_dir() {
+        dbg::trace trace("ea", DBG_HERE);
         if (Params::pop::dump_period == -1)
           return;
-
-        _res_dir = misc::hostname() + "_" + misc::date() + "_" + misc::getpid();
+        if (_res_dir.empty())
+          _res_dir = misc::hostname() + "_" + misc::date() + "_" + misc::getpid();
         boost::filesystem::path my_path(_res_dir);
         boost::filesystem::create_directory(my_path);
       }
@@ -261,7 +364,11 @@ namespace sferes {
         std::string fname = _res_dir + std::string("/gen_")
                             + boost::lexical_cast<std::string>(gen);
         std::ofstream ofs(fname.c_str());
+#ifdef  SFERES_XML_WRITE
         typedef boost::archive::xml_oarchive oa_t;
+#else
+        typedef boost::archive::binary_oarchive oa_t;
+#endif
         oa_t oa(ofs);
         boost::fusion::for_each(_stat, WriteStat_f<oa_t>(oa));
         std::cout << fname << " written" << std::endl;
@@ -275,7 +382,11 @@ namespace sferes {
                     << "(does file exist ?)" << std::endl;
           exit(1);
         }
+#ifdef SFERES_XML_WRITE
         typedef boost::archive::xml_iarchive ia_t;
+#else
+        typedef boost::archive::binary_iarchive ia_t;
+#endif
         ia_t ia(ifs);
         boost::fusion::for_each(_stat, ReadStat_f<ia_t>(ia));
       }
@@ -288,5 +399,10 @@ namespace sferes {
            typename Exact = stc::Itself>                                                       \
   class Class : public Parent < Phen, Eval, Stat, FitModifier, Params,                         \
   typename stc::FindExact<Class<Phen, Eval, Stat, FitModifier, Params, Exact>, Exact>::ret >
+
+// useful to call protected functions of derived classes from the Ea
+#define SFERES_EA_FRIEND(Class) \
+      friend class Ea< Phen, Eval, Stat, FitModifier, Params,                         \
+      typename stc::FindExact<Class<Phen, Eval, Stat, FitModifier, Params, Exact>, Exact>::ret >
 
 #endif

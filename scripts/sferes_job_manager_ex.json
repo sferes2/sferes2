@@ -1,0 +1,7 @@
+{
+  "replicates": 3,
+  "bin_dir": "/Users/jbm/Documents/git/sferes2/build/debug/examples/",
+  "res_dir": "/Users/jbm/Documents/git/sferes2/test_job_manager",
+  "exps" : ["ex_ea", "ex_ea2"],
+  "last_file" : "gen_1000"
+}

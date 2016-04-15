@@ -100,11 +100,11 @@ BOOST_AUTO_TEST_CASE(test_cmaes) {
   typedef boost::fusion::vector<stat::BestFit<phen_t, Params> >  stat_t;
   typedef modif::Dummy<> modifier_t;
   typedef ea::Cmaes<phen_t, eval_t, stat_t, modifier_t, Params> ea_t;
+
   ea_t ea;
 
   ea.run();
   float best = ea.stat<0>().best()->fit().value();
   std::cout<<"best fit (cmaes):"<<best<<std::endl;
-  BOOST_CHECK(best > -1e-3);
-
+  BOOST_CHECK(best >= -1e-3);
 }

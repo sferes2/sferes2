@@ -63,7 +63,7 @@ namespace sferes {
     void check_serialize(const T& src, T& dest, const CheckEqual &check_equal) {
       BOOST_CHECK(true);
       std::string filename = boost::archive::tmpdir();
-      filename += "/serialize_g.xml";
+      filename += "/serialize_g.sferes";
 
       BOOST_CHECK(true);
       {

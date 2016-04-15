@@ -42,48 +42,35 @@
 #include <boost/archive/xml_iarchive.hpp>
 #include <boost/foreach.hpp>
 
-#include <sferes/eval/parallel.hpp>
+// this is UGLY hack to avoid the name clash between
+// the C function stat() [man 2 stat] and our stat::
+// namespace
+// (asio include stat but we do not use it...)
+#define stat stat_test
+#include <boost/asio/signal_set.hpp>
+#undef stat
+
+#include <boost/bind.hpp>
+#include <boost/thread.hpp>
+
+#include <sferes/parallel.hpp>
 #include <sferes/dbg/dbg.hpp>
 
 namespace sferes {
-
-  template<typename Ea>
-  static void run_ea(int argc,
-                     char **argv,
-                     Ea& ea,
-                     const typename Ea::phen_t::fit_t& fit_proto,
-                     const boost::program_options::options_description& add_opts =
-                       boost::program_options::options_description(),
-                     bool init_rand = true) {
-    ea.set_fit_proto(fit_proto);
-    namespace po = boost::program_options;
-    std::cout<<"sferes2 version: "<<VERSION<<std::endl;
-    if (init_rand) {
-      time_t t = time(0) + ::getpid();
-      std::cout<<"seed: " << t << std::endl;
-      srand(t);
+  // private functions for run
+  namespace run {
+    template<typename EA>
+    static void _sig_handler(EA& ea,
+                             const boost::system::error_code& error,
+                             int signal_number) {
+      if (!error) {
+        std::cout<<"sferes received signal:"<<signal_number<<std::endl;
+        ea.stop();
+      } else
+        std::cerr<<"error in sig handler:" << error.message() << std::endl;
     }
-    po::options_description desc("Allowed sferes2 options");
-    desc.add(add_opts);
-    desc.add_options()
-    ("help,h", "produce help message")
-    ("stat,s", po::value<int>(), "statistic number")
-    ("out,o", po::value<std::string>(), "output file")
-    ("number,n", po::value<int>(), "number in stat")
-    ("load,l", po::value<std::string>(), "load a result file")
-    ("verbose,v", po::value<std::vector<std::string> >()->multitoken(),
-     "verbose output, available default streams : all, ea, fit, phen, trace")
-    ;
 
-    po::variables_map vm;
-    po::store(po::parse_command_line(argc, argv, desc), vm);
-    po::notify(vm);
-
-    if (vm.count("help")) {
-      std::cout << desc << std::endl;
-      return;
-    }
-    if (vm.count("verbose")) {
+    void _verbose(const boost::program_options::variables_map& vm) {
       dbg::init();
       std::vector<std::string> streams =
         vm["verbose"].as<std::vector<std::string> >();
@@ -108,8 +95,8 @@ namespace sferes {
         attach_ostream(dbg::tracing, std::cout);
     }
 
-    parallel::init();
-    if (vm.count("load")) {
+    template<typename Ea>
+    void _load(const boost::program_options::variables_map& vm, Ea& ea) {
       ea.load(vm["load"].as<std::string>());
 
       if (!vm.count("out")) {
@@ -125,8 +112,80 @@ namespace sferes {
         std::ofstream ofs(vm["out"].as<std::string>().c_str());
         ea.show_stat(stat, ofs, n);
       }
-    } else
+
+    }
+  }// namespace run
+
+  // run_ea is the main function (a wrapper to run a sferes ea)
+  // it handles the command line options & set the sig handler
+  template<typename Ea>
+  static void run_ea(int argc,
+                     char **argv,
+                     Ea& ea,
+                     const typename Ea::phen_t::fit_t& fit_proto,
+                     const boost::program_options::options_description& add_opts =
+                       boost::program_options::options_description(),
+                     bool init_rand = true) {
+    ea.set_fit_proto(fit_proto);
+
+    // handler (dump in case of sigterm/sigkill)
+    /*    boost::asio::io_service io_service;
+    boost::asio::signal_set signals(io_service, SIGINT, SIGTERM, SIGQUIT);
+    signals.async_wait(boost::bind(run::_sig_handler<Ea>, boost::ref(ea), _1, _2));
+    boost::shared_ptr<boost::asio::io_service::work> work(new boost::asio::io_service::work(io_service));
+    boost::thread t(boost::bind(&boost::asio::io_service::run, &io_service));
+    t.detach();*/
+
+    // command-line options
+    namespace po = boost::program_options;
+    std::cout<<"sferes2 version: "<<VERSION<<std::endl;
+    if (init_rand) {
+      time_t t = time(0) + ::getpid();
+      std::cout<<"seed: " << t << std::endl;
+      srand(t);
+    }
+    po::options_description desc("Available sferes2 options");
+    desc.add(add_opts);
+    desc.add_options()
+    ("help,h", "produce help message")
+    ("load,l", po::value<std::string>(), "load a result file")
+    ("stat,s", po::value<int>(), "statistic number")
+    ("out,o", po::value<std::string>(), "output file (when loading)")
+    ("number,n", po::value<int>(), "number in stat (when loading)")
+    ("dir,d", po::value<std::string>(), "custom directory for gen files (when evolving)")
+    ("resume,r", po::value<std::string>(), "load a full state and resume the algorithm")
+    ("verbose,v", po::value<std::vector<std::string> >()->multitoken(),
+     "verbose output, available default streams : all, ea, fit, phen, trace \
+        (e.g. use -v ea -v trace to see the trace of the ea)")
+    ;
+
+    po::variables_map vm;
+    po::store(po::parse_command_line(argc, argv, desc), vm);
+    po::notify(vm);
+
+    if (vm.count("help")) {
+      std::cout << desc << std::endl;
+      exit(0);
+      return;
+    }
+    if (vm.count("verbose")) {
+      run::_verbose(vm);
+    }
+    if (vm.count("dir")) {
+      ea.set_res_dir(vm["dir"].as<std::string>());
+    }
+    parallel::init();
+    if (vm.count("load")) {
+      run::_load(vm, ea);
+    } else if (vm.count("resume")) {
+      ea.resume(vm["resume"].as<std::string>());
+      ea.write();
+      std::cout<<"final state written -- "<<ea.gen()<<std::endl;
+    } else {
       ea.run();
+      ea.write();
+      std::cout<<"final state written -- "<<ea.gen()<<std::endl;
+    }
   }
 
   template<typename Ea>

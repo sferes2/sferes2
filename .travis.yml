@@ -1,25 +1,26 @@
 language: cpp
+
+os:
+  - linux
+
+sudo: required
+
+dist: trusty
+
 compiler:
   - gcc
   - clang
 addons:
   apt:
     packages:
-    - libboost-dev
-    - libboost-test-dev 
-    - libboost-graph-dev 
-    - libboost-iostreams-dev
-    - libboost-math-dev
-    - libboost-program-options-dev
-    - libboost-serialization-dev
-    - libboost-system-dev 
-    - libboost-thread-dev
+    - libboost1.55-all-dev
     - libeigen3-dev
     - libtbb-dev
 
-install: 
+install:
 
 
 # Change this to your needs
 script:
-  dpkg -L libboost-serialization-dev && ./waf configure && ./waf -v
+  - ./waf configure
+  - ./waf --tests=yes -v

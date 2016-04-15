@@ -35,18 +35,20 @@
 
 
 
+#define NO_PARALLEL
 #define BOOST_TEST_DYN_LINK
-#define BOOST_TEST_MODULE eps_moea
+#define BOOST_TEST_MODULE nsga2
+
 
 #include <boost/test/unit_test.hpp>
 #include <cmath>
 #include <iostream>
 #include <sferes/phen/parameters.hpp>
 #include <sferes/gen/evo_float.hpp>
-#include <sferes/ea/eps_moea.hpp>
+#include <sferes/stat/state.hpp>
+#include <sferes/ea/nsga2.hpp>
 #include <sferes/eval/eval.hpp>
 #include <sferes/stat/pareto_front.hpp>
-#include <sferes/stat/best_fit.hpp>
 #include <sferes/eval/parallel.hpp>
 #include <sferes/modif/dummy.hpp>
 
@@ -55,27 +57,26 @@ using namespace sferes::gen::evo_float;
 
 struct Params {
   struct evo_float {
-
     SFERES_CONST float cross_rate = 0.5f;
-    SFERES_CONST float mutation_rate = 1.0f/30.0f;
+    SFERES_CONST float mutation_rate = 1.0f / 30.0f;
     SFERES_CONST float eta_m = 15.0f;
-    SFERES_CONST float eta_c = 20.0f;
+    SFERES_CONST float eta_c = 10.0f;
     SFERES_CONST mutation_t mutation_type = polynomial;
     SFERES_CONST cross_over_t cross_over_type = sbx;
   };
   struct pop {
     SFERES_CONST unsigned size = 100;
-    SFERES_CONST int dump_period = -1;
-    SFERES_ARRAY(float, eps, 0.0075f, 0.0075f);
-    SFERES_ARRAY(float, min_fit, 0.0f, 0.0f);
-    SFERES_CONST size_t grain = size / 4;
-    SFERES_CONST unsigned nb_gen = 60000 / grain;
+    static unsigned nb_gen;
+    SFERES_CONST float initial_aleat = 2.0f;
+    SFERES_CONST int dump_period = 100; // we need to dump the file
   };
   struct parameters {
     SFERES_CONST float min = 0.0f;
     SFERES_CONST float max = 1.0f;
   };
 };
+
+
 
 template<typename Indiv>
 float _g(const Indiv &ind) {
@@ -95,43 +96,54 @@ public:
     this->_objs.resize(2);
     float f1 = ind.data(0);
     float g = _g(ind);
-    float h = 1.0f - powf((f1 / g), 2.0f);
+    float h = 1.0f - pow((f1 / g), 2.0);
     float f2 = g * h;
     this->_objs[0] = -f1;
     this->_objs[1] = -f2;
   }
 };
 
+unsigned Params::pop::nb_gen = 101;
 
-BOOST_AUTO_TEST_CASE(test_epsmoea) {
+BOOST_AUTO_TEST_CASE(test_nsga2) {
   srand(time(0));
+
+  std::cout<<"running nsga2 ..."<<std::endl;
 
   typedef gen::EvoFloat<30, Params> gen_t;
   typedef phen::Parameters<gen_t, FitZDT2<Params>, Params> phen_t;
   typedef eval::Parallel<Params> eval_t;
-  typedef boost::fusion::vector<stat::ParetoFront<phen_t, Params> >  stat_t;
+  typedef boost::fusion::vector<stat::ParetoFront<phen_t, Params>, stat::State<phen_t, Params> >  stat_t;
+  //typedef boost::fusion::vector<stat::ParetoFront<phen_t, Params> >  stat_t;
+
   typedef modif::Dummy<> modifier_t;
-  typedef ea::EpsMOEA<phen_t, eval_t, stat_t, modifier_t, Params> ea_t;
+  typedef ea::Nsga2<phen_t, eval_t, stat_t, modifier_t, Params> ea_t;
+  ea_t ea;
+  ea.run();// 101 generations
 
-  const size_t N = 20;
-  size_t errors = 0;
-  for(size_t i=0;i<N;i++)
-  {
-    ea_t ea;
+  ea.stat<0>().show_all(std::cout, 0);
+  BOOST_CHECK(ea.stat<0>().pareto_front().size() > 50);
 
-    ea.run();
-
-    ea.stat<0>().show_all(std::cout, 0);
-    if(ea.stat<0>().pareto_front().size() < 100)
-      errors++;
-    std::cout<<"elite size :"<<ea.stat<0>().pareto_front().size()<<std::endl;
-
-    BOOST_FOREACH(boost::shared_ptr<phen_t> p, ea.stat<0>().pareto_front()) {
-      if(_g(*p) >= 1.1)
-        errors++;
-    }
+  BOOST_FOREACH(boost::shared_ptr<phen_t> p, ea.stat<0>().pareto_front()) {
+    std::cout<<_g(*p)<<std::endl;
+    BOOST_CHECK(_g(*p) < 1.1);
+    BOOST_CHECK(_g(*p) > 0.0);
   }
 
-  BOOST_CHECK(double(errors)/double(N) <= 0.3);
+  std::cout<<"nsga2 done, resuming"<<std::endl;
+  Params::pop::nb_gen = 201;
+  typedef ea::Nsga2<phen_t, eval_t, stat_t, modifier_t, Params> ea2_t;
+  ea2_t ea2;
+  ea2.resume(ea.res_dir() + "/gen_100");
+  ea2.stat<0>().show_all(std::cout, 0);
+  BOOST_CHECK(ea2.stat<0>().pareto_front().size() > 50);
 
+  BOOST_FOREACH(boost::shared_ptr<phen_t> p, ea2.stat<0>().pareto_front()) {
+    std::cout<<_g(*p)<<std::endl;
+    BOOST_CHECK(_g(*p) < 1.1);
+    BOOST_CHECK(_g(*p) > 0.0);
+  }
+  // cleanup
+  boost::filesystem::remove_all(ea.res_dir());
+  boost::filesystem::remove_all(ea2.res_dir());
 }

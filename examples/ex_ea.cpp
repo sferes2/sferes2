@@ -30,10 +30,10 @@ struct Params {
     // size of the population
     SFERES_CONST unsigned size = 200;
     // number of generations
-    SFERES_CONST unsigned nb_gen = 2000;
+    SFERES_CONST unsigned nb_gen = 200000;
     // how often should the result file be written (here, each 5
     // generation)
-    SFERES_CONST int dump_period = 5;
+    SFERES_CONST int dump_period = 5000;
     // how many individuals should be created during the random
     // generation process?
     SFERES_CONST int initial_aleat = 1;
@@ -90,7 +90,9 @@ int main(int argc, char **argv) {
   // fitness, Pareto front, ...). Since they can also stores the best
   // individuals, they are the container of our results. We can add as
   // many statistics as required thanks to the boost::fusion::vector.
-  typedef boost::fusion::vector<stat::BestFit<phen_t, Params>, stat::MeanFit<Params> >  stat_t;
+  // we need sferes:: because of a name clash with the C function stat()...
+  typedef boost::fusion::vector<stat::BestFit<phen_t, Params>,
+          stat::MeanFit<Params> >  stat_t;
   // Modifiers are functors that are run once all individuals have
   // been evalutated. Their typical use is to add some evolutionary
   // pressures towards diversity (e.g. fitness sharing). Here we don't

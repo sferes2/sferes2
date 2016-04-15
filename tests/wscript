@@ -5,13 +5,13 @@
 #|
 #| This software is a computer program whose purpose is to facilitate
 #| experiments in evolutionary computation and evolutionary robotics.
-#| 
+#|
 #| This software is governed by the CeCILL license under French law
 #| and abiding by the rules of distribution of free software.  You
 #| can use, modify and/ or redistribute the software under the terms
 #| of the CeCILL license as circulated by CEA, CNRS and INRIA at the
 #| following URL "http://www.cecill.info".
-#| 
+#|
 #| As a counterpart to the access to the source code and rights to
 #| copy, modify and redistribute granted by the license, users are
 #| provided only with a limited warranty and the software's author,
@@ -41,13 +41,11 @@ def build(bld):
     # compile & run every *.cpp automagically
     files = glob.glob("tests/*/*.cpp")
     for f in files:
-#        if not f.find('mpi'):
-        obj = bld.new_task_gen(features='cxx cprogram')
-        obj.source = '../' + f
-        obj.includes = '../'
         fname = f.replace('/', '_')
         fname = fname[0:-4]
-        obj.target = fname
-        obj.unit_test = 1
-        obj.uselib_local = 'sferes2'
-        obj.uselib = 'TBB BOOST BOOST_UNIT_TEST_FRAMEWORK EIGEN3'
+        bld.program(features = 'cxx test',
+                       source = '../' + f,
+                       includes = '../',
+                       use = 'sferes2',
+                       uselib = 'TBB BOOST BOOST_THREAD EIGEN BOOST_FILESYSTEM BOOST_SYSTEM BOOST_SERIALIZATION BOOST_PROGRAM_OPTIONS PTHREAD',
+                       target = fname)
