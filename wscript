@@ -84,22 +84,23 @@ def options(opt):
     # tests
     opt.add_option('--tests', type='string', help='compile tests or not', dest='tests')
 
+    opt.logger = Logs.make_logger(blddir + 'options.log', 'mylogger')
 
     for i in modules:
-        print 'command-line options for module : [' + i + ']',
+        opt.start_msg('Command-line options for module [%s]' % i)
         try:
             opt.recurse(i)
-            Logs.info(' -> OK')
+            opt.end_msg('OK')
         except:
-            Logs.warn(' -> no option found')
+            opt.end_msg(' -> no option found', 'YELLOW')
 
     for i in glob.glob('exp/*'):
-        print 'command-line options for exp : [' + i + ']',
+        opt.start_msg('Command-line options for exp [%s]' % i)
         try:
             opt.recurse(i)
-            Logs.info(' -> OK')
+            opt.end_msg(' -> OK')
         except:
-            Logs.warn(' -> no option found')
+            opt.end_msg(' -> no option found', 'YELLOW')
 
 
 def configure(conf):
@@ -198,21 +199,21 @@ def configure(conf):
 
     # modules
     for i in modules:
-        print 'configuring module: [', i, ']',
+        conf.start_msg('Configuring for module: [%s]' % i),
         try:
             conf.recurse(i)
-            Logs.info(' -> OK')
+            conf.end_msg('ok')
         except:
-            Logs.warn(' -> no configuration found')
+            conf.end_msg(' -> no configuration found', 'YELLOW')
 
     if conf.options.exp:
         for i in conf.options.exp.split(','):
-            print 'configuring for exp: ' + i,
+            conf.start_msg('Configuring for exp [%s]' %s)
             try:
                 conf.recurse('exp/' + i)
-                Logs.info(' -> OK')
+                conf.end_msg('ok')
             except:
-                Logs.warn(' -> no configuration found')
+                conf.end_msg(' -> no configuration found', 'YELLOW')
 
     # link flags
     if conf.options.libs:
