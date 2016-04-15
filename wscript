@@ -144,21 +144,21 @@ def configure(conf):
 
     # modules
     for i in modules:
-        conf.start_msg('Configuring for module: [%s]' % i),
+        Logs.info('Configuring for module: [%s]' % i),
         try:
             conf.recurse(i)
-            conf.end_msg('ok')
+            Logs.info('%s -> ok' % i)
         except:
-            conf.end_msg(' -> no configuration found', 'YELLOW')
+            Logs.warn(' %s -> no configuration found' % i, 'YELLOW')
 
     if conf.options.exp:
         for i in conf.options.exp.split(','):
-            conf.start_msg('Configuring for exp [%s]' %s)
+            Logs.inf('Configuring for exp [%s]' %s)
             try:
                 conf.recurse('exp/' + i)
-                conf.end_msg('ok')
+                Logs.info('%s -> ok' % i)
             except:
-                conf.end_msg(' -> no configuration found', 'YELLOW')
+                Logs.warn('%s -> no configuration found' % i, 'YELLOW')
 
     # link flags
     if conf.options.libs:
