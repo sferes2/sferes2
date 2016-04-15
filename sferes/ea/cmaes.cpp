@@ -243,10 +243,10 @@ cmaes_init(cmaes_t *t, /* "this" */
   double dtest, trace;
   static const char * version = "3.11.02.beta";
 
-  if (t->version && strcmp(version, t->version) == 0) {
+  /* if (t->version && strcmp(version, t->version) == 0) {
     ERRORMESSAGE("cmaes_init called twice, which will lead to a memory leak, use cmaes_exit first",0,0,0);
     printf("Warning: cmaes_init called twice, which will lead to a memory leak, use cmaes_exit first\n");
-  }
+  }*/
   t->version = version;
   /* assign_string(&t->signalsFilename, "cmaes_signals.par"); */
 
@@ -2974,5 +2974,3 @@ char *szCat(const char *sz1, const char*sz2,
             (unsigned)intMin((int)strlen(sz4)+1, 698 - (int)strlen((char const *)szBuf)));
   return (char *) szBuf;
 }
-
-
