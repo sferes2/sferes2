@@ -135,64 +135,9 @@ def configure(conf):
     else:
         conf.env['MPI_ENABLED'] = False
 
-    # sdl (optional)
-    sdl = conf.check_cfg(package='sdl',
-                   args='--cflags --libs',
-                   msg="Checking for SDL (optional)",
-                   uselib_store='SDL',
-                   mandatory=False)
-    if sdl: common_flags += '-DUSE_SDL '
-
-    conf.env['CCDEFINES_SDL_gfx']=['_GNU_SOURCE=1', '_REENTRANT']
-    conf.env['CPPPATH_SDL_gfx']=['/usr/include/SDL']
-    conf.env['LIBPATH_SDL_gfx']=['/usr/lib']
-    conf.env['CXXDEFINES_SDL_gfx']=['_GNU_SOURCE=1', '_REENTRANT']
-    conf.env['LIB_SDL_gfx']=['SDL_gfx']
-    conf.env['HAVE_SDL_gfx']=1
-
-    conf.env['LIB_PTHREAD']=['pthread']
-
-
     # eigen 3 (optional)
     conf.load('eigen')
     conf.check_eigen()
-
-    # ode (optional)
-    conf.load('ode')
-    conf.check_ode()
-
-    # gsl (optional)
-    conf.check_cfg(package='gsl',
-                   args='--cflags --libs',
-                   msg="Checking for GSL (optional)",
-                   uselib_store='GSL',
-                   mandatory=False)
-
-    # bullet (optional)
-    conf.env['LIB_BULLET'] = ['bulletdynamics', 'bulletcollision', 'bulletmath']
-    if conf.options.bullet :
-        conf.env['LIBPATH_BULLET'] = conf.options.bullet + '/lib'
-        conf.env['CPPPATH_BULLET'] = conf.options.bullet + '/src'
-
-    # osg (optional)
-    conf.env['LIB_OSG'] = ['osg', 'osgDB', 'osgUtil',
-                           'osgViewer', 'OpenThreads',
-                           'osgFX', 'osgShadow']
-
-
-    # Mac OS specific options
-    if conf.options.apple and conf.options.apple == 'yes':
-        common_flags += ' -Wno-gnu-static-float-init '
-
-    conf.env['LIB_TCMALLOC'] = 'tcmalloc'
-    conf.env['LIB_PTMALLOC'] = 'ptmalloc3'
-
-    conf.env['LIB_EFENCE'] = 'efence'
-    conf.env['LIB_BZIP2'] = 'bz2'
-    conf.env['LIB_ZLIB'] = 'z'
-
-    conf.env['LIBPATH_OPENGL'] = '/usr/X11R6/lib'
-    conf.env['LIB_OPENGL'] = ['GL', 'GLU', 'glut']
 
     if conf.options.rpath:
         conf.env.append_value("LINKFLAGS", "--rpath="+conf.options.rpath)
