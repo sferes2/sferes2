@@ -115,8 +115,16 @@ def configure(conf):
     conf.load('compiler_cxx')
 
     common_flags = "-D_REENTRANT -Wall -fPIC -ftemplate-depth-1024 -Wno-sign-compare -Wno-deprecated  -Wno-unused "
-    if not conf.options.cpp11 or conf.options.cpp11 == 'yes':
-        common_flags += '-std=c++11 '
+    common_flags += "-DSFERES_ROOT=\"" + os.getcwd() + "\" "
+    conf.env['CXXFLAGS'] += common_flags.split(' ')
+
+    conf.env['SFERES_ROOT'] = os.getcwd()
+
+    # link flags
+    if conf.options.libs:
+        conf.env.append_value("LINKFLAGS", "-L" + conf.options.libs)
+
+
 
     # boost
     conf.load('boost')
@@ -160,23 +168,17 @@ def configure(conf):
             except:
                 Logs.warn('%s -> no configuration found' % i, 'YELLOW')
 
-    # link flags
-    if conf.options.libs:
-        conf.env.append_value("LINKFLAGS", "-L" + conf.options.libs)
 
+    if not conf.options.cpp11 or conf.options.cpp11 == 'yes':
+        conf.env['CXXFLAGS']  += ['-std=c++11']
     if conf.options.includes :
-        common_flags += " -I" + conf.options.includes + ' '
+        conf.env['CXXFLAGS']  += ["-I" + conf.options.includes]
     if conf.env['MPI_ENABLED']:
-        common_flags += '-DMPI_ENABLED '
+        conf.env['CXXFLAGS']  += ['-DMPI_ENABLED']
     if not conf.env['TBB_ENABLED']:
-        common_flags += '-DNO_PARALLEL '
+        conf.env['CXXFLAGS']  += ['-DNO_PARALLEL']
     if conf.env['EIGEN_FOUND']:
-        common_flags += '-DEIGEN3_ENABLED '
-
-    common_flags += "-DSFERES_ROOT=\"" + os.getcwd() + "\" "
-
-    conf.env['CXXFLAGS'] = common_flags.split(' ')
-    conf.env['SFERES_ROOT'] = os.getcwd()
+        conf.env['CXXFLAGS']  += ['-DEIGEN3_ENABLED']
 
     # display flags
     def flat(list) :
