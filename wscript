@@ -50,6 +50,7 @@ import copy
 import os, glob, types
 import sferes
 from waflib.Build import BuildContext
+from waflib import Logs
 
 modules = sferes.parse_modules()
 
@@ -82,16 +83,20 @@ def options(opt):
 
 
     for i in modules:
-        print 'options for module : [' + i + ']'
-        opt.recurse(i)
-
-    for i in glob.glob('exp/*'):
-        print 'options for exp : [' + i + ']',
+        print 'command-line options for module : [' + i + ']',
         try:
             opt.recurse(i)
-            print 'ok'
+            Logs.info(' -> OK')
         except:
-            print 'none'
+            Logs.warn(' -> no option found')
+
+    for i in glob.glob('exp/*'):
+        print 'command-line options for exp : [' + i + ']',
+        try:
+            opt.recurse(i)
+            Logs.info(' -> OK')
+        except:
+            Logs.warn(' -> no option found')
 
 
 def configure(conf):
@@ -191,12 +196,20 @@ def configure(conf):
     # modules
     for i in modules:
         print 'configuring module: ', i
-        conf.recurse(i)
+        try:
+            conf.recurse(i)
+            print 'ok'
+        except:
+            print ' -> no configuration found'
 
     if conf.options.exp:
         for i in conf.options.exp.split(','):
             print 'configuring for exp: ' + i
-            conf.recurse('exp/' + i)
+            try:
+                conf.recurse('exp/' + i)
+                print 'ok'
+            except:
+                print ' -> no configuration found'
 
     # link flags
     if conf.options.libs:
@@ -244,14 +257,14 @@ def build(bld):
     else:
         bld.env['CXXFLAGS'] += opt_flags.split(' ')
 
-    print ("Entering directory `" + os.getcwd() + "'")
+    Logs.info("Entering directory `" + os.getcwd() + "'")
     bld.recurse('sferes examples tests')
     if bld.options.exp:
         for i in bld.options.exp.split(','):
-            print 'Building exp: ' + i
+            Logs.info('Building exp: ' + i)
             bld.recurse('exp/' + i)
     for i in modules:
-        print 'Building module: ' + i
+        Logs.info('Building module: ' + i)
         bld.recurse(i)
 
 def shutdown (ctx):
