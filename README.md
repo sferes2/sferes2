@@ -65,7 +65,7 @@ Peer-reviewed academic papers that used Sferes2:
 - Tarapore, D. Clune, J., Cully, A., and Mouret, J.-B "How Do Different Encodings Influence the Performance of the MAP-Elites Algorithm?" Proceedings of the Genetic and Evolutionary Computation Conference. 2016.
 -  Huizinga J., Mouret J.-B., Clune J. "Does aligning phenotypic and genotypic modularity improve the evolution of neural networks?" Proceedings of the Genetic and Evolutionary Computation Conference. 2016.
 - Norouzzadeh M., Clune J. Neuromodulation improves the evolution of forward models. Proceedings of the Genetic and Evolutionary Computation Conference. 2016.
-- 
+
 ### 2015
 - Maestre, Carlos, Antoine Cully, Christophe Gonzales, and Stephane Doncieux. "Bootstrapping interactions with objects from raw sensorimotor data: a Novelty Search based approach." In IEEE International Conference on Developmental and Learning and on Epigenetic Robotics. 2015.
 - Cully, Antoine, Jeff Clune, Danesh Tarapore, and Jean-Baptiste Mouret. "Robots that can adapt like animals." Nature 521, no. 7553 (2015): 503-507.
