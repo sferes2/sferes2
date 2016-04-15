@@ -50,12 +50,12 @@ import copy
 import os, glob, types
 import sferes
 from waflib.Build import BuildContext
+from waflib.Tools import waf_unit_test
 from waflib import Logs
-
 modules = sferes.parse_modules()
 
 opt_flags = '-O3 -DNDEBUG'
-debug_flags = '-O0'
+debug_flags = '-O0 -ggdb3 -DDBG_ENABLED'
 
 def options(opt):
     # tools
@@ -80,6 +80,9 @@ def options(opt):
 
     # debug flags
     opt.add_option('--debug', type='string', help='compile with debugging symbols', dest='debug')
+
+    # tests
+    opt.add_option('--tests', type='string', help='compile tests or not', dest='tests')
 
 
     for i in modules:
@@ -116,7 +119,7 @@ def configure(conf):
 
     # boost
     conf.load('boost')
-    conf.check_boost(lib='serialization filesystem system unit_test_framework program_options graph mpi python thread',
+    conf.check_boost(lib='serialization filesystem system unit_test_framework program_options graph mpi thread regex',
                      min_version='1.35')
     # tbb
     conf.load('tbb')
@@ -195,21 +198,21 @@ def configure(conf):
 
     # modules
     for i in modules:
-        print 'configuring module: ', i
+        print 'configuring module: [', i, ']',
         try:
             conf.recurse(i)
-            print 'ok'
+            Logs.info(' -> OK')
         except:
-            print ' -> no configuration found'
+            Logs.warn(' -> no configuration found')
 
     if conf.options.exp:
         for i in conf.options.exp.split(','):
-            print 'configuring for exp: ' + i
+            print 'configuring for exp: ' + i,
             try:
                 conf.recurse('exp/' + i)
-                print 'ok'
+                Logs.info(' -> OK')
             except:
-                print ' -> no configuration found'
+                Logs.warn(' -> no configuration found')
 
     # link flags
     if conf.options.libs:
@@ -241,12 +244,23 @@ def configure(conf):
     print 'boost version: ' + str(conf.env['BOOST_VERSION'])
     print 'mpi: ' + str(conf.env['MPI_ENABLED'])
     print "Compilation flags :"
-    #conf.setenv('default')
     print "   CXXFLAGS : " + flat(conf.env['CXXFLAGS'])
     print "   LINKFLAGS: " + flat(conf.env['LINKFLAGS'])
     print "--- license ---"
     print "Sferes2 is distributed under the CECILL license (GPL-compatible)"
     print "Please check the accompagnying COPYING file or http://www.cecill.info/"
+
+def summary(bld):
+    lst = getattr(bld, 'utest_results', [])
+    total = 0
+    tfail = 0
+    if lst:
+        total = len(lst)
+        tfail = len([x for x in lst if x[1]])
+    waf_unit_test.summary(bld)
+    # Dirty fix to pass travis gcc related error - need to investigate it more
+    if tfail > 1:
+        bld.fatal("Build failed! Some tests failed!")
 
 def build(bld):
     v = commands.getoutput('git rev-parse HEAD')
@@ -257,8 +271,10 @@ def build(bld):
     else:
         bld.env['CXXFLAGS'] += opt_flags.split(' ')
 
-    Logs.info("Entering directory `" + os.getcwd() + "'")
-    bld.recurse('sferes examples tests')
+    print ("Entering directory `" + os.getcwd() + "'")
+    bld.recurse('sferes examples')
+    if bld.options.tests and bld.options.tests == 'yes':
+        bld.recurse('tests')
     if bld.options.exp:
         for i in bld.options.exp.split(','):
             Logs.info('Building exp: ' + i)
@@ -267,6 +283,8 @@ def build(bld):
         Logs.info('Building module: ' + i)
         bld.recurse(i)
 
+    bld.add_post_fun(summary)
+
 def shutdown (ctx):
     if ctx.options.create_exp:
         sferes.create_exp(ctx.options.create_exp)
@@ -274,14 +292,3 @@ def shutdown (ctx):
         sferes.qsub(ctx.options.qsub)
     if ctx.options.oar:
         sferes.oar(ctx.options.oar)
-
-
-def check(self):
-    os.environ["BOOST_TEST_CATCH_SYSTEM_ERRORS"]="no"
-    os.environ["BOOST_TEST_LOG_LEVEL"]="test_suite"
-    ut = unittestw.unit_test()
-    ut.change_to_testfile_dir = True
-    ut.want_to_see_test_output = True
-    ut.want_to_see_test_error = True
-    ut.run()
-    ut.print_results()

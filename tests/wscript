@@ -47,5 +47,5 @@ def build(bld):
                        source = '../' + f,
                        includes = '../',
                        use = 'sferes2',
-                       uselib = 'TBB BOOST BOOST_THREAD EIGEN',
+                       uselib = 'TBB BOOST BOOST_THREAD EIGEN BOOST_FILESYSTEM BOOST_SYSTEM BOOST_SERIALIZATION BOOST_PROGRAM_OPTIONS PTHREAD',
                        target = fname)
