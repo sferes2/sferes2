@@ -1,4 +1,4 @@
-sferes2
+sferes2 [![Build Status](https://img.shields.io/travis/sferes2/sferes2.svg)](https://travis-ci.org/sferes2/sferes2)
 =======
 
 Sferes2 is a high-performance, multi-core, lightweight, generic C++98 framework for evolutionary computation. It is intently kept small to stay reliable and understandable.
