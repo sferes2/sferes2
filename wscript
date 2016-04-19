@@ -161,7 +161,7 @@ def configure(conf):
 
     if conf.options.exp:
         for i in conf.options.exp.split(','):
-            Logs.inf('Configuring for exp [%s]' %s)
+            Logs.info('Configuring for exp [%s]' %i)
             try:
                 conf.recurse('exp/' + i)
                 Logs.info('%s -> ok' % i)
