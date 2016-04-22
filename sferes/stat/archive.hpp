@@ -61,7 +61,7 @@ namespace sferes {
           (*this->_log_file) << ea.gen() << " " << _archive.size() << std::endl;
         }
       }
-      void show(std::ostream& os, size_t k) {
+      void show(std::ostream& os, size_t k) const {
         _archive[k]->develop();
         _archive[k]->show(os);
         _archive[k]->fit().set_mode(fit::mode::view);
