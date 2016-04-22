@@ -52,6 +52,10 @@ namespace sferes {
       template<typename E>
       void refresh(const E& ea) {
         assert(!ea.pop().empty());
+
+        if (ea.template fit_modifier<0>().archive().empty())
+          return;
+
         _best = *std::max_element(
             ea.template fit_modifier<0>().archive().begin(),
             ea.template fit_modifier<0>().archive().end(),
