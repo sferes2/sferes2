@@ -47,6 +47,7 @@ namespace sferes {
   namespace eval {
     SFERES_CLASS(Eval) {
     public:
+      Eval() : _nb_evals(0) {}
       template<typename Phen>
       void eval(std::vector<boost::shared_ptr<Phen> >& pop, size_t begin, size_t end,
                 const typename Phen::fit_t& fit_proto) {
@@ -58,13 +59,20 @@ namespace sferes {
           pop[i]->fit() = fit_proto;
           pop[i]->develop();
           pop[i]->fit().eval(*pop[i]);
+          _nb_evals++;
         }
       }
+      unsigned nb_evals() const { return _nb_evals; }
     protected:
+      unsigned _nb_evals;
     };
   }
 }
 
-#define SFERES_EVAL SFERES_CLASS
+
+#define SFERES_EVAL(Class, Parent)					\
+  template <typename Params, typename Exact = stc::Itself> \
+  class Class : public Parent<Params, typename stc::FindExact<Class<Params, Exact>, Exact>::ret>
+
 
 #endif

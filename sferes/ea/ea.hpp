@@ -294,6 +294,9 @@ namespace sferes {
       void set_gen(unsigned g) {
         _gen = g;
       }
+      size_t nb_evals() const {
+          return _eval.nb_evals();
+      }
       bool dump_enabled() const {
         return Params::pop::dump_period != -1;
       }
