@@ -54,7 +54,7 @@ from waflib.Tools import waf_unit_test
 from waflib import Logs
 modules = sferes.parse_modules()
 
-opt_flags = '-O3 -DNDEBUG'
+opt_flags = '-O3'
 debug_flags = '-O0 -ggdb3 -DDBG_ENABLED'
 
 def options(opt):
@@ -65,12 +65,11 @@ def options(opt):
     opt.load('eigen')
 
     # sferes specific
-    opt.add_option('--bullet', type='string', help='path to bullet', dest='bullet')
-    opt.add_option('--apple', type='string', help='enable apple support', dest='apple')
     opt.add_option('--rpath', type='string', help='set rpath', dest='rpath')
     opt.add_option('--includes', type='string', help='add an include path, e.g. /home/mandor/include', dest='includes')
     opt.add_option('--libs', type='string', help='add a lib path, e.g. /home/mandor/lib', dest='libs')
-    opt.add_option('--cpp11', type='string', help='force c++-11 compilation [--cpp11=yes]', dest='cpp11')
+    opt.add_option('--cpp11', type='string', help='force / disable c++-11 compilation [--cpp11=yes]', dest='cpp11')
+    opt.add_option('--no-asserts', action='store_true', default=False, help='disable asserts [--no-asserts]', dest='no_asserts')
 
     # exp commands
     opt.add_option('--create', type='string', help='create a new exp', dest='create_exp')
@@ -170,15 +169,18 @@ def configure(conf):
 
 
     if not conf.options.cpp11 or conf.options.cpp11 == 'yes':
-        conf.env['CXXFLAGS']  += ['-std=c++11']
+        conf.env['CXXFLAGS'] += ['-std=c++11']
     if conf.options.includes :
-        conf.env['CXXFLAGS']  += ["-I" + conf.options.includes]
+        conf.env['CXXFLAGS'] += ["-I" + conf.options.includes]
     if conf.env['MPI_ENABLED']:
-        conf.env['CXXFLAGS']  += ['-DMPI_ENABLED']
+        conf.env['CXXFLAGS'] += ['-DMPI_ENABLED']
     if not conf.env['TBB_ENABLED']:
-        conf.env['CXXFLAGS']  += ['-DNO_PARALLEL']
+        conf.env['CXXFLAGS'] += ['-DNO_PARALLEL']
     if conf.env['EIGEN_FOUND']:
-        conf.env['CXXFLAGS']  += ['-DEIGEN3_ENABLED']
+        conf.env['CXXFLAGS'] += ['-DEIGEN3_ENABLED']
+    if conf.options.no_asserts:
+        conf.env['CXXFLAGS'] += ['-DNDEBUG']
+
 
     # display flags
     def flat(list) :
