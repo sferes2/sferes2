@@ -68,7 +68,7 @@ namespace sferes {
       }
     };
 
-    SFERES_CLASS(Parallel) {
+    SFERES_EVAL(Parallel, Eval) {
     public:
       template<typename Phen>
       void eval(std::vector<boost::shared_ptr<Phen> >& pop, size_t begin, size_t end,
@@ -80,6 +80,7 @@ namespace sferes {
         parallel::init();
         parallel::p_for(parallel::range_t(begin, end),
                         _parallel_evaluate<Phen>(pop, fit_proto));
+        this->_nb_evals += (end - begin);
       }
 
     };

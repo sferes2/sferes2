@@ -49,7 +49,7 @@
 namespace sferes {
 
   namespace eval {
-    SFERES_CLASS(Mpi) {
+    SFERES_EVAL(Mpi, Eval) {
     public:
       Mpi() {
         static char* argv[] = {(char*)"sferes2", 0x0};
@@ -70,7 +70,10 @@ namespace sferes {
                 const typename Phen::fit_t& fit_proto) {
         dbg::trace("mpi", DBG_HERE);
         if (_world->rank() == 0)
+        {
           _master_loop(pop, begin, end);
+          this->_nb_evals += (end - begin);
+        }
         else
           _slave_loop<Phen>(fit_proto);
       }
