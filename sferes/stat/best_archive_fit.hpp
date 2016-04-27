@@ -47,11 +47,15 @@ namespace sferes {
   namespace stat {
     /// Stat to be used with Novelty Search: save the best individual (fitness-wise) in the archive
     /// Warning: it assumes that the Novelty modifier is the first modifier!
-    SFERES_STAT(BestArchive, Stat) {
+    SFERES_STAT(BestArchiveFit, Stat) {
     public:
       template<typename E>
       void refresh(const E& ea) {
         assert(!ea.pop().empty());
+
+        if (ea.template fit_modifier<0>().archive().empty())
+          return;
+
         _best = *std::max_element(
             ea.template fit_modifier<0>().archive().begin(),
             ea.template fit_modifier<0>().archive().end(),
@@ -61,7 +65,7 @@ namespace sferes {
         if (ea.dump_enabled())
           (*this->_log_file) << ea.gen() << " " << ea.nb_evals() << " " << _best->fit().value() << std::endl;
       }
-      void show(std::ostream& os, size_t k) {
+      void show(std::ostream& os, size_t k) const {
         _best->develop();
         _best->show(os);
         _best->fit().set_mode(fit::mode::view);

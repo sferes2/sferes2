@@ -127,7 +127,7 @@ BOOST_AUTO_TEST_CASE(test_novelty_multi) {
   typedef phen::Parameters<gen_t, FitZDT2<Params>, Params> phen_t;
   typedef eval::Parallel<Params> eval_t;
   typedef boost::fusion::vector<stat::ParetoFront<phen_t, Params>,
-                                stat::BestArchive<phen_t, Params>,
+                                stat::BestArchiveFit<phen_t, Params>,
                                 stat::Archive<phen_t, Params> >  stat_t;
   typedef modif::Novelty<phen_t, Params> modifier_t;
   typedef ea::Nsga2<phen_t, eval_t, stat_t, modifier_t, Params> ea_t;
