@@ -58,7 +58,7 @@ namespace sferes {
         if (ea.dump_enabled())
         {
           this->_create_log_file(ea, "archive.dat");
-          (*this->_log_file) << ea.gen() << " " << _archive.size() << std::endl;
+          (*this->_log_file) << ea.gen() << " " << ea.nb_evals() << " " << _archive.size() << std::endl;
         }
       }
       void show(std::ostream& os, size_t k) {

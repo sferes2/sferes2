@@ -59,7 +59,7 @@ namespace sferes {
 
         this->_create_log_file(ea, "best_archive_fit.dat");
         if (ea.dump_enabled())
-          (*this->_log_file) << ea.gen() << " " << _best->fit().value() << std::endl;
+          (*this->_log_file) << ea.gen() << " " << ea.nb_evals() << " " << _best->fit().value() << std::endl;
       }
       void show(std::ostream& os, size_t k) {
         _best->develop();
