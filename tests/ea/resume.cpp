@@ -120,9 +120,12 @@ BOOST_AUTO_TEST_CASE(test_nsga2_resume) {
   typedef ea::Nsga2<phen_t, eval_t, stat_t, modifier_t, Params> ea_t;
   ea_t ea;
   ea.run();// 101 generations
+  std::cout<<"nsga2 done, running some tests..."<<std::endl;
 
   ea.stat<0>().show_all(std::cout, 0);
   BOOST_CHECK(ea.stat<0>().pareto_front().size() > 50);
+
+  std::cout<<"nsga2 done, checking the Pareto front"<<std::endl;
 
   BOOST_FOREACH(boost::shared_ptr<phen_t> p, ea.stat<0>().pareto_front()) {
     std::cout<<_g(*p)<<std::endl;
@@ -130,7 +133,7 @@ BOOST_AUTO_TEST_CASE(test_nsga2_resume) {
     BOOST_CHECK(_g(*p) > 0.0);
   }
 
-  std::cout<<"nsga2 done, resuming"<<std::endl;
+  std::cout<<"Now resuming"<<std::endl;
   Params::pop::nb_gen = 201;
   typedef ea::Nsga2<phen_t, eval_t, stat_t, modifier_t, Params> ea2_t;
   ea2_t ea2;
