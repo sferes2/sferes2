@@ -81,7 +81,8 @@ def options(opt):
     opt.add_option('--debug', type='string', help='compile with debugging symbols', dest='debug')
 
     # tests
-    opt.add_option('--tests', type='string', help='compile tests or not', dest='tests')
+    opt.add_option('--tests',  action='store_true', default=False, help='compile tests or not', dest='tests')
+    opt.add_option('--tests-verbose', action='store_true', default=False, help='display the output of the unit tests', dest='tests_verbose')
 
     opt.logger = Logs.make_logger(blddir + 'options.log', 'mylogger')
 
@@ -207,9 +208,26 @@ def summary(bld):
     if lst:
         total = len(lst)
         tfail = len([x for x in lst if x[1]])
+    failed_lines = []
+    for (f, code, out, err) in lst:
+        output = str(out).splitlines()
+        for line in output:
+            if ' failed' in line:
+                failed_lines += [line]
+            if bld.options.tests_verbose and ' passed' in line:
+                Logs.info(line)
+            elif bld.options.tests_verbose and ' failed' in line:
+                Logs.error(line)
+            elif bld.options.tests_verbose :
+                print line
     waf_unit_test.summary(bld)
     if tfail > 0:
+        Logs.error(str(tfail) + "/" + str(total) + " tests failed:")
+        for i in failed_lines:
+            Logs.error(i)
         bld.fatal("Build failed, because some tests failed!")
+
+
 
 def build(bld):
     v = commands.getoutput('git rev-parse HEAD')
@@ -222,7 +240,7 @@ def build(bld):
 
     print ("Entering directory `" + os.getcwd() + "'")
     bld.recurse('sferes examples')
-    if bld.options.tests and bld.options.tests == 'yes':
+    if bld.options.tests:
         bld.recurse('tests')
     if bld.options.exp:
         for i in bld.options.exp.split(','):

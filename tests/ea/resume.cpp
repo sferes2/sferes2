@@ -105,7 +105,7 @@ public:
 
 unsigned Params::pop::nb_gen = 101;
 
-BOOST_AUTO_TEST_CASE(test_nsga2) {
+BOOST_AUTO_TEST_CASE(test_nsga2_resume) {
   srand(time(0));
 
   std::cout<<"running nsga2 ..."<<std::endl;
