@@ -132,6 +132,7 @@ BOOST_AUTO_TEST_CASE(test_nsga2_resume) {
     BOOST_CHECK(_g(*p) < 1.1);
     BOOST_CHECK(_g(*p) > 0.0);
   }
+  
 
   std::cout<<"Now resuming"<<std::endl;
   Params::pop::nb_gen = 201;

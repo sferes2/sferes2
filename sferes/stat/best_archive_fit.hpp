@@ -52,7 +52,7 @@ namespace sferes {
       template<typename E>
       void refresh(const E& ea) {
         assert(!ea.pop().empty());
-
+        std::cout<<"best archive fit ..."<<std::endl;
         if (ea.template fit_modifier<0>().archive().empty())
           return;
 
@@ -61,9 +61,12 @@ namespace sferes {
             ea.template fit_modifier<0>().archive().end(),
             fit::compare_max());
 
-        this->_create_log_file(ea, "best_archive_fit.dat");
         if (ea.dump_enabled())
+        {
+          this->_create_log_file(ea, "best_archive_fit.dat");
           (*this->_log_file) << ea.gen() << " " << ea.nb_evals() << " " << _best->fit().value() << std::endl;
+        }
+        std::cout<<"done"<<std::endl;
       }
       void show(std::ostream& os, size_t k) const {
         _best->develop();

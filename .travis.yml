@@ -16,6 +16,7 @@ addons:
     - libboost1.55-all-dev
     - libeigen3-dev
     - libtbb-dev
+    - valgrind
 
 install:
 
@@ -24,3 +25,4 @@ install:
 script:
   - ./waf configure
   - ./waf --tests -v --tests-verbose
+  - valgrind build/tests/tests_ea_resume

@@ -53,6 +53,7 @@ namespace sferes {
       template<typename E>
       void refresh(const E& ea) {
         assert(!ea.pop().empty());
+        std::cout<<"archive stat..."<<std::endl;
         _archive = ea.template fit_modifier<0>().archive();
 
         if (ea.dump_enabled())
@@ -60,6 +61,7 @@ namespace sferes {
           this->_create_log_file(ea, "archive.dat");
           (*this->_log_file) << ea.gen() << " " << ea.nb_evals() << " " << _archive.size() << std::endl;
         }
+        std::cout<<"done"<<std::endl;
       }
       void show(std::ostream& os, size_t k) const {
         _archive[k]->develop();
