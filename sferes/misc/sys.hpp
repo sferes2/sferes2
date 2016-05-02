@@ -52,14 +52,6 @@ namespace sferes {
       return date;
     }
 
-    inline std::string hostname() {
-      char hostname[30];
-      int res = gethostname(hostname, 30);
-      assert(res == 0);
-      res = 0; // avoid a warning in opt mode
-      return std::string(hostname);
-    }
-
     inline std::string getpid() {
       return boost::lexical_cast<std::string>(::getpid());
     }
