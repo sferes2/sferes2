@@ -212,11 +212,11 @@ def summary(bld):
     for (f, code, out, err) in lst:
         output = str(out).splitlines()
         for line in output:
-            if ' failed' in line:
+            if ' failed' in line or 'fatal error' in line:
                 failed_lines += [line]
             if bld.options.tests_verbose and ' passed' in line:
                 Logs.info(line)
-            elif bld.options.tests_verbose and ' failed' in line:
+            elif bld.options.tests_verbose and (' failed' in line  or 'fatal error' in line):
                 Logs.error(line)
             elif bld.options.tests_verbose :
                 print line
