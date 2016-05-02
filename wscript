@@ -82,7 +82,8 @@ def options(opt):
     opt.add_option('--debug', type='string', help='compile with debugging symbols', dest='debug')
 
     # tests
-    opt.add_option('--tests', type='string', help='compile tests or not', dest='tests')
+    opt.add_option('--tests',  action='store_true', default=False, help='compile tests or not', dest='tests')
+    opt.add_option('--tests-verbose', action='store_true', default=False, help='display the output of the unit tests', dest='tests_verbose')
 
     opt.logger = Logs.make_logger(blddir + 'options.log', 'mylogger')
 
@@ -209,12 +210,13 @@ def summary(bld):
     for (f, code, out, err) in lst:
         output = str(out).splitlines()
         for line in output:
-            if ' passed' in line:
-                Logs.info(line)
-            elif ' failed' in line:
-                Logs.error(line)
+            if ' failed' in line:
                 failed_lines += [line]
-            else:
+            if bld.options.tests_verbose and ' passed' in line:
+                Logs.info(line)
+            elif bld.options.tests_verbose and ' failed' in line:
+                Logs.error(line)
+            elif bld.options.tests_verbose :
                 print line
     waf_unit_test.summary(bld)
     if tfail > 0:
@@ -236,7 +238,7 @@ def build(bld):
 
     print ("Entering directory `" + os.getcwd() + "'")
     bld.recurse('sferes examples')
-    if bld.options.tests and bld.options.tests == 'yes':
+    if bld.options.tests:
         bld.recurse('tests')
     if bld.options.exp:
         for i in bld.options.exp.split(','):

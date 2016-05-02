@@ -124,8 +124,6 @@ BOOST_AUTO_TEST_CASE(test_nsga2_resume) {
   ea.stat<0>().show_all(std::cout, 0);
   BOOST_CHECK(ea.stat<0>().pareto_front().size() > 50);
 
-  BOOST_CHECK(false);
-
   BOOST_FOREACH(boost::shared_ptr<phen_t> p, ea.stat<0>().pareto_front()) {
     std::cout<<_g(*p)<<std::endl;
     BOOST_CHECK(_g(*p) < 1.1);

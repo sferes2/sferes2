@@ -23,4 +23,4 @@ install:
 # Change this to your needs
 script:
   - ./waf configure
-  - ./waf --tests=yes -v
+  - ./waf --tests -v
