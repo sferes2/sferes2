@@ -47,7 +47,7 @@ srcdir = '.'
 blddir = 'build'
 
 import copy
-import os, glob, types, logging
+import os, glob, types
 import sferes
 from waflib.Build import BuildContext
 from waflib.Tools import waf_unit_test
@@ -205,6 +205,7 @@ def summary(bld):
     if lst:
         total = len(lst)
         tfail = len([x for x in lst if x[1]])
+    failed_lines = []
     for (f, code, out, err) in lst:
         output = str(out).splitlines()
         for line in output:
@@ -212,11 +213,17 @@ def summary(bld):
                 Logs.info(line)
             elif ' failed' in line:
                 Logs.error(line)
+                failed_lines += [line]
             else:
                 print line
     waf_unit_test.summary(bld)
     if tfail > 0:
+        Logs.error(str(tfail) + "/" + str(total) + " tests failed:")
+        for i in failed_lines:
+            Logs.error(i)
         bld.fatal("Build failed, because some tests failed!")
+
+
 
 def build(bld):
     v = commands.getoutput('git rev-parse HEAD')
