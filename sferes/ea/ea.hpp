@@ -255,19 +255,24 @@ namespace sferes {
       eval_t& eval() {
         return _eval;
       }
-      const stat_t& stat() const {
-        return _stat;
-      }
+
+
+      //---- modifiers ----
       const modifier_t& fit_modifier() const {
         return _fit_modifier;
       }
-
-      // modifiers
+      template<int I>
+      const typename boost::fusion::result_of::value_at_c<modifier_t, I>::type& fit_modifier() const {
+        return boost::fusion::at_c<I>(_fit_modifier);
+      }
       void apply_modifier() {
         boost::fusion::for_each(_fit_modifier, ApplyModifier_f<Exact>(stc::exact(*this)));
       }
 
-      // stats
+      // ---- stats ---
+      const stat_t& stat() const {
+        return _stat;
+      }
       template<int I>
       const typename boost::fusion::result_of::value_at_c<stat_t, I>::type& stat() const {
         return boost::fusion::at_c<I>(_stat);
@@ -293,6 +298,9 @@ namespace sferes {
       }
       void set_gen(unsigned g) {
         _gen = g;
+      }
+      size_t nb_evals() const {
+          return _eval.nb_evals();
       }
       bool dump_enabled() const {
         return Params::pop::dump_period != -1;

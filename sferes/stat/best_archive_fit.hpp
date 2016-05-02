@@ -35,44 +35,52 @@
 
 
 
-#ifndef EVAL_HPP_
-#define EVAL_HPP_
+#ifndef BEST_ARCHIVE_FIT_
+#define BEST_ARCHIVE_FIT_
 
-#include <vector>
-#include <boost/shared_ptr.hpp>
-#include <sferes/dbg/dbg.hpp>
-#include <sferes/stc.hpp>
+#include <boost/serialization/shared_ptr.hpp>
+#include <boost/serialization/nvp.hpp>
+#include <sferes/stat/stat.hpp>
+#include <sferes/fit/fitness.hpp>
 
 namespace sferes {
-  namespace eval {
-    SFERES_CLASS(Eval) {
+  namespace stat {
+    /// Stat to be used with Novelty Search: save the best individual (fitness-wise) in the archive
+    /// Warning: it assumes that the Novelty modifier is the first modifier!
+    SFERES_STAT(BestArchiveFit, Stat) {
     public:
-      Eval() : _nb_evals(0) {}
-      template<typename Phen>
-      void eval(std::vector<boost::shared_ptr<Phen> >& pop, size_t begin, size_t end,
-                const typename Phen::fit_t& fit_proto) {
-        dbg::trace trace("eval", DBG_HERE);
-        assert(pop.size());
-        assert(begin < pop.size());
-        assert(end <= pop.size());
-        for (size_t i = begin; i < end; ++i) {
-          pop[i]->fit() = fit_proto;
-          pop[i]->develop();
-          pop[i]->fit().eval(*pop[i]);
-          _nb_evals++;
-        }
+      template<typename E>
+      void refresh(const E& ea) {
+        assert(!ea.pop().empty());
+
+        if (ea.template fit_modifier<0>().archive().empty())
+          return;
+
+        _best = *std::max_element(
+            ea.template fit_modifier<0>().archive().begin(),
+            ea.template fit_modifier<0>().archive().end(),
+            fit::compare_max());
+
+        this->_create_log_file(ea, "best_archive_fit.dat");
+        if (ea.dump_enabled())
+          (*this->_log_file) << ea.gen() << " " << ea.nb_evals() << " " << _best->fit().value() << std::endl;
       }
-      unsigned nb_evals() const { return _nb_evals; }
+      void show(std::ostream& os, size_t k) const {
+        _best->develop();
+        _best->show(os);
+        _best->fit().set_mode(fit::mode::view);
+        _best->fit().eval(*_best);
+      }
+      const boost::shared_ptr<Phen> best() const {
+        return _best;
+      }
+      template<class Archive>
+      void serialize(Archive & ar, const unsigned int version) {
+        ar & BOOST_SERIALIZATION_NVP(_best);
+      }
     protected:
-      unsigned _nb_evals;
+      boost::shared_ptr<Phen> _best;
     };
   }
 }
-
-
-#define SFERES_EVAL(Class, Parent)					\
-  template <typename Params, typename Exact = stc::Itself> \
-  class Class : public Parent<Params, typename stc::FindExact<Class<Params, Exact>, Exact>::ret>
-
-
 #endif

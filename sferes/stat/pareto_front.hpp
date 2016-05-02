@@ -58,11 +58,11 @@ namespace sferes {
                        fit::compare_objs_lex());
         this->_create_log_file(ea, "pareto.dat");
         if (ea.dump_enabled())
-          show_all(*(this->_log_file), ea.gen());
+          show_all(*(this->_log_file), ea.gen(), ea.nb_evals());
         //this->_log_file->close();
       }
       void show(std::ostream& os, size_t k) const {
-        os<<"log format : gen id obj_1 ... obj_n"<<std::endl;
+        os<<"log format : gen nb_evals id obj_1 ... obj_n"<<std::endl;
         show_all(os, 0);
         _pareto_front[k]->develop();
         _pareto_front[k]->show(os);
@@ -83,9 +83,10 @@ namespace sferes {
       void serialize(Archive & ar, const unsigned int version) {
         ar & BOOST_SERIALIZATION_NVP(_pareto_front);
       }
-      void show_all(std::ostream& os, size_t gen = 0) const {
+
+      void show_all(std::ostream& os, size_t gen = 0, size_t nb_evals = 0) const {
         for (unsigned i = 0; i < _pareto_front.size(); ++i) {
-          os << gen << " " << i << " ";
+          os << gen << " " << nb_evals << " " << i << " ";
           for (unsigned j = 0; j < _pareto_front[i]->fit().objs().size(); ++j)
             os << _pareto_front[i]->fit().obj(j) << " ";
           os << std::endl;;

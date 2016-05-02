@@ -83,6 +83,9 @@ namespace sferes {
     template<typename Phen, typename Params, typename Exact = stc::Itself>
     class Novelty {
      public:
+      typedef boost::shared_ptr<Phen> phen_t;
+      typedef std::vector<phen_t> pop_t;
+
       Novelty() : _rho_min(Params::novelty::rho_min_init), _not_added(0) {}
 
       template<typename Ea>
@@ -99,7 +102,7 @@ namespace sferes {
         parallel::p_for(parallel::range_t(0, ea.pop().size()), f);
 
         // compute the sparseness of each individual of the population
-        // and potentially add to the archive
+        // and potentially add some of them to the archive
         int added = 0;
         for (size_t i = 0; i < ea.pop().size(); ++i) {
           size_t nb_objs = ea.pop()[i]->fit().objs().size();
@@ -132,9 +135,8 @@ namespace sferes {
             && added > Params::novelty::adding_tresh)//4
           _rho_min *= 1.05f;
       }
+      const pop_t& archive() const { return _archive; }
      protected:
-      typedef boost::shared_ptr<Phen> phen_t;
-      typedef std::vector<phen_t> pop_t;
       pop_t _archive;
       float _rho_min;
       size_t _not_added;
