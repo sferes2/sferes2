@@ -105,7 +105,7 @@ public:
 
 unsigned Params::pop::nb_gen = 101;
 
-BOOST_AUTO_TEST_CASE(test_nsga2) {
+BOOST_AUTO_TEST_CASE(test_nsga2_resume) {
   srand(time(0));
 
   std::cout<<"running nsga2 ..."<<std::endl;
@@ -123,6 +123,8 @@ BOOST_AUTO_TEST_CASE(test_nsga2) {
 
   ea.stat<0>().show_all(std::cout, 0);
   BOOST_CHECK(ea.stat<0>().pareto_front().size() > 50);
+
+  BOOST_CHECK(false);
 
   BOOST_FOREACH(boost::shared_ptr<phen_t> p, ea.stat<0>().pareto_front()) {
     std::cout<<_g(*p)<<std::endl;

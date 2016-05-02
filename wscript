@@ -47,7 +47,7 @@ srcdir = '.'
 blddir = 'build'
 
 import copy
-import os, glob, types
+import os, glob, types, logging
 import sferes
 from waflib.Build import BuildContext
 from waflib.Tools import waf_unit_test
@@ -205,6 +205,15 @@ def summary(bld):
     if lst:
         total = len(lst)
         tfail = len([x for x in lst if x[1]])
+    for (f, code, out, err) in lst:
+        output = str(out).splitlines()
+        for line in output:
+            if ' passed' in line:
+                Logs.info(line)
+            elif ' failed' in line:
+                Logs.error(line)
+            else:
+                print line
     waf_unit_test.summary(bld)
     if tfail > 0:
         bld.fatal("Build failed, because some tests failed!")
