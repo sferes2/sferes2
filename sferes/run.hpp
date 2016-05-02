@@ -182,7 +182,7 @@ namespace sferes {
       ea.write();
       std::cout<<"final state written -- "<<ea.gen()<<std::endl;
     } else {
-      ea.run();
+      ea.run(argv[0]);
       ea.write();
       std::cout<<"final state written -- "<<ea.gen()<<std::endl;
     }

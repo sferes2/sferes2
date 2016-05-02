@@ -195,8 +195,9 @@ namespace sferes {
         _fit_proto = fit;
       }
 
-      void run() {
+      void run(const std::string& exp_name = "") {
         dbg::trace trace("ea", DBG_HERE);
+        _exp_name = exp_name;
         _make_res_dir();
         _set_status("running");
         random_pop();
@@ -328,6 +329,7 @@ namespace sferes {
       size_t _gen;
       fit_t _fit_proto;
       bool _stop;
+      std::string _exp_name;
 
       void _iter() {
         epoch();
@@ -361,7 +363,10 @@ namespace sferes {
         if (Params::pop::dump_period == -1)
           return;
         if (_res_dir.empty())
-          _res_dir = misc::hostname() + "_" + misc::date() + "_" + misc::getpid();
+          if (_exp_name.empty())
+            _res_dir = misc::date() + "_" + misc::getpid();
+          else
+            _res_dir = _exp_name + "_" + misc::date() + "_" + misc::getpid();
         boost::filesystem::path my_path(_res_dir);
         boost::filesystem::create_directory(my_path);
       }
