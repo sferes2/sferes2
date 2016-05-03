@@ -67,10 +67,10 @@ struct Params {
     SFERES_CONST cross_over_t cross_over_type = sbx;
   };
   struct pop {
-    SFERES_CONST unsigned size = 200;
-    SFERES_CONST unsigned nb_gen = 600;
+    SFERES_CONST unsigned size = 100;
+    SFERES_CONST unsigned nb_gen = 500;
     SFERES_CONST float initial_aleat = 2.0f;
-    SFERES_CONST int dump_period = 2;
+    SFERES_CONST int dump_period = -1;
   };
   struct parameters {
     SFERES_CONST float min = 0.0f;
@@ -126,9 +126,9 @@ BOOST_AUTO_TEST_CASE(test_novelty_multi) {
   typedef gen::EvoFloat<30, Params> gen_t;
   typedef phen::Parameters<gen_t, FitZDT2<Params>, Params> phen_t;
   typedef eval::Parallel<Params> eval_t;
-  typedef boost::fusion::vector<stat::ParetoFront<phen_t, Params>,
-                                stat::BestArchiveFit<phen_t, Params>,
-                                stat::Archive<phen_t, Params> >  stat_t;
+  typedef boost::fusion::vector<stat::ParetoFront<phen_t, Params> > stat_t;//,
+                                //stat::BestArchiveFit<phen_t, Params>,
+                                //stat::Archive<phen_t, Params> >  stat_t;
   typedef modif::Novelty<phen_t, Params> modifier_t;
   typedef ea::Nsga2<phen_t, eval_t, stat_t, modifier_t, Params> ea_t;
   ea_t ea;

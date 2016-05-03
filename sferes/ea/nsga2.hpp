@@ -53,14 +53,19 @@
 
 namespace sferes {
   namespace ea {
-    // Main class
-    SFERES_EA(Nsga2, Ea) {
+    // The generic NSGA2 is a NSGA2 with a template for the 'crowding distance'
+    // abstracting this allows us to implement variants of NSGA2 that use a different
+    // criteria to rank individuals that are on the same front (e.g. genotypic diversity)
+    template<typename Phen, typename Eval, typename Stat, typename FitModifier, typename Crowd, typename Params,
+             typename Exact = stc::Itself>
+    class GenericNsga2 : public Ea <Phen, Eval, Stat, FitModifier, Params,
+    typename stc::FindExact<GenericNsga2<Phen, Eval, Stat, FitModifier, Params, Exact>, Exact>::ret > {
     public:
       typedef boost::shared_ptr<crowd::Indiv<Phen> > indiv_t;
       typedef typename std::vector<indiv_t> pop_t;
       typedef typename pop_t::iterator it_t;
       typedef typename std::vector<std::vector<indiv_t> > front_t;
-      SFERES_EA_FRIEND(Nsga2);
+      SFERES_EA_FRIEND(GenericNsga2);
 
       void random_pop() {
         parallel::init();
@@ -276,6 +281,13 @@ namespace sferes {
       }
 
     };
+
+    template<typename Phen, typename Eval, typename Stat, typename FitModifier, typename Params,
+             typename Exact = stc::Itself>
+    class Nsga2 : public GenericNsga2 <Phen, Eval, Stat, FitModifier,
+      crowd::assign_crowd<boost::shared_ptr<crowd::Indiv<Phen> > >, Params,
+    typename stc::FindExact<Nsga2<Phen, Eval, Stat, FitModifier, Params, Exact>, Exact>::ret >
+    {};
   }
 }
 #endif
