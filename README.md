@@ -62,6 +62,7 @@ Peer-reviewed academic papers that used Sferes2:
 (you can find a pdf for most of these publications on http://scholar.google.com).
 
 ### 2016
+- Velez, R., and Clune, J.. "Identifying Core Functional Networks and Functional Modules within Artificial Neural Networks via Subsets Regression." Proceedings of the Genetic and Evolutionary Computation Conference. 2016.
 - Tarapore, D. Clune, J., Cully, A., and Mouret, J.-B "How Do Different Encodings Influence the Performance of the MAP-Elites Algorithm?" Proceedings of the Genetic and Evolutionary Computation Conference. 2016.
 -  Huizinga J., Mouret J.-B., Clune J. "Does aligning phenotypic and genotypic modularity improve the evolution of neural networks?" Proceedings of the Genetic and Evolutionary Computation Conference. 2016.
 - Norouzzadeh M., Clune J. Neuromodulation improves the evolution of forward models. Proceedings of the Genetic and Evolutionary Computation Conference. 2016.
