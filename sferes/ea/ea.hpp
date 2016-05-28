@@ -362,11 +362,12 @@ namespace sferes {
         dbg::trace trace("ea", DBG_HERE);
         if (Params::pop::dump_period == -1)
           return;
-        if (_res_dir.empty())
+        if (_res_dir.empty()) {
           if (_exp_name.empty())
             _res_dir = misc::date() + "_" + misc::getpid();
           else
             _res_dir = _exp_name + "_" + misc::date() + "_" + misc::getpid();
+	}
         boost::filesystem::path my_path(_res_dir);
         boost::filesystem::create_directory(my_path);
       }
