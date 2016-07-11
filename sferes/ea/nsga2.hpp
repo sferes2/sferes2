@@ -263,7 +263,7 @@ namespace sferes {
 
         for (size_t i = 0; i < ranks.size(); ++i)
           pop[i]->set_rank(ranks[i]);
-        parallel::sort(pop.begin(), pop.end(), crowd::compare_ranks());;
+        parallel::sort(pop.begin(), pop.end(), crowd::compare_ranks());
       }
 
       void _assign_rank(pop_t& pop) {

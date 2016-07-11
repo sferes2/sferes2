@@ -4,9 +4,25 @@
 #include <sferes/ea/nsga2.hpp>
 #include <sferes/eval/eval.hpp>
 #include <sferes/stat/pareto_front.hpp>
+#include <sferes/stat/pareto_samples.hpp>
 #include <sferes/modif/dummy.hpp>
 #include <sferes/run.hpp>
 #include <boost/program_options.hpp>
+
+#ifdef GRAPHIC
+#define NO_PARALLEL
+#endif
+
+#define NO_MPI
+
+#ifndef NO_PARALLEL
+#include <sferes/eval/parallel.hpp>
+#ifndef NO_MPI
+#include <sferes/eval/mpi.hpp>
+#endif
+#else
+#include <sferes/eval/eval.hpp>
+#endif
 
 using namespace sferes;
 using namespace sferes::gen::evo_float;
@@ -65,10 +81,19 @@ public:
 int main(int argc, char **argv) {
   std::cout<<"running "<<argv[0]<<" ... try --help for options (verbose)"<<std::endl;
 
+#ifndef NO_PARALLEL
+#ifndef NO_MPI
+  typedef eval::Mpi<Params> eval_t;
+#else
+  typedef eval::Parallel<Params> eval_t;
+#endif
+#else
+  typedef eval::Eval<Params> eval_t;
+#endif
+
   typedef gen::EvoFloat<30, Params> gen_t;
   typedef phen::Parameters<gen_t, FitZDT2<Params>, Params> phen_t;
-  typedef eval::Eval<Params> eval_t;
-  typedef boost::fusion::vector<stat::ParetoFront<phen_t, Params> >  stat_t;
+  typedef boost::fusion::vector<stat::ParetoFront<phen_t, Params>, stat::ParetoSamples<phen_t, Params> >  stat_t;
   typedef modif::Dummy<> modifier_t;
   typedef ea::Nsga2<phen_t, eval_t, stat_t, modifier_t, Params> ea_t;
   ea_t ea;

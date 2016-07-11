@@ -50,7 +50,7 @@ namespace sferes {
     SFERES_STAT(ParetoFront, Stat) {
     public:
       typedef std::vector<boost::shared_ptr<Phen> > pareto_t;
-      // asume a ea.pareto_front() method
+      // assume a ea.pareto_front() method
       template<typename E>
       void refresh(const E& ea) {
         _pareto_front = ea.pareto_front();
@@ -89,7 +89,7 @@ namespace sferes {
           os << gen << " " << nb_evals << " " << i << " ";
           for (unsigned j = 0; j < _pareto_front[i]->fit().objs().size(); ++j)
             os << _pareto_front[i]->fit().obj(j) << " ";
-          os << std::endl;;
+          os << std::endl;
         }
       }
 
