@@ -2,7 +2,6 @@
 #include <sferes/phen/parameters.hpp>
 #include <sferes/gen/evo_float.hpp>
 #include <sferes/ea/nsga2.hpp>
-#include <sferes/eval/eval.hpp>
 #include <sferes/stat/pareto_front.hpp>
 #include <sferes/modif/dummy.hpp>
 #include <sferes/run.hpp>
