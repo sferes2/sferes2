@@ -17,16 +17,16 @@ def options(opt):
 @conf
 def check_eigen(conf):
 	conf.env['EIGEN_FOUND'] = False
-        conf.env.INCLUDES_EIGEN = []
+	conf.env.INCLUDES_EIGEN = []
 	conf.start_msg('Checking for Eigen')
 	if conf.options.eigen:
 		conf.env.INCLUDES_EIGEN += [conf.options.eigen]
 	else:
-            if 'CPPFLAGS' in os.environ:
-                conf.env.INCLUDES_EIGEN += [path[2:] for path in os.environ['CPPFLAGS'].split() if path[0:2] == '-I']
-            conf.env.INCLUDES_EIGEN += ['/usr/include/eigen3',
-                                           '/usr/local/include/eigen3',
-                                           '/usr/include', '/usr/local/include']
+		if 'CPPFLAGS' in os.environ:
+			conf.env.INCLUDES_EIGEN += [path[2:] for path in os.environ['CPPFLAGS'].split() if path[0:2] == '-I']
+			conf.env.INCLUDES_EIGEN += ['/usr/include/eigen3',
+										'/usr/local/include/eigen3',
+										'/usr/include', '/usr/local/include']
 	try:
 		res = conf.find_file('Eigen/Core', conf.env.INCLUDES_EIGEN)
 		conf.end_msg('ok')
