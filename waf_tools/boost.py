@@ -127,13 +127,10 @@ def boost_get_includes(self, *k, **kw):
 	if includes and self.__boost_get_version_file(includes):
 		return includes
 
-        # JH: Automatic detection of boost include path after loading a module on a cluster
-        include_paths = []
-        if 'CPPFLAGS' in os.environ:
-            include_paths += [path[2:] for path in os.environ['CPPFLAGS'].split() if path[0:2] == '-I']
-        include_paths += BOOST_INCLUDES
-        # JH: Automatic detection of boost includes path end
-
+	include_paths = []
+	if 'CPPFLAGS' in os.environ:
+		include_paths += [path[2:] for path in os.environ['CPPFLAGS'].split() if path[0:2] == '-I']
+	include_paths += BOOST_INCLUDES
 	for dir in include_paths:
 		if self.__boost_get_version_file(dir):
 			return dir
@@ -169,14 +166,11 @@ def __boost_get_libs_path(self, *k, **kw):
 		files = path.ant_glob('*boost_*')
 
 	if not libs or not files:
-                #JH: Also check LD_LIBRARY_PATH
-                lib_paths = []
-                if 'LD_LIBRARY_PATH' in os.environ:
-                        lib_paths += os.environ['LD_LIBRARY_PATH'].split(":")
-                lib_paths += BOOST_LIBS
-                #JH: Also check LD_LIBRARY_PATH end
-
-                for dir in lib_paths:
+		lib_paths = []
+		if 'LD_LIBRARY_PATH' in os.environ:
+			lib_paths += os.environ['LD_LIBRARY_PATH'].split(":")
+		lib_paths += BOOST_LIBS
+		for dir in lib_paths:
 			try:
 				path = self.root.find_dir(dir)
 				files = path.ant_glob('*boost_*')
@@ -257,7 +251,6 @@ def check_boost(self, *k, **kw):
 	You can pass the same parameters as the command line (without "--boost-"),
 	but the command line has the priority.
 	"""
-        print "### Checking for boost ###"
 	if not self.env['CXX']:
 		self.fatal('load a c++ compiler first, conf.load("compiler_cxx")')
 
