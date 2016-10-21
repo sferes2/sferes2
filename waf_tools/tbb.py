@@ -5,7 +5,7 @@
 """
 Quick n dirty tbb detection
 """
-
+import os
 from waflib.Configure import conf
 
 
@@ -15,12 +15,18 @@ def options(opt):
 
 @conf
 def check_tbb(self, *k, **kw):
+    includes_tbb = []
+    libpath_tbb = []
     if self.options.tbb:
-        includes_tbb = [self.options.tbb + '/include']
-        libpath_tbb = [self.options.tbb + '/lib']
+        includes_tbb += [self.options.tbb + '/include']
+        libpath_tbb += [self.options.tbb + '/lib']
     else:
-        includes_tbb = ['/usr/local/include', '/usr/include', '/opt/intel/tbb/include']
-        libpath_tbb = ['/usr/local/lib/', '/usr/lib', '/opt/intel/tbb/lib']
+        includes_tbb += [path[2:] for path in self.env['CPPFLAGS'] if path[0:2] == '-I']
+        if 'CPPFLAGS' in os.environ:
+            includes_tbb += [path[2:] for path in os.environ['CPPFLAGS'].split() if path[0:2] == '-I']
+        if 'LD_LIBRARY_PATH' in os.environ:
+            libpath_tbb += os.environ['LD_LIBRARY_PATH'].split(":")
+        libpath_tbb += ['/usr/local/lib/', '/usr/lib', '/opt/intel/tbb/lib']
 
     self.start_msg('Checking Intel TBB includes')
     try:
