@@ -128,8 +128,10 @@ def configure(conf):
 
     # boost
     conf.load('boost')
-    conf.check_boost(lib='serialization filesystem system unit_test_framework program_options graph mpi thread regex',
-                     min_version='1.35')
+    boost_libs = 'serialization filesystem system unit_test_framework program_options graph thread regex'
+    if not conf.options.no_mpi:
+        boost_libs += ' mpi'
+    conf.check_boost(lib=boost_libs, min_version='1.35')
     # tbb
     conf.load('tbb')
     conf.check_tbb()
