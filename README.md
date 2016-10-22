@@ -81,7 +81,7 @@ Peer-reviewed academic papers that used Sferes2:
 - Tarapore, Danesh, and Jean-Baptiste Mouret. "Evolvability signatures of generative encodings: beyond standard performance benchmarks." Information Sciences (2015).
 - Nguyen, A., Yosinski, J. and Clune, J.. "Deep neural networks are easily fooled: High confidence predictions for unrecognizable images." Computer Vision and Pattern Recognition (CVPR), 2015 IEEE Conference on. IEEE, 2015.
 - Bernard, A., André, J.B. and Bredeche, N., 2015. Evolution of Cooperation in Evolutionary Robotics: the Tradeoff between Evolvability and Efficiency. In Proceedings of the European Converence on Artificial Life 2015 (pp. 195-502).
-- 
+ 
 ### 2014
 -  Doncieux, S. (2014). Knowledge Extraction from Learning Traces in Continuous Domains. AAAI 2014 fall Symposium ''Knowledge, Skill, and Behavior Transfer in Autonomous Robots''. Pages 1-8.
 
