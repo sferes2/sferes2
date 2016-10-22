@@ -23,6 +23,9 @@ def check_eigen(conf):
 	if conf.options.eigen:
 		includes_check = [conf.options.eigen]
 		conf.env.INCLUDES_EIGEN = [conf.options.eigen]
+	else:
+		if 'CPPFLAGS' in os.environ:
+			includes_check += [path[2:] for path in os.environ['CPPFLAGS'].split() if path[0:2] == '-I']
 
 	try:
 		res = conf.find_file('Eigen/Core', includes_check)

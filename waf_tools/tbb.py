@@ -6,6 +6,7 @@
 Quick n dirty tbb detection
 """
 
+import os
 from waflib.Configure import conf
 from waflib import Utils, Logs
 
@@ -21,6 +22,10 @@ def check_tbb(self, *k, **kw):
     else:
         includes_tbb = ['/usr/local/include', '/usr/include', '/opt/intel/tbb/include']
         libpath_tbb = ['/usr/local/lib/', '/usr/lib', '/opt/intel/tbb/lib']
+        if 'CPPFLAGS' in os.environ:
+            includes_tbb += [path[2:] for path in os.environ['CPPFLAGS'].split() if path[0:2] == '-I']
+        if 'LD_LIBRARY_PATH' in os.environ:
+            libpath_tbb += os.environ['LD_LIBRARY_PATH'].split(":")
 
     self.start_msg('Checking Intel TBB includes (optional)')
     try:

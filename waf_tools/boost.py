@@ -27,7 +27,7 @@ def build(bld):
 	bld(source='main.cpp', target='app', use='BOOST')
 '''
 
-import sys
+import os, sys
 import re
 from waflib import Utils, Logs
 from waflib.Configure import conf
@@ -125,7 +125,11 @@ def boost_get_includes(self, *k, **kw):
 	includes = k and k[0] or kw.get('includes', None)
 	if includes and self.__boost_get_version_file(includes):
 		return includes
-	for dir in BOOST_INCLUDES:
+	include_paths = []
+	if 'CPPFLAGS' in os.environ:
+		include_paths += [path[2:] for path in os.environ['CPPFLAGS'].split() if path[0:2] == '-I']
+	include_paths += BOOST_INCLUDES
+	for dir in include_paths:
 		if self.__boost_get_version_file(dir):
 			return dir
 	if includes:
@@ -158,7 +162,11 @@ def __boost_get_libs_path(self, *k, **kw):
 		path = self.root.find_dir(libs)
 		files = path.ant_glob('*boost_*')
 	if not libs or not files:
-		for dir in BOOST_LIBS:
+		lib_paths = []
+		if 'LD_LIBRARY_PATH' in os.environ:
+			lib_paths += os.environ['LD_LIBRARY_PATH'].split(":")
+		lib_paths += BOOST_LIBS
+		for dir in lib_paths:
 			try:
 				path = self.root.find_dir(dir)
 				files = path.ant_glob('*boost_*')
