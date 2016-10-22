@@ -137,6 +137,7 @@ def configure(conf):
     conf.check_tbb()
 
     # mpi.h
+    conf.load('mpi')
     conf.check_mpi()
 
     # boost mpi
