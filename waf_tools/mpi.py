@@ -53,12 +53,30 @@ def check_mpi(conf):
 
 		conf.start_msg('Checking for MPI libs (optional)')
 		lib_paths = []
-		libs  = ['libmpi_cxx.so', 'libmpi.so']
+		libs  = ['libmpi.so']
 		for l in libs:
 			res = conf.find_file(l, libs_check)
 			index = libs_check.index(res[:-len(l)-1])
 			if libs_check[index] not in lib_paths:
 				lib_paths += [libs_check[index]]
+		anta_libs = ['mpi_cxx', 'mpicxx']
+		found = False
+		ii = -1
+		for i in range(len(anta_libs)):
+			l = 'lib'+anta_libs[i]+'.so'
+			try:
+				res = conf.find_file(l, libs_check)
+				index = libs_check.index(res[:-len(l)-1])
+				if libs_check[index] not in lib_paths:
+					lib_paths += [libs_check[index]]
+				found = True
+				ii = i
+				break
+			except:
+				continue
+		if not found:
+			conf.end_msg('Not found', 'RED')
+			return 1
 		conf.end_msg('ok')
 
 		if Logs.verbose:
@@ -68,7 +86,7 @@ def check_mpi(conf):
 		conf.env.INCLUDES_MPI = includes_check[i_index]
 		conf.env.LIBPATH_MPI = lib_paths
 		conf.env['MPI_FOUND'] = True
-		conf.env.LIB_MPI = ['mpi_cxx','mpi']
+		conf.env.LIB_MPI = [anta_libs[ii],'mpi']
 	except:
 		conf.end_msg('Not found', 'RED')
 	return 1
