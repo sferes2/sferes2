@@ -11,8 +11,8 @@ from waflib.Configure import conf
 
 def options(opt):
 	opt.add_option("--no-mpi",
-		       default=False, action='store_true',
-		       help='disable mpi', dest='no_mpi')
+					default=False, action='store_true',
+					help='disable mpi', dest='no_mpi')
 	opt.add_option('--mpi', type='string', help='path to mpi', dest='mpi')
 
 
@@ -22,14 +22,24 @@ def check_mpi(conf):
 
 	conf.env['LIB_MPI'] = ''
 	conf.env['MPI_FOUND'] = False
+	conf.env.INCLUDES_MPI = []
+	conf.env.LIBPATH_MPI = []
 	if conf.options.no_mpi :
 		return
 	if conf.options.mpi:
-		conf.env.INCLUDES_MPI = conf.options.mpi + '/include'
-		conf.env.LIBPATH_MPI = conf.options.mpi + '/lib'
+		conf.env.INCLUDES_MPI += conf.options.mpi + '/include'
+		conf.env.LIBPATH_MPI += conf.options.mpi + '/lib'
 	else:
-		conf.env.INCLUDES_MPI = ['/usr/include/mpi', '/usr/local/include/mpi', '/usr/include', '/usr/local/include']
-		conf.env.LIBPATH_MPI = ['/usr/lib', '/usr/local/lib', '/usr/lib/openmpi']
+		if 'MPI_ROOT' in os.environ:
+			conf.env.INCLUDES_MPI += [os.environ['MPI_ROOT'] +"/include", os.environ['MPI_ROOT'] +"/include64"]
+		elif 'I_MPI_ROOT' in os.environ: 
+			conf.env.INCLUDES_MPI += [os.environ['I_MPI_ROOT'] +"/include", os.environ['I_MPI_ROOT'] +"/include64"]
+		elif 'CPPFLAGS' in os.environ:
+			conf.env.INCLUDES_MPI += [path[2:] for path in os.environ['CPPFLAGS'].split() if path[0:2] == '-I']
+		conf.env.INCLUDES_MPI += ['/usr/include/mpi', '/usr/local/include/mpi', '/usr/include', '/usr/local/include']
+		if 'LD_LIBRARY_PATH' in os.environ:
+			conf.env.LIBPATH_MPI += os.environ['LD_LIBRARY_PATH'].split(":")
+		conf.env.LIBPATH_MPI += ['/usr/lib', '/usr/local/lib', '/usr/lib/openmpi']
 
 	try:
 		conf.start_msg('Checking for MPI include')
@@ -38,7 +48,7 @@ def check_mpi(conf):
 		conf.env['MPI_FOUND'] = True
 		conf.env.LIB_MPI = ['mpi_cxx','mpi']
 	except:
-		conf.end_msg('Not found', 'RED')
+		conf.end_msg('Not found', 'YELLOW')
 	return 1
 
 def detect(conf):
