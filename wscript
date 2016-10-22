@@ -140,7 +140,7 @@ def configure(conf):
     conf.check_mpi()
 
     # boost mpi
-    if (len(conf.env['LIB_BOOST_MPI']) != 0 and conf.env['MPI_FOUND']):
+    if ('mpi' in boost_libs and conf.env['MPI_FOUND']):
         conf.env['MPI_ENABLED'] = True
     else:
         conf.env['MPI_ENABLED'] = False
