@@ -46,6 +46,6 @@ def build(bld):
         bld.program(features = 'cxx test',
                        source = '../' + f,
                        includes = '../',
-                       use = 'sferes2',
-                       uselib = 'TBB BOOST BOOST_THREAD EIGEN BOOST_FILESYSTEM BOOST_SYSTEM BOOST_SERIALIZATION BOOST_PROGRAM_OPTIONS PTHREAD',
-                       target = fname)
+                       target = fname,
+                       uselib = 'TBB BOOST EIGEN PTHREAD MPI',
+                       use = 'sferes2')

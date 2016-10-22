@@ -4,7 +4,7 @@ def build(bld):
     bld.program(features = 'cxx',
                    source = 'ex_ea.cpp',
                    includes = '../',
-                   uselib = 'TBB BOOST BOOST_UNIT_TEST_FRAMEWORK BOOST_THREAD EIGEN',
+                   uselib = 'TBB BOOST EIGEN PTHREAD MPI',
                    use = 'sferes2',
                    target = 'ex_ea')
 
@@ -12,7 +12,7 @@ def build(bld):
     bld.program(features = 'cxx',
                    source = 'ex_ea_mpi.cpp',
                    includes = '../',
-                   uselib = 'TBB BOOST BOOST_UNIT_TEST_FRAMEWORK BOOST_THREAD EIGEN',
+                   uselib = 'TBB BOOST EIGEN PTHREAD MPI',
                    use = 'sferes2',
                    target = 'ex_ea_mpi')
 
@@ -20,7 +20,7 @@ def build(bld):
     bld.program(features = 'cxx',
                    source = 'ex_nsga2.cpp',
                    includes = '../',
-                   uselib = 'TBB BOOST BOOST_UNIT_TEST_FRAMEWORK BOOST_THREAD EIGEN',
+                   uselib = 'TBB BOOST EIGEN PTHREAD MPI',
                    use = 'sferes2',
                    target = 'ex_nsga2')
 
@@ -28,6 +28,6 @@ def build(bld):
     bld.program(features = 'cxx',
                    source = 'ex_eps_moea.cpp',
                    includes = '../',
-                   uselib = 'TBB BOOST BOOST_UNIT_TEST_FRAMEWORK BOOST_THREAD EIGEN',
+                   uselib = 'TBB BOOST EIGEN PTHREAD MPI',
                    use = 'sferes2',
                    target = 'ex_eps_moea')
