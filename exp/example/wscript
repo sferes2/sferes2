@@ -10,6 +10,6 @@ def build(bld):
     bld.program(features = 'cxx',
                    source = 'example.cpp',
                    includes = '. ../../',
-                   uselib = 'EIGEN BOOST BOOST_UNIT_TEST_FRAMEWORK TBB ',
+                   uselib = 'TBB BOOST EIGEN PTHREAD MPI',
                    use = 'sferes2',
                    target = 'example')

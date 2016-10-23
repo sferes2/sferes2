@@ -128,17 +128,20 @@ def configure(conf):
 
     # boost
     conf.load('boost')
-    conf.check_boost(lib='serialization filesystem system unit_test_framework program_options graph mpi thread regex',
-                     min_version='1.35')
+    boost_libs = 'serialization filesystem system unit_test_framework program_options graph thread regex'
+    if not conf.options.no_mpi:
+        boost_libs += ' mpi'
+    conf.check_boost(lib=boost_libs, min_version='1.35')
     # tbb
     conf.load('tbb')
     conf.check_tbb()
 
     # mpi.h
+    conf.load('mpi')
     conf.check_mpi()
 
     # boost mpi
-    if (len(conf.env['LIB_BOOST_MPI']) != 0 and conf.env['MPI_FOUND']):
+    if ('mpi' in boost_libs and conf.env['MPI_FOUND']):
         conf.env['MPI_ENABLED'] = True
     else:
         conf.env['MPI_ENABLED'] = False
