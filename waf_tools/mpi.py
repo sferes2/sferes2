@@ -81,7 +81,7 @@ def check_mpi(conf):
 
 		if Logs.verbose:
 			Logs.pprint('CYAN', '	paths : %s' % lib_paths)
-			Logs.pprint('CYAN', '	libs : %s' % ['mpi_cxx','mpi'])
+			Logs.pprint('CYAN', '	libs : %s' % [anta_libs[ii],'mpi'])
 
 		conf.env.INCLUDES_MPI = includes_check[i_index]
 		conf.env.LIBPATH_MPI = lib_paths
