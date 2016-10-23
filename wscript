@@ -66,8 +66,8 @@ def options(opt):
 
     # sferes specific
     opt.add_option('--rpath', type='string', help='set rpath', dest='rpath')
-    opt.add_option('--includes', type='string', help='add an include path, e.g. /home/mandor/include', dest='includes')
-    opt.add_option('--libs', type='string', help='add a lib path, e.g. /home/mandor/lib', dest='libs')
+    opt.add_option('--includes', action='append', type='string', help='add an include path, e.g. /home/mandor/include', dest='includes')
+    opt.add_option('--libs', action='append', type='string', help='add a lib path, e.g. /home/mandor/lib', dest='libs')
     opt.add_option('--cpp11', type='string', help='force / disable c++-11 compilation [--cpp11=yes]', dest='cpp11')
     opt.add_option('--no-asserts', action='store_true', default=False, help='disable asserts [--no-asserts]', dest='no_asserts')
 
@@ -122,8 +122,8 @@ def configure(conf):
 
     # link flags
     if conf.options.libs:
-        conf.env.append_value("LINKFLAGS", "-L" + conf.options.libs)
-
+        for lib_dir in conf.options.libs:
+            conf.env.append_value("LINKFLAGS", " -L" + lib_dir)
 
 
     # boost
@@ -175,7 +175,8 @@ def configure(conf):
     if not conf.options.cpp11 or conf.options.cpp11 == 'yes':
         conf.env['CXXFLAGS'] += ['-std=c++11']
     if conf.options.includes :
-        conf.env['CXXFLAGS'] += ["-I" + conf.options.includes]
+        for inlcude_dir in conf.options.includes:
+            conf.env['CXXFLAGS'] += [" -I" + inlcude_dir]
     if conf.env['MPI_ENABLED']:
         conf.env['CXXFLAGS'] += ['-DMPI_ENABLED']
     if not conf.env['TBB_ENABLED']:
