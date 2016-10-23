@@ -10,17 +10,41 @@ dist: trusty
 compiler:
   - gcc
   - clang
+
+env:
+  global:
+    - CI_HOME=`pwd`
+  matrix:
+    - TBB=ON EIGEN3=ON CPP11=ON MPI=ON
+    - TBB=ON EIGEN3=ON CPP11=ON MPI=OFF
+    - TBB=ON EIGEN3=ON CPP11=OFF MPI=ON
+    - TBB=ON EIGEN3=OFF CPP11=ON MPI=ON
+    - TBB=OFF EIGEN3=ON CPP11=ON MPI=ON
+    - TBB=OFF EIGEN3=ON CPP11=ON MPI=OFF
+    - TBB=OFF EIGEN3=ON CPP11=OFF MPI=ON
+    - TBB=OFF EIGEN3=OFF CPP11=ON MPI=ON
+    - TBB=OFF EIGEN3=OFF CPP11=ON MPI=OFF
+    - TBB=OFF EIGEN3=OFF CPP11=OFF MPI=ON
+    - TBB=OFF EIGEN3=OFF CPP11=OFF MPI=OFF
+
 addons:
   apt:
     packages:
     - libboost1.55-all-dev
-    - libeigen3-dev
-    - libtbb-dev
+
+before_install:
+  - sudo sed -i -e 's/^Defaults\tsecure_path.*$//' /etc/sudoers
 
 install:
+  - if [ "$EIGEN3" = "ON" ]; then 'ci/install_eigen.sh' ; fi
+  - if [ "$TBB" = "ON" ]; then 'ci/install_tbb.sh' ; fi
 
 
 # Change this to your needs
 script:
-  - ./waf configure
+  - cpp11=""
+  - mpi=""
+  - if [ "$CPP11" = "OFF" ]; then cpp11="--cpp11=no" ; fi
+  - if [ "$MPI" = "OFF" ]; then cpp11="--no-mpi" ; fi
+  - ./waf configure $cpp11 $mpi
   - ./waf --tests -v --tests-verbose

@@ -35,7 +35,12 @@
 #ifndef MODIFIER_NOVELTY_HPP
 #define MODIFIER_NOVELTY_HPP
 
+#ifdef EIGEN3_ENABLED
 #include <Eigen/Core>
+#else
+#include <vector>
+#endif
+
 #include "sferes/parallel.hpp"
 
 namespace sferes {
@@ -48,10 +53,18 @@ namespace sferes {
         typedef std::vector<boost::shared_ptr<Phen> > pop_t;
         const pop_t& _pop;
         const pop_t& _archive;
+#ifdef EIGEN3_ENABLED
         Eigen::MatrixXf& distances;
+#else
+        std::vector<std::vector<float> > distances;
+#endif
 
         ~_distance_f() { }
+#ifdef EIGEN3_ENABLED
         _distance_f(const pop_t& pop, const pop_t& archive, Eigen::MatrixXf& d) :
+#else
+        _distance_f(const pop_t& pop, const pop_t& archive, std::vector<std::vector<float> >& d) :
+#endif
           _pop(pop), _archive(archive), distances(d) {}
         _distance_f(const _distance_f& ev) :
           _pop(ev._pop), _archive(ev._archive), distances(ev.distances) {}
@@ -59,7 +72,11 @@ namespace sferes {
         void operator() (const parallel::range_t& r) const {
           for (size_t i = r.begin(); i != r.end(); ++i) {
             for (size_t j = 0; j < _archive.size(); ++j)
+#ifdef EIGEN3_ENABLED
               distances(i, j) = _pop[i]->fit().dist(*_archive[j]);
+#else
+              distances[i][j] = _pop[i]->fit().dist(*_archive[j]);
+#endif
           }
         }
       };
@@ -96,7 +113,11 @@ namespace sferes {
         archive.insert(archive.end(), ea.pop().begin(), ea.pop().end());
 
         // we compute all the distances from pop(i) to archive(j) and store them
+#ifdef EIGEN3_ENABLED
         Eigen::MatrixXf distances(ea.pop().size(), archive.size());
+#else
+        std::vector<std::vector<float> > distances(ea.pop().size(), std::vector<float>(archive.size()));
+#endif
         novelty::_distance_f<Phen> f(ea.pop(), archive, distances);
         parallel::init();
         parallel::p_for(parallel::range_t(0, ea.pop().size()), f);

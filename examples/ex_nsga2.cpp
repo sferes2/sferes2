@@ -73,7 +73,7 @@ namespace sferes {
         SFERES_STAT(ParetoSamples, Stat)
         {
         public:
-            typedef std::vector<boost::shared_ptr<Phen>> pareto_t;
+            typedef std::vector<boost::shared_ptr<Phen> > pareto_t;
             // assume a ea.pareto_front() method
             template <typename E>
             void refresh(const E& ea)

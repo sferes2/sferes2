@@ -43,6 +43,8 @@ def build(bld):
     for f in files:
         fname = f.replace('/', '_')
         fname = fname[0:-4]
+        if not bld.env['EIGEN_FOUND'] and (fname == 'tests_ea_cmaes' or fname == 'tests_modif_diversity' or fname == 'tests_modif_novelty'):
+            continue
         bld.program(features = 'cxx test',
                        source = '../' + f,
                        includes = '../',
