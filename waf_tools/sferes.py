@@ -11,58 +11,31 @@ except:
    print "WARNING simplejson not found some function may not work"
 
 import glob
-#import xml.etree.cElementTree as etree
 
-
-
-def create_variants(bld, source, use, target,
-                    uselib, variants, includes=". ../../",
+def create_variants(bld, source, use,
+                    uselib, variants, includes=". ../ ../../",
                     cxxflags='',
-                    json=''):
-   # the basic one
-   #   tgt = bld.new_task_gen('cxx', 'program')
-   #   tgt.source = source
-   #   tgt.includes = includes
-   #   tgt.uselib_local = uselib_local
-   #   tgt.uselib = uselib
-   #   tgt.target = target
-   # the variants
-   if not target:
-      tmp = source.replace('.cpp', '')
-   else:
-      tmp = target
-   bld.program(features='cxx',
-               source=source,
-               target=tmp,
-               includes=includes,
-               uselib=uselib,
-               use=use)
-   c_src = bld.path.abspath() + '/'
-   for v in variants:
-      # create file
-      suff = ''
-      for d in v.split(' '):
-         suff += d.lower() + '_'
-         src_fname = tmp + '_' + suff[0:len(suff) - 1] + '.cpp'
-         bin_fname = tmp + '_' + suff[0:len(suff) - 1]
-      f = open(c_src + src_fname, 'w')
-      f.write("// THIS IS A GENERATED FILE - DO NOT EDIT\n")
-      for d in v.split(' '):
-         f.write("#define " + d + "\n")
-         f.write("#line 1 \"" + c_src + source + "\"\n")
-      code = open(c_src + source, 'r')
-      for line in code:
-         f.write(line)
-      bin_name = src_fname.replace('.cpp', '')
-      bin_name = os.path.basename(bin_name)
-      # create build
-      bld.program(features='cxx',
-                     source=src_fname,
-                     target=bin_fname,
-                     includes=includes,
-                     uselib=uselib,
-                     use=use)
-
+                    target=''):
+    source_list = source.split()
+    if not target:
+        tmp = source_list[0].replace('.cpp', '')
+    else:
+        tmp = target
+    for v in variants:
+        deff = []
+        suff = ''
+        for d in v.split(' '):
+            suff += d.lower() + '_'
+            deff.append(d)
+        bin_fname = tmp + '_' + suff[0:len(suff) - 1]
+        bld.program(features='cxx',
+                    source=source,
+                    target=bin_fname,
+                    includes=includes,
+                    uselib=uselib,
+                    cxxflags=cxxflags,
+                    use=use,
+                    defines=deff)
 
 def create_exp(name):
    ws_tpl = """
