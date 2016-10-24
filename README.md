@@ -52,6 +52,7 @@ Author
 Other contributors
 ------------
 - Stephane Doncieux doncieux@isir.upmc.fr
+- Konstantinos Chatzilygeroudis konstantinos.chatzilygeroudis@inria.fr
 - Paul Tonelli tonelli@isir.upmc.fr (documentation)
 - Many members of ISIR (http://isir.upmc.fr)
 
