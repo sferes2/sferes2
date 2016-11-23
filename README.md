@@ -63,11 +63,13 @@ Peer-reviewed academic papers that used Sferes2:
 (you can find a pdf for most of these publications on http://scholar.google.com).
 
 ### 2016
-- Mengistu, H., Huizinga, J., Mouret, J.-B., & Clune, J.. The evolutionary origins of hierarchy. PLoS Computational Biology, Public Library of Science, 2016, 12 (6),
+- Mengistu, H., Huizinga, J., Mouret, J.-B., & Clune, J. The evolutionary origins of hierarchy. PLoS Computational Biology, Public Library of Science, 2016, 12 (6),
 - Velez, R., and Clune, J.. "Identifying Core Functional Networks and Functional Modules within Artificial Neural Networks via Subsets Regression." Proceedings of the Genetic and Evolutionary Computation Conference. 2016.
 - Tarapore, D. Clune, J., Cully, A., and Mouret, J.-B "How Do Different Encodings Influence the Performance of the MAP-Elites Algorithm?" Proceedings of the Genetic and Evolutionary Computation Conference. 2016.
 -  Huizinga J., Mouret J.-B., Clune J. "Does aligning phenotypic and genotypic modularity improve the evolution of neural networks?" Proceedings of the Genetic and Evolutionary Computation Conference. 2016.
 - Norouzzadeh M., Clune J. Neuromodulation improves the evolution of forward models. Proceedings of the Genetic and Evolutionary Computation Conference. 2016.
+- Stanton, C., and Clune J. "Curiosity Search: Producing Generalists by Encouraging Individuals to Continually Explore and Acquire Skills throughout Their Lifetime." PloS one 11.9 (2016): e0162235.
+- Nguyen A, Yosinski J, Clune J. Understanding Innovation Engines: Automated Creativity and Improved Stochastic Optimization via Deep Learning. Evolutionary Computation. 2016 Sep;24(3):545-72.
 
 ### 2015
 - Maestre, Carlos, Antoine Cully, Christophe Gonzales, and Stephane Doncieux. "Bootstrapping interactions with objects from raw sensorimotor data: a Novelty Search based approach." In IEEE International Conference on Developmental and Learning and on Epigenetic Robotics. 2015.
