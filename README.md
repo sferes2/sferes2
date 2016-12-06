@@ -47,7 +47,7 @@ Sferes2 should work on most Unix systems (in particular, GNU/Linux and OSX). It 
 
 Author
 -------
-- Jean-Baptiste Mouret mouret@isir.upmc.frfr: main author and maintainer
+- Jean-Baptiste Mouret jean-baptiste.mouret@inria.fr: main author and maintainer
 
 Other contributors
 ------------
@@ -70,6 +70,7 @@ Peer-reviewed academic papers that used Sferes2:
 - Norouzzadeh M., Clune J. Neuromodulation improves the evolution of forward models. Proceedings of the Genetic and Evolutionary Computation Conference. 2016.
 - Stanton, C., and Clune J. "Curiosity Search: Producing Generalists by Encouraging Individuals to Continually Explore and Acquire Skills throughout Their Lifetime." PloS one 11.9 (2016): e0162235.
 - Nguyen A, Yosinski J, Clune J. Understanding Innovation Engines: Automated Creativity and Improved Stochastic Optimization via Deep Learning. Evolutionary Computation. 2016 Sep;24(3):545-72.
+- Bernard, A., André, J. B., & Bredeche, N. (2016). Evolving specialisation in a population of heterogeneous robots: the challenge of bootstrapping and maintaining genotypic polymorphism. Artificial Life, 15, 1-8.
 
 ### 2015
 - Maestre, Carlos, Antoine Cully, Christophe Gonzales, and Stephane Doncieux. "Bootstrapping interactions with objects from raw sensorimotor data: a Novelty Search based approach." In IEEE International Conference on Developmental and Learning and on Epigenetic Robotics. 2015.
@@ -83,7 +84,7 @@ Peer-reviewed academic papers that used Sferes2:
 - Mouret, Jean-Baptiste, and Jeff Clune. "Illuminating search spaces by mapping elites." arXiv preprint arXiv:1504.04909 (2015).
 - Tarapore, Danesh, and Jean-Baptiste Mouret. "Evolvability signatures of generative encodings: beyond standard performance benchmarks." Information Sciences (2015).
 - Nguyen, A., Yosinski, J. and Clune, J.. "Deep neural networks are easily fooled: High confidence predictions for unrecognizable images." Computer Vision and Pattern Recognition (CVPR), 2015 IEEE Conference on. IEEE, 2015.
-- Bernard, A., André, J.B. and Bredeche, N., 2015. Evolution of Cooperation in Evolutionary Robotics: the Tradeoff between Evolvability and Efficiency. In Proceedings of the European Converence on Artificial Life 2015 (pp. 195-502).
+- Bernard, A., André, J.B. and Bredeche, N., 2015. Evolution of Cooperation in Evolutionary Robotics: the Tradeoff between Evolvability and Efficiency. In Proceedings of the European Conference on Artificial Life 2015 (pp. 195-502).
  
 ### 2014
 -  Doncieux, S. (2014). Knowledge Extraction from Learning Traces in Continuous Domains. AAAI 2014 fall Symposium ''Knowledge, Skill, and Behavior Transfer in Autonomous Robots''. Pages 1-8.
