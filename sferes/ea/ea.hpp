@@ -59,6 +59,7 @@
 #include <boost/lexical_cast.hpp>
 #include <boost/filesystem.hpp>
 #include <boost/mpl/joint_view.hpp>
+#include <boost/crc.hpp>
 
 #include <sferes/dbg/dbg.hpp>
 #include <sferes/misc.hpp>
@@ -371,22 +372,40 @@ namespace sferes {
         boost::filesystem::path my_path(_res_dir);
         boost::filesystem::create_directory(my_path);
       }
+
+      // to add a CRC, we first serialize in a string, then compute the CRC,
+      // then we serialize this string + CRC
       void _write(int gen) const {
         dbg::trace trace("ea", DBG_HERE);
         if (Params::pop::dump_period == -1)
           return;
-        std::string fname = _res_dir + std::string("/gen_")
-                            + boost::lexical_cast<std::string>(gen);
-        std::ofstream ofs(fname.c_str());
+	// choose between XML or binary (default) archive
 #ifdef  SFERES_XML_WRITE
         typedef boost::archive::xml_oarchive oa_t;
 #else
         typedef boost::archive::binary_oarchive oa_t;
 #endif
-        oa_t oa(ofs);
+	// serialize in the string
+	std::ostringstream ss;
+        oa_t oa(ss);
         boost::fusion::for_each(_stat, WriteStat_f<oa_t>(oa));
-        std::cout << fname << " written" << std::endl;
+	// compute a CRC32
+	boost::crc_32_type result;
+	result.process_bytes(ss.str().c_str(), ss.str().size());
+	boost::crc_32_type::value_type crc = result.checksum();
+	// serialize the string + the CRC to a file
+        std::string fname = _res_dir + std::string("/gen_")
+                            + boost::lexical_cast<std::string>(gen);
+        std::ofstream ofs(fname.c_str());
+	oa_t oa_crc(ofs);
+	std::string s = ss.str();
+	oa_crc <<  boost::serialization::make_nvp("content", s);
+	oa_crc << boost::serialization::make_nvp("crc", crc);
+        std::cout << fname << " written [crc=" << crc << "]" << std::endl;
       }
+
+      // to read the CRC, we first de-serialize the CRC and the content (a string)
+      // we check the CRC, then we de-serialize the string
       void _load(const std::string& fname) {
         dbg::trace trace("ea", DBG_HERE);
         std::cout << "loading " << fname << std::endl;
@@ -401,8 +420,25 @@ namespace sferes {
 #else
         typedef boost::archive::binary_iarchive ia_t;
 #endif
+	// read the string
+	std::string s;
         ia_t ia(ifs);
-        boost::fusion::for_each(_stat, ReadStat_f<ia_t>(ia));
+	ia >> s;
+	// read the crc
+	boost::crc_32_type::value_type crc;
+	ia >> crc;
+	// compute the crc
+	boost::crc_32_type result;
+	result.process_bytes(s.c_str(), s.size());
+	boost::crc_32_type::value_type crc_computed = result.checksum();
+	if (crc != crc_computed) {
+	  std::cerr << "CRC error (read:"<< crc<<" computed:" << crc_computed<<")" << std::endl;
+	  exit(1);
+	}
+	// load from the string
+	std::istringstream iss(s);
+	ia_t ias(iss);
+        boost::fusion::for_each(_stat, ReadStat_f<ia_t>(ias));
       }
     };
   }
