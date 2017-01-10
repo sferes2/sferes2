@@ -62,6 +62,9 @@ Peer-reviewed academic papers that used Sferes2:
 
 (you can find a pdf for most of these publications on http://scholar.google.com).
 
+### 2017
+- Maurice, P., Padois, V., Measson, Y., & Bidaud, P. (2017). Human-oriented design of collaborative robots. International Journal of Industrial Ergonomics, 57, 88-102.
+
 ### 2016
 - Mengistu, H., Huizinga, J., Mouret, J.-B., & Clune, J. The evolutionary origins of hierarchy. PLoS Computational Biology, Public Library of Science, 2016, 12 (6),
 - Velez, R., and Clune, J.. "Identifying Core Functional Networks and Functional Modules within Artificial Neural Networks via Subsets Regression." Proceedings of the Genetic and Evolutionary Computation Conference. 2016.
