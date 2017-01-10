@@ -74,6 +74,7 @@ Peer-reviewed academic papers that used Sferes2:
 - Stanton, C., and Clune J. "Curiosity Search: Producing Generalists by Encouraging Individuals to Continually Explore and Acquire Skills throughout Their Lifetime." PloS one 11.9 (2016): e0162235.
 - Nguyen A, Yosinski J, Clune J. Understanding Innovation Engines: Automated Creativity and Improved Stochastic Optimization via Deep Learning. Evolutionary Computation. 2016 Sep;24(3):545-72.
 - Bernard, A., André, J. B., & Bredeche, N. (2016). Evolving specialisation in a population of heterogeneous robots: the challenge of bootstrapping and maintaining genotypic polymorphism. Artificial Life, 15, 1-8.
+- Pontes, J., Doncieux, S., Santos, C., & Padois, V. (2016). An Adaptive Approach to Humanoid Locomotion. In Advances in Cooperative Robotics--Proceedings of the 19th International Conference on Climbing and Walking Robots and the Support Technologies for Mobile Machines (pp. 437-444).
 
 ### 2015
 - Maestre, Carlos, Antoine Cully, Christophe Gonzales, and Stephane Doncieux. "Bootstrapping interactions with objects from raw sensorimotor data: a Novelty Search based approach." In IEEE International Conference on Developmental and Learning and on Epigenetic Robotics. 2015.
