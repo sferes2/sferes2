@@ -274,6 +274,10 @@ namespace sferes {
       const stat_t& stat() const {
         return _stat;
       }
+      // see issue #47 
+      stat_t& stat() {
+	return _stat;
+      }
       template<int I>
       const typename boost::fusion::result_of::value_at_c<stat_t, I>::type& stat() const {
         return boost::fusion::at_c<I>(_stat);
