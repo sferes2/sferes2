@@ -59,7 +59,9 @@
 #include <boost/lexical_cast.hpp>
 #include <boost/filesystem.hpp>
 #include <boost/mpl/joint_view.hpp>
-#include <boost/crc.hpp>
+#include <boost/iostreams/stream.hpp>
+#include <boost/iostreams/stream_buffer.hpp>
+
 
 #include <sferes/dbg/dbg.hpp>
 #include <sferes/misc.hpp>
@@ -371,6 +373,7 @@ namespace sferes {
 	}
         boost::filesystem::path my_path(_res_dir);
         boost::filesystem::create_directory(my_path);
+	std::cout<<"directory :"<<_res_dir<<" created"<<std::endl;
       }
 
       // to add a CRC, we first serialize in a string, then compute the CRC,
@@ -389,19 +392,19 @@ namespace sferes {
 	std::ostringstream ss;
         oa_t oa(ss);
         boost::fusion::for_each(_stat, WriteStat_f<oa_t>(oa));
-	// compute a CRC32
-	boost::crc_32_type result;
-	result.process_bytes(ss.str().c_str(), ss.str().size());
-	boost::crc_32_type::value_type crc = result.checksum();
-	// serialize the string + the CRC to a file
+	// compute the size of the actual archive
+	size_t file_size = ss.str().size();
+	// file name
         std::string fname = _res_dir + std::string("/gen_")
                             + boost::lexical_cast<std::string>(gen);
+	std::cout<<" writing "<<fname<<" size="<<file_size<<std::endl;
+
         std::ofstream ofs(fname.c_str());
-	oa_t oa_crc(ofs);
-	std::string s = ss.str();
-	oa_crc <<  boost::serialization::make_nvp("content", s);
-	oa_crc << boost::serialization::make_nvp("crc", crc);
-        std::cout << fname << " written [crc=" << crc << "]" << std::endl;
+	// write the size (in binary, no boost::serialization here)
+	ofs.write((char*)(&file_size), sizeof(size_t));
+	// now write the content of the archive
+	ofs.write(ss.str().c_str(), ss.str().size());
+	
       }
 
       // to read the CRC, we first de-serialize the CRC and the content (a string)
@@ -415,30 +418,32 @@ namespace sferes {
                     << "(does file exist ?)" << std::endl;
           exit(1);
         }
+	size_t actual_file_size = boost::filesystem::file_size(fname);
 #ifdef SFERES_XML_WRITE
         typedef boost::archive::xml_iarchive ia_t;
 #else
         typedef boost::archive::binary_iarchive ia_t;
 #endif
-	// read the string
-	std::string s;
-        ia_t ia(ifs);
-	ia >> s;
-	// read the crc
-	boost::crc_32_type::value_type crc;
-	ia >> crc;
-	// compute the crc
-	boost::crc_32_type result;
-	result.process_bytes(s.c_str(), s.size());
-	boost::crc_32_type::value_type crc_computed = result.checksum();
-	if (crc != crc_computed) {
-	  std::cerr << "CRC error (read:"<< crc<<" computed:" << crc_computed<<")" << std::endl;
-	  exit(1);
-	}
-	// load from the string
-	std::istringstream iss(s);
+	// read the file size
+	size_t file_size;
+	ifs.read((char*)(&file_size), sizeof(size_t));
+	if (file_size + sizeof(size_t) == actual_file_size)
+	  std::cout << "gen file is OK (file size matches)" << std::endl;
+         else{
+ 	 std::cerr<<"invalid archive (file size=" << actual_file_size
+ 		  <<" expected file size :" << file_size + sizeof(size_t) << ")" << std::endl;
+	 exit(1);
+        }
+	// read the string (the content)
+	char* str = new char[file_size];
+	ifs.read(str, file_size);
+	// load from the string (we cannot use std::istringstream because of potential
+	// \0 in the buffer (str))
+	boost::iostreams::basic_array_source<char> device(str, file_size);
+	boost::iostreams::stream<boost::iostreams::basic_array_source<char> > iss(device);
 	ia_t ias(iss);
         boost::fusion::for_each(_stat, ReadStat_f<ia_t>(ias));
+	delete[] str;
       }
     };
   }
