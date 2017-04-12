@@ -21,7 +21,7 @@ def check_tbb(self, *k, **kw):
         libpath_tbb = [self.options.tbb + '/lib']
     else:
         includes_tbb = ['/usr/local/include', '/usr/include', '/opt/intel/tbb/include']
-        libpath_tbb = ['/usr/local/lib/', '/usr/lib', '/opt/intel/tbb/lib']
+        libpath_tbb = ['/usr/local/lib/', '/usr/lib', '/opt/intel/tbb/lib', '/usr/lib/x86_64-linux-gnu', '/usr/libx86_64-linux-gnu']
         if 'CPPFLAGS' in os.environ:
             includes_tbb += [path[2:] for path in os.environ['CPPFLAGS'].split() if path[0:2] == '-I']
         if 'LD_LIBRARY_PATH' in os.environ:
