@@ -83,22 +83,30 @@ def _sub_script(tpl, conf_file):
         use_mpi = conf['use_mpi']
     except:
         use_mpi = "false"
+        nb_nodes = 1
     try:
         nb_cores = conf['nb_cores']
     except:
-        nb_cores = 1
+        nb_cores = -1
     try:
         args = conf['args']
     except:
         args = ''
     email = conf['email']
+
+    # typical line for OAR: /nodes=1/core=@nb_cores
     if (use_mpi == "true"):
-        ppn = '1'
-        mpirun = 'mpirun'
+        # if MPI, we specify cores, not nodes
+        nodes_cores = "/core=" + str(nb_cores)
+        mpirun = 'mpirun --map-by core -mca plm_rsh_agent "oarsh" -machinefile $OAR_NODEFILE -np ' + str(nb_cores)
     else:
- #      nb_cores = 1;
-        ppn = "8"
-        mpirun = ''
+       # if no MPI and no nb_cores (or nb_cores = -1), we take the full node
+       # otherwise, we take the right number of cores
+       if nb_cores == -1:
+           nodes_cores = "/core=1"
+       else:
+           nodes_cores = "/nodes=1/core=" + str(nb_cores)
+       mpirun = ''
 
     fnames = []
     for i in range(0, nb_runs):
@@ -117,8 +125,7 @@ def _sub_script(tpl, conf_file):
                     .replace("@ld_lib_path", ld_lib_path)
                     .replace("@wall_time", wall_time)
                     .replace("@dir", directory)
-                    .replace("@nb_cores", str(nb_cores))
-                    .replace("@ppn", ppn)
+                    .replace("@nodes_cores", nodes_cores)
                     .replace("@exec", mpirun + ' ' + directory + '/' + e + ' ' + args))
             f.close()
             os.chmod(fname, stat.S_IEXEC | stat.S_IREAD | stat.S_IWRITE)
@@ -143,6 +150,8 @@ def qsub(conf_file):
 export LD_LIBRARY_PATH=@ld_lib_path
 exec @exec
 """
+    print 'qsub / torque is not supported anymore! Please contact jean-baptiste.mouret@inria.fr'
+    exit(1)
     fnames = _sub_script(tpl, conf_file)
     for (fname, directory) in fnames:
         s = "qsub -d " + directory + " " + fname
@@ -153,14 +162,13 @@ exec @exec
 
 def oar(conf_file):
     tpl = """#!/bin/bash
-#OAR -l /nodes=1/core=@nb_cores,walltime=@wall_time
+#OAR -l @nodes_cores,walltime=@wall_time
 #OAR -n @exp
 #OAR -O stdout.%jobid%.log
 #OAR -E stderr.%jobid%.log
 export LD_LIBRARY_PATH=@ld_lib_path
 exec @exec
 """
-    print 'WARNING [oar]: MPI not supported yet'
     fnames = _sub_script(tpl, conf_file)
     for (fname, directory) in fnames:
         s = "oarsub -d " + directory + " -S " + fname

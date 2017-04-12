@@ -26,8 +26,8 @@ struct Params {
   };
   struct pop {
     SFERES_CONST unsigned size = 200;
-    SFERES_CONST unsigned nb_gen = 40;
-    SFERES_CONST int dump_period = 5;
+    SFERES_CONST unsigned nb_gen = 40000;
+    SFERES_CONST int dump_period = 1000;
     SFERES_CONST int initial_aleat = 1;
     SFERES_CONST float coeff = 1.1f;
     SFERES_CONST float keep_rate = 0.6f;
