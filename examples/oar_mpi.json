@@ -1,0 +1,10 @@
+{
+    "email" : "JBM",
+    "wall_time" : "24:00:00",
+    "nb_runs": 2,
+    "use_mpi" : "true",
+    "nb_cores": 128,
+    "bin_dir": "/nfs/hal01/jmouret/git/sferes2/build/examples",
+    "res_dir": "/nfs/hal01/jmouret/tmp",
+    "exps" : ["ex_ea_mpi"]
+}
