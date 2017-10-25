@@ -64,6 +64,8 @@ Peer-reviewed academic papers that used Sferes2:
 
 ### 2017
 - Maurice, P., Padois, V., Measson, Y., & Bidaud, P. (2017). Human-oriented design of collaborative robots. International Journal of Industrial Ergonomics, 57, 88-102.
+- Viejo, G., Girard, B., Procyk, E., & Khamassi, M. (2017). Adaptive coordination of working-memory and reinforcement learning in non-human primates performing a trial-and-error problem solving task. Behavioural Brain Research.
+- Vassiliades, V., Chatzilygeroudis, K., & Mouret, J. B. (2017). Using centroidal voronoi tessellations to scale up the multi-dimensional archive of phenotypic elites algorithm. IEEE Transactions on Evolutionary Computation.
 
 ### 2016
 - Mengistu, H., Huizinga, J., Mouret, J.-B., & Clune, J. The evolutionary origins of hierarchy. PLoS Computational Biology, Public Library of Science, 2016, 12 (6),
