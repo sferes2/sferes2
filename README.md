@@ -58,7 +58,7 @@ Other contributors
 
 Peer-reviewed academic papers that used Sferes2:
 ------------------------------------------------
-*If you used Sferes2 in an academic paper, please send us an e-mail (mouret@isir.upmc.fr) so that we can add it here!*
+*If you used Sferes2 in an academic paper, please send us an e-mail (jean-baptiste.mouret@inria.fr) so that we can add it here!*
 
 (you can find a pdf for most of these publications on http://scholar.google.com).
 
