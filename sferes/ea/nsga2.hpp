@@ -119,13 +119,13 @@ namespace sferes {
       const std::vector<boost::shared_ptr<Phen> >& pareto_front() const {
         return _pareto_front;
       }
-      const pop_t& mixed_pop() {
+      const pop_t& mixed_pop() const {
         return _mixed_pop;
       }
-      const pop_t& parent_pop() {
+      const pop_t& parent_pop() const {
         return _parent_pop;
       }
-      const pop_t& child_pop() {
+      const pop_t& child_pop() const {
         return _child_pop;
       }
 
