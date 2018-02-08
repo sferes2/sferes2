@@ -238,8 +238,10 @@ def build(bld):
     bld.env['CXXFLAGS'].append("-DVERSION=\"(const char*)\\\""+v+"\\\"\"")
 
     if bld.options.debug:
+        Logs.info('DEBUG is enabled')
         bld.env['CXXFLAGS'] += debug_flags.split(' ')
     else:
+        Logs.info('DEBUG is is disabled')
         bld.env['CXXFLAGS'] += opt_flags.split(' ')
 
     print ("Entering directory `" + os.getcwd() + "'")

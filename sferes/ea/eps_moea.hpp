@@ -63,8 +63,9 @@ namespace sferes {
         this->_pop.resize(Params::pop::size);
         parallel::p_for(parallel::range_t(0, this->_pop.size()),
                         random<Phen>(this->_pop));
+        std::cout<<"random done"<<std::endl;
         this->_eval_pop(this->_pop, 0, this->_pop.size());
-
+        std::cout<<"initial eval ok"<<std::endl;
         // create archive
         add_to_archive(this->_pop.front());
         for (typename pop_t :: const_iterator it = this->_pop.begin();

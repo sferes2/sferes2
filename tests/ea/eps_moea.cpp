@@ -38,6 +38,8 @@
 #define BOOST_TEST_DYN_LINK
 #define BOOST_TEST_MODULE eps_moea
 
+#define NO_PARALLEL
+
 #include <boost/test/unit_test.hpp>
 #include <cmath>
 #include <iostream>
@@ -104,8 +106,6 @@ public:
 
 
 BOOST_AUTO_TEST_CASE(test_epsmoea) {
-  srand(time(0));
-
   typedef gen::EvoFloat<30, Params> gen_t;
   typedef phen::Parameters<gen_t, FitZDT2<Params>, Params> phen_t;
   typedef eval::Parallel<Params> eval_t;
