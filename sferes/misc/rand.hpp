@@ -65,7 +65,8 @@ namespace sferes {
             D _dist;
             std::mt19937 _rgen;
         };
-
+      using generator_t = std::mt19937;
+      
         // thread-safe
         template <typename T>
         inline T rand(T min, T max)
@@ -88,20 +89,13 @@ namespace sferes {
         }
 
         template<>
-        inline int rand<int>(int min, int max)
+        inline size_t rand<size_t>(size_t min, size_t max)
         {
-            using rgen_t = RandomGenerator<std::uniform_int_distribution<int>>;
-            assert(max > min);
-            static thread_local int _min = min;
-            static thread_local int _max = max;
-            static thread_local rgen_t rgen(min, max);
-            if (max != _max || min != _min) {
-                std::cout<<"change max-min int"<<std::endl;
-                _max = max;
-                _min = min;
-                rgen = rgen_t(_min, _max);
-            }
-            int v = rgen.rand();
+            assert(max - 1 > min);
+	    static thread_local generator_t rgen;
+	    // uniform_int is in [a,b], not [a,b)...
+	    std::uniform_int_distribution<size_t> dist(min, max - 1);
+            size_t v = dist(rgen);
             assert(v >= min);
             assert(v < max);
             return v;
