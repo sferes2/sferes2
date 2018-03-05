@@ -91,7 +91,7 @@ namespace sferes {
         template<>
         inline size_t rand<size_t>(size_t min, size_t max)
         {
-            assert(max - 1 > min);
+            assert(max > min);
 	    static thread_local generator_t rgen;
 	    // uniform_int is in [a,b], not [a,b)...
 	    std::uniform_int_distribution<size_t> dist(min, max - 1);

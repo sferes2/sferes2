@@ -166,6 +166,7 @@ namespace sferes {
       struct CrossOver_f<Ev, recombination> {
         void operator()(const Ev& f1, const Ev& f2, Ev &c1, Ev &c2) {
           size_t k = misc::rand<size_t>(f1.size());
+	  assert(k < f1.size());
           for (size_t i = 0; i < k; ++i) {
             c1.data(i, f1.data(i));
             c2.data(i, f2.data(i));
