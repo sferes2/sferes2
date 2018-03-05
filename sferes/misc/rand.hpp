@@ -51,12 +51,6 @@ namespace sferes {
         using generator_t = std::mt19937;
         inline generator_t make_rgen() { return generator_t(randutils::auto_seed_128{}.base()); }
 
-        template <typename T, bool IsIntegral>
-        T _rand(T min, T max)
-        {
-            assert(0); // see the partial specializations
-        }
-
         // rand for floating point types (see the dispatcher below)
         // this is supposed to generate a number in [min, max)
         // but this is not guaranteed in the current implementations
