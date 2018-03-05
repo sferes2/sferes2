@@ -46,125 +46,120 @@
 #include "sferes/misc/rand_utils.hpp"
 
 namespace sferes {
-    namespace misc {
-        /// usage :
-        /// - RandomGenerator<dist<double>>(0.0, 1.0);
-        /// - double r = rgen.rand();
-        template <typename D>
-        class RandomGenerator {
-        public:
-            using result_type = typename D::result_type;
-            RandomGenerator(result_type a, result_type b) : _dist(a, b), _rgen(randutils::auto_seed_128{}.base()) {}
-            result_type rand()
-            {
-                return _dist(_rgen);
-            }
-            D& dist() { return dist; }
+  namespace misc {
+    /// usage :
+    /// - RandomGenerator<dist<double>>(0.0, 1.0);
+    /// - double r = rgen.rand();
+    template <typename D>
+    class RandomGenerator {
+    public:
+      using result_type = typename D::result_type;
+      RandomGenerator(result_type a, result_type b) : _dist(a, b), _rgen(randutils::auto_seed_128{}.base()) {}
+      result_type rand()
+      {
+	return _dist(_rgen);
+      }
+      D& dist() { return dist; }
 
-        private:
-            D _dist;
-            std::mt19937 _rgen;
-        };
-      using generator_t = std::mt19937;
+    private:
+      D _dist;
+      std::mt19937 _rgen;
+    };
+    using generator_t = std::mt19937;
+
+    template<typename T, bool IsIntegral>
+    T _rand(T min, T max) {
+      assert(0); // see the partial specializations
+    }
       
-        // thread-safe
-        template <typename T>
-        inline T rand(T min, T max)
-        {
-            using rgen_t = RandomGenerator<std::uniform_real_distribution<T>>;
-            assert(max > min);
-            static thread_local T _min = min;
-            static thread_local T _max = max;
-            static thread_local rgen_t rgen(min, max);
-            if (max != _max || min != _min) {
-                std::cout<<"change max-min"<<std::endl;
-                _max = max;
-                _min = min;
-                rgen = rgen_t(_min, _max);
-            }
-            T v = rgen.rand();
-            assert(v >= min);
-            assert(v < max);
-            return v;
-        }
+    // this is supposed to generate a number in [min, max)
+    // but this is not guaranteed in the current implementations
+    // see notes here: http://en.cppreference.com/w/cpp/numeric/random/uniform_real_distribution
+    template<typename T>
+    inline T rand(T min, T max, std::false_type)
+    {
+      assert(max > min);
+      static thread_local generator_t rgen;
+      std::uniform_real_distribution<T> dist(min, max);
+      T v;
+      do
+	v = dist(rgen);
+      while (v >= max);
+      assert(v >= min);
+      assert(v < max);
+      return v;
+    }
+  
+    template<typename T>
+    inline T rand(T min, T max, std::true_type)
+    {
+      assert(max > min);
+      static thread_local generator_t rgen;
+      // uniform_int is in [a,b], not [a,b)...
+      std::uniform_int_distribution<size_t> dist(min, max - 1);
+      size_t v = dist(rgen);
+      assert(v >= min);
+      assert(v < max);
+      return v;  
+    }
+    template<typename T>
+    inline T rand(T min, T max) {
+      return rand(min, max, std::is_integral<T>());
+    }
 
-        template<>
-        inline size_t rand<size_t>(size_t min, size_t max)
-        {
-            assert(max > min);
-	    static thread_local generator_t rgen;
-	    // uniform_int is in [a,b], not [a,b)...
-	    std::uniform_int_distribution<size_t> dist(min, max - 1);
-            size_t v = dist(rgen);
-            assert(v >= min);
-            assert(v < max);
-            return v;
-        }
+  
+    template <typename T>
+    inline T rand(T max = 1.0)
+    {
+      return rand<T>((T)0.0, max);
+    }
 
-        template <typename T>
-        inline T rand(T max = 1.0)
-        {
-            return rand<T>((T)0.0, max);
-        }
+    template <typename T>
+    inline T gaussian_rand(T m = 0.0, T v = 1.0)
+    {
+      static thread_local generator_t rgen;
+      std::normal_distribution<T> dist(m, v);
+      return dist(rgen);
+    }
 
-        template <typename T>
-        inline T gaussian_rand(T m = 0.0, T v = 1.0)
-        {
-            using rgen_t = RandomGenerator<std::normal_distribution<T>>;
-            static thread_local rgen_t rgen(m, v);
-            static thread_local T _m = m;
-            static thread_local T _v = v;
-            if (v != v || _m != m) {
-                _m = m;
-                _v = v;
-                rgen = rgen_t(m, v);
-            }
-            T val = rgen.rand();
-            return val;
-        }
+    // randomize indices
+    inline void rand_ind(std::vector<size_t>& a1, size_t size)
+    {
+      a1.resize(size);
+      for (size_t i = 0; i < a1.size(); ++i)
+	a1[i] = i;
+      for (size_t i = 0; i < a1.size(); ++i) {
+	size_t k = rand(i, a1.size());
+	assert(k < a1.size());
+	std::swap(a1[i], a1[k]);
+      }
+    }
 
-        // randomize indices
-        inline void rand_ind(std::vector<size_t>& a1, size_t size)
-        {
-            a1.resize(size);
-            for (size_t i = 0; i < a1.size(); ++i)
-                a1[i] = i;
-            for (size_t i = 0; i < a1.size(); ++i) {
-                size_t k = rand(i, a1.size());
-                assert(k < a1.size());
-                std::swap(a1[i], a1[k]);
-            }
-        }
+    /// return a random it in the list
+    template <typename T>
+    inline typename std::list<T>::iterator rand_in_list(std::list<T>& l)
+    {
+      int n = rand((size_t)0, l.size());
+      typename std::list<T>::iterator it = l.begin();
+      for (int i = 0; i < n; ++i)
+	++it;
+      return it;
+    }
 
-        /// return a random it in the list
-        template <typename T>
-        inline typename std::list<T>::iterator rand_in_list(std::list<T>& l)
-        {
-            using rgen_t = RandomGenerator<std::uniform_int_distribution<int>>;
-            static thread_local rgen_t rgen(0, l.size());
-            int n = rgen.rand();
-            typename std::list<T>::iterator it = l.begin();
-            for (int i = 0; i < n; ++i)
-                ++it;
-            return it;
-        }
+    inline bool flip_coin()
+    {
+      static thread_local generator_t rgen;
+      // uniform_int is in [a,b], not [a,b)...
+      std::uniform_int_distribution<size_t> dist(0, 1);
+      return (dist(rgen) == 0);
+    }
 
-        inline bool flip_coin()
-        {
-            return rand<float>() < 0.5f;
-        }
-
-        template <typename L>
-        inline typename L::iterator rand_l(L& l)
-        {
-            using rgen_t = RandomGenerator<std::uniform_int_distribution<int>>;
-            static thread_local rgen_t rgen(0, l.size());
-            int k = rgen.rand();
-            typename L::iterator it = l.begin();
-            for (size_t i = 0; i < k; ++i)
-                ++it;
-            return it;
-        }
-    } // namespace misc
+    // todo : remove this
+    template <typename L>
+    inline typename L::iterator rand_l(L& l)
+    {
+      return rand_in_list(l);
+    }
+  } // namespace misc
 } // namespace sferes
 #endif
