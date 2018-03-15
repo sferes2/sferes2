@@ -75,6 +75,9 @@ namespace sferes {
       //@}
 
       //@{
+      const std::vector<float>& data() const {
+        return this->_data;
+      }
       float data(size_t i) const {
         assert(this->_data.size());
         assert(i < this->_data.size());
