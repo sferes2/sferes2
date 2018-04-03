@@ -39,7 +39,7 @@
 #define EVAL_PARALLEL_HPP_
 
 #include <sferes/parallel.hpp>
-#include<cmath>
+#include <cmath>
 #include <sferes/eval/eval.hpp>
 
 namespace sferes {
