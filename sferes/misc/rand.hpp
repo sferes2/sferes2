@@ -80,7 +80,7 @@ namespace sferes {
             static thread_local generator_t rgen = make_rgen();;
             // uniform_int is in [a,b], not [a,b)...
             std::uniform_int_distribution<size_t> dist(min, max - 1);
-            size_t v = dist(rgen);
+            T v = dist(rgen);
             assert(v >= min);
             assert(v < max);
             return v;
