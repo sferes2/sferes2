@@ -24,6 +24,8 @@ Documentation (including instruction for compilation)
 
 We are in the process of porting the documentation to the github wiki (tutorials, installation instructions, reference manual, etc.): https://github.com/jbmouret/sferes2/wiki
 
+** Warning ** Sferes2 now requires a C++11 compiler (recent versions of g++ or clang++ work fine).
+
 Optional modules
 ---------------
 - evolvable neural networks: https://github.com/jbmouret/nn2
