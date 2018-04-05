@@ -68,6 +68,8 @@ def options(opt):
     opt.add_option('--rpath', type='string', help='set rpath', dest='rpath')
     opt.add_option('--includes', action='append', type='string', help='add an include path, e.g. /home/mandor/include', dest='includes')
     opt.add_option('--libs', action='append', type='string', help='add a lib path, e.g. /home/mandor/lib', dest='libs')
+    opt.add_option('--cpp14', type='string', help='force / disable c++-11 compilation [--cpp14=yes]', dest='cpp14')
+
     opt.add_option('--no-asserts', action='store_true', default=False, help='disable asserts [--no-asserts]', dest='no_asserts')
 
     # exp commands
@@ -172,6 +174,8 @@ def configure(conf):
 
     # we need c++11
     conf.env['CXXFLAGS'] += ['-std=c++11']
+    if conf.options.cpp14 == 'yes':
+        conf.env['CXXFLAGS'] += ['-std=c++14']
     if conf.options.includes :
         for inlcude_dir in conf.options.includes:
             conf.env['CXXFLAGS'] += [" -I" + inlcude_dir]
