@@ -11,6 +11,7 @@ Mouret, J.-B. and Doncieux, S. (2010). SFERESv2: Evolvin' in the Multi-Core Worl
 
 The article is available here: http://www.isir.upmc.fr/files/2010ACTI1524.pdf
 
+```
 @INPROCEEDINGS{Mouret2010,
 	AUTHOR = {Mouret, J.-B. and Doncieux, S.},
 	TITLE = {{SFERES}v2: Evolvin' in the Multi-Core World},
@@ -18,11 +19,14 @@ The article is available here: http://www.isir.upmc.fr/files/2010ACTI1524.pdf
 	BOOKTITLE = {Proc. of Congress on Evolutionary Computation (CEC)},
 	PAGES = {4079--4086}
 }
+```
 
 Documentation (including instruction for compilation)
 -------------
 
 We are in the process of porting the documentation to the github wiki (tutorials, installation instructions, reference manual, etc.): https://github.com/jbmouret/sferes2/wiki
+
+**Warning** Sferes2 now requires a C++11 compiler (recent versions of g++ or clang++ work fine).
 
 Optional modules
 ---------------

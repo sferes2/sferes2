@@ -34,6 +34,7 @@
 
 #define BOOST_TEST_DYN_LINK
 #define BOOST_TEST_MODULE bit_string
+
 #include <boost/test/unit_test.hpp>
 #include <sferes/gen/bit_string.hpp>
 #include <tests/check_serialize.hpp>
@@ -55,8 +56,6 @@ void test() {
     gen2.random();
     gen1.mutate();
     gen1.cross(gen2, gen3, gen4);
-
-
   }
 }
 

@@ -15,17 +15,13 @@ env:
   global:
     - CI_HOME=`pwd`
   matrix:
-    - TBB=ON EIGEN3=ON CPP11=ON MPI=ON
-    - TBB=ON EIGEN3=ON CPP11=ON MPI=OFF
-    - TBB=ON EIGEN3=ON CPP11=OFF MPI=ON
-    - TBB=ON EIGEN3=OFF CPP11=ON MPI=ON
-    - TBB=OFF EIGEN3=ON CPP11=ON MPI=ON
-    - TBB=OFF EIGEN3=ON CPP11=ON MPI=OFF
-    - TBB=OFF EIGEN3=ON CPP11=OFF MPI=ON
-    - TBB=OFF EIGEN3=OFF CPP11=ON MPI=ON
-    - TBB=OFF EIGEN3=OFF CPP11=ON MPI=OFF
-    - TBB=OFF EIGEN3=OFF CPP11=OFF MPI=ON
-    - TBB=OFF EIGEN3=OFF CPP11=OFF MPI=OFF
+    - TBB=ON EIGEN3=ON MPI=ON
+    - TBB=ON EIGEN3=ON MPI=OFF
+    - TBB=ON EIGEN3=OFF MPI=ON
+    - TBB=OFF EIGEN3=ON MPI=ON
+    - TBB=OFF EIGEN3=ON MPI=OFF
+    - TBB=OFF EIGEN3=OFF MPI=ON
+    - TBB=OFF EIGEN3=OFF MPI=OFF
 
 addons:
   apt:
@@ -42,9 +38,7 @@ install:
 
 # Change this to your needs
 script:
-  - cpp11=""
   - mpi=""
-  - if [ "$CPP11" = "OFF" ]; then cpp11="--cpp11=no" ; fi
   - if [ "$MPI" = "OFF" ]; then cpp11="--no-mpi" ; fi
-  - ./waf configure $cpp11 $mpi
+  - ./waf configure $mpi
   - ./waf --tests -v --tests-verbose
