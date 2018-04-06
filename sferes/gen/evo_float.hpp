@@ -233,6 +233,13 @@ namespace sferes {
                 child2.data(i, c1);
               }
             }
+            else{ 
+              // case where y1 == y2
+              // the two genes are the same (which may come for example,
+              // when the two parents are the same individual)
+              child1.data(i, y1);
+              child2.data(i, y2);
+            }
           }
         }
       };
