@@ -51,13 +51,12 @@ def create_exp(name):
    ws_tpl = """
 #! /usr/bin/env python
 def build(bld):
-    obj = bld.new_task_gen('cxx', 'program')
-    obj.source = '@exp.cpp'
-    obj.includes = '. ../../'
-    obj.uselib_local = 'sferes2'
-    obj.uselib = ''
-    obj.target = '@exp'
-    obj.uselib_local = 'sferes2'
+    bld.program(features = 'cxx',
+            source = '@exp.cpp',
+            includes = '. ../../',
+            uselib = 'TBB BOOST EIGEN PTHREAD MPI',
+            use = 'sferes2',
+            target = 'example')
 """
    os.mkdir('exp/' + name)
    os.system("cp examples/ex_ea.cpp exp/" + name + "/" + name + ".cpp")
