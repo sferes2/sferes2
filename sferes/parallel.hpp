@@ -44,6 +44,8 @@
 #include <tbb/blocked_range.h>
 #include <tbb/partitioner.h>
 #include <tbb/parallel_sort.h>
+#else
+#include <algorithm>
 #endif
 
 // parallel for can be desactived by defining NO_PARALLEL
