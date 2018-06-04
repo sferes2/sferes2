@@ -240,7 +240,7 @@ def summary(bld):
 
 def build(bld):
     v = VERSION
-    bld.env['CXXFLAGS'].append("-DVERSION=\"(const char*)\\\""+v+"\\\"\"")
+    bld.env['CXXFLAGS'].append("-DVERSION=\""+v+"\"")
 
     if bld.options.debug:
         Logs.info('DEBUG is enabled')
