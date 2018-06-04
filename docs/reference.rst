@@ -224,7 +224,7 @@ All evolutionary algorithms (EA) use the following parameters:
    -  `10`: statistics are written each 10 generations (`gen_0`,
       `gen_10`, …)
 
-Keep in mind that the `statitistics` classes are where final results are stored.
+Keep in mind that the `statistics` classes are where final results are stored.
 
 RankSimple
 ~~~~~~~~~~

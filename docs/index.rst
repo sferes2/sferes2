@@ -45,6 +45,8 @@ Contents:
   :maxdepth: 2
 
   self
+  compilation
+  tutorial
   concepts  
   reference
 
