@@ -40,7 +40,7 @@ import subprocess
 sys.path.insert(0, './waf_tools')
 
 try:
-    VERSION = str(subprocess.check_output(['git', 'rev-parse', 'HEAD']))
+    VERSION = str(subprocess.check_output(['git', 'rev-parse', 'HEAD'])).replace('\n', '')
 except:
     VERSION = "0.x"
 
