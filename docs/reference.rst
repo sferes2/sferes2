@@ -1,6 +1,45 @@
 Reference manual
 =================
 
+UML Diagram
+-----------
+
+Here is a "conceptual" UML diagram of the sferes2 framework (modules are
+not represented). It's "conceptual" because some abstract classes are
+not implemented (because they are useless from an implementation point
+of view) but should exist in the mind of the user. Moreover, each class
+is parametrized by the Params class (see previous section), which is not
+represented on the diagram.
+
+
+.. figure:: pics/sferes_uml.jpg
+   :alt: Call graph
+   :target: _images/sferes_uml.jpg
+
+
+Overview of the call graph
+--------------------------
+
+.. figure:: pics/sferes_call_graph.jpg
+   :alt: Call graph
+   :target: _images/sferes_call_graph.jpg
+
+On this simplified call graph:
+
+-  `ea_t` : type of your EA (e.g. ea::Nsga2)
+-  `eval_t` : type of your evaluator (e.g. eval::Parallel)
+-  `gen_t` : type of your genotype (e.g gen::EvoFloat)
+-  `modifier_t` : type of your modifier (e.g. modif::Dummy)
+-  `phen_t` : type of your phenotype (e.g. phen::Parameters)
+-  `stat_t` : type of your statistics vector (e.g.
+   `boost::fusion::vector<stat::BestFit<phen_t> >` )
+
+Time flows from left to right (i.e. `random_pop()` is called
+before `epoch()` and so on). Methods with a double bar are called for each
+individual or each new individual.
+
+
+
 Naming conventions
 ------------------
 
