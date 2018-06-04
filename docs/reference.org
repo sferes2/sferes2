@@ -1,0 +1,871 @@
+* The Sferes2 framework
+** Main concepts
+*** Static object-oriented paradigm
+Object-oriented programming (OOP) has many advantages which are
+desirable for complex high-level code. However, classic OOP (e.g. in
+C++) heavily relies on virtual methods to implement abstraction and
+polymorphism. Such an approach has a significant run-time overhead:
+- selecting the right method to call adds an indirection (the program
+  has to check the virtual table)
+- abstract/virtual methods cannot be inlined, resulting in a overhead
+  for very simple methods (e.g. setters/getters).
+
+In a few word, we want the main benefits of OOP (abstraction,
+re-usability) and the efficiency of low-level languages.
+
+One solution in C++ is to use the "curiously recurring template
+pattern"
+([[http://en.wikipedia.org/wiki/Curiously_Recurring_Template_Pattern][http://en.wikipedia.org/wiki/Curiously_Recurring_Template_Pattern]]). Here
+is the idea:
+#+BEGIN_SRC c++
+template <class Derived> struct Base
+{
+    void interface()
+    {
+        static_cast<Derived*>(this)->implementation();
+    }
+    void f()
+    {
+       for(int i = 0; i < 3; ++i) interface();
+    }
+};
+ 
+struct Derived : public Base<Derived>
+{
+    void implementation() { std::cout<<"impl"<<std::endl; }
+};
+#+END_SRC
+
+This code mimics a virtual call of an abstract method: in the abstract
+class (Base), a generic algorithm can use methods which are only
+defined in the derived classes. Extending this pattern for a full
+hierarchy of classes requires more work; sferes2 relies on the method
+described in the following paper:
+
+Nicolas Burrus, Alexandre Duret-Lutz, Thierry Géraud, David Lesage
+and Raphaël Poss. A Static C++ Object-Oriented Programming (SCOOP)
+Paradigm Mixing Benefits of Traditional OOP and Generic
+Programming. In /Proceedings of the Workshop on Multiple Paradigm with
+OO Languages (MPOOL'03)/, 2003.
+http://www.lrde.epita.fr/dload/papers/mpool03.pdf
+
+This mechanics is hidden in sferes2 behind some macros (see section [[macros]])
+
+*** Static parameters
+Evolutionary algorithms have a lot of parameters (e.g. population
+size, mutation rate, etc.) and we need a convenient way to set them. A
+configuration file (e.g. an XML file) is often used; however, such a
+method has two drawbacks:
+- some code to read the files has to be written and kept synchronized
+  with the objects;
+- parameters are unknown at compile time so some checks (e.g. if
+  (mutation_type = x) {} else { } ...) have to be done many times
+  whereas they are useless.
+
+In sferes2, parameters are defined at compile time using a structure
+which contains only constants. This structure is passed to all sferes2
+classes so they can access to the parameters. This method allows to
+avoid to write read/write code for parameters. It also allows the
+compiler to propagate constants and settings in the whole source code,
+resulting in an executable optimized for the specific parameters.
+
+*** Macros and special functions
+# <<macros>>
+To simplify the writing of "static virtual functions" and the
+definition of static parameters, sferes2 provides several macros which
+are defined in [[https://github.com/jbmouret/sferes2/blob/master/sferes/stc.hpp][stc.hpp]].
+
+**** Classes
+- SFERES_CLASS(Name): defines the base class Name ; this class uses
+  the "static" inheritance scheme and takes a Param template parameter.
+- SFERES_CLASS_D(Name, Parent): derives the class Name from Parent
+- SFERES_PARENT(Name, Parent)::method(): calls method() in the parent class
+- stc::exact(this)->method(): calls an abstract method() which is
+  defined in the derived classes
+
+Moreover, sferes2 provides special macros to define specific classes
+(SFERES_FITNESS, SFERES_INDIV, SFERES_EA, etc.). See [[ref]].
+
+Example:
+#+BEGIN_SRC c++
+  SFERES_CLASS(X)
+  {
+    X() { std::cout<<"X"<<std::endl; }
+    void test() { stc::exact(this)->blah(); }
+    void test2() { std::cout<<"test2"<<std::endl; }
+  };
+  // Y derives from X
+  SFERES_CLASS_D(Y, X)
+  {
+    Y() { std::cout<<"Y"<<std::endl; }
+    void blah() 
+    { 
+      std::cout<<"param::test::x"<<Param::test::x<<std::endl;
+      SFERES_PARENT(Y, X)::test2();
+    }
+  };
+  // Z derives from Y
+  SFERES_CLASS_D(Z, Y)
+  {
+    Z() { std::cout<<"Z"<<std::endl; }
+    void blah() 
+    { 
+      std::cout<<"Z"<<std::endl;
+    }
+  };
+  // sample parameter (see next subsection)
+  struct Params_test
+  {
+    struct test
+    {
+      SFERES_CONST float x = 0.1f;
+    };
+  };
+  // to instantiate Y and Z (X is abstract):
+  int main()
+  {
+    // Y uses a parameter
+    Y<Param_test> y;
+    // Z doesn't use any parameter, these two forms are possible:
+    Z<> z1;
+    Z<Param_test> z2;
+    return 0;
+  }
+#+END_SRC
+**** Parameter handling
+The basic parameter format employs SFERES_CONST members in nested
+structures. For instance:
+#+BEGIN_SRC c++
+  struct Param
+  {
+    struct pop
+    {
+      SFERES_CONST size_t size = 100;
+      SFERES_CONST float x = 0.2f;
+    };
+  };
+#+END_SRC
+However, c++ does not allow to define SFERES_CONST string or arrays in
+these structures. To solve this problem, sferes2 provides two macros:
+- SFERES_ARRAY(type, name, val1, val2, ...)
+- SFERES_STRING(name, "string")
+#+BEGIN_SRC c++
+  struct Param
+  {
+    struct test
+    {
+      SFERES_ARRAY(float, my_array, 1.0f, 2.0f, 3.0f);
+      SFERES_STRING(my_string, "hello world");
+    };
+  };
+#+END_SRC
+These parameters can then be retrieved in the source code in the
+following way:
+#+BEGIN_SRC c++
+...
+// size
+size_t s = Params::test::my_array_size();
+// 2nd element
+float v = Param::test::my_array(2);
+// string
+const char* c = Params::test::my_string();
+#+END_SRC
+
+*** More information
+A general introduction of the concepts is the Sferes2 paper:
+
+Mouret, J.-B. and Doncieux, S. (2010). SFERESv2: Evolvin' in the Multi-Core World.
+/WCCI 2010 IEEE World Congress on Computational Intelligence, Congress on Evolutionary Computation (CEC)/. Pages 4079--4086. [[http://www.isir.upmc.fr/files/2010ACTI1524.pdf][{pdf}]]
+
+** Mastering boost
+Sferes2 heavily relies on boost libraries (see
+[[http://www.boost.org]]). To implement your own
+algorithms in the sferes2 framework, you should be familiar enough
+with the following libraries:
+- boost::shared_ptr:
+  [[http://www.boost.org/doc/libs/1_40_0/libs/smart_ptr/shared_ptr.htm]]
+- boost::serialization (useful to define your own genotypes and
+  statistics):
+  [[http://www.boost.org/doc/libs/1_40_0/libs/serialization/doc/index.html]]
+
+The following libraries are used in sferes2 but you might never notice
+  them:
+- BOOST_FOREACH (to simplify loops): [[http://www.boost.org/doc/libs/1_40_0/doc/html/foreach.html]]
+- boost::filesystem (to create directories, etc.): [[http://www.boost.org/doc/libs/1_40_0/libs/filesystem/doc/index.htm]]
+- boost::fusion (list of statistics):
+  http://www.boost.org/doc/libs/1_40_0/libs/fusion/doc/html/index.html
+- boost::mpi (MPI evaluator): [[http://www.boost.org/doc/libs/1_40_0/doc/html/mpi.html]]
+** UML Diagram
+Here is a "conceptual" UML diagram of the sferes2 framework (modules
+are not represented). It's "conceptual" because some abstract classes
+are not implemented (because they are useless from an implementation
+point of view) but should exist in the mind of the user. Moreover,
+each class is parametrized by the Param class (see previous section),
+which is not represented on the diagram.
+
+[[imgs/sferes.jpg]]
+
+** Overview of the call graph
+
+[[imgs/call_graph.jpg]]
+
+On this simplified call graph:
+- ea_t : type of your EA (e.g. ea::Nsga2)
+- eval_t : type of your evaluator (e.g. eval::Parallel)
+- gen_t : type of your genotype (e.g gen::EvoFloat)
+- modifier_t : type of your modifier (e.g. modif::Dummy)
+- phen_t : type of your phenotype (e.g. phen::Parameters)
+- stat_t : type of your statistics vector
+  (e.g. boost::fusion::vector<stat::BestFit<phen_t> > )
+
+Time flows from left to right (i.e. random_pop() is called before
+epoch() and so on). Methods with a double bar are called for each individual or
+each new individual.
+
+* Main classes and files
+# <<ref>>
+** Naming conventions
+- Names representing *classes* must be in mixed case starting with upper
+  case: MyClass
+- *Variable and method names* must be in lower case, using underscores to
+  separate words: my_variable, my_method()
+- Names of *protected and private members* must start with an underscore:
+  _my_private_member, _my_private_method()
+- *File names* must be in lower case, using underscores to separate
+  words. A file which contains a class MyClass should be put in a file
+  my_class.hpp
+- *File structure* mirrors namespace structure. For instance
+  gen::MyClass is in the file gen/my_class.hpp
+- *Named constants* (including enumeration values) must be all uppercase
+  using underscores to separate words
+- *Getters* should have the name of the attribute. For instance,
+  this->_objs should be accessed using this->objs()
+- *Setters* should start with "set_" followed by the name of
+  the attribute. For instance: set_objs(const std::vector<float>& ov)
+- The *public section* should be the first section of a class
+- Type names defined using *typedefs* should end with _t (e.g. iterator_t) 
+Full example:
+#+BEGIN_SRC c++
+  // filename: sferes/fit/my_test.hpp
+  namespace sferes
+  {
+    namespace fit
+    {
+      class SFERES_CLASS(MyTest)
+      {
+      public:
+        typedef float f_t;
+        MyTest() {}
+        void my_method() { _my_impl(); }
+        float my_attr() const { return _my_attr;}
+        float set_my_attr(float a) { _my_attr = v; }
+      protected:
+        float _my_attr;
+        void _my_impl() {}
+      };
+    }
+  }
+#+END_SRC
+
+** Fitness
+*** Fitness
+- *File:* [[https://github.com/jbmouret/sferes2/tree/master/sferes/fit/fitness.hpp][sferes/fit/fitness.hpp]]
+- *Description:* Fitness is the base class of fitness functions in
+  sferes2. It has two main attributes:
+ - float _value (setter/getter Fitness::value()) -> the value of the fitness for
+   single-objective optimization
+ - std::vector<float> _objs (setter/getter Fitness::objs()) -> the value of
+   each objective, for multiobjective optimization
+- This class is abstract
+*** Defining your own fitness
+In most sferes2 experiments, you will have to design your own fitness. A
+fitness should:
+- be defined using SFERES_FITNESS(MyFitness, sferes::fit::Fitness)
+- define the eval() method, which takes an individual
+- attribute a fitness value in this->_value (single objective
+  optimization) or this->_objs (multiobjective optimization)
+
+ A fitness is a "normal" class and consequently you can
+  add other methods or attributes to suit your needs.
+
+Example:
+#+BEGIN_SRC c++
+  // single objective fitess
+  SFERES_FITNESS(FitnessSingle, sferes::fit::fitness)
+  {
+    // (optional) constructor
+    FitnessSingle()
+      {
+        this->_value = -1;
+      }
+    // evaluation
+    template<typename Indiv>
+      void eval(Indiv& indiv)
+    {
+      this->_value = -42;
+    }
+  };
+  
+  // two-objective fitness
+  SFERES_FITNESS(FitnessMulti, sferes::fit::fitness)
+  {
+    // constructor
+    FitnessMulti()
+      {
+        this->_objs.resize(2);   
+      }
+    // evaluation
+    template<typename Indiv>
+      void eval(Indiv& indiv)
+    {
+      this->_objs[0] = -42;
+      this->_objs[1] = 42;
+    }
+  };
+#+END_SRC
+*** View mode
+When loading a result file, it is often useful to slightly change the
+fitness function, for instance to display/log data about the behavior
+of the individual. This can be easily done in sferes2 using the
+boolean Fitness::mode() than can takes two values:
+ - fit::mode::view when you are viewing an individual via --load
+ - fit::mode::eval when you are evaluting individuals (during the
+   evolutionary process)
+Example:
+#+BEGIN_SRC c++
+  // single objective fitess
+  SFERES_FITNESS(FitnessSingle, sferes::fit::fitness)
+  {
+    // evaluation
+    template<typename Indiv>
+      void eval(Indiv& indiv)
+    {
+      if (this->mode() == sferes::fit::mode::view)
+        {
+        std::ofstream ofs("fit.dat");
+        ofs<<"this is a log file !"<<std::endl;
+        }
+      this->_value = -42;
+    }
+  };
+#+END_SRC
+** Evolutionary algorithms
+*Warning* Evolutionary algorithms /maximize/ the fitness (whereas most
+optimization algorithms minimize the cost function).
+*** Shared parameters
+All evolutionary algorithms (EA) use the following parameters:
+- SFERES_CONST size_t Params::pop::size = population size
+- SFERES_CONST float Params::pop::initial_aleat = during the random generation,
+  Params::pop::initial_aleat \times Params::pop::size individuals are
+  generated and only the Params::pop::size best ones are kept
+- SFERES_CONST int Params::pop::dump_period: the period between each write of results, examples:
+  - 1: statistics are written at each generation (gen_0, gen_1, gen_2, ...)
+  - -1: statistics are never written (useful for unit tests)
+  - 10: statistics are written each 10 generations (gen_0, gen_10, ...)
+*** RankSimple
+- *Status:* Deprecated (we keep it only as an example of an EA). If you need single-objective optimisation, use NSGA-2 with a single objective.
+- *File:* [[https://github.com/jbmouret/sferes2/tree/master/sferes/ea/rank_simple.hpp][sferes/ea/rank_simple.hpp]]
+- *Unit test:* [[https://github.com/jbmouret/sferes2/tree/master/tests/ea/rank_simple.cpp][tests/ea/rank_simple.cpp]]
+- *Typical typename:*: 
+#+BEGIN_SRC c++
+typedef sferes::ea::RankSimple<phen_t, eval_t, stat_t, modifier_t, Params> ea_t;
+#+END_SRC
+
+- *Description:* A rank-based single-objective evolutionary
+  algorithm. Individuals are selected using the following formula:
+ - n = k_r \times p
+ - \kappa = c^{n + 1} - 1
+ - f = n / (\kappa + 1)
+ - i = p - f \times log(r \times \kappa + 1)
+ - where
+  - c = Params::pop::coeff
+  - k_r = Params::pop::keep_rate
+  - p = Params::pop::size
+  - r = a random number in [0,1[
+  - i = index of the selected individual
+
+- parameters:
+ - SFERES_CONST float Params::pop::coeff = a internal parameter (see the previous
+   formula) ; typical value : 1.1
+ - SFERES_CONST float Params::pop::keep_rate = proportion of individuals kept from a
+   generation to the next one ; typical value : 0.2 to 0.6
+
+*** Nsga2
+- *File:* [[https://github.com/jbmouret/sferes2/tree/master/sferes/ea/nsga2.hpp][sferes/ea/nsga2.hpp]]
+- *Unit test:* [[https://github.com/jbmouret/sferes2/tree/master/tests/ea/nsga2.cpp][tests/ea/nsga2.cpp]]
+- Example: [[https://github.com/jbmouret/sferes2/tree/master/sferes/examples/ex_nsga2.cpp][examples/ex_nsga2.cpp]]
+- *Typical typename:*: 
+#+BEGIN_SRC c++
+typedef sferes::ea::Nsga2<phen_t, eval_t, stat_t, modifier_t, Params> ea_t;
+#+END_SRC
+- *Description:* Implementation of the NSGA-II multiobjective
+  evolutionary algorithm. See:
+ - Deb, K. (2001). Multi-Objective Optimization Using Evolutionary
+  Algorithms. /Wiley/.
+ - Deb, K., Pratap, A., Agarwal, S. and Meyarivan, T. (2002). A fast
+   and elitist multiobjective genetic algorithm: NSGA-II. In /IEEE
+   transactions on evolutionary computation/, 6:2:182-197
+- *Parameters:* pop_size must be divisible by 4
+- *Note:* NSGA-II can be efficient for single-objective optimization as
+  it corresponds to a classic tournament-based evolutionary algorithm. In
+  sferes2, a 1-sized _objs vector in the fitness can be employed (don't
+  use _value).
+*** EpsMOEA
+- *Status:* working but no user (we might remove it in the future because it is hard to trust the current implementation when nobody uses it).
+- *File:* [[https://github.com/jbmouret/sferes2/tree/master/sferes/ea/eps_moea.hpp][sferes/ea/eps_moea.hpp]]
+- *Unit test:* [[https://github.com/jbmouret/sferes2/tree/master/tests/ea/eps_moea.cpp][tests/ea/eps_moea.cpp]]
+- *Typical typename:*: 
+#+BEGIN_SRC c++
+typedef sferes::ea::EpsMOEA<phen_t, eval_t, stat_t, modifier_t, Params> ea_t
+#+END_SRC
+- *Description:* Implementation of the \varepsilon-MOEA multiobjective
+  evolutionary algorithm. See: 
+ - Deb, K., Mohan, M. and Mishra, S. (2005). Evaluating the
+   \varepsilon-domination based multi-objective evolutionary
+   algorithm for a quick computation of pareto-optimal solutions. In
+   /Evolutionary Computation/, 13:4:501-525.
+- Parameters
+ - SFERES_ARRAY(float, eps, 0.0075f, 0.0075f) = values of \varepsilon
+   for each objective. There should be as many values as objectives.
+ - SFERES_ARRAY(float, min_fit, 0.0f, 0.0f) = minimum value of
+   fitness for each objective.There should as many values as objectives
+ - SFERES_CONST size_t grain = \varepsilon-MOEA is a
+   steady-state algorithm which adds individuals one by one. A basic
+   implementation would prevent the parallelization of individuals'
+   evaluation. The parameter grain allows to generate and evaluate
+   /grain/ indidividuals in paralell at each generation. Typical value
+   is size / 4.
+- *Notes:* 
+ - \varepsilon-MOEA employs \varepsilon-dominance to sort
+   individuals. This allows users to tune the precision of the pareto
+   front for each objective and often results in better performance
+   than NSGA-II.
+ - EpsMOEA should not be used with a modifier (because it uses an
+   archive). You should always use fit::ModifierDummy
+*** Defining your own EA
+To define your own EA, you should use the macro SFERES_EA(Class,
+Parent). Mandatory methods:
+- random_pop(): fill this->_pop with random individuals
+- epoch(): main loop of the algorithm
+Defined types (these types will be available in your class):
+- Phen: phenotype
+- Eval: evaluator
+- Stat: statistics vector
+- FitModifier: modifier
+- Params: parameters
+#+BEGIN_SRC c++
+  SFERES_EA(Test, Ea)
+  {
+   public:
+   Test() {}
+   void random_pop()
+   { /* your code */ }
+   void epoch()
+   { /* your code */ }
+  };
+#+END_SRC
+Multiobjective EA must also define a pareto_front() method, see [[*ParetoFront][ParetoFront]].
+
+** Statistics
+Statistics should be combined in a boost::fusion::vector (see:
+http://www.boost.org/doc/libs/1_40_0/libs/fusion/doc/html/fusion/container/vector.html)
+before being passed to a EA. For instance:
+#+BEGIN_SRC c++
+typedef boost::fusion::vector<stat::BestFit<phen_t, Params>, stat::MeanFit<Params> >  stat_t;
+#+END_SRC
+(yes, it is a vector of /typenames/).
+You can put in the vector as many statistics types as you
+desire.
+
+*** BestFit
+- *File:* [[https://github.com/jbmouret/sferes2/tree/master/sferes/stat/best_fit.hpp][sferes/stat/best_fit.hpp]]
+- *Typical typename:* 
+#+BEGIN_SRC c++
+typedef boost::fusion::vector<sferes::ea::BestFit<phen_t, Params> > stat_t;
+#+END_SRC
+- *Description:* 
+ - stores the individual with the highest fitness in _best (getter:
+   BestFit::best() ). /This assumes that the population is sorted/ and
+   consequently this statistics stores the first individual of the
+   population. 
+ - This class is designed for single objective optimization and
+   consequently works using Fitness::_value (and not Fitness::_objs)
+ - writes the value of the best fitness in the file
+   <result_directory>/bestfit.dat ; this file should be easily plotted
+   with gnuplot or R.
+
+*** MeanFit
+- *File:* [[https://github.com/jbmouret/sferes2/tree/master/sferes/stat/mean_fit.hpp][sferes/stat/mean_fit.hpp]]
+- *Typical typename:*
+#+BEGIN_SRC c++
+typedef boost::fusion::vector<sferes::ea::MeanFit<phen_t, Params> > stat_t;
+#+END_SRC
+- *Description:* computes the mean fitness (single objective, based on
+  Fitness::_value). This class is mainly aimed at providing a simple
+  example of statistics.
+*** ParetoFront
+- *File:* [[https://github.com/jbmouret/sferes2/tree/master/sferes/stat/pareto_front.hpp][sferes/stat/pareto_front.hpp]]
+- *Typical typename:*
+#+BEGIN_SRC c++
+typedef boost::fusion::vector<sferes::ea::ParetoFront<phen_t, Params> > stat_t;
+#+END_SRC
+- *Description:* stores the set of non-dominated individuals by copying
+  the list returned by ea_t::pareto_front(). ParetoFront does not
+  compute the pareto front; this class assumes that the EA computed
+  it. This implies that multiobjective EA classes should define the following method:
+#+BEGIN_SRC c++
+SFERES_EA(MyEA, Ea)
+{
+ public:
+  std:vector<Indiv> &pareto_front() const { /* your code */ }
+};
+#+END_SRC
+- *Note:* since this statistic can store many individuals, to load a
+  result file you must give the identifier (the rank in the Pareto
+  front) to your executable. For instance, assuming that ParetoFront
+  in the first (0th) statistics in the stat vector, loading the 10th
+  individual should look like:
+#+BEGIN_SRC shell
+./my_exp --load gen_100 -s 0 -n 10 -o output
+#+END_SRC
+*** Defining your own statistics
+#+BEGIN_SRC c++
+  SFERES_STAT(MyStat, Stat)
+  {
+    // examines the population (via the EA) to update the statistics
+    template<typename E> void refresh(const E& ea) { /* your code */ }
+    // writes the content of the statistics in the stream; k is the number
+    // of the individual in the statistics (e.g. in a Pareto front, the
+    // statistics contains many individuals)
+    void show(std::ostream& os, size_t k) const { /* your code */ }
+    // serializes the statistics using boost::serialization
+    template<class Archive> void serialize(Archive & ar, const unsigned int version)
+    { /* your code */ }
+  }
+#+END_SRC
+
+** Genotypes
+*** BitString
+- *File:* [[https://github.com/jbmouret/sferes2/tree/master/sferes/gen/bit_string.hpp][sferes/gen/bit_string.hpp]]
+- *Unit test:* [[../../tests/gen/bit_string.hpp][sferes/gen/bit_string.hpp]]
+- *Description:* vector of bitstrings which can be used to represent a
+  vector of integer parameters or a vector of discrete
+  parameters. Cross-over is a simple one point cross-over (it always
+  happens). The data can be easily converted to int (in the range
+  0..2^b, where b is the number of bits for each bitstring) via
+  BitString<>::int_data(i) or to float (in the range 0..1) via
+  BitString<>::data(i)
+- *Template parameter:* the number of bitstrings
+- *Parameters (struct bit_string):*
+ - SFERES_CONST size_t nb_bits -> number of bits for each bitstring
+ - SFERES_CONST float mutation_rate -> the mutation rate for a
+   bitstring (the bitstring i is mutated if a random real is belows mutation_rate)
+ - SFERES_CONST float mutation_rate_bit -> the mutation rate /for each
+   bit/. In pseudo-code, here is the mutation procedure:
+#+BEGIN_SRC c++
+ foreach(bitstring b in genotype)
+   if (rand(0, 1) < Params::bit_string::mutation_rate)
+     foreach(bit i in b)
+       if (rand(0, 1) < Params::bit_string::mutation_bit)
+         flip(i)   
+#+END_SRC
+- *Typical parameters:*
+#+BEGIN_SRC c++
+struct Params
+{
+  struct bit_string
+  {
+    SFERES_CONST size_t nb_bits = 8;
+    SFERES_CONST float mutate_rate = 0.1f;
+    SFERES_CONST float mutate_rate_bit = 0.1f;    
+  };
+};
+#+END_SRC
+- *Typical typename:*
+#+BEGIN_SRC c++
+typedef BitString<10, Params> gen_t;
+#+END_SRC
+*** EvoFloat
+- *File:* [[https://github.com/jbmouret/sferes2/tree/master/sferes/gen/evo_float.hpp][sferes/gen/evo_float.hpp]]
+- *Unit test:* [[https://github.com/jbmouret/sferes2/tree/master/tests/gen/evo_float.cpp][sferes/tests/gen/evo_float.cpp]]
+- *Description:* This genotype is a n-sized vector of real (float)
+  numbers. It is designed for real optimization. 
+
+- Three mutation types are available:
+ - polynomial:  polynomial mutation, as defined in Deb(200)1, p 124
+ - gaussian: adds a gaussian noise to the current value; the variance
+   is a user-specified parameter
+ - uniform: adds a uniform noise to the current value; the range is a
+   user-specified parameter
+- Two cross-over types are available (you can disable cross-over by
+  using a cross_rate equals to 0)
+ - recombination: 
+  - a number k is randomly chosen
+  - the first child is made of the [0, k[ values of the first
+    parent and of the [k, n-1[ values of the second parent
+  - the second child is made of the [0, k[ values of the second parent
+    and of the [k, n-1] values of the first parent
+ - SBX (simulated binary cross-over, cf Deb (2001), p 113). Warning:
+   the current implementation is copied from Deb's code and is
+   slightly different from the original paper.
+- *Parameters:*
+ - Any variant:
+    - (mutation_t and cross_over_t are defined in the namespace sferes::gen::evo_float)
+    - SFERES_CONST mutation_t mutation_type: polynomial, gaussian or uniform;
+    - SFERES_CONST cross_over_t cross_over_type -> sbx or recombination;
+    - SFERES_CONST float mutation_rate -> the rate of mutation of one
+     member of the vector
+    - SFERES_CONST float cross_rate -> the rate of cross-over (if no
+     cross-over is applied, parents are copied to children)
+ - polynomial mutation:
+  -  SFERES_CONST float eta_m -> \eta_m is a parameter which controls
+    the polynomial distribution. See Deb's paper or book.
+ - gaussian mutation:
+  - SFERES_CONST float sigma -> the standard deviation of the gaussian
+ - uniform mutation:
+  - SFERES_CONST float max -> maximum change of the current value
+ - sbx:
+  - SFERES_CONST float eta_c -> see Deb's paper or book.
+- *Typical typename:*
+#+BEGIN_SRC c++
+typedef sferes::gen::EvoFloat<10, Params1> gen_t;
+#+END_SRC
+- *Typical parameters:*
+#+BEGIN_SRC c++
+using namespace sferes::gen::evo_float;
+
+struct Params1
+{
+  struct evo_float
+  {
+    SFERES_CONST float mutation_rate = 0.1f;
+    SFERES_CONST float cross_rate = 0.1f;
+    SFERES_CONST mutation_t mutation_type = polynomial;
+    SFERES_CONST cross_over_t cross_over_type = sbx;
+    SFERES_CONST float eta_m = 15.0f;
+    SFERES_CONST float eta_c = 15.0f;
+  };
+};
+
+struct Params2
+{
+  struct evo_float
+  {
+    SFERES_CONST float mutation_rate = 0.1f;
+    SFERES_CONST float cross_rate = 0.1f;
+    SFERES_CONST mutation_t mutation_type = gaussian;
+    SFERES_CONST cross_over_t cross_over_type = recombination;
+    SFERES_CONST float sigma = 0.3f;
+  };
+};
+
+
+struct Params3
+{
+  struct evo_float
+  {
+    SFERES_CONST float mutation_rate = 0.1f;
+    SFERES_CONST float cross_rate = 0.1f;
+    SFERES_CONST mutation_t mutation_type = uniform;
+    SFERES_CONST cross_over_t cross_over_type = sbx;
+    SFERES_CONST float max = 0.3f;
+    SFERES_CONST float eta_c = 15.0f;
+  };
+};
+
+#+END_SRC
+*** Defining your own genotype
+#+BEGIN_SRC c++
+  #include <sferes/stc/stc.hpp>
+  namespace sferes
+  {
+    namespace gen
+    {  
+      SFERES_CLASS(MyGenotype)
+      {
+      public:
+        // generates a random genotype
+        void random()
+        {
+        // your code
+        }
+        // mutates an individual
+        void mutate() 
+        { 
+        // your code to mutate (you have to handle your own mutation_rate)
+        }
+        // WARNING: the arguments of this method are of the same type
+        // than your genotype
+        void cross(const MyGenotype& o, MyGenotype& c1, MyGenotype& c2)
+        {
+        // if you don't know what to do, simply use:
+        if (misc::flip_coin())
+          {
+            c1 = *this;
+            c2 = o;
+            }
+          else
+            {
+              c2 = *this;
+              c1 = o;
+            }   
+        }
+      protected:
+        // your data here (your genotype)
+      };
+    }
+  }
+#+END_SRC
+** Phenotypes (Individuals)
+Phenotypes are the expression of the genotypes: it is often useful to
+develop a genotype into a structure which is easier to evaluate. For
+instance, a neural network can be encoded with a compact encoding
+(genotype, e.g. a modular encoding which can repeat the same module several
+times), then developped into a standard neural network (phenotype).
+
+Phenotypes are also the bridge between the fitness function and the
+genotype. In sferes2, a phenotype is the composition of a fit_t and
+a gen_t.
+
+*** Indiv
+- *File:* [[https://github.com/jbmouret/sferes2/tree/master/sferes/indiv.hpp][sferes/phen/indiv.hpp]]
+- *Description:* The abstract base class for phenotypes.
+- *Main public methods:*
+#+BEGIN_SRC c++
+  // returns the fitness
+  Fit& fit();
+  const Fit& fit() const;
+  // returns the genotype
+  Gen& gen()  { return _gen; }
+  const Gen& gen() const { return _gen; }
+  // develops the genotype, called by the evalutar before evaluating
+  // the individual
+  void develop();
+  // you can also override the following methods (although in most
+  // cases, you should override their equivalent in the genotype)
+  void mutate();
+  void random();
+  void cross(const boost::shared_ptr<Exact> i2, 
+           boost::shared_ptr<Exact>& o1, 
+           boost::shared_ptr<Exact>& o2);
+  // this method is not implemented in Indiv but it must be in all the
+  // concrete genotypes. It should describe this particular individual
+  // in the stream os (see the Parameter source code for an example)
+  void show(std::ostream& os) const
+#+END_SRC
+- *Defined types:*
+ - Fit -> the fitness functor
+ - Gen -> genotype
+*** Parameters
+- *File:* [[https://github.com/jbmouret/sferes2/tree/master/sferes/phen/parameters.hpp][sferes/gen/parameters.hpp]]
+- *Unit test:* [[https://github.com/jbmouret/sferes2/tree/master/tests/phen/parameters.cpp][sferes/tests/phen/parameters.cpp]]
+- *Description:* This phenotype transforms a list of parameters in
+  [0, 1[ (typically a gen::Bitstring or a gen::EvoFloat) to a list of
+  parameter in [min, max[. The genotype class must define a method:
+#+BEGIN_SRC c++
+cont std::vector<float>& data() const ();
+#+END_SRC
+- *Typical typename:*
+#+BEGIN_SRC c++
+typedef eval::Parameters<gen_t, fit_t, Params> phen_t;
+#+END_SRC
+ 
+*** Defining your own phenotype
+#+BEGIN_SRC c++
+  #include <sferes/phen/indiv.hpp>
+  namespace sferes
+  {
+    namespace phen
+    {
+      SFERES_INDIV(MyPhenotype, Indiv)
+      {
+      public:
+        // constructor
+        MyPhenotype() { /* your code */ }
+        // develop the genotype to whatever you want
+        void develop(){ /* your code */ }
+        // describe this individual
+        void show(std::ostream& os) const { /* your code */ }
+      protected:
+        // your data
+      };
+    }
+  }
+#+END_SRC
+
+
+** Evaluators
+Evaluators are in charge of evalutating a vector of individuals
+(i.e. running phen_t::fit::eval() for each individual).
+*** Eval
+- *File:* [[https://github.com/jbmouret/sferes2/tree/master/sferes/eval/eval.hpp][sferes/eval/eval.hpp]]
+- A basic evaluator (no multiprocessing, no MPI, etc.), i.e. a basic
+  loop.
+- *Typical typename:*
+#+BEGIN_SRC c++
+typedef eval::Eval<Params> eval_t;
+#+END_SRC
+ 
+*** Parallel
+- *File:* [[https://github.com/jbmouret/sferes2/tree/master/sferes/eval/parallel.hpp][sferes/eval/parallel.hpp]]
+- *Description:* A SMP/multicore evaluator based on TBB
+  ([[http://www.threadingbuildingblocks.org/]]). *Your fitness should be
+  thread-safe!*
+- *Typical typename:*
+#+BEGIN_SRC c++
+typedef eval::Parallel<Params> eval_t;
+#+END_SRC
+
+*** Mpi
+- *File:* [[file:sferes/eval/mpi.hpp][sferes/eval/mpi.hpp]]
+- *Description:* A MPI evaluator based on boost::mpi. It works on clusters (we use it
+  on a JS22 cluster with IBM MPI).
+- *Typical typename:*
+#+BEGIN_SRC c++
+typedef eval::Mpi<Params> eval_t;
+#+END_SRC
+*** Defining your own evaluator
+The only required method is eval. It should call phen_t::develop()
+then phen_t::fit::eval() for each individual.
+#+BEGIN_SRC c++
+
+namespace sferes
+{
+  namespace eval
+  {
+    SFERES_EVAL(Eval)
+    {
+    public:
+      template<typename Phen>
+        void eval(std::vector<boost::shared_ptr<Phen> >& pop, size_t begin, size_t end)
+      {
+        for (size_t i = begin; i < end; ++i)
+          {
+            pop[i]->develop();
+            pop[i]->fit().eval(*pop[i]);
+          }
+      }
+    protected:
+    };
+  }
+}
+#+END_SRC
+
+** Modifiers
+Modifiers are run once all the individuals have been evaluated but
+before any sorting. They are designed to allow to modify the fitness
+values to implement niching strategies, diversity preservation
+mechanisms, etc.
+
+The only predefined modifier available in sferes2 is
+modif::Dummy, which does nothing.
+*** Dummy
+- *File:* [[https://github.com/jbmouret/sferes2/tree/master/sferes/modif/dummy.hpp][sferes/modif/dummy.hpp]]
+- *Description:* basic modifier which does nothing.
+** Misc
+The misc namespace contains useful small functions for:
+- system access (e.g getpid())
+- random number generation
+
+
+
