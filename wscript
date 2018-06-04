@@ -35,12 +35,15 @@
 
 
 import sys
-sys.path.insert(0, './waf_tools')
-import commands
+import subprocess
 
-VERSION=commands.getoutput('git rev-parse HEAD')
-if "No such " in VERSION or "fatal:" in VERSION:
-    VERSION="0.x"
+sys.path.insert(0, './waf_tools')
+
+try:
+    VERSION = str(subprocess.check_output(['git', 'rev-parse', 'HEAD']))
+except:
+    VERSION = "0.x"
+
 APPNAME='sferes2'
 
 srcdir = '.'
@@ -195,17 +198,17 @@ def configure(conf):
         for i in list :
             str += i + ' '
         return str
-    print '\n--- configuration ---'
-    print 'compiler(s):'
-    print' * CXX: ' + str(conf.env['CXX_NAME'])
-    print 'boost version: ' + str(conf.env['BOOST_VERSION'])
-    print 'mpi: ' + str(conf.env['MPI_ENABLED'])
-    print "Compilation flags :"
-    print "   CXXFLAGS : " + flat(conf.env['CXXFLAGS'])
-    print "   LINKFLAGS: " + flat(conf.env['LINKFLAGS'])
-    print "--- license ---"
-    print "Sferes2 is distributed under the CECILL license (GPL-compatible)"
-    print "Please check the accompagnying COPYING file or http://www.cecill.info/"
+    print('\n--- configuration ---')
+    print('compiler(s):')
+    print(' * CXX: ' + str(conf.env['CXX_NAME']))
+    print('boost version: ' + str(conf.env['BOOST_VERSION']))
+    print('mpi: ' + str(conf.env['MPI_ENABLED']))
+    print("Compilation flags :")
+    print("   CXXFLAGS : " + flat(conf.env['CXXFLAGS']))
+    print("   LINKFLAGS: " + flat(conf.env['LINKFLAGS']))
+    print("--- license ---")
+    print("Sferes2 is distributed under the CECILL license (GPL-compatible)")
+    print("Please check the accompanying COPYING file or http://www.cecill.info/")
 
 def summary(bld):
     lst = getattr(bld, 'utest_results', [])
@@ -225,7 +228,7 @@ def summary(bld):
             elif bld.options.tests_verbose and (' failed' in line  or 'fatal error' in line):
                 Logs.error(line)
             elif bld.options.tests_verbose :
-                print line
+                print(line)
     waf_unit_test.summary(bld)
     if tfail > 0:
         Logs.error(str(tfail) + "/" + str(total) + " tests failed:")
@@ -236,7 +239,7 @@ def summary(bld):
 
 
 def build(bld):
-    v = commands.getoutput('git rev-parse HEAD')
+    v = VERSION
     bld.env['CXXFLAGS'].append("-DVERSION=\"(const char*)\\\""+v+"\\\"\"")
 
     if bld.options.debug:
