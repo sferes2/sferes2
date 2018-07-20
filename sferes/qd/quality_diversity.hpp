@@ -49,6 +49,8 @@
 #include <sferes/fit/fitness.hpp>
 #include <sferes/stc.hpp>
 
+#include <sferes/qd/selector/uniform.hpp> 
+
 namespace sferes {
     namespace qd {
 
@@ -178,6 +180,10 @@ namespace sferes {
             pop_t _offspring, _parents;
             std::vector<bool> _added;
         };
+
+		template<typename Phen, typename Eval, typename Stat, typename Modifier, typename Params>
+		using MapElites = qd::QualityDiversity<Phen, Eval, Stat, Modifier,  qd::selector::Uniform<Phen, Params>, qd::container::Grid<Phen, Params>, Params>;
+
     } // namespace qd
 } // namespace sferes
 #endif

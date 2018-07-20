@@ -6,7 +6,8 @@
 namespace sferes {
     namespace qd {
         namespace selector {
-            template <typename Phen, typename ValueSelector = getFitness> class Tournament {
+            template <typename Phen, typename ValueSelector, typename Params> 
+            class Tournament {
             public:
                 typedef boost::shared_ptr<Phen> indiv_t;
 

@@ -1,5 +1,5 @@
-#ifndef _SELECTOR_SCOREPROPORTIONATE_HPP
-#define _SELECTOR_SCOREPROPORTIONATE_HPP
+#ifndef QD_SELECTOR_SCOREPROPORTIONATE_HPP
+#define QD_SELECTOR_SCOREPROPORTIONATE_HPP
 
 #include <tbb/parallel_reduce.h>
 #include <tbb/parallel_sort.h>
@@ -8,7 +8,8 @@ namespace sferes {
     namespace qd {
         namespace selector {
 
-            template <typename Phen, typename ValueSelector = getFitness> class ScoreProportionate {
+            template <typename Phen, typename ValueSelector, typename Params> 
+						class ScoreProportionate {
             public:
                 typedef boost::shared_ptr<Phen> indiv_t;
                 typedef typename std::vector<indiv_t>::iterator it_t;

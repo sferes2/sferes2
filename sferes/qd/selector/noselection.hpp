@@ -5,7 +5,7 @@ namespace sferes {
     namespace qd {
         namespace selector {
             // this corresponds to random sampling (no QD)
-            template <typename Phen> struct NoSelection {
+            template <typename Phen, typename Params> struct NoSelection {
                 typedef boost::shared_ptr<Phen> indiv_t;
 
                 template <typename EA>

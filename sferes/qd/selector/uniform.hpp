@@ -5,7 +5,7 @@ namespace sferes {
     namespace qd {
         namespace selector {
             // MAP-Elites style
-            template <typename Phen> struct Uniform {
+            template <typename Phen, typename Params> struct Uniform {
 
                 typedef boost::shared_ptr<Phen> indiv_t;
 

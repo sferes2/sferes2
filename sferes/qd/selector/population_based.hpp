@@ -6,7 +6,7 @@
 namespace sferes {
     namespace qd {
         namespace selector {
-            template <typename Phen, typename Selector = ScoreProportionate<getFitness>>
+            template <typename Phen, typename Selector, typename Params>
             struct PopulationBased {
 
                 typedef boost::shared_ptr<Phen> indiv_t;
