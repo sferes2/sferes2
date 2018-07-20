@@ -1,4 +1,5 @@
 #! /usr/bin/env python
+# encoding: utf-8
 #| This file is a part of the sferes2 framework.
 #| Copyright 2009, ISIR / Universite Pierre et Marie Curie (UPMC)
 #| Main contributor(s): Jean-Baptiste Mouret, mouret@isir.fr
@@ -63,6 +64,7 @@ def options(opt):
     opt.load('tbb')
     opt.load('mpi')
     opt.load('eigen')
+    opt.load('kdtree')
 
     # sferes specific
     opt.add_option('--rpath', type='string', help='set rpath', dest='rpath')
@@ -151,6 +153,10 @@ def configure(conf):
     conf.load('eigen')
     conf.check_eigen()
 
+
+    # ssrc kdtree
+    conf.load('kdtree')
+    conf.check_kdtree()
     if conf.options.rpath:
         conf.env.append_value("LINKFLAGS", "--rpath="+conf.options.rpath)
 
