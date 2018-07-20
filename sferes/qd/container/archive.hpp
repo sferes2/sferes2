@@ -1,7 +1,7 @@
 #ifndef QD_CONTAINER_ARCHIVE_HPP
 #define QD_CONTAINER_ARCHIVE_HPP
 
-#ifdef USE_KD_TREE
+#ifdef USE_KDTREE
 
 #include <ssrc/spatial/kd_tree.h>
 
