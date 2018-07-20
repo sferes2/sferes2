@@ -63,9 +63,8 @@ namespace sferes {
                                               Container, Params, Exact>,
                       Exact>::ret> {
         public:
-            typedef boost::shared_ptr<Phen> phen_t;
+            typedef Phen phen_t;
             typedef boost::shared_ptr<Phen> indiv_t;
-
             typedef typename std::vector<indiv_t> pop_t;
             typedef typename pop_t::iterator it_t;
 
@@ -76,8 +75,8 @@ namespace sferes {
             {
                 parallel::init();
                 _offspring.resize(Params::pop::size);
-                BOOST_FOREACH (phen_t& indiv, this->_offspring) {
-                    indiv = phen_t(new Phen());
+                BOOST_FOREACH (indiv_t& indiv, this->_offspring) {
+                    indiv = indiv_t(new Phen());
                     indiv->random();
                 }
                 this->_eval_pop(this->_offspring, 0, this->_offspring.size());
@@ -88,8 +87,8 @@ namespace sferes {
                 this->_parents = this->_offspring;
                 _offspring.resize(Params::pop::size);
 
-                BOOST_FOREACH (phen_t& indiv, this->_offspring) {
-                    indiv = phen_t(new Phen());
+                BOOST_FOREACH (indiv_t& indiv, this->_offspring) {
+                    indiv = indiv_t(new Phen());
                     indiv->random();
                 }
 
