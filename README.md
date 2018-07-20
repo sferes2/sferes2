@@ -1,7 +1,13 @@
 sferes2 [![Build Status](https://img.shields.io/travis/sferes2/sferes2.svg)](https://travis-ci.org/sferes2/sferes2)
 =======
 
-Sferes2 is a high-performance, multi-core, lightweight, generic C++98 framework for evolutionary computation. It is intently kept small to stay reliable and understandable.
+Sferes2 is a high-performance, multi-core, lightweight, generic C++98 framework for evolutionary computation. It is mainly used in our research about:
+- neuro-evolution
+- quality diversity
+- behavioral diversity
+- multi-objectivization
+
+It is intently kept small to stay reliable and understandable.
 
 Sferes2 heavily relies on template-based meta-programming in C++ to get both abstraction and execution speed.
 
@@ -24,7 +30,7 @@ The article is available here: http://www.isir.upmc.fr/files/2010ACTI1524.pdf
 Documentation (including instruction for compilation)
 -------------
 
-We are in the process of porting the documentation to the github wiki (tutorials, installation instructions, reference manual, etc.): https://github.com/jbmouret/sferes2/wiki
+We are in the process of porting the documentation to a sphinx website (read-the-doc). Current documentation: https://github.com/jbmouret/sferes2/wiki
 
 **Warning** Sferes2 now requires a C++11 compiler (recent versions of g++ or clang++ work fine).
 
@@ -51,13 +57,14 @@ Sferes2 should work on most Unix systems (in particular, GNU/Linux and OSX). It 
 
 Author
 -------
-- Jean-Baptiste Mouret jean-baptiste.mouret@inria.fr: main author and maintainer
+- Jean-Baptiste Mouret - jean-baptiste.mouret@inria.fr: main author and maintainer
 
 Other contributors
 ------------
-- Stephane Doncieux doncieux@isir.upmc.fr
-- Konstantinos Chatzilygeroudis konstantinos.chatzilygeroudis@inria.fr
-- Paul Tonelli tonelli@isir.upmc.fr (documentation)
+- Antoine Cully (QD module) - antoine.cully@imperial.edu
+- Stephane Doncieux - doncieux@sorbonne-universite.fr
+- Konstantinos Chatzilygeroudis - konstantinos.chatzilygeroudis@inria.fr
+- Paul Tonelli - tonelli@isir.upmc.fr (documentation)
 - Many members of ISIR (http://isir.upmc.fr)
 
 Peer-reviewed academic papers that used Sferes2:
@@ -66,7 +73,13 @@ Peer-reviewed academic papers that used Sferes2:
 
 (you can find a pdf for most of these publications on http://scholar.google.com).
 
+### 2018
+- Cully et al. TODO
+- Vassiliades and Mouret TODO
+- AAAI paper TODO
+
 ### 2017
+- Pautrat et al. TODO
 - Maurice, P., Padois, V., Measson, Y., & Bidaud, P. (2017). Human-oriented design of collaborative robots. International Journal of Industrial Ergonomics, 57, 88-102.
 - Viejo, G., Girard, B., Procyk, E., & Khamassi, M. (2017). Adaptive coordination of working-memory and reinforcement learning in non-human primates performing a trial-and-error problem solving task. Behavioural Brain Research.
 - Vassiliades, V., Chatzilygeroudis, K., & Mouret, J. B. (2017). Using centroidal voronoi tessellations to scale up the multi-dimensional archive of phenotypic elites algorithm. IEEE Transactions on Evolutionary Computation.
