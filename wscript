@@ -191,6 +191,8 @@ def configure(conf):
         conf.env['CXXFLAGS'] += ['-DNO_PARALLEL']
     if conf.env['EIGEN_FOUND']:
         conf.env['CXXFLAGS'] += ['-DEIGEN3_ENABLED']
+    if conf.env['KDTREE_FOUND']:
+        conf.env['CXXFLAGS'] += ['-DUSE_KDTREE']
     if conf.options.no_asserts:
         conf.env['CXXFLAGS'] += ['-DNDEBUG']
 

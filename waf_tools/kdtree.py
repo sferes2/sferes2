@@ -17,7 +17,7 @@ def options(opt):
 
 @conf
 def check_kdtree(conf):
-	conf.env['USE_KDTREE'] = False
+	conf.env['KDTREE_FOUND'] = False
 	conf.start_msg('Checking for ssrc kdtree (KD-tree)')
 	includes_check = ['/usr/include/', '/usr/local/include/']
 	if conf.options.kdtree:
@@ -34,7 +34,7 @@ def check_kdtree(conf):
 		conf.end_msg('ok')
 		if Logs.verbose:
 			Logs.pprint('CYAN', '	path : %s' % includes_check[index])
-		conf.env['USE_KDTREE'] = True
+		conf.env['KDTREE_FOUND'] = True
 	except:
 		conf.end_msg('Not found', 'RED')
 	return 1
