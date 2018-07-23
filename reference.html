@@ -1,0 +1,1194 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Reference manual &mdash; Sferes_v2 0.1 alpha documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="genindex.html"/>
+        <link rel="search" title="Search" href="search.html"/>
+    <link rel="top" title="Sferes_v2 0.1 alpha documentation" href="index.html"/>
+        <link rel="prev" title="Main concepts" href="concepts.html"/>
+<style type="text/css">
+/* This CSS displays small logos at the bottom of the page, on one line */
+
+.wy-footer-logo-container {
+  margin-top: 50px;
+  text-align: center;
+}
+
+.wy-footer-logo {
+  display: inline-block;
+  width: 60px;
+}
+</style>
+
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+          
+
+          
+            <a href="http://www.resibots.eu">
+          
+
+          
+            
+            <img src="_static/resibots_logo_black_200px.png" class="logo" />
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                2.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="resibots-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+                  <a class="caption" href="http://www.resibots.eu">Back to resiBots' website</a>
+              
+            
+
+            
+            
+                <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="index.html">Sferes_v2 – documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="compilation.html">Compilation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial (basics)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="concepts.html">Main concepts</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Reference manual</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#uml-diagram">UML Diagram</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#overview-of-the-call-graph">Overview of the call graph</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#naming-conventions">Naming conventions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#fitness">Fitness</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#fitness-1">Fitness</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#defining-your-own-fitness">Defining your own fitness</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#view-mode">View mode</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#evolutionary-algorithms">Evolutionary algorithms</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#shared-parameters">Shared parameters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#ranksimple">RankSimple</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#nsga2">Nsga2</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#epsmoea">EpsMOEA</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#defining-your-own-ea">Defining your own EA</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#statistics">Statistics</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#bestfit">BestFit</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#meanfit">MeanFit</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#paretofront">ParetoFront</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#defining-your-own-statistics">Defining your own statistics</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#genotypes">Genotypes</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#bitstring">BitString</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#evofloat">EvoFloat</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#defining-your-own-genotype">Defining your own genotype</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#phenotypes-individuals">Phenotypes (Individuals)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#indiv">Indiv</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#parameters">Parameters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#defining-your-own-phenotype">Defining your own phenotype</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#evaluators">Evaluators</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#eval">Eval</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#parallel">Parallel</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#mpi">Mpi</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#defining-your-own-evaluator">Defining your own evaluator</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#modifiers">Modifiers</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#dummy">Dummy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#diversity">Diversity</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#novelty">Novelty</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#misc">Misc</a></li>
+</ul>
+</li>
+</ul>
+
+            
+
+            
+            
+              
+                <a class="caption" href="http://github.com/resibots">github</a>
+              
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="index.html">Sferes_v2</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="index.html">Fferes_v2</a> &raquo;</li>
+    
+    <li>Reference manual</li>
+    <li class="wy-breadcrumbs-aside">
+      
+        
+          <a href="_sources/reference.rst.txt" rel="nofollow"> View page source</a>
+        
+      
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="reference-manual">
+<h1>Reference manual<a class="headerlink" href="#reference-manual" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="uml-diagram">
+<h2>UML Diagram<a class="headerlink" href="#uml-diagram" title="Permalink to this headline">¶</a></h2>
+<p>Here is a “conceptual” UML diagram of the sferes2 framework (modules are
+not represented). It’s “conceptual” because some abstract classes are
+not implemented (because they are useless from an implementation point
+of view) but should exist in the mind of the user. Moreover, each class
+is parametrized by the Params class (see previous section), which is not
+represented on the diagram.</p>
+<div class="figure">
+<a class="reference external image-reference" href="_images/sferes_uml.jpg"><img alt="Call graph" src="_images/sferes_uml.jpg" /></a>
+</div>
+</div>
+<div class="section" id="overview-of-the-call-graph">
+<h2>Overview of the call graph<a class="headerlink" href="#overview-of-the-call-graph" title="Permalink to this headline">¶</a></h2>
+<div class="figure">
+<a class="reference external image-reference" href="_images/sferes_call_graph.jpg"><img alt="Call graph" src="_images/sferes_call_graph.jpg" /></a>
+</div>
+<p>On this simplified call graph:</p>
+<ul class="simple">
+<li><cite>ea_t</cite> : type of your EA (e.g. ea::Nsga2)</li>
+<li><cite>eval_t</cite> : type of your evaluator (e.g. eval::Parallel)</li>
+<li><cite>gen_t</cite> : type of your genotype (e.g gen::EvoFloat)</li>
+<li><cite>modifier_t</cite> : type of your modifier (e.g. modif::Dummy)</li>
+<li><cite>phen_t</cite> : type of your phenotype (e.g. phen::Parameters)</li>
+<li><cite>stat_t</cite> : type of your statistics vector (e.g.
+<cite>boost::fusion::vector&lt;stat::BestFit&lt;phen_t&gt; &gt;</cite> )</li>
+</ul>
+<p>Time flows from left to right (i.e. <cite>random_pop()</cite> is called
+before <cite>epoch()</cite> and so on). Methods with a double bar are called for each
+individual or each new individual.</p>
+</div>
+<div class="section" id="naming-conventions">
+<h2>Naming conventions<a class="headerlink" href="#naming-conventions" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>Names representing <strong>classes</strong> must be in mixed case starting with
+upper case: MyClass</li>
+<li><strong>Variable and method names</strong> must be in lower case, using
+underscores to separate words: my_variable`,
+my_method`()</li>
+<li>Names of <strong>protected and private members</strong> must start with an
+underscore: <cite>_my_private_member</cite>, <cite>_my_private_method()</cite></li>
+<li><strong>File names</strong> must be in lower case, using underscores to separate
+words. A file which contains a class MyClass should be put in a file
+<cite>my_class.hpp</cite></li>
+<li><strong>File structure</strong> mirrors namespace structure. For instance
+gen::MyClass is in the file <cite>gen/my_class.hpp</cite></li>
+<li><strong>Named constants</strong> (including enumeration values) must be all
+uppercase using underscores to separate words</li>
+<li><strong>Getters</strong> should have the name of the attribute. For instance,
+<cite>this-&gt;_objs</cite> should be accessed using <cite>this-&gt;objs()</cite></li>
+<li><strong>Setters</strong> should start with “<a href="#id2"><span class="problematic" id="id3">set_</span></a>” followed by the name of the
+attribute. For instance: <cite>set_objs(const std::vector&lt;float&gt;&amp;
+ov)</cite></li>
+<li>The <strong>public section</strong> should be the first section of a class</li>
+<li>Type names defined using <strong>typedefs</strong> should end with <cite>_t</cite> (e.g. <cite>iterator_t</cite>)</li>
+<li>The <strong>default argument argument passing</strong> is <cite>const&amp;</cite> (except for <cite>char/int/double</cite> types), e.g., <cite>void my_function(const std::vector&lt;float&gt;&amp; x)</cite></li>
+<li>Methods should be declared as <cite>const</cite> except if there is a good reason for them to not be
+const, e.g., <cite>const std::vector&lt;float&gt;&amp; get_objs() const { return _objs; }</cite></li>
+</ul>
+<p>Full example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">//</span> <span class="n">filename</span><span class="p">:</span> <span class="n">sferes</span><span class="o">/</span><span class="n">fit</span><span class="o">/</span><span class="n">my_test</span><span class="o">.</span><span class="n">hpp</span>
+<span class="n">namespace</span> <span class="n">sferes</span>
+<span class="p">{</span>
+  <span class="n">namespace</span> <span class="n">fit</span>
+  <span class="p">{</span>
+    <span class="k">class</span> <span class="nc">SFERES_CLASS</span><span class="p">(</span><span class="n">MyTest</span><span class="p">)</span>
+    <span class="p">{</span>
+    <span class="n">public</span><span class="p">:</span>
+      <span class="n">typedef</span> <span class="nb">float</span> <span class="n">f_t</span><span class="p">;</span>
+      <span class="n">MyTest</span><span class="p">()</span> <span class="p">{}</span>
+      <span class="n">void</span> <span class="n">my_method</span><span class="p">()</span> <span class="p">{</span> <span class="n">_my_impl</span><span class="p">();</span> <span class="p">}</span>
+      <span class="nb">float</span> <span class="n">my_attr</span><span class="p">()</span> <span class="n">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_my_attr</span><span class="p">;}</span>
+      <span class="nb">float</span> <span class="n">set_my_attr</span><span class="p">(</span><span class="nb">float</span> <span class="n">a</span><span class="p">)</span> <span class="p">{</span> <span class="n">_my_attr</span> <span class="o">=</span> <span class="n">v</span><span class="p">;</span> <span class="p">}</span>
+    <span class="n">protected</span><span class="p">:</span>
+      <span class="nb">float</span> <span class="n">_my_attr</span><span class="p">;</span>
+      <span class="n">void</span> <span class="n">_my_impl</span><span class="p">()</span> <span class="p">{}</span>
+    <span class="p">};</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="fitness">
+<h2>Fitness<a class="headerlink" href="#fitness" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="fitness-1">
+<span id="id1"></span><h3>Fitness<a class="headerlink" href="#fitness-1" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><strong>File:</strong>
+<a class="reference external" href="https://github.com/sferes2/sferes2/blob/master/sferes/fit/fitness.hpp">sferes/fit/fitness.hpp</a></li>
+<li><strong>Description:</strong> Fitness is the base class of fitness functions in
+sferes2. It has two main attributes:<ul>
+<li><cite>float _value</cite> (setter/getter <cite>Fitness::value()/Fitness::set_value()</cite>) -&gt; the value
+of the fitness for single-objective optimization</li>
+<li><cite>std::vector&lt;float&gt; _objs</cite> (setter/getter <cite>Fitness::objs()/Fitness::set_obj(i, x)</cite>) -&gt;
+the value of each objective, for multiobjective optimization</li>
+</ul>
+</li>
+<li>This class is abstract</li>
+<li>Note: in multi-objective algorithms, <cite>this-&gt;_value</cite> is ignored; and in singe-objective algorithms, <cite>this-&gt;_objs</cite> is ignored.</li>
+</ul>
+</div>
+<div class="section" id="defining-your-own-fitness">
+<h3>Defining your own fitness<a class="headerlink" href="#defining-your-own-fitness" title="Permalink to this headline">¶</a></h3>
+<p>In most sferes2 experiments, you will have to design your own fitness. A
+fitness should:</p>
+<ul>
+<li><p class="first">be defined using <cite>SFERES_FITNESS(MyFitness,
+sferes::fit::Fitness)</cite></p>
+</li>
+<li><p class="first">define the <cite>eval()</cite> method, which takes an individual</p>
+</li>
+<li><p class="first">attribute a fitness value in <cite>this-&gt;_value</cite> (single objective
+optimization) or <cite>this-&gt;_objs</cite> (multiobjective optimization)</p>
+<p>A fitness is a “normal” class and consequently you can add other
+methods or attributes to suit your needs.</p>
+</li>
+</ul>
+<p>Example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">//</span> <span class="n">single</span> <span class="n">objective</span> <span class="n">fitess</span>
+<span class="n">SFERES_FITNESS</span><span class="p">(</span><span class="n">FitnessSingle</span><span class="p">,</span> <span class="n">sferes</span><span class="p">::</span><span class="n">fit</span><span class="p">::</span><span class="n">fitness</span><span class="p">)</span>
+<span class="p">{</span>
+  <span class="o">//</span> <span class="p">(</span><span class="n">optional</span><span class="p">)</span> <span class="n">constructor</span>
+  <span class="n">FitnessSingle</span><span class="p">()</span>
+    <span class="p">{</span>
+      <span class="n">this</span><span class="o">-&gt;</span><span class="n">_value</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+    <span class="p">}</span>
+  <span class="o">//</span> <span class="n">evaluation</span>
+  <span class="n">template</span><span class="o">&lt;</span><span class="n">typename</span> <span class="n">Indiv</span><span class="o">&gt;</span>
+  <span class="n">void</span> <span class="nb">eval</span><span class="p">(</span><span class="n">Indiv</span><span class="o">&amp;</span> <span class="n">indiv</span><span class="p">)</span>
+  <span class="p">{</span>
+    <span class="n">this</span><span class="o">-&gt;</span><span class="n">_value</span> <span class="o">=</span> <span class="o">-</span><span class="mi">42</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="o">//</span> <span class="n">two</span><span class="o">-</span><span class="n">objective</span> <span class="n">fitness</span>
+<span class="n">SFERES_FITNESS</span><span class="p">(</span><span class="n">FitnessMulti</span><span class="p">,</span> <span class="n">sferes</span><span class="p">::</span><span class="n">fit</span><span class="p">::</span><span class="n">fitness</span><span class="p">)</span>
+<span class="p">{</span>
+  <span class="o">//</span> <span class="n">constructor</span>
+  <span class="n">FitnessMulti</span><span class="p">()</span>
+    <span class="p">{</span>
+      <span class="n">this</span><span class="o">-&gt;</span><span class="n">_objs</span><span class="o">.</span><span class="n">resize</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
+    <span class="p">}</span>
+  <span class="o">//</span> <span class="n">evaluation</span>
+  <span class="n">template</span><span class="o">&lt;</span><span class="n">typename</span> <span class="n">Indiv</span><span class="o">&gt;</span>
+  <span class="n">void</span> <span class="nb">eval</span><span class="p">(</span><span class="n">Indiv</span><span class="o">&amp;</span> <span class="n">indiv</span><span class="p">)</span>
+  <span class="p">{</span>
+    <span class="n">this</span><span class="o">-&gt;</span><span class="n">_objs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mi">42</span><span class="p">;</span>
+    <span class="n">this</span><span class="o">-&gt;</span><span class="n">_objs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">42</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="view-mode">
+<h3>View mode<a class="headerlink" href="#view-mode" title="Permalink to this headline">¶</a></h3>
+<p>When loading a result file, it is often useful to slightly change the
+fitness function, for instance to display data about the behavior of
+the individual. This can be easily done in sferes2 using the boolean
+<cite>Fitness::mode()</cite> than can takes two values:</p>
+<ul class="simple">
+<li><cite>fit::mode::view</cite> when you are viewing an individual via <cite>–load</cite></li>
+<li><cite>fit::mode::eval</cite> when you are evaluting individuals (during the
+evolutionary process)</li>
+</ul>
+<p>Example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">//</span> <span class="n">single</span> <span class="n">objective</span> <span class="n">fitess</span>
+<span class="n">SFERES_FITNESS</span><span class="p">(</span><span class="n">FitnessSingle</span><span class="p">,</span> <span class="n">sferes</span><span class="p">::</span><span class="n">fit</span><span class="p">::</span><span class="n">fitness</span><span class="p">)</span>
+<span class="p">{</span>
+  <span class="o">//</span> <span class="n">evaluation</span>
+  <span class="n">template</span><span class="o">&lt;</span><span class="n">typename</span> <span class="n">Indiv</span><span class="o">&gt;</span>
+   <span class="n">void</span> <span class="nb">eval</span><span class="p">(</span><span class="n">Indiv</span><span class="o">&amp;</span> <span class="n">indiv</span><span class="p">)</span>
+  <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">mode</span><span class="p">()</span> <span class="o">==</span> <span class="n">sferes</span><span class="p">::</span><span class="n">fit</span><span class="p">::</span><span class="n">mode</span><span class="p">::</span><span class="n">view</span><span class="p">)</span>
+      <span class="p">{</span>
+      <span class="n">std</span><span class="p">::</span><span class="n">ofstream</span> <span class="n">ofs</span><span class="p">(</span><span class="s2">&quot;fit.dat&quot;</span><span class="p">);</span>
+      <span class="n">ofs</span><span class="o">&lt;&lt;</span><span class="s2">&quot;this is a log file !&quot;</span><span class="o">&lt;&lt;</span><span class="n">std</span><span class="p">::</span><span class="n">endl</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="n">this</span><span class="o">-&gt;</span><span class="n">_value</span> <span class="o">=</span> <span class="o">-</span><span class="mi">42</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="evolutionary-algorithms">
+<h2>Evolutionary algorithms<a class="headerlink" href="#evolutionary-algorithms" title="Permalink to this headline">¶</a></h2>
+<p><strong>Warning</strong> Evolutionary algorithms <em>maximize</em> the fitness (whereas most
+optimization algorithms minimize the cost function).</p>
+<div class="section" id="shared-parameters">
+<h3>Shared parameters<a class="headerlink" href="#shared-parameters" title="Permalink to this headline">¶</a></h3>
+<p>All evolutionary algorithms (EA) use the following parameters:</p>
+<ul class="simple">
+<li><cite>SFERES_CONST size_t Params::pop::size</cite>: population
+size (e.g., 100)</li>
+<li><cite>SFERES_CONST float Params::pop::initial_aleat</cite>: during the
+random generation, <cite>Params::pop::initial_aleat × Params::pop::size</cite>
+individuals are generated and only the <cite>Params::pop::size</cite> best ones
+are kept (Note: some algorithms might ignore this parameters)</li>
+<li><cite>SFERES_CONST int Params::pop::dump_period</cite>: the period
+between each write of results, examples:<ul>
+<li><cite>1</cite>: statistics are written at each generation (<cite>gen_0</cite>,
+<cite>gen_1</cite>, <cite>gen_2</cite>, …)</li>
+<li><cite>-1</cite>: statistics are never written (useful for unit tests)</li>
+<li><cite>10</cite>: statistics are written each 10 generations (<cite>gen_0</cite>,
+<cite>gen_10</cite>, …)</li>
+</ul>
+</li>
+</ul>
+<p>Keep in mind that the <cite>statistics</cite> classes are where final results are stored.</p>
+</div>
+<div class="section" id="ranksimple">
+<h3>RankSimple<a class="headerlink" href="#ranksimple" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><strong>Status:</strong> Deprecated (we keep this algorithm only as an example of an EA). If
+you need single-objective optimisation, use NSGA-2 with a single
+objective. It is equivalent to an elitist, rank-based algorithm.</li>
+<li><strong>File:</strong>
+<a class="reference external" href="https://github.com/sferes2/sferes2/blob/master/sferes/ea/rank_simple.hpp">sferes/ea/rank_simple.hpp</a></li>
+<li><strong>Unit test:</strong>
+<a class="reference external" href="https://github.com/sferes2/sferes2/blob/master/tests/ea/rank_simple.cpp">tests/ea/rank_simple.cpp</a></li>
+<li><strong>Typical typename:</strong>:</li>
+</ul>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">typedef</span> <span class="n">sferes</span><span class="p">::</span><span class="n">ea</span><span class="p">::</span><span class="n">RankSimple</span><span class="o">&lt;</span><span class="n">phen_t</span><span class="p">,</span> <span class="n">eval_t</span><span class="p">,</span> <span class="n">stat_t</span><span class="p">,</span> <span class="n">modifier_t</span><span class="p">,</span> <span class="n">Params</span><span class="o">&gt;</span> <span class="n">ea_t</span><span class="p">;</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><strong>Description:</strong> A rank-based single-objective evolutionary
+algorithm. Individuals are selected using the following formula:<ul>
+<li>n = k_r × p</li>
+<li>κ = c^n + 1 - 1</li>
+<li>f = n / (<em>κ</em> + 1)</li>
+<li>i = p - f × log(r × <em>κ</em> + 1)</li>
+<li>where<ul>
+<li>c = Params::pop::coeff</li>
+<li>k_r = Params::pop::keep_rate</li>
+<li>p = Params::pop::size</li>
+<li>r = a random number in [0,1[</li>
+<li>i = index of the selected individual</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>parameters:<ul>
+<li>SFERES_CONST float Params::pop::coeff = a internal
+parameter (see the previous formula); typical value : 1.1</li>
+<li>SFERES_CONST float Params::pop::keep_rate = proportion
+of individuals kept from a generation to the next one; typical
+value: 0.2 to 0.6</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="nsga2">
+<h3>Nsga2<a class="headerlink" href="#nsga2" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><strong>File:</strong>
+<a class="reference external" href="https://github.com/sferes2/sferes2/blob/master/sferes/ea/nsga2.hpp">sferes/ea/nsga2.hpp</a></li>
+<li><strong>Unit test:</strong>
+<a class="reference external" href="https://github.com/sferes2/sferes2/blob/master/tests/ea/nsga2.cpp">tests/ea/nsga2.cpp</a></li>
+<li>Example:
+<a class="reference external" href="https://github.com/sferes2/sferes2/blob/master/sferes/examples/ex_nsga2.cpp">examples/ex_nsga2.cpp</a></li>
+<li><strong>Typical typename:</strong>:</li>
+</ul>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">typedef</span> <span class="n">sferes</span><span class="p">::</span><span class="n">ea</span><span class="p">::</span><span class="n">Nsga2</span><span class="o">&lt;</span><span class="n">phen_t</span><span class="p">,</span> <span class="n">eval_t</span><span class="p">,</span> <span class="n">stat_t</span><span class="p">,</span> <span class="n">modifier_t</span><span class="p">,</span> <span class="n">Params</span><span class="o">&gt;</span> <span class="n">ea_t</span><span class="p">;</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><strong>Description:</strong> Implementation of the NSGA-II multiobjective
+evolutionary algorithm. See:<ul>
+<li>Deb, K. (2001). Multi-Objective Optimization Using Evolutionary
+Algorithms. <em>Wiley</em>.</li>
+<li>Deb, K., Pratap, A., Agarwal, S. and Meyarivan, T. (2002). A fast
+and elitist multiobjective genetic algorithm: NSGA-II. In <em>IEEE
+transactions on evolutionary computation</em>, 6:2:182-197</li>
+</ul>
+</li>
+<li><strong>Parameters:</strong> <cite>pop_size</cite> must be divisible by 4</li>
+<li><strong>Note:</strong> NSGA-II can be effective for a basic, single-objective optimization
+as it corresponds to a classic tournament-based evolutionary
+algorithm. In sferes2, a 1-sized <cite>_objs</cite> vector in the fitness
+can be employed (don’t use <cite>_value</cite>).</li>
+</ul>
+</div>
+<div class="section" id="epsmoea">
+<h3>EpsMOEA<a class="headerlink" href="#epsmoea" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><strong>Status:</strong> working but no user (we might remove it in the future
+because it is hard to trust the current implementation when nobody
+uses it).</li>
+<li><strong>File:</strong>
+<a class="reference external" href="https://github.com/sferes2/sferes2/blob/master/sferes/ea/eps_moea.hpp">sferes/ea/eps_moea.hpp</a></li>
+<li><strong>Unit test:</strong>
+<a class="reference external" href="https://github.com/sferes2/sferes2/blob/master/tests/ea/eps_moea.cpp">tests/ea/eps_moea.cpp</a></li>
+<li><strong>Typical typename:</strong>:</li>
+</ul>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">typedef</span> <span class="n">sferes</span><span class="p">::</span><span class="n">ea</span><span class="p">::</span><span class="n">EpsMOEA</span><span class="o">&lt;</span><span class="n">phen_t</span><span class="p">,</span> <span class="n">eval_t</span><span class="p">,</span> <span class="n">stat_t</span><span class="p">,</span> <span class="n">modifier_t</span><span class="p">,</span> <span class="n">Params</span><span class="o">&gt;</span> <span class="n">ea_t</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><strong>Description:</strong> Implementation of the <em>ε</em>-MOEA multiobjective
+evolutionary algorithm. See:<ul>
+<li>Deb, K., Mohan, M. and Mishra, S. (2005). Evaluating the
+<em>ε</em>-domination based multi-objective evolutionary algorithm for a
+quick computation of pareto-optimal solutions. In <em>Evolutionary
+Computation</em>, 13:4:501-525.</li>
+</ul>
+</li>
+<li>Parameters<ul>
+<li>SFERES_ARRAY(float, eps, 0.0075f, 0.0075f) = values of
+<em>ε</em> for each objective. There should be as many values as
+objectives.</li>
+<li>SFERES_ARRAY(float, min_fit`, 0.0f, 0.0f) =
+minimum value of fitness for each objective.There should as many
+values as objectives</li>
+<li>SFERES_CONST size_t` grain = <em>ε</em>-MOEA is a
+steady-state algorithm which adds individuals one by one. A basic
+implementation would prevent the parallelization of individuals’
+evaluation. The parameter grain allows to generate and evaluate
+<em>grain</em> indidividuals in paralell at each generation. Typical
+value is size / 4.</li>
+</ul>
+</li>
+<li><strong>Notes:</strong><ul>
+<li><em>ε</em>-MOEA employs <em>ε</em>-dominance to sort individuals. This allows
+users to tune the precision of the pareto front for each objective
+and often results in better performance than NSGA-II.</li>
+<li>EpsMOEA should not be used with a modifier (because it uses an
+archive). You should always use fit::ModifierDummy</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="defining-your-own-ea">
+<h3>Defining your own EA<a class="headerlink" href="#defining-your-own-ea" title="Permalink to this headline">¶</a></h3>
+<p>To define your own EA, you should use the macro
+SFERES_EA(Class, Parent). Mandatory methods:</p>
+<ul class="simple">
+<li>random_pop(): fill this-&gt;_pop with random
+individuals</li>
+<li>epoch(): main loop of the algorithm</li>
+</ul>
+<p>Defined types (these types will be available in your class):</p>
+<ul class="simple">
+<li>Phen: phenotype</li>
+<li>Eval: evaluator</li>
+<li>Stat: statistics vector</li>
+<li>FitModifier: modifier</li>
+<li>Params: parameters</li>
+</ul>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">SFERES_EA</span><span class="p">(</span><span class="n">Test</span><span class="p">,</span> <span class="n">Ea</span><span class="p">)</span>
+<span class="p">{</span>
+ <span class="n">public</span><span class="p">:</span>
+ <span class="n">Test</span><span class="p">()</span> <span class="p">{}</span>
+ <span class="n">void</span> <span class="n">random_pop</span><span class="p">()</span>
+ <span class="p">{</span> <span class="o">/*</span> <span class="n">your</span> <span class="n">code</span> <span class="o">*/</span> <span class="p">}</span>
+ <span class="n">void</span> <span class="n">epoch</span><span class="p">()</span>
+ <span class="p">{</span> <span class="o">/*</span> <span class="n">your</span> <span class="n">code</span> <span class="o">*/</span> <span class="p">}</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>Multiobjective EA must also define a pareto_front() method,
+see <em>ParetoFront</em>.</p>
+</div>
+</div>
+<div class="section" id="statistics">
+<h2>Statistics<a class="headerlink" href="#statistics" title="Permalink to this headline">¶</a></h2>
+<p>Statistics should be combined in a boost::fusion::vector (see:
+http://www.boost.org/doc/libs/1_40_0/libs/fusion/doc/html/fusion/container/vector.html)
+before being passed to a EA. For instance:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">typedef</span> <span class="n">boost</span><span class="p">::</span><span class="n">fusion</span><span class="p">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">stat</span><span class="p">::</span><span class="n">BestFit</span><span class="o">&lt;</span><span class="n">phen_t</span><span class="p">,</span> <span class="n">Params</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">stat</span><span class="p">::</span><span class="n">MeanFit</span><span class="o">&lt;</span><span class="n">Params</span><span class="o">&gt;</span> <span class="o">&gt;</span>  <span class="n">stat_t</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>(yes, it is a vector of <em>typenames</em>). You can put in the vector as many
+statistics types as you desire.</p>
+<div class="section" id="bestfit">
+<h3>BestFit<a class="headerlink" href="#bestfit" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><strong>File:</strong>
+<a class="reference external" href="https://github.com/sferes2/sferes2/blob/master/sferes/stat/best_fit.hpp">sferes/stat/best_fit.hpp</a></li>
+<li><strong>Typical typename:</strong></li>
+</ul>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">typedef</span> <span class="n">boost</span><span class="p">::</span><span class="n">fusion</span><span class="p">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">sferes</span><span class="p">::</span><span class="n">ea</span><span class="p">::</span><span class="n">BestFit</span><span class="o">&lt;</span><span class="n">phen_t</span><span class="p">,</span> <span class="n">Params</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">stat_t</span><span class="p">;</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><strong>Description:</strong><ul>
+<li>stores the individual with the highest fitness in this-&gt;_best
+(getter: BestFit::best() ). <em>This assumes that the population is
+sorted</em> and consequently this statistics stores the first
+individual of the population.</li>
+<li>This class is designed for single objective optimization and
+consequently works using <cite>Fitness::_value</cite> (and not
+<cite>Fitness::_objs</cite>)</li>
+<li>writes the value of the best fitness in the file
+&lt;result_directory&gt;/bestfit.dat; this file should be easily
+plotted with gnuplot, matplotlib/numpy or R.</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="meanfit">
+<h3>MeanFit<a class="headerlink" href="#meanfit" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><strong>File:</strong>
+<a class="reference external" href="https://github.com/sferes2/sferes2/blob/master/sferes/stat/mean_fit.hpp">sferes/stat/mean_fit.hpp</a></li>
+<li><strong>Typical typename:</strong></li>
+</ul>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">typedef</span> <span class="n">boost</span><span class="p">::</span><span class="n">fusion</span><span class="p">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">sferes</span><span class="p">::</span><span class="n">ea</span><span class="p">::</span><span class="n">MeanFit</span><span class="o">&lt;</span><span class="n">phen_t</span><span class="p">,</span> <span class="n">Params</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">stat_t</span><span class="p">;</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><strong>Description:</strong> computes the mean fitness (single objective, based
+on Fitness::_value). This class is mainly aimed at providing
+a simple example of statistics.</li>
+</ul>
+</div>
+<div class="section" id="paretofront">
+<h3>ParetoFront<a class="headerlink" href="#paretofront" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><strong>File:</strong>
+<a class="reference external" href="https://github.com/sferes2/sferes2/blob/master/sferes/stat/pareto_front.hpp">sferes/stat/pareto_front.hpp</a></li>
+<li><strong>Typical typename:</strong></li>
+</ul>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">typedef</span> <span class="n">boost</span><span class="p">::</span><span class="n">fusion</span><span class="p">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">sferes</span><span class="p">::</span><span class="n">ea</span><span class="p">::</span><span class="n">ParetoFront</span><span class="o">&lt;</span><span class="n">phen_t</span><span class="p">,</span> <span class="n">Params</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">stat_t</span><span class="p">;</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><strong>Description:</strong> stores the set of non-dominated individuals by
+copying the list returned by ea_t::pareto_front().
+ParetoFront does not compute the pareto front; this class assumes
+that the EA computed it. This implies that multiobjective EA classes
+should define the following method:</li>
+</ul>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">SFERES_EA</span><span class="p">(</span><span class="n">MyEA</span><span class="p">,</span> <span class="n">Ea</span><span class="p">)</span>
+<span class="p">{</span>
+ <span class="n">public</span><span class="p">:</span>
+  <span class="n">std</span><span class="p">:</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">Indiv</span><span class="o">&gt;</span> <span class="o">&amp;</span><span class="n">pareto_front</span><span class="p">()</span> <span class="n">const</span> <span class="p">{</span> <span class="o">/*</span> <span class="n">your</span> <span class="n">code</span> <span class="o">*/</span> <span class="p">}</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><strong>Note:</strong> since this statistic can store many individuals, to load a
+result file you must give the identifier (the rank in the Pareto
+front) to your executable. For instance, assuming that ParetoFront in
+the first (0th) statistics in the stat vector, loading the 10th
+individual should look like:</li>
+</ul>
+<div class="code shell highlight-default"><div class="highlight"><pre><span></span><span class="o">./</span><span class="n">my_exp</span> <span class="o">--</span><span class="n">load</span> <span class="n">gen_100</span> <span class="o">-</span><span class="n">s</span> <span class="mi">0</span> <span class="o">-</span><span class="n">n</span> <span class="mi">10</span> <span class="o">-</span><span class="n">o</span> <span class="n">output</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="defining-your-own-statistics">
+<h3>Defining your own statistics<a class="headerlink" href="#defining-your-own-statistics" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">SFERES_STAT</span><span class="p">(</span><span class="n">MyStat</span><span class="p">,</span> <span class="n">Stat</span><span class="p">)</span>
+<span class="p">{</span>
+  <span class="o">//</span> <span class="n">examines</span> <span class="n">the</span> <span class="n">population</span> <span class="p">(</span><span class="n">via</span> <span class="n">the</span> <span class="n">EA</span><span class="p">)</span> <span class="n">to</span> <span class="n">update</span> <span class="n">the</span> <span class="n">statistics</span>
+  <span class="n">template</span><span class="o">&lt;</span><span class="n">typename</span> <span class="n">E</span><span class="o">&gt;</span> <span class="n">void</span> <span class="n">refresh</span><span class="p">(</span><span class="n">const</span> <span class="n">E</span><span class="o">&amp;</span> <span class="n">ea</span><span class="p">)</span> <span class="p">{</span> <span class="o">/*</span> <span class="n">your</span> <span class="n">code</span> <span class="o">*/</span> <span class="p">}</span>
+  <span class="o">//</span> <span class="n">writes</span> <span class="n">the</span> <span class="n">content</span> <span class="n">of</span> <span class="n">the</span> <span class="n">statistics</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">stream</span><span class="p">;</span> <span class="n">k</span> <span class="ow">is</span> <span class="n">the</span> <span class="n">number</span>
+  <span class="o">//</span> <span class="n">of</span> <span class="n">the</span> <span class="n">individual</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">statistics</span> <span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">g</span><span class="o">.</span> <span class="ow">in</span> <span class="n">a</span> <span class="n">Pareto</span> <span class="n">front</span><span class="p">,</span> <span class="n">the</span>
+  <span class="o">//</span> <span class="n">statistics</span> <span class="n">contains</span> <span class="n">many</span> <span class="n">individuals</span><span class="p">)</span>
+  <span class="n">void</span> <span class="n">show</span><span class="p">(</span><span class="n">std</span><span class="p">::</span><span class="n">ostream</span><span class="o">&amp;</span> <span class="n">os</span><span class="p">,</span> <span class="n">size_t</span> <span class="n">k</span><span class="p">)</span> <span class="n">const</span> <span class="p">{</span> <span class="o">/*</span> <span class="n">your</span> <span class="n">code</span> <span class="o">*/</span> <span class="p">}</span>
+  <span class="o">//</span> <span class="n">serializes</span> <span class="n">the</span> <span class="n">statistics</span> <span class="n">using</span> <span class="n">boost</span><span class="p">::</span><span class="n">serialization</span>
+  <span class="n">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">Archive</span><span class="o">&gt;</span> <span class="n">void</span> <span class="n">serialize</span><span class="p">(</span><span class="n">Archive</span> <span class="o">&amp;</span> <span class="n">ar</span><span class="p">,</span> <span class="n">const</span> <span class="n">unsigned</span> <span class="nb">int</span> <span class="n">version</span><span class="p">)</span>
+  <span class="p">{</span> <span class="o">/*</span> <span class="n">your</span> <span class="n">code</span> <span class="o">*/</span> <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="genotypes">
+<h2>Genotypes<a class="headerlink" href="#genotypes" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="bitstring">
+<h3>BitString<a class="headerlink" href="#bitstring" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><strong>File:</strong>
+<a class="reference external" href="https://github.com/sferes2/sferes2/blob/master/sferes/gen/bit_string.hpp">sferes/gen/bit_string.hpp</a></li>
+<li><strong>Unit test:</strong>
+<a class="reference external" href="../../tests/gen/bit_string.hpp">sferes/gen/bit_string.hpp</a></li>
+<li><strong>Description:</strong> vector of bitstrings which can be used to represent
+a vector of integer parameters or a vector of discrete parameters.
+Cross-over is a simple one point cross-over (it always happens). The
+data can be easily converted to int (in the range 0..2^b,
+where b is the number of bits for each bitstring) via
+BitString&lt;&gt;::int_data(i) or to float (in the range 0..1)
+via BitString&lt;&gt;::data(i)</li>
+<li><strong>Template parameter:</strong> the number of bitstrings</li>
+<li><strong>Parameters (struct bit_string`):</strong><ul>
+<li>SFERES_CONST size_t nb_bits -&gt; number of
+bits for each bitstring</li>
+<li>SFERES_CONST float mutation_rate -&gt; the mutation
+rate for a bitstring (the bitstring i is mutated if a random real
+is belows <cite>mutation_rate</cite>)</li>
+<li>SFERES_CONST` float mutation_ratebit -&gt; the
+mutation rate <em>for each bit</em>. In pseudo-code, here is the mutation
+procedure:</li>
+</ul>
+</li>
+</ul>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">foreach</span><span class="p">(</span><span class="n">bitstring</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">genotype</span><span class="p">)</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">rand</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">Params</span><span class="p">::</span><span class="n">bit_string</span><span class="p">::</span><span class="n">mutation_rate</span><span class="p">)</span>
+    <span class="n">foreach</span><span class="p">(</span><span class="n">bit</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">b</span><span class="p">)</span>
+      <span class="k">if</span> <span class="p">(</span><span class="n">rand</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">Params</span><span class="p">::</span><span class="n">bit_string</span><span class="p">::</span><span class="n">mutation_bit</span><span class="p">)</span>
+        <span class="n">flip</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><strong>Typical parameters:</strong></li>
+</ul>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">struct</span> <span class="n">Params</span>
+<span class="p">{</span>
+  <span class="n">struct</span> <span class="n">bit_string</span>
+  <span class="p">{</span>
+    <span class="n">SFERES_CONST</span> <span class="n">size_t</span> <span class="n">nb_bits</span> <span class="o">=</span> <span class="mi">8</span><span class="p">;</span>
+    <span class="n">SFERES_CONST</span> <span class="nb">float</span> <span class="n">mutate_rate</span> <span class="o">=</span> <span class="mf">0.1</span><span class="n">f</span><span class="p">;</span>
+    <span class="n">SFERES_CONST</span> <span class="nb">float</span> <span class="n">mutate_rate_bit</span> <span class="o">=</span> <span class="mf">0.1</span><span class="n">f</span><span class="p">;</span>
+  <span class="p">};</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><strong>Typical typename:</strong></li>
+</ul>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">typedef</span> <span class="n">BitString</span><span class="o">&lt;</span><span class="mi">10</span><span class="p">,</span> <span class="n">Params</span><span class="o">&gt;</span> <span class="n">gen_t</span><span class="p">;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="evofloat">
+<h3>EvoFloat<a class="headerlink" href="#evofloat" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><strong>File:</strong>
+<a class="reference external" href="https://github.com/sferes2/sferes2/blob/master/sferes/gen/evo_float.hpp">sferes/gen/evo_float.hpp</a></li>
+<li><strong>Unit test:</strong>
+<a class="reference external" href="https://github.com/sferes2/sferes2/blob/master/tests/gen/evo_float.cpp">sferes/tests/gen/evo_float.cpp</a></li>
+<li><strong>Description:</strong> This genotype is a n-sized vector of real (float)
+numbers. It is designed for real optimization.</li>
+<li>Three mutation types are available:<ul>
+<li>polynomial: polynomial mutation, as defined in Deb(200)1, p 124</li>
+<li>gaussian: adds a gaussian noise to the current value; the variance
+is a user-specified parameter</li>
+<li>uniform: adds a uniform noise to the current value; the range is a
+user-specified parameter</li>
+</ul>
+</li>
+<li>Two cross-over types are available (you can disable cross-over by
+using a cross_rate` equals to 0)<ul>
+<li>recombination:<ul>
+<li>a number k is randomly chosen</li>
+<li>the first child is made of the [0, k[ values of the first
+parent and of the [k, n-1[ values of the second parent</li>
+<li>the second child is made of the [0, k[ values of the second
+parent and of the [k, n-1] values of the first parent</li>
+</ul>
+</li>
+<li>SBX (simulated binary cross-over, cf Deb (2001), p 113). Warning:
+the current implementation is copied from Deb’s code and is
+slightly different from the original paper.</li>
+</ul>
+</li>
+<li><strong>Parameters:</strong><ul>
+<li>Any variant:<ul>
+<li>(<cite>mutation_t</cite> and <cite>cross_over_t</cite> are defined in the
+namespace sferes::gen::evo_float`)</li>
+<li>SFERES_CONST mutation_t mutation_type:
+polynomial, gaussian or uniform;</li>
+<li>SFERES_CONST cross_overt cross_overtype
+-&gt; sbx or recombination;</li>
+<li>SFERES_CONST float mutation_rate -&gt; the rate of
+mutation of one member of the vectorf</li>
+<li>SFERES_CONST float cross_rate -&gt; the rate of
+cross-over (if no cross-over is applied, parents are copied to
+children)</li>
+</ul>
+</li>
+<li>polynomial mutation:<ul>
+<li>SFERES_CONST float eta_m -&gt; η_m is a
+parameter which controls the polynomial distribution. See Deb’s
+paper or book.</li>
+</ul>
+</li>
+<li>gaussian mutation:<ul>
+<li>SFERES_CONST float sigma -&gt; the standard deviation of
+the gaussian</li>
+</ul>
+</li>
+<li>uniform mutation:<ul>
+<li>SFERES_CONST float max -&gt; maximum change of the current
+value</li>
+</ul>
+</li>
+<li>sbx:<ul>
+<li>SFERES_CONST float eta_c -&gt; see Deb’s paper or
+book.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>Typical typename:</strong></li>
+</ul>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">typedef</span> <span class="n">sferes</span><span class="p">::</span><span class="n">gen</span><span class="p">::</span><span class="n">EvoFloat</span><span class="o">&lt;</span><span class="mi">10</span><span class="p">,</span> <span class="n">Params1</span><span class="o">&gt;</span> <span class="n">gen_t</span><span class="p">;</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><strong>Typical parameters:</strong></li>
+</ul>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">using</span> <span class="n">namespace</span> <span class="n">sferes</span><span class="p">::</span><span class="n">gen</span><span class="p">::</span><span class="n">evo_float</span><span class="p">;</span>
+
+<span class="n">struct</span> <span class="n">Params1</span>
+<span class="p">{</span>
+  <span class="n">struct</span> <span class="n">evo_float</span>
+  <span class="p">{</span>
+    <span class="n">SFERES_CONST</span> <span class="nb">float</span> <span class="n">mutation_rate</span> <span class="o">=</span> <span class="mf">0.1</span><span class="n">f</span><span class="p">;</span>
+    <span class="n">SFERES_CONST</span> <span class="nb">float</span> <span class="n">cross_rate</span> <span class="o">=</span> <span class="mf">0.1</span><span class="n">f</span><span class="p">;</span>
+    <span class="n">SFERES_CONST</span> <span class="n">mutation_t</span> <span class="n">mutation_type</span> <span class="o">=</span> <span class="n">polynomial</span><span class="p">;</span>
+    <span class="n">SFERES_CONST</span> <span class="n">cross_over_t</span> <span class="n">cross_over_type</span> <span class="o">=</span> <span class="n">sbx</span><span class="p">;</span>
+    <span class="n">SFERES_CONST</span> <span class="nb">float</span> <span class="n">eta_m</span> <span class="o">=</span> <span class="mf">15.0</span><span class="n">f</span><span class="p">;</span>
+    <span class="n">SFERES_CONST</span> <span class="nb">float</span> <span class="n">eta_c</span> <span class="o">=</span> <span class="mf">15.0</span><span class="n">f</span><span class="p">;</span>
+  <span class="p">};</span>
+<span class="p">};</span>
+
+<span class="n">struct</span> <span class="n">Params2</span>
+<span class="p">{</span>
+  <span class="n">struct</span> <span class="n">evo_float</span>
+  <span class="p">{</span>
+    <span class="n">SFERES_CONST</span> <span class="nb">float</span> <span class="n">mutation_rate</span> <span class="o">=</span> <span class="mf">0.1</span><span class="n">f</span><span class="p">;</span>
+    <span class="n">SFERES_CONST</span> <span class="nb">float</span> <span class="n">cross_rate</span> <span class="o">=</span> <span class="mf">0.1</span><span class="n">f</span><span class="p">;</span>
+    <span class="n">SFERES_CONST</span> <span class="n">mutation_t</span> <span class="n">mutation_type</span> <span class="o">=</span> <span class="n">gaussian</span><span class="p">;</span>
+    <span class="n">SFERES_CONST</span> <span class="n">cross_over_t</span> <span class="n">cross_over_type</span> <span class="o">=</span> <span class="n">recombination</span><span class="p">;</span>
+    <span class="n">SFERES_CONST</span> <span class="nb">float</span> <span class="n">sigma</span> <span class="o">=</span> <span class="mf">0.3</span><span class="n">f</span><span class="p">;</span>
+  <span class="p">};</span>
+<span class="p">};</span>
+
+
+<span class="n">struct</span> <span class="n">Params3</span>
+<span class="p">{</span>
+  <span class="n">struct</span> <span class="n">evo_float</span>
+  <span class="p">{</span>
+    <span class="n">SFERES_CONST</span> <span class="nb">float</span> <span class="n">mutation_rate</span> <span class="o">=</span> <span class="mf">0.1</span><span class="n">f</span><span class="p">;</span>
+    <span class="n">SFERES_CONST</span> <span class="nb">float</span> <span class="n">cross_rate</span> <span class="o">=</span> <span class="mf">0.1</span><span class="n">f</span><span class="p">;</span>
+    <span class="n">SFERES_CONST</span> <span class="n">mutation_t</span> <span class="n">mutation_type</span> <span class="o">=</span> <span class="n">uniform</span><span class="p">;</span>
+    <span class="n">SFERES_CONST</span> <span class="n">cross_over_t</span> <span class="n">cross_over_type</span> <span class="o">=</span> <span class="n">sbx</span><span class="p">;</span>
+    <span class="n">SFERES_CONST</span> <span class="nb">float</span> <span class="nb">max</span> <span class="o">=</span> <span class="mf">0.3</span><span class="n">f</span><span class="p">;</span>
+    <span class="n">SFERES_CONST</span> <span class="nb">float</span> <span class="n">eta_c</span> <span class="o">=</span> <span class="mf">15.0</span><span class="n">f</span><span class="p">;</span>
+  <span class="p">};</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="defining-your-own-genotype">
+<h3>Defining your own genotype<a class="headerlink" href="#defining-your-own-genotype" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="c1">#include &lt;sferes/stc/stc.hpp&gt;</span>
+<span class="n">namespace</span> <span class="n">sferes</span>
+<span class="p">{</span>
+  <span class="n">namespace</span> <span class="n">gen</span>
+  <span class="p">{</span>
+    <span class="n">SFERES_CLASS</span><span class="p">(</span><span class="n">MyGenotype</span><span class="p">)</span>
+    <span class="p">{</span>
+    <span class="n">public</span><span class="p">:</span>
+      <span class="o">//</span> <span class="n">generates</span> <span class="n">a</span> <span class="n">random</span> <span class="n">genotype</span>
+      <span class="n">void</span> <span class="n">random</span><span class="p">()</span>
+      <span class="p">{</span>
+      <span class="o">//</span> <span class="n">your</span> <span class="n">code</span>
+      <span class="p">}</span>
+      <span class="o">//</span> <span class="n">mutates</span> <span class="n">an</span> <span class="n">individual</span>
+      <span class="n">void</span> <span class="n">mutate</span><span class="p">()</span>
+      <span class="p">{</span>
+      <span class="o">//</span> <span class="n">your</span> <span class="n">code</span> <span class="n">to</span> <span class="n">mutate</span> <span class="p">(</span><span class="n">you</span> <span class="n">have</span> <span class="n">to</span> <span class="n">handle</span> <span class="n">your</span> <span class="n">own</span> <span class="n">mutation_rate</span><span class="p">)</span>
+      <span class="p">}</span>
+      <span class="o">//</span> <span class="n">WARNING</span><span class="p">:</span> <span class="n">the</span> <span class="n">arguments</span> <span class="n">of</span> <span class="n">this</span> <span class="n">method</span> <span class="n">are</span> <span class="n">of</span> <span class="n">the</span> <span class="n">same</span> <span class="nb">type</span>
+      <span class="o">//</span> <span class="n">than</span> <span class="n">your</span> <span class="n">genotype</span>
+      <span class="n">void</span> <span class="n">cross</span><span class="p">(</span><span class="n">const</span> <span class="n">MyGenotype</span><span class="o">&amp;</span> <span class="n">o</span><span class="p">,</span> <span class="n">MyGenotype</span><span class="o">&amp;</span> <span class="n">c1</span><span class="p">,</span> <span class="n">MyGenotype</span><span class="o">&amp;</span> <span class="n">c2</span><span class="p">)</span>
+      <span class="p">{</span>
+      <span class="o">//</span> <span class="k">if</span> <span class="n">you</span> <span class="n">don</span><span class="s1">&#39;t know what to do, simply use:</span>
+      <span class="k">if</span> <span class="p">(</span><span class="n">misc</span><span class="p">::</span><span class="n">flip_coin</span><span class="p">())</span>
+        <span class="p">{</span>
+          <span class="n">c1</span> <span class="o">=</span> <span class="o">*</span><span class="n">this</span><span class="p">;</span>
+          <span class="n">c2</span> <span class="o">=</span> <span class="n">o</span><span class="p">;</span>
+          <span class="p">}</span>
+        <span class="k">else</span>
+          <span class="p">{</span>
+            <span class="n">c2</span> <span class="o">=</span> <span class="o">*</span><span class="n">this</span><span class="p">;</span>
+            <span class="n">c1</span> <span class="o">=</span> <span class="n">o</span><span class="p">;</span>
+          <span class="p">}</span>
+      <span class="p">}</span>
+    <span class="n">protected</span><span class="p">:</span>
+      <span class="o">//</span> <span class="n">your</span> <span class="n">data</span> <span class="n">here</span> <span class="p">(</span><span class="n">your</span> <span class="n">genotype</span><span class="p">)</span>
+    <span class="p">};</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="phenotypes-individuals">
+<h2>Phenotypes (Individuals)<a class="headerlink" href="#phenotypes-individuals" title="Permalink to this headline">¶</a></h2>
+<p>Phenotypes are the expression of the genotypes: it is often useful to
+develop a genotype into a structure which is easier to evaluate. For
+instance, a neural network can be encoded with a compact encoding
+(genotype, e.g. a modular encoding which can repeat the same module
+several times), then developped into a standard neural network
+(phenotype).</p>
+<p>Phenotypes are also the bridge between the fitness function and the
+genotype. In sferes2, a phenotype is the composition of a <cite>fit_t</cite>
+and a <cite>gen_t</cite>.</p>
+<div class="section" id="indiv">
+<h3>Indiv<a class="headerlink" href="#indiv" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><strong>File:</strong>
+<a class="reference external" href="https://github.com/sferes2/sferes2/blob/master/sferes/indiv.hpp">sferes/phen/indiv.hpp</a></li>
+<li><strong>Description:</strong> The abstract base class for phenotypes.</li>
+<li><strong>Main public methods:</strong></li>
+</ul>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">//</span> <span class="n">returns</span> <span class="n">the</span> <span class="n">fitness</span>
+<span class="n">Fit</span><span class="o">&amp;</span> <span class="n">fit</span><span class="p">();</span>
+<span class="n">const</span> <span class="n">Fit</span><span class="o">&amp;</span> <span class="n">fit</span><span class="p">()</span> <span class="n">const</span><span class="p">;</span>
+<span class="o">//</span> <span class="n">returns</span> <span class="n">the</span> <span class="n">genotype</span>
+<span class="n">Gen</span><span class="o">&amp;</span> <span class="n">gen</span><span class="p">()</span>  <span class="p">{</span> <span class="k">return</span> <span class="n">_gen</span><span class="p">;</span> <span class="p">}</span>
+<span class="n">const</span> <span class="n">Gen</span><span class="o">&amp;</span> <span class="n">gen</span><span class="p">()</span> <span class="n">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_gen</span><span class="p">;</span> <span class="p">}</span>
+<span class="o">//</span> <span class="n">develops</span> <span class="n">the</span> <span class="n">genotype</span><span class="p">,</span> <span class="n">called</span> <span class="n">by</span> <span class="n">the</span> <span class="n">evalutar</span> <span class="n">before</span> <span class="n">evaluating</span>
+<span class="o">//</span> <span class="n">the</span> <span class="n">individual</span>
+<span class="n">void</span> <span class="n">develop</span><span class="p">();</span>
+<span class="o">//</span> <span class="n">you</span> <span class="n">can</span> <span class="n">also</span> <span class="n">override</span> <span class="n">the</span> <span class="n">following</span> <span class="n">methods</span> <span class="p">(</span><span class="n">although</span> <span class="ow">in</span> <span class="n">most</span>
+<span class="o">//</span> <span class="n">cases</span><span class="p">,</span> <span class="n">you</span> <span class="n">should</span> <span class="n">override</span> <span class="n">their</span> <span class="n">equivalent</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">genotype</span><span class="p">)</span>
+<span class="n">void</span> <span class="n">mutate</span><span class="p">();</span>
+<span class="n">void</span> <span class="n">random</span><span class="p">();</span>
+<span class="n">void</span> <span class="n">cross</span><span class="p">(</span><span class="n">const</span> <span class="n">boost</span><span class="p">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">Exact</span><span class="o">&gt;</span> <span class="n">i2</span><span class="p">,</span>
+         <span class="n">boost</span><span class="p">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">Exact</span><span class="o">&gt;&amp;</span> <span class="n">o1</span><span class="p">,</span>
+         <span class="n">boost</span><span class="p">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">Exact</span><span class="o">&gt;&amp;</span> <span class="n">o2</span><span class="p">);</span>
+<span class="o">//</span> <span class="n">this</span> <span class="n">method</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">implemented</span> <span class="ow">in</span> <span class="n">Indiv</span> <span class="n">but</span> <span class="n">it</span> <span class="n">must</span> <span class="n">be</span> <span class="ow">in</span> <span class="nb">all</span> <span class="n">the</span>
+<span class="o">//</span> <span class="n">concrete</span> <span class="n">genotypes</span><span class="o">.</span> <span class="n">It</span> <span class="n">should</span> <span class="n">describe</span> <span class="n">this</span> <span class="n">particular</span> <span class="n">individual</span>
+<span class="o">//</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">stream</span> <span class="n">os</span> <span class="p">(</span><span class="n">see</span> <span class="n">the</span> <span class="n">Parameter</span> <span class="n">source</span> <span class="n">code</span> <span class="k">for</span> <span class="n">an</span> <span class="n">example</span><span class="p">)</span>
+<span class="n">void</span> <span class="n">show</span><span class="p">(</span><span class="n">std</span><span class="p">::</span><span class="n">ostream</span><span class="o">&amp;</span> <span class="n">os</span><span class="p">)</span> <span class="n">const</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><strong>Defined types:</strong><ul>
+<li>Fit -&gt; the fitness functor</li>
+<li>Gen -&gt; genotype</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="parameters">
+<h3>Parameters<a class="headerlink" href="#parameters" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><strong>File:</strong>
+<a class="reference external" href="https://github.com/sferes2/sferes2/blob/master/sferes/phen/parameters.hpp">sferes/gen/parameters.hpp</a></li>
+<li><strong>Unit test:</strong>
+<a class="reference external" href="https://github.com/sferes2/sferes2/blob/master/tests/phen/parameters.cpp">sferes/tests/phen/parameters.cpp</a></li>
+<li><strong>Description:</strong> This phenotype transforms a list of parameters in
+[0, 1[ (typically a gen::Bitstring or a gen::EvoFloat) to a list of
+parameter in [min, max[. The genotype class must define a method:</li>
+</ul>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">cont</span> <span class="n">std</span><span class="p">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="nb">float</span><span class="o">&gt;&amp;</span> <span class="n">data</span><span class="p">()</span> <span class="n">const</span> <span class="p">();</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><strong>Typical typename:</strong></li>
+</ul>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">typedef</span> <span class="nb">eval</span><span class="p">::</span><span class="n">Parameters</span><span class="o">&lt;</span><span class="n">gen_t</span><span class="p">,</span> <span class="n">fit_t</span><span class="p">,</span> <span class="n">Params</span><span class="o">&gt;</span> <span class="n">phen_t</span><span class="p">;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="defining-your-own-phenotype">
+<h3>Defining your own phenotype<a class="headerlink" href="#defining-your-own-phenotype" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="c1">#include &lt;sferes/phen/indiv.hpp&gt;</span>
+<span class="n">namespace</span> <span class="n">sferes</span>
+<span class="p">{</span>
+  <span class="n">namespace</span> <span class="n">phen</span>
+  <span class="p">{</span>
+    <span class="n">SFERES_INDIV</span><span class="p">(</span><span class="n">MyPhenotype</span><span class="p">,</span> <span class="n">Indiv</span><span class="p">)</span>
+    <span class="p">{</span>
+    <span class="n">public</span><span class="p">:</span>
+      <span class="o">//</span> <span class="n">constructor</span>
+      <span class="n">MyPhenotype</span><span class="p">()</span> <span class="p">{</span> <span class="o">/*</span> <span class="n">your</span> <span class="n">code</span> <span class="o">*/</span> <span class="p">}</span>
+      <span class="o">//</span> <span class="n">develop</span> <span class="n">the</span> <span class="n">genotype</span> <span class="n">to</span> <span class="n">whatever</span> <span class="n">you</span> <span class="n">want</span>
+      <span class="n">void</span> <span class="n">develop</span><span class="p">(){</span> <span class="o">/*</span> <span class="n">your</span> <span class="n">code</span> <span class="o">*/</span> <span class="p">}</span>
+      <span class="o">//</span> <span class="n">describe</span> <span class="n">this</span> <span class="n">individual</span>
+      <span class="n">void</span> <span class="n">show</span><span class="p">(</span><span class="n">std</span><span class="p">::</span><span class="n">ostream</span><span class="o">&amp;</span> <span class="n">os</span><span class="p">)</span> <span class="n">const</span> <span class="p">{</span> <span class="o">/*</span> <span class="n">your</span> <span class="n">code</span> <span class="o">*/</span> <span class="p">}</span>
+    <span class="n">protected</span><span class="p">:</span>
+      <span class="o">//</span> <span class="n">your</span> <span class="n">data</span>
+    <span class="p">};</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="evaluators">
+<h2>Evaluators<a class="headerlink" href="#evaluators" title="Permalink to this headline">¶</a></h2>
+<p>Evaluators are in charge of evalutating a vector of individuals (i.e.
+running phen_t::fit::eval() for each individual).</p>
+<div class="section" id="eval">
+<h3>Eval<a class="headerlink" href="#eval" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><strong>File:</strong>
+<a class="reference external" href="https://github.com/sferes2/sferes2/blob/master/sferes/eval/eval.hpp">sferes/eval/eval.hpp</a></li>
+<li>A basic evaluator (no multiprocessing, no MPI, etc.), i.e. a basic
+loop.</li>
+<li><strong>Typical typename:</strong></li>
+</ul>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">typedef</span> <span class="nb">eval</span><span class="p">::</span><span class="n">Eval</span><span class="o">&lt;</span><span class="n">Params</span><span class="o">&gt;</span> <span class="n">eval_t</span><span class="p">;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="parallel">
+<h3>Parallel<a class="headerlink" href="#parallel" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><strong>File:</strong>
+<a class="reference external" href="https://github.com/sferes2/sferes2/blob/master/sferes/eval/parallel.hpp">sferes/eval/parallel.hpp</a></li>
+<li><strong>Description:</strong> A SMP/multicore evaluator based on TBB
+(<a class="reference external" href="http://www.threadingbuildingblocks.org/">http://www.threadingbuildingblocks.org/</a>). <strong>Your fitness should be
+thread-safe!</strong></li>
+<li><strong>Typical typename:</strong></li>
+</ul>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">typedef</span> <span class="nb">eval</span><span class="p">::</span><span class="n">Parallel</span><span class="o">&lt;</span><span class="n">Params</span><span class="o">&gt;</span> <span class="n">eval_t</span><span class="p">;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="mpi">
+<h3>Mpi<a class="headerlink" href="#mpi" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><strong>File:</strong> <a class="reference external" href="sferes/eval/mpi.hpp">sferes/eval/mpi.hpp</a></li>
+<li><strong>Description:</strong> A MPI evaluator based on boost::mpi. It works on
+clusters but keep in mind that every cluster is different!</li>
+<li><strong>Typical typename:</strong></li>
+</ul>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">typedef</span> <span class="nb">eval</span><span class="p">::</span><span class="n">Mpi</span><span class="o">&lt;</span><span class="n">Params</span><span class="o">&gt;</span> <span class="n">eval_t</span><span class="p">;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="defining-your-own-evaluator">
+<h3>Defining your own evaluator<a class="headerlink" href="#defining-your-own-evaluator" title="Permalink to this headline">¶</a></h3>
+<p>The only required method is eval. It should call
+phen_t::develop() then phen_t::fit::eval() for each
+individual.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">namespace</span> <span class="n">sferes</span>
+<span class="p">{</span>
+  <span class="n">namespace</span> <span class="nb">eval</span>
+  <span class="p">{</span>
+    <span class="n">SFERES_EVAL</span><span class="p">(</span><span class="n">Eval</span><span class="p">)</span>
+    <span class="p">{</span>
+    <span class="n">public</span><span class="p">:</span>
+      <span class="n">template</span><span class="o">&lt;</span><span class="n">typename</span> <span class="n">Phen</span><span class="o">&gt;</span>
+        <span class="n">void</span> <span class="nb">eval</span><span class="p">(</span><span class="n">std</span><span class="p">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">boost</span><span class="p">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">Phen</span><span class="o">&gt;</span> <span class="o">&gt;&amp;</span> <span class="n">pop</span><span class="p">,</span> <span class="n">size_t</span> <span class="n">begin</span><span class="p">,</span> <span class="n">size_t</span> <span class="n">end</span><span class="p">)</span>
+      <span class="p">{</span>
+        <span class="k">for</span> <span class="p">(</span><span class="n">size_t</span> <span class="n">i</span> <span class="o">=</span> <span class="n">begin</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">end</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span>
+          <span class="p">{</span>
+            <span class="n">pop</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">-&gt;</span><span class="n">develop</span><span class="p">();</span>
+            <span class="n">pop</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">-&gt;</span><span class="n">fit</span><span class="p">()</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="o">*</span><span class="n">pop</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
+          <span class="p">}</span>
+      <span class="p">}</span>
+    <span class="n">protected</span><span class="p">:</span>
+    <span class="p">};</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="modifiers">
+<h2>Modifiers<a class="headerlink" href="#modifiers" title="Permalink to this headline">¶</a></h2>
+<p>Modifiers are run once all the individuals have been evaluated but
+before any sorting. They are designed to allow to modify the fitness
+values to implement niching strategies, diversity preservation
+mechanisms, etc.</p>
+<div class="section" id="dummy">
+<h3>Dummy<a class="headerlink" href="#dummy" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><strong>File:</strong>
+<a class="reference external" href="https://github.com/sferes2/sferes2/blob/master/sferes/modif/dummy.hpp">sferes/modif/dummy.hpp</a></li>
+<li><strong>Description:</strong> basic modifier which does nothing.</li>
+</ul>
+</div>
+<div class="section" id="diversity">
+<h3>Diversity<a class="headerlink" href="#diversity" title="Permalink to this headline">¶</a></h3>
+</div>
+<div class="section" id="novelty">
+<h3>Novelty<a class="headerlink" href="#novelty" title="Permalink to this headline">¶</a></h3>
+</div>
+</div>
+<div class="section" id="misc">
+<h2>Misc<a class="headerlink" href="#misc" title="Permalink to this headline">¶</a></h2>
+<p>The misc namespace contains useful small functions for:</p>
+<ul class="simple">
+<li>system access (e.g getpid())</li>
+<li>random number generation</li>
+</ul>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href="concepts.html" class="btn btn-neutral" title="Main concepts" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo" class="wy-footer">
+    <div role="contentinfo">
+      <p>
+          &copy; Copyright 2008-2018, UPMC / Inria.
+
+      
+      
+        <br/>
+        <a href="mailto:jean-baptiste.mouret@inria.fr"> Contact us </a>
+      
+      </p>
+    </div>
+    <div class="wy-footer-aside">
+      Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> modified for <a href="http://resibots.eu">Resibots</a>.
+    </div>
+    <div style="clear: both;"></div>
+  </div>
+<div class="wy-footer-logo-container">
+  <div class="wy-footer-logo"><img src="_static/logos/logo_eu.png"/></div>
+  <div class="wy-footer-logo"><img src="_static/logos/logo_erc_nonofficial.svg"/></div>
+  <div class="wy-footer-logo"><img src="_static/logos/logo_loria.jpg"/></div>
+  <div class="wy-footer-logo"><img src="_static/logos/logo-inria.svg"/></div>
+  <div class="wy-footer-logo"><img src="_static/logos/logo_cnrs.png"/></div>
+  <div class="wy-footer-logo"><img src="_static/logos/logo_universite_lorraine.jpg"/></div>
+</div>
+
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'0.1 alpha',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  <script type="text/javascript" src="_static/js/theme.js"></script>
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxResibotsTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

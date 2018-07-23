@@ -1,0 +1,579 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Tutorial (basics) &mdash; Sferes_v2 0.1 alpha documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="genindex.html"/>
+        <link rel="search" title="Search" href="search.html"/>
+    <link rel="top" title="Sferes_v2 0.1 alpha documentation" href="index.html"/>
+        <link rel="next" title="Main concepts" href="concepts.html"/>
+        <link rel="prev" title="Compilation" href="compilation.html"/>
+<style type="text/css">
+/* This CSS displays small logos at the bottom of the page, on one line */
+
+.wy-footer-logo-container {
+  margin-top: 50px;
+  text-align: center;
+}
+
+.wy-footer-logo {
+  display: inline-block;
+  width: 60px;
+}
+</style>
+
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+          
+
+          
+            <a href="http://www.resibots.eu">
+          
+
+          
+            
+            <img src="_static/resibots_logo_black_200px.png" class="logo" />
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                2.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="resibots-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+                  <a class="caption" href="http://www.resibots.eu">Back to resiBots' website</a>
+              
+            
+
+            
+            
+                <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="index.html">Sferes_v2 – documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="compilation.html">Compilation</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Tutorial (basics)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#running-a-sferes2-executable">Running a sferes2 executable</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#loading-a-result-file">Loading a result file</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#building-your-own-experiment">Building your own experiment</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#setting-everything-up">Setting everything up</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#customizing-writing-the-experiment">Customizing / writing the experiment</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="concepts.html">Main concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="reference.html">Reference manual</a></li>
+</ul>
+
+            
+
+            
+            
+              
+                <a class="caption" href="http://github.com/resibots">github</a>
+              
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="index.html">Sferes_v2</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="index.html">Fferes_v2</a> &raquo;</li>
+    
+    <li>Tutorial (basics)</li>
+    <li class="wy-breadcrumbs-aside">
+      
+        
+          <a href="_sources/tutorial.rst.txt" rel="nofollow"> View page source</a>
+        
+      
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="tutorial-basics">
+<h1>Tutorial (basics)<a class="headerlink" href="#tutorial-basics" title="Permalink to this headline">¶</a></h1>
+<p>This short example shows how to set up a basic experiment to optimize
+parameters using a user-defined fitness.</p>
+<div class="section" id="running-a-sferes2-executable">
+<h2>Running a sferes2 executable<a class="headerlink" href="#running-a-sferes2-executable" title="Permalink to this headline">¶</a></h2>
+<p>Waf put all the compiled files in the “build” directory. Two variants
+are produced: “default” and “debug”. You should always run the debug
+version first because the default version disables assert. Each variant
+mirrors the architecture of the main sferes2 directory.</p>
+<p>Sferes2 contains some basic examples in the “examples” directory. For
+instance, let’s check “ex:sub:<cite>ea</cite>.cpp”, a basic single-objective
+optimization of parameters. To launch the debug version, you should run:</p>
+<div class="code shell highlight-default"><div class="highlight"><pre><span></span><span class="n">build</span><span class="o">/</span><span class="n">debug</span><span class="o">/</span><span class="n">examples</span><span class="o">/</span><span class="n">ex_ea</span>
+</pre></div>
+</div>
+<p>A verbose mode is also available:</p>
+<div class="code shell highlight-default"><div class="highlight"><pre><span></span><span class="n">build</span><span class="o">/</span><span class="n">debug</span><span class="o">/</span><span class="n">examples</span><span class="o">/</span><span class="n">ex_ea</span> <span class="o">-</span><span class="n">v</span> <span class="nb">all</span>
+</pre></div>
+</div>
+<p>And a more verbose one:</p>
+<div class="code shell highlight-default"><div class="highlight"><pre><span></span><span class="n">build</span><span class="o">/</span><span class="n">debug</span><span class="o">/</span><span class="n">examples</span><span class="o">/</span><span class="n">ex_ea</span> <span class="o">-</span><span class="n">v</span> <span class="nb">all</span> <span class="o">-</span><span class="n">v</span> <span class="n">trace</span>
+</pre></div>
+</div>
+<p>For the optimized version:</p>
+<div class="code shell highlight-default"><div class="highlight"><pre><span></span><span class="n">build</span><span class="o">/</span><span class="n">default</span><span class="o">/</span><span class="n">examples</span><span class="o">/</span><span class="n">ex_ea</span>
+</pre></div>
+</div>
+<p>Running one of those commands should create a directory named using the
+schema hostame<sub>pid</sub>-year-month-day:sub:<cite>hours</cite>:min:seconds. In
+this directory there are:</p>
+<ul class="simple">
+<li>a file called “bestfit.dat”, which contains, for each generation, the
+value of the best fitness;</li>
+<li>many files calles gen<sub>xxx</sub> where xxx is a number.</li>
+</ul>
+<p>These files are XML files which store the best candidates solutions for
+each generation (xxx is the generation number). For instance:</p>
+<div class="code xml highlight-default"><div class="highlight"><pre><span></span>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;yes&quot; ?&gt;
+&lt;!DOCTYPE boost_serialization&gt;
+&lt;boost_serialization signature=&quot;serialization::archive&quot; version=&quot;5&quot;&gt;
+  &lt;x class_id=&quot;0&quot; tracking_level=&quot;0&quot; version=&quot;0&quot;&gt;
+    &lt;_best class_id=&quot;1&quot; tracking_level=&quot;0&quot; version=&quot;1&quot;&gt;
+      &lt;px class_id=&quot;2&quot; tracking_level=&quot;1&quot; version=&quot;0&quot; object_id=&quot;_0&quot;&gt;
+    &lt;_gen class_id=&quot;3&quot; tracking_level=&quot;0&quot; version=&quot;0&quot;&gt;
+      &lt;_data&gt;
+        &lt;count&gt;10&lt;/count&gt;
+        &lt;item_version&gt;0&lt;/item_version&gt;
+        &lt;item&gt;0.50000423&lt;/item&gt;
+        &lt;item&gt;0.49999771&lt;/item&gt;
+        &lt;item&gt;0.49999756&lt;/item&gt;
+        &lt;item&gt;0.49999699&lt;/item&gt;
+        &lt;item&gt;0.50000197&lt;/item&gt;
+        &lt;item&gt;0.49999171&lt;/item&gt;
+        &lt;item&gt;0.5000003&lt;/item&gt;
+        &lt;item&gt;0.50000542&lt;/item&gt;
+        &lt;item&gt;0.50002229&lt;/item&gt;
+        &lt;item&gt;0.49999493&lt;/item&gt;
+      &lt;/_data&gt;
+    &lt;/_gen&gt;
+    &lt;_fit class_id=&quot;5&quot; tracking_level=&quot;0&quot; version=&quot;0&quot;&gt;
+      &lt;_value&gt;-4.0586573e-14&lt;/_value&gt;
+      &lt;_objs&gt;
+        &lt;count&gt;0&lt;/count&gt;
+        &lt;item_version&gt;0&lt;/item_version&gt;
+      &lt;/_objs&gt;
+    &lt;/_fit&gt;
+      &lt;/px&gt;
+    &lt;/_best&gt;
+  &lt;/x&gt;
+  &lt;x class_id=&quot;6&quot; tracking_level=&quot;0&quot; version=&quot;0&quot;&gt;
+    &lt;_mean&gt;-5376.9888&lt;/_mean&gt;
+  &lt;/x&gt;
+&lt;/boost_serialization&gt;
+</pre></div>
+</div>
+<p>This XML file mirrors the statistics used in this experiment (more about
+this in the next sections). At this point of this overview, you can
+check:</p>
+<ul class="simple">
+<li>the <sub>data</sub> subtree which lists the values of the “optimal”
+parameters (the result of the experiment);</li>
+<li>the <sub>fit</sub> subtree which shows the fitness value of this
+“optimal” individual;</li>
+<li>the <sub>mean</sub> value which corresponds to the mean fitness in the
+population (another statistics);</li>
+</ul>
+</div>
+<div class="section" id="loading-a-result-file">
+<h2>Loading a result file<a class="headerlink" href="#loading-a-result-file" title="Permalink to this headline">¶</a></h2>
+<p>These XML files can be easily post-processed in your favorite language
+if needed. However, the same executable which generated the result files
+can also read them using the following syntax in the experience
+directory :</p>
+<div class="code shell highlight-default"><div class="highlight"><pre><span></span><span class="o">../</span><span class="n">build</span><span class="o">/</span><span class="n">default</span><span class="o">/</span><span class="n">examples</span><span class="o">/</span><span class="n">ex_ea</span> <span class="o">--</span><span class="n">load</span> <span class="n">gen_1000</span> <span class="o">-</span><span class="n">o</span> <span class="n">output_file</span> <span class="o">-</span><span class="n">n</span> <span class="n">number</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li>output<sub>file</sub> is a text file which, most of the time (depending
+on the genotype and phenotype used), describes the best individual
+(or the Pareto-optimal set in multiobjective optimization); in this
+example, it contains the value of the parameters for the best
+individual:</li>
+</ul>
+<div class="code shell highlight-default"><div class="highlight"><pre><span></span><span class="n">cat</span> <span class="n">output_file</span>
+<span class="mf">8.46386e-05</span> <span class="o">-</span><span class="mf">4.58956e-05</span> <span class="o">-</span><span class="mf">4.88758e-05</span> <span class="o">-</span><span class="mf">6.02007e-05</span> <span class="mf">3.93391e-05</span> <span class="o">-</span><span class="mf">0.000165701</span> <span class="mf">5.96046e-06</span> <span class="mf">0.00010848</span> <span class="mf">0.000445843</span> <span class="o">-</span><span class="mf">0.000101328</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li>number is the number of the individual described in the file you want
+to load.</li>
+</ul>
+</div>
+<div class="section" id="building-your-own-experiment">
+<h2>Building your own experiment<a class="headerlink" href="#building-your-own-experiment" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="setting-everything-up">
+<h3>Setting everything up<a class="headerlink" href="#setting-everything-up" title="Permalink to this headline">¶</a></h3>
+<ol class="arabic">
+<li><p class="first">Create directories and files</p>
+<ul class="simple">
+<li>At the root of the sferes repository (the main directory), use waf
+to create a new experiment. Let’s call it “test”:</li>
+</ul>
+<div class="code shell highlight-default"><div class="highlight"><pre><span></span><span class="o">./</span><span class="n">waf</span> <span class="o">--</span><span class="n">create</span> <span class="n">test</span>
+</pre></div>
+</div>
+<p>This should have created a new directory exp/test, a waf file
+exp/test/wscript and a basic file exp/test/test.cpp. You can now
+edit/customize them.</p>
+</li>
+<li><p class="first">Compiling</p>
+<ul class="simple">
+<li>In the main sferes2 directory (not in the experiment’s directory):</li>
+</ul>
+<div class="code shell highlight-default"><div class="highlight"><pre><span></span><span class="o">./</span><span class="n">waf</span> <span class="o">--</span><span class="n">exp</span> <span class="n">my_exp</span>
+</pre></div>
+</div>
+<p>If the experiment is called “test”, the command line is:</p>
+<div class="code shell highlight-default"><div class="highlight"><pre><span></span><span class="o">./</span><span class="n">waf</span> <span class="o">--</span><span class="n">exp</span> <span class="n">test</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Running</p>
+<div class="code shell highlight-default"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="n">exp</span><span class="o">/</span><span class="n">test</span>
+<span class="o">../../</span><span class="n">build</span><span class="o">/</span><span class="n">debug</span><span class="o">/</span><span class="n">exp</span><span class="o">/</span><span class="n">test</span><span class="o">/</span><span class="n">test</span>
+</pre></div>
+</div>
+<p>and for the optimized version:</p>
+<div class="code shell highlight-default"><div class="highlight"><pre><span></span><span class="o">../../</span><span class="n">build</span><span class="o">/</span><span class="n">default</span><span class="o">/</span><span class="n">exp</span><span class="o">/</span><span class="n">test</span><span class="o">/</span><span class="n">test</span>
+</pre></div>
+</div>
+</li>
+</ol>
+</div>
+<div class="section" id="customizing-writing-the-experiment">
+<h3>Customizing / writing the experiment<a class="headerlink" href="#customizing-writing-the-experiment" title="Permalink to this headline">¶</a></h3>
+<p>Let’s start with exp/test/test.cpp, <em>from the end of the file</em>.</p>
+<ol class="arabic">
+<li><p class="first">Main function</p>
+<p>At the end of the file, you should see a main() function. It defines
+some types using typedef then run the evolutionary algorithm. The
+types describe our experiment (what kind of genotype? what kind of
+fitness? what kind of algorithm?). We will go back to the Params
+class in the following section. Ignore it for now.</p>
+</li>
+</ol>
+<div class="code c++ highlight-default"><div class="highlight"><pre><span></span><span class="nb">int</span> <span class="n">main</span><span class="p">(</span><span class="nb">int</span> <span class="n">argc</span><span class="p">,</span> <span class="n">char</span> <span class="o">**</span><span class="n">argv</span><span class="p">)</span>
+<span class="p">{</span>
+  <span class="o">//</span> <span class="n">Our</span> <span class="n">fitness</span> <span class="ow">is</span> <span class="n">the</span> <span class="k">class</span> <span class="nc">FitTest</span> <span class="p">(</span><span class="n">see</span> <span class="n">above</span><span class="p">),</span> <span class="n">that</span> <span class="n">we</span> <span class="n">call</span>
+  <span class="o">//</span> <span class="n">fit_t</span><span class="o">.</span> <span class="n">Params</span> <span class="ow">is</span> <span class="n">the</span> <span class="nb">set</span> <span class="n">of</span> <span class="n">parameters</span> <span class="p">(</span><span class="n">struct</span> <span class="n">Params</span><span class="p">)</span> <span class="n">defined</span> <span class="ow">in</span>
+  <span class="o">//</span> <span class="n">this</span> <span class="n">file</span><span class="o">.</span>
+  <span class="n">typedef</span> <span class="n">FitTest</span><span class="o">&lt;</span><span class="n">Params</span><span class="o">&gt;</span> <span class="n">fit_t</span><span class="p">;</span>
+  <span class="o">//</span> <span class="n">We</span> <span class="n">define</span> <span class="n">the</span> <span class="n">genotype</span><span class="o">.</span> <span class="n">Here</span> <span class="n">we</span> <span class="n">choose</span> <span class="n">EvoFloat</span> <span class="p">(</span><span class="n">real</span>
+  <span class="o">//</span> <span class="n">numbers</span><span class="p">)</span><span class="o">.</span> <span class="n">We</span> <span class="n">evolve</span> <span class="mi">10</span> <span class="n">real</span> <span class="n">numbers</span><span class="p">,</span> <span class="k">with</span> <span class="n">the</span> <span class="n">params</span> <span class="n">defined</span> <span class="ow">in</span>
+  <span class="o">//</span> <span class="n">Params</span> <span class="p">(</span><span class="n">cf</span> <span class="n">the</span> <span class="n">beginning</span> <span class="n">of</span> <span class="n">this</span> <span class="n">file</span><span class="p">)</span>
+  <span class="n">typedef</span> <span class="n">gen</span><span class="p">::</span><span class="n">EvoFloat</span><span class="o">&lt;</span><span class="mi">10</span><span class="p">,</span> <span class="n">Params</span><span class="o">&gt;</span> <span class="n">gen_t</span><span class="p">;</span>
+  <span class="o">//</span> <span class="n">This</span> <span class="n">genotype</span> <span class="n">should</span> <span class="n">be</span> <span class="n">simply</span> <span class="n">transformed</span> <span class="n">into</span> <span class="n">a</span> <span class="n">vector</span> <span class="n">of</span>
+  <span class="o">//</span> <span class="n">parameters</span> <span class="p">(</span><span class="n">phen</span><span class="p">::</span><span class="n">Parameters</span><span class="p">)</span><span class="o">.</span> <span class="n">The</span> <span class="n">genotype</span> <span class="n">could</span> <span class="n">also</span> <span class="n">have</span> <span class="n">been</span>
+  <span class="o">//</span> <span class="n">transformed</span> <span class="n">into</span> <span class="n">a</span> <span class="n">shape</span><span class="p">,</span> <span class="n">a</span> <span class="n">neural</span> <span class="n">network</span><span class="o">...</span> <span class="n">The</span> <span class="n">phenotype</span> <span class="n">need</span>
+  <span class="o">//</span> <span class="n">to</span> <span class="n">know</span> <span class="n">which</span> <span class="n">fitness</span> <span class="n">to</span> <span class="n">use</span><span class="p">;</span> <span class="n">we</span> <span class="k">pass</span> <span class="n">fit_t</span> <span class="n">to</span> <span class="n">it</span><span class="o">.</span>
+  <span class="n">typedef</span> <span class="n">phen</span><span class="p">::</span><span class="n">Parameters</span><span class="o">&lt;</span><span class="n">gen_t</span><span class="p">,</span> <span class="n">fit_t</span><span class="p">,</span> <span class="n">Params</span><span class="o">&gt;</span> <span class="n">phen_t</span><span class="p">;</span>
+  <span class="o">//</span> <span class="n">The</span> <span class="n">evaluator</span> <span class="ow">is</span> <span class="ow">in</span> <span class="n">charge</span> <span class="n">of</span> <span class="n">distributing</span> <span class="n">the</span> <span class="n">evaluation</span> <span class="n">of</span> <span class="n">the</span>
+  <span class="o">//</span> <span class="n">population</span><span class="o">.</span> <span class="n">It</span> <span class="n">can</span> <span class="n">be</span> <span class="n">simple</span> <span class="nb">eval</span><span class="p">::</span><span class="n">Eval</span> <span class="p">(</span><span class="n">nothing</span> <span class="n">special</span><span class="p">),</span>
+  <span class="o">//</span> <span class="n">parallel</span> <span class="p">(</span><span class="k">for</span> <span class="n">multicore</span> <span class="n">machines</span><span class="p">,</span> <span class="nb">eval</span><span class="p">::</span><span class="n">Parallel</span><span class="p">)</span> <span class="ow">or</span> <span class="n">distributed</span>
+  <span class="o">//</span> <span class="p">(</span><span class="k">for</span> <span class="n">clusters</span><span class="p">,</span> <span class="nb">eval</span><span class="p">::</span><span class="n">Mpi</span><span class="p">)</span><span class="o">.</span>
+  <span class="n">typedef</span> <span class="nb">eval</span><span class="p">::</span><span class="n">Eval</span><span class="o">&lt;</span><span class="n">Params</span><span class="o">&gt;</span> <span class="n">eval_t</span><span class="p">;</span>
+  <span class="o">//</span> <span class="n">Statistics</span> <span class="n">gather</span> <span class="n">data</span> <span class="n">about</span> <span class="n">the</span> <span class="n">evolutionary</span> <span class="n">process</span> <span class="p">(</span><span class="n">mean</span>
+  <span class="o">//</span> <span class="n">fitness</span><span class="p">,</span> <span class="n">Pareto</span> <span class="n">front</span><span class="p">,</span> <span class="o">...</span><span class="p">)</span><span class="o">.</span> <span class="n">Since</span> <span class="n">they</span> <span class="n">can</span> <span class="n">also</span> <span class="n">store</span> <span class="n">the</span> <span class="n">best</span>
+  <span class="o">//</span> <span class="n">individuals</span><span class="p">,</span> <span class="n">they</span> <span class="n">are</span> <span class="n">the</span> <span class="n">container</span> <span class="n">of</span> <span class="n">our</span> <span class="n">results</span><span class="o">.</span> <span class="n">We</span> <span class="n">can</span> <span class="n">add</span> <span class="k">as</span>
+  <span class="o">//</span> <span class="n">many</span> <span class="n">statistics</span> <span class="k">as</span> <span class="n">required</span> <span class="n">thanks</span> <span class="n">to</span> <span class="n">the</span> <span class="n">boost</span><span class="p">::</span><span class="n">fusion</span><span class="p">::</span><span class="n">vector</span><span class="o">.</span>
+  <span class="n">typedef</span> <span class="n">boost</span><span class="p">::</span><span class="n">fusion</span><span class="p">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">stat</span><span class="p">::</span><span class="n">BestFit</span><span class="o">&lt;</span><span class="n">phen_t</span><span class="p">,</span> <span class="n">Params</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">stat</span><span class="p">::</span><span class="n">MeanFit</span><span class="o">&lt;</span><span class="n">Params</span><span class="o">&gt;</span> <span class="o">&gt;</span>  <span class="n">stat_t</span><span class="p">;</span>
+  <span class="o">//</span> <span class="n">Modifiers</span> <span class="n">are</span> <span class="n">functors</span> <span class="n">which</span> <span class="n">are</span> <span class="n">run</span> <span class="n">once</span> <span class="nb">all</span> <span class="n">individuals</span> <span class="n">have</span>
+  <span class="o">//</span> <span class="n">been</span> <span class="n">evalutated</span><span class="o">.</span> <span class="n">Their</span> <span class="n">typical</span> <span class="n">use</span> <span class="ow">is</span> <span class="n">to</span> <span class="n">add</span> <span class="n">some</span> <span class="n">evolutionary</span>
+  <span class="o">//</span> <span class="n">pressures</span> <span class="n">towards</span> <span class="n">diversity</span> <span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">g</span><span class="o">.</span> <span class="n">fitness</span> <span class="n">sharing</span><span class="p">)</span><span class="o">.</span> <span class="n">Here</span> <span class="n">we</span> <span class="n">don</span><span class="s1">&#39;t</span>
+  <span class="o">//</span> <span class="n">use</span> <span class="n">this</span> <span class="n">feature</span><span class="o">.</span> <span class="n">As</span> <span class="n">a</span> <span class="n">consequence</span> <span class="n">we</span> <span class="n">use</span> <span class="n">a</span> <span class="s2">&quot;dummy&quot;</span> <span class="n">modifier</span> <span class="n">that</span>
+  <span class="o">//</span> <span class="n">does</span> <span class="n">nothing</span><span class="o">.</span>
+  <span class="n">typedef</span> <span class="n">modif</span><span class="p">::</span><span class="n">Dummy</span><span class="o">&lt;&gt;</span> <span class="n">modifier_t</span><span class="p">;</span>
+  <span class="o">//</span> <span class="n">We</span> <span class="n">can</span> <span class="k">finally</span> <span class="n">put</span> <span class="n">everything</span> <span class="n">together</span><span class="o">.</span> <span class="n">RankSimple</span> <span class="ow">is</span> <span class="n">the</span>
+  <span class="o">//</span> <span class="n">evolutionary</span> <span class="n">algorithm</span><span class="o">.</span> <span class="n">It</span> <span class="ow">is</span> <span class="n">parametrized</span> <span class="n">by</span> <span class="n">the</span> <span class="n">phenotype</span><span class="p">,</span> <span class="n">the</span>
+  <span class="o">//</span> <span class="n">evaluator</span><span class="p">,</span> <span class="n">the</span> <span class="n">statistics</span> <span class="nb">list</span><span class="p">,</span> <span class="n">the</span> <span class="n">modifier</span> <span class="ow">and</span> <span class="n">the</span> <span class="n">general</span> <span class="n">params</span><span class="o">.</span>
+  <span class="n">typedef</span> <span class="n">ea</span><span class="p">::</span><span class="n">RankSimple</span><span class="o">&lt;</span><span class="n">phen_t</span><span class="p">,</span> <span class="n">eval_t</span><span class="p">,</span> <span class="n">stat_t</span><span class="p">,</span> <span class="n">modifier_t</span><span class="p">,</span> <span class="n">Params</span><span class="o">&gt;</span> <span class="n">ea_t</span><span class="p">;</span>
+  <span class="o">//</span> <span class="n">We</span> <span class="n">now</span> <span class="n">have</span> <span class="n">a</span> <span class="n">special</span> <span class="k">class</span> <span class="nc">for</span> <span class="n">our</span> <span class="n">experiment</span><span class="p">:</span> <span class="n">ea_t</span><span class="o">.</span> <span class="n">The</span> <span class="nb">next</span>
+  <span class="o">//</span> <span class="n">line</span> <span class="n">instantiates</span> <span class="n">an</span> <span class="nb">object</span> <span class="n">of</span> <span class="n">this</span> <span class="k">class</span>
+  <span class="nc">ea_t</span> <span class="n">ea</span><span class="p">;</span>
+  <span class="o">//</span> <span class="n">We</span> <span class="n">can</span> <span class="n">now</span> <span class="n">process</span> <span class="n">the</span> <span class="n">command</span> <span class="n">line</span> <span class="n">options</span> <span class="ow">and</span> <span class="n">run</span> <span class="n">the</span>
+  <span class="o">//</span> <span class="n">evolutionary</span> <span class="n">algorithm</span> <span class="p">(</span><span class="k">if</span> <span class="n">a</span> <span class="o">--</span><span class="n">load</span> <span class="n">argument</span> <span class="ow">is</span> <span class="n">passed</span><span class="p">,</span> <span class="n">the</span> <span class="n">file</span>
+  <span class="o">//</span> <span class="ow">is</span> <span class="n">loaded</span><span class="p">;</span> <span class="n">otherwise</span><span class="p">,</span> <span class="n">the</span> <span class="n">algorithm</span> <span class="ow">is</span> <span class="n">launched</span><span class="p">)</span><span class="o">.</span>
+  <span class="n">run_ea</span><span class="p">(</span><span class="n">argc</span><span class="p">,</span> <span class="n">argv</span><span class="p">,</span> <span class="n">ea</span><span class="p">);</span>
+  <span class="o">//</span>
+  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<ol class="arabic">
+<li><p class="first">Include part</p>
+<p>Let’s now go back to the top of the file. The file starts with the
+usual include files, which obviously depends on which classes
+(genotype, phenotype, ea, …) you selected in the main function:</p>
+</li>
+</ol>
+<div class="code c++ highlight-default"><div class="highlight"><pre><span></span><span class="c1">#include &lt;iostream&gt;</span>
+<span class="c1">#include &lt;sferes/phen/parameters.hpp&gt;</span>
+<span class="c1">#include &lt;sferes/gen/evo_float.hpp&gt;</span>
+<span class="c1">#include &lt;sferes/ea/rank_simple.hpp&gt;</span>
+<span class="c1">#include &lt;sferes/eval/eval.hpp&gt;</span>
+<span class="c1">#include &lt;sferes/stat/best_fit.hpp&gt;</span>
+<span class="c1">#include &lt;sferes/stat/mean_fit.hpp&gt;</span>
+<span class="c1">#include &lt;sferes/modif/dummy.hpp&gt;</span>
+<span class="c1">#include &lt;sferes/run.hpp&gt;</span>
+</pre></div>
+</div>
+<ol class="arabic">
+<li><p class="first">Params</p>
+<p>Then, the Params structure defines the parameters of the algorithm.
+This particular way of setting them allows the compiler to propagate
+constants to the whole programm (i.e. it replaces the parameters in
+the code by their values), allowing some optimizations. This
+parameters will depend on the algorithms you chose to use in your
+main function.</p>
+</li>
+</ol>
+<div class="code c++ highlight-default"><div class="highlight"><pre><span></span>struct Params
+{
+  struct evo_float
+  {
+    // we choose the polynomial mutation type
+    SFERES_CONST mutation_t mutation_type = polynomial;
+    // we choose the polynomial cross-over type
+    SFERES_CONST cross_over_t cross_over_type = sbx;
+    // the mutation rate of the real-valued vector
+    SFERES_CONST float mutation_rate = 0.1f;
+    // a parameter of the polynomial mutation
+    SFERES_CONST float eta_m = 15.0f;
+    // a parameter of the polynomial cross-over
+    SFERES_CONST float eta_c = 10.0f;
+  };
+  struct pop
+  {
+    // size of the population
+    SFERES_CONST unsigned size = 200;
+    // number of generations
+    SFERES_CONST unsigned nb_gen = 2000;
+    // how often should the result file be written (here, each 5
+    // generation)
+    SFERES_CONST int dump_period = 5;
+    // how many individuals should be created during the random
+    // generation process?
+    SFERES_CONST int initial_aleat = 1;
+    // used by RankSimple to select the pressure
+    SFERES_CONST float coeff = 1.1f;
+    // the number of individuals which are kept from one generation to
+    // another (elitism)
+    SFERES_CONST float keep_rate = 0.6f;
+  };
+  struct parameters
+  {
+    // maximum value of the phenotype parameters
+    SFERES_CONST float min = -10.0f;
+    // minimum value
+    SFERES_CONST float max = 10.0f;
+  };
+};
+</pre></div>
+</div>
+<ol class="arabic">
+<li><p class="first">Fitness function</p>
+<p>Last, it’s time to write the fitness function. It’s a special class
+with an “eval()” function which derives from fit::Fitness. It has to
+fill this-&gt;<sub>value</sub> in single-objective optimization and
+this-&gt;<sub>objs</sub> in multiobjective optimization. In this example,
+we want to maximize -∑:sub:<cite>i</cite> p<sub>i</sub><sup>4</sup>, where p is the
+individual’s phenotype.</p>
+</li>
+</ol>
+<div class="code c++ highlight-default"><div class="highlight"><pre><span></span><span class="n">SFERES_FITNESS</span><span class="p">(</span><span class="n">FitTest</span><span class="p">,</span> <span class="n">sferes</span><span class="p">::</span><span class="n">fit</span><span class="p">::</span><span class="n">Fitness</span><span class="p">)</span>
+<span class="p">{</span>
+ <span class="n">public</span><span class="p">:</span>
+  <span class="o">//</span> <span class="n">indiv</span> <span class="n">will</span> <span class="n">have</span> <span class="n">the</span> <span class="nb">type</span> <span class="n">defined</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">main</span> <span class="p">(</span><span class="n">phen_t</span><span class="p">)</span>
+  <span class="n">template</span><span class="o">&lt;</span><span class="n">typename</span> <span class="n">Indiv</span><span class="o">&gt;</span>
+    <span class="n">void</span> <span class="nb">eval</span><span class="p">(</span><span class="n">const</span> <span class="n">Indiv</span><span class="o">&amp;</span> <span class="n">ind</span><span class="p">)</span>
+  <span class="p">{</span>
+    <span class="nb">float</span> <span class="n">v</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">unsigned</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">ind</span><span class="o">.</span><span class="n">size</span><span class="p">();</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span>
+      <span class="p">{</span>
+    <span class="nb">float</span> <span class="n">p</span> <span class="o">=</span> <span class="n">ind</span><span class="o">.</span><span class="n">data</span><span class="p">(</span><span class="n">i</span><span class="p">);</span>
+    <span class="n">v</span> <span class="o">+=</span> <span class="n">p</span> <span class="o">*</span> <span class="n">p</span> <span class="o">*</span> <span class="n">p</span> <span class="o">*</span> <span class="n">p</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="n">this</span><span class="o">-&gt;</span><span class="n">_value</span> <span class="o">=</span> <span class="o">-</span><span class="n">v</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>You can now have a look at the <cite>examples</cite> directory.</p>
+</div>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="concepts.html" class="btn btn-neutral float-right" title="Main concepts" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="compilation.html" class="btn btn-neutral" title="Compilation" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo" class="wy-footer">
+    <div role="contentinfo">
+      <p>
+          &copy; Copyright 2008-2018, UPMC / Inria.
+
+      
+      
+        <br/>
+        <a href="mailto:jean-baptiste.mouret@inria.fr"> Contact us </a>
+      
+      </p>
+    </div>
+    <div class="wy-footer-aside">
+      Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> modified for <a href="http://resibots.eu">Resibots</a>.
+    </div>
+    <div style="clear: both;"></div>
+  </div>
+<div class="wy-footer-logo-container">
+  <div class="wy-footer-logo"><img src="_static/logos/logo_eu.png"/></div>
+  <div class="wy-footer-logo"><img src="_static/logos/logo_erc_nonofficial.svg"/></div>
+  <div class="wy-footer-logo"><img src="_static/logos/logo_loria.jpg"/></div>
+  <div class="wy-footer-logo"><img src="_static/logos/logo-inria.svg"/></div>
+  <div class="wy-footer-logo"><img src="_static/logos/logo_cnrs.png"/></div>
+  <div class="wy-footer-logo"><img src="_static/logos/logo_universite_lorraine.jpg"/></div>
+</div>
+
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'0.1 alpha',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  <script type="text/javascript" src="_static/js/theme.js"></script>
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxResibotsTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>
