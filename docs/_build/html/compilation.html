@@ -1,0 +1,385 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Compilation &mdash; Sferes_v2 0.1 alpha documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="genindex.html"/>
+        <link rel="search" title="Search" href="search.html"/>
+    <link rel="top" title="Sferes_v2 0.1 alpha documentation" href="index.html"/>
+        <link rel="next" title="Tutorial (basics)" href="tutorial.html"/>
+        <link rel="prev" title="Sferes_v2 – documentation" href="index.html"/>
+<style type="text/css">
+/* This CSS displays small logos at the bottom of the page, on one line */
+
+.wy-footer-logo-container {
+  margin-top: 50px;
+  text-align: center;
+}
+
+.wy-footer-logo {
+  display: inline-block;
+  width: 60px;
+}
+</style>
+
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+          
+
+          
+            <a href="http://www.resibots.eu">
+          
+
+          
+            
+            <img src="_static/resibots_logo_black_200px.png" class="logo" />
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                2.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="resibots-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+                  <a class="caption" href="http://www.resibots.eu">Back to resiBots' website</a>
+              
+            
+
+            
+            
+                <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="index.html">Sferes_v2 – documentation</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Compilation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#dependencies">Dependencies</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#ubuntu-debian">Ubuntu / Debian</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#osx-brew">OSX (brew)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#id1">Compilation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#simple-compilation">Simple compilation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#configuration-and-details">Configuration and details</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#optional-modules">Optional modules</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial (basics)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="concepts.html">Main concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="reference.html">Reference manual</a></li>
+</ul>
+
+            
+
+            
+            
+              
+                <a class="caption" href="http://github.com/resibots">github</a>
+              
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="index.html">Sferes_v2</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="index.html">Fferes_v2</a> &raquo;</li>
+    
+    <li>Compilation</li>
+    <li class="wy-breadcrumbs-aside">
+      
+        
+          <a href="_sources/compilation.rst.txt" rel="nofollow"> View page source</a>
+        
+      
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="compilation">
+<h1>Compilation<a class="headerlink" href="#compilation" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="dependencies">
+<h2>Dependencies<a class="headerlink" href="#dependencies" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="ubuntu-debian">
+<h3>Ubuntu / Debian<a class="headerlink" href="#ubuntu-debian" title="Permalink to this headline">¶</a></h3>
+<p>We list here the Ubuntu package names:</p>
+<ul class="simple">
+<li>[required] libboost-dev &gt;= 1.35 (including test, serialization,
+graph, program<sub>options</sub>, filesystem); see
+<a class="reference external" href="http://www.boost.org">http://www.boost.org</a>;</li>
+<li>[required] libboost-test-dev &gt;= 1.35</li>
+<li>[required] libboost-filesystem-dev &gt;= 1.35</li>
+<li>[required] libboost-program-options-dev &gt;= 1.35</li>
+<li>[required] libboost-graph-parallel-dev &gt;= 1.35</li>
+<li>[required] python &gt;= 2.4;</li>
+<li>[required] g++ &gt;= 4.2 (this should work with icc and clang too);</li>
+<li>[optional but highly recommended] libtbb-dev; see
+<a class="reference external" href="http://www.threadingbuildingblocks.org/">http://www.threadingbuildingblocks.org/</a></li>
+<li>[optional but recommended] libeigen3-dev ; see
+<a class="reference external" href="http://eigen.tuxfamily.org/">http://eigen.tuxfamily.org/</a></li>
+<li>[optional but recommended] python-simplejson;</li>
+<li>[optional] libboost-mpi-dev , if you need the optional MPI support
+(Warning: the Ubuntu packages of boost are not compiled with MPI
+support; you will have to compile boost yourself to use MPI).</li>
+<li>[optional] OpenMPI or another MPI implementation (tested with IBM MPI
+and OpenMPI)</li>
+<li>[optional] libgoogle-perftools-dev.</li>
+</ul>
+<div class="code shell highlight-default"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="n">libboost</span><span class="o">-</span><span class="n">dev</span> <span class="n">libboost</span><span class="o">-</span><span class="n">test</span><span class="o">-</span><span class="n">dev</span> <span class="n">libboost</span><span class="o">-</span><span class="n">filesystem</span><span class="o">-</span><span class="n">dev</span> <span class="n">libboost</span><span class="o">-</span><span class="n">program</span><span class="o">-</span><span class="n">options</span><span class="o">-</span><span class="n">dev</span> <span class="n">libboost</span><span class="o">-</span><span class="n">graph</span><span class="o">-</span><span class="n">parallel</span><span class="o">-</span><span class="n">dev</span> <span class="n">python</span> <span class="n">g</span><span class="o">++</span> <span class="n">libtbb</span><span class="o">-</span><span class="n">dev</span> <span class="n">libeigen3</span><span class="o">-</span><span class="n">dev</span> <span class="n">python</span><span class="o">-</span><span class="n">simplejson</span> <span class="n">libgoogle</span><span class="o">-</span><span class="n">perftools</span><span class="o">-</span><span class="n">dev</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="osx-brew">
+<h3>OSX (brew)<a class="headerlink" href="#osx-brew" title="Permalink to this headline">¶</a></h3>
+<p>To install MPI support with brew:</p>
+<div class="code shell highlight-default"><div class="highlight"><pre><span></span><span class="n">brew</span> <span class="o">-</span><span class="n">v</span> <span class="n">install</span>  <span class="n">boost</span> <span class="o">--</span><span class="k">with</span><span class="o">-</span><span class="n">mpi</span> <span class="o">--</span><span class="n">without</span><span class="o">-</span><span class="n">single</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="id1">
+<h2>Compilation<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="simple-compilation">
+<h3>Simple compilation<a class="headerlink" href="#simple-compilation" title="Permalink to this headline">¶</a></h3>
+<p>Assuming that everything has been properly installed you should be able
+to compile sferes2 by typing (in the main sferes directory):</p>
+<div class="code shell highlight-default"><div class="highlight"><pre><span></span><span class="o">./</span><span class="n">waf</span> <span class="n">configure</span>
+<span class="o">./</span><span class="n">waf</span> <span class="n">build</span>
+</pre></div>
+</div>
+<p>You should then run the unit tests:</p>
+<div class="code shell highlight-default"><div class="highlight"><pre><span></span><span class="o">./</span><span class="n">waf</span> <span class="n">check</span>
+</pre></div>
+</div>
+<p>If everything is green, sferes2 is working! If not, please send an
+e-mail to the authors with as many details as possible about your
+problem.</p>
+</div>
+<div class="section" id="configuration-and-details">
+<h3>Configuration and details<a class="headerlink" href="#configuration-and-details" title="Permalink to this headline">¶</a></h3>
+<p>Sferes2 employs the waf build system (<a class="reference external" href="http://code.google.com/p/waf/">http://code.google.com/p/waf/</a>)
+instead of autoconf/automake and make. Waf employs files named <em>wscript</em>
+to describe the compilation process in python.</p>
+<p>The main wscript of sferes2 accepts the following configuration options:</p>
+<ul class="simple">
+<li>–-boost-includes=BOOSTINCLUDES : path to the boost directory where the
+includes are e.g. /usr/local/include/boost-1\:sub:<cite>35</cite></li>
+<li>–-boost-libs=BOOSTLIBS: path to the directory where the boost libs are
+e.g. /usr/local/lib</li>
+<li>–eigen=EIGEN: path to eigen (if not in the default directory)</li>
+<li>–-no-mpi: disable mpi (MPI is automatically disabled if no MPI
+implementation is found)</li>
+<li>–cpp14=CPP14: force / disable c++-14 compilation</li>
+<li>–-mpi=MPI: path to MPI [e.g. /usr/lib/openmpi ]</li>
+<li>–-tbb=TBB: path to TBB if it’s not installed in the default directory</li>
+<li>–-rpath: set an optional rpath (useful in case of link failure)</li>
+<li>–debug=yes/no: compile with debugging symbols</li>
+</ul>
+<p>To use these options, pass them to the waf script during the
+configuration step. For example:</p>
+<div class="code shell highlight-default"><div class="highlight"><pre><span></span><span class="o">./</span><span class="n">waf</span> <span class="n">configure</span> <span class="o">--</span><span class="n">mpi</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">openmpi</span><span class="o">/</span>
+</pre></div>
+</div>
+<p>or, to disable MPI:</p>
+<div class="code shell highlight-default"><div class="highlight"><pre><span></span><span class="o">./</span><span class="n">waf</span> <span class="n">configure</span> <span class="o">--</span><span class="n">no</span><span class="o">-</span><span class="n">mpi</span>
+</pre></div>
+</div>
+<p>The configure options used during the last call of the “configure”
+command are in the file build/configure.options.</p>
+</div>
+</div>
+<div class="section" id="optional-modules">
+<h2>Optional modules<a class="headerlink" href="#optional-modules" title="Permalink to this headline">¶</a></h2>
+<p>The previous compilation provided you with a minimal sferes install.
+Several modules are available here: <a class="reference external" href="https://github.com/sferes2">https://github.com/sferes2</a></p>
+<p>Before using any of these modules in your experiment, you need to clone these
+repositories in the ‘modules’ directory of sferes.</p>
+<p>Then, create a file named “modules.conf” at the root of sferes
+install (where waf is). You should then list the modules you want to use
+in this file, with one module per line.</p>
+<p>For example, if you want to use the modules cartpole and nn2, your
+modules.conf file should look like:</p>
+<div class="code shell highlight-default"><div class="highlight"><pre><span></span><span class="n">cartpole</span>
+<span class="n">nn2</span>
+</pre></div>
+</div>
+<p>You should then recompile sferes with the updated file :</p>
+<div class="code shell highlight-default"><div class="highlight"><pre><span></span><span class="o">./</span><span class="n">waf</span> <span class="n">build</span>
+</pre></div>
+</div>
+<p>This should compile all the add-on modules.</p>
+<p>You can then run the tests by using waf check:</p>
+<div class="code shell highlight-default"><div class="highlight"><pre><span></span><span class="o">./</span><span class="n">waf</span> <span class="n">check</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="tutorial.html" class="btn btn-neutral float-right" title="Tutorial (basics)" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="index.html" class="btn btn-neutral" title="Sferes_v2 – documentation" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo" class="wy-footer">
+    <div role="contentinfo">
+      <p>
+          &copy; Copyright 2008-2018, UPMC / Inria.
+
+      
+      
+        <br/>
+        <a href="mailto:jean-baptiste.mouret@inria.fr"> Contact us </a>
+      
+      </p>
+    </div>
+    <div class="wy-footer-aside">
+      Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> modified for <a href="http://resibots.eu">Resibots</a>.
+    </div>
+    <div style="clear: both;"></div>
+  </div>
+<div class="wy-footer-logo-container">
+  <div class="wy-footer-logo"><img src="_static/logos/logo_eu.png"/></div>
+  <div class="wy-footer-logo"><img src="_static/logos/logo_erc_nonofficial.svg"/></div>
+  <div class="wy-footer-logo"><img src="_static/logos/logo_loria.jpg"/></div>
+  <div class="wy-footer-logo"><img src="_static/logos/logo-inria.svg"/></div>
+  <div class="wy-footer-logo"><img src="_static/logos/logo_cnrs.png"/></div>
+  <div class="wy-footer-logo"><img src="_static/logos/logo_universite_lorraine.jpg"/></div>
+</div>
+
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'0.1 alpha',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  <script type="text/javascript" src="_static/js/theme.js"></script>
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxResibotsTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>
