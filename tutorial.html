@@ -185,7 +185,7 @@ are produced: “default” and “debug”. You should always run the debug
 version first because the default version disables assert. Each variant
 mirrors the architecture of the main sferes2 directory.</p>
 <p>Sferes2 contains some basic examples in the “examples” directory. For
-instance, let’s check “ex:sub:<cite>ea</cite>.cpp”, a basic single-objective
+instance, let’s check “ex_ea.cpp”, a basic single-objective
 optimization of parameters. To launch the debug version, you should run:</p>
 <div class="code shell highlight-default"><div class="highlight"><pre><span></span><span class="n">build</span><span class="o">/</span><span class="n">debug</span><span class="o">/</span><span class="n">examples</span><span class="o">/</span><span class="n">ex_ea</span>
 </pre></div>
@@ -203,76 +203,22 @@ optimization of parameters. To launch the debug version, you should run:</p>
 </pre></div>
 </div>
 <p>Running one of those commands should create a directory named using the
-schema hostame<sub>pid</sub>-year-month-day:sub:<cite>hours</cite>:min:seconds. In
-this directory there are:</p>
+schema binary_name_year-month-day_hours_min_seconds_PID (this is designed to be a unique name to avoid overwriting any previous result). In this directory there are:</p>
 <ul class="simple">
 <li>a file called “bestfit.dat”, which contains, for each generation, the
 value of the best fitness;</li>
-<li>many files calles gen<sub>xxx</sub> where xxx is a number.</li>
+<li>many files calles <cite>gen_xxx</cite> where xxx is a generation number.</li>
 </ul>
-<p>These files are XML files which store the best candidates solutions for
-each generation (xxx is the generation number). For instance:</p>
-<div class="code xml highlight-default"><div class="highlight"><pre><span></span>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;yes&quot; ?&gt;
-&lt;!DOCTYPE boost_serialization&gt;
-&lt;boost_serialization signature=&quot;serialization::archive&quot; version=&quot;5&quot;&gt;
-  &lt;x class_id=&quot;0&quot; tracking_level=&quot;0&quot; version=&quot;0&quot;&gt;
-    &lt;_best class_id=&quot;1&quot; tracking_level=&quot;0&quot; version=&quot;1&quot;&gt;
-      &lt;px class_id=&quot;2&quot; tracking_level=&quot;1&quot; version=&quot;0&quot; object_id=&quot;_0&quot;&gt;
-    &lt;_gen class_id=&quot;3&quot; tracking_level=&quot;0&quot; version=&quot;0&quot;&gt;
-      &lt;_data&gt;
-        &lt;count&gt;10&lt;/count&gt;
-        &lt;item_version&gt;0&lt;/item_version&gt;
-        &lt;item&gt;0.50000423&lt;/item&gt;
-        &lt;item&gt;0.49999771&lt;/item&gt;
-        &lt;item&gt;0.49999756&lt;/item&gt;
-        &lt;item&gt;0.49999699&lt;/item&gt;
-        &lt;item&gt;0.50000197&lt;/item&gt;
-        &lt;item&gt;0.49999171&lt;/item&gt;
-        &lt;item&gt;0.5000003&lt;/item&gt;
-        &lt;item&gt;0.50000542&lt;/item&gt;
-        &lt;item&gt;0.50002229&lt;/item&gt;
-        &lt;item&gt;0.49999493&lt;/item&gt;
-      &lt;/_data&gt;
-    &lt;/_gen&gt;
-    &lt;_fit class_id=&quot;5&quot; tracking_level=&quot;0&quot; version=&quot;0&quot;&gt;
-      &lt;_value&gt;-4.0586573e-14&lt;/_value&gt;
-      &lt;_objs&gt;
-        &lt;count&gt;0&lt;/count&gt;
-        &lt;item_version&gt;0&lt;/item_version&gt;
-      &lt;/_objs&gt;
-    &lt;/_fit&gt;
-      &lt;/px&gt;
-    &lt;/_best&gt;
-  &lt;/x&gt;
-  &lt;x class_id=&quot;6&quot; tracking_level=&quot;0&quot; version=&quot;0&quot;&gt;
-    &lt;_mean&gt;-5376.9888&lt;/_mean&gt;
-  &lt;/x&gt;
-&lt;/boost_serialization&gt;
-</pre></div>
-</div>
-<p>This XML file mirrors the statistics used in this experiment (more about
-this in the next sections). At this point of this overview, you can
-check:</p>
-<ul class="simple">
-<li>the <sub>data</sub> subtree which lists the values of the “optimal”
-parameters (the result of the experiment);</li>
-<li>the <sub>fit</sub> subtree which shows the fitness value of this
-“optimal” individual;</li>
-<li>the <sub>mean</sub> value which corresponds to the mean fitness in the
-population (another statistics);</li>
-</ul>
+<p>These files are boost::serialization binary files (optionnaly XML files, if needed) that typically store the best candidates solutions for each generation (xxx is the generation number). It actually saves all the <cite>statistics</cite> instances (e.g., <cite>BestFit</cite>, <cite>ParetoFront</cite>, etc.).</p>
 </div>
 <div class="section" id="loading-a-result-file">
 <h2>Loading a result file<a class="headerlink" href="#loading-a-result-file" title="Permalink to this headline">¶</a></h2>
-<p>These XML files can be easily post-processed in your favorite language
-if needed. However, the same executable which generated the result files
-can also read them using the following syntax in the experience
-directory :</p>
+<p>These binary files are designed to be read by the same executable which generated the result files:</p>
 <div class="code shell highlight-default"><div class="highlight"><pre><span></span><span class="o">../</span><span class="n">build</span><span class="o">/</span><span class="n">default</span><span class="o">/</span><span class="n">examples</span><span class="o">/</span><span class="n">ex_ea</span> <span class="o">--</span><span class="n">load</span> <span class="n">gen_1000</span> <span class="o">-</span><span class="n">o</span> <span class="n">output_file</span> <span class="o">-</span><span class="n">n</span> <span class="n">number</span>
 </pre></div>
 </div>
 <ul class="simple">
-<li>output<sub>file</sub> is a text file which, most of the time (depending
+<li><cite>output_file</cite> is a text file which, most of the time (depending
 on the genotype and phenotype used), describes the best individual
 (or the Pareto-optimal set in multiobjective optimization); in this
 example, it contains the value of the parameters for the best
@@ -283,8 +229,8 @@ individual:</li>
 </pre></div>
 </div>
 <ul class="simple">
-<li>number is the number of the individual described in the file you want
-to load.</li>
+<li><cite>number</cite> is the number of the individual described in the statistics you want to load.</li>
+<li>optionnally, the option <cite>-s</cite> allows to specify the statistics number (e.g, if you have <cite>BestFit&lt;&gt;</cite> and <cite>ParetoFront&lt;&gt;</cite> in your statistics list, then <cite>BestFit&lt;&gt;</cite> is <cite>0</cite> and <cite>ParetoFront&lt;&gt;</cite> is number <cite>1</cite>.</li>
 </ul>
 </div>
 <div class="section" id="building-your-own-experiment">
@@ -462,9 +408,9 @@ main function.</p>
 <li><p class="first">Fitness function</p>
 <p>Last, it’s time to write the fitness function. It’s a special class
 with an “eval()” function which derives from fit::Fitness. It has to
-fill this-&gt;<sub>value</sub> in single-objective optimization and
-this-&gt;<sub>objs</sub> in multiobjective optimization. In this example,
-we want to maximize -∑:sub:<cite>i</cite> p<sub>i</sub><sup>4</sup>, where p is the
+fill <cite>this-&gt;_value</cite> in single-objective optimization and
+this-&gt;_objs` in multiobjective optimization. In this example,
+we want to maximize -∑_i p_i^4, where p is the
 individual’s phenotype.</p>
 </li>
 </ol>
@@ -478,8 +424,8 @@ individual’s phenotype.</p>
     <span class="nb">float</span> <span class="n">v</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
     <span class="k">for</span> <span class="p">(</span><span class="n">unsigned</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">ind</span><span class="o">.</span><span class="n">size</span><span class="p">();</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span>
       <span class="p">{</span>
-    <span class="nb">float</span> <span class="n">p</span> <span class="o">=</span> <span class="n">ind</span><span class="o">.</span><span class="n">data</span><span class="p">(</span><span class="n">i</span><span class="p">);</span>
-    <span class="n">v</span> <span class="o">+=</span> <span class="n">p</span> <span class="o">*</span> <span class="n">p</span> <span class="o">*</span> <span class="n">p</span> <span class="o">*</span> <span class="n">p</span><span class="p">;</span>
+       <span class="nb">float</span> <span class="n">p</span> <span class="o">=</span> <span class="n">ind</span><span class="o">.</span><span class="n">data</span><span class="p">(</span><span class="n">i</span><span class="p">);</span>
+       <span class="n">v</span> <span class="o">+=</span> <span class="n">p</span> <span class="o">*</span> <span class="n">p</span> <span class="o">*</span> <span class="n">p</span> <span class="o">*</span> <span class="n">p</span><span class="p">;</span>
       <span class="p">}</span>
     <span class="n">this</span><span class="o">-&gt;</span><span class="n">_value</span> <span class="o">=</span> <span class="o">-</span><span class="n">v</span><span class="p">;</span>
   <span class="p">}</span>

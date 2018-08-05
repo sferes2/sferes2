@@ -11,7 +11,7 @@ Ubuntu / Debian
 We list here the Ubuntu package names:
 
 -  [required] libboost-dev >= 1.35 (including test, serialization,
-   graph, program\ :sub:`options`, filesystem); see
+   graph, program_options, filesystem); see
    http://www.boost.org;
 -  [required] libboost-test-dev >= 1.35
 -  [required] libboost-filesystem-dev >= 1.35
@@ -78,7 +78,7 @@ to describe the compilation process in python.
 The main wscript of sferes2 accepts the following configuration options:
 
 -  –-boost-includes=BOOSTINCLUDES : path to the boost directory where the
-   includes are e.g. /usr/local/include/boost-1\\:sub:`35`
+   includes are e.g. /usr/local/include/boost-1_35`
 -  –-boost-libs=BOOSTLIBS: path to the directory where the boost libs are
    e.g. /usr/local/lib
 -  --eigen=EIGEN: path to eigen (if not in the default directory)

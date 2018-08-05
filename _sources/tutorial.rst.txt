@@ -13,7 +13,7 @@ version first because the default version disables assert. Each variant
 mirrors the architecture of the main sferes2 directory.
 
 Sferes2 contains some basic examples in the "examples" directory. For
-instance, let's check "ex:sub:`ea`.cpp", a basic single-objective
+instance, let's check "ex_ea.cpp", a basic single-objective
 optimization of parameters. To launch the debug version, you should run:
 
 .. code:: shell
@@ -39,79 +39,25 @@ For the optimized version:
     build/default/examples/ex_ea
 
 Running one of those commands should create a directory named using the
-schema hostame\ :sub:`pid`-year-month-day:sub:`hours`:min:seconds. In
-this directory there are:
+schema binary_name_year-month-day_hours_min_seconds_PID (this is designed to be a unique name to avoid overwriting any previous result). In this directory there are:
 
 -  a file called "bestfit.dat", which contains, for each generation, the
    value of the best fitness;
--  many files calles gen\ :sub:`xxx` where xxx is a number.
+-  many files calles `gen_xxx` where xxx is a generation number.
 
-These files are XML files which store the best candidates solutions for
-each generation (xxx is the generation number). For instance:
+These files are boost::serialization binary files (optionnaly XML files, if needed) that typically store the best candidates solutions for each generation (xxx is the generation number). It actually saves all the `statistics` instances (e.g., `BestFit`, `ParetoFront`, etc.).
 
-.. code:: xml
-
-    <?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
-    <!DOCTYPE boost_serialization>
-    <boost_serialization signature="serialization::archive" version="5">
-      <x class_id="0" tracking_level="0" version="0">
-        <_best class_id="1" tracking_level="0" version="1">
-          <px class_id="2" tracking_level="1" version="0" object_id="_0">
-        <_gen class_id="3" tracking_level="0" version="0">
-          <_data>
-            <count>10</count>
-            <item_version>0</item_version>
-            <item>0.50000423</item>
-            <item>0.49999771</item>
-            <item>0.49999756</item>
-            <item>0.49999699</item>
-            <item>0.50000197</item>
-            <item>0.49999171</item>
-            <item>0.5000003</item>
-            <item>0.50000542</item>
-            <item>0.50002229</item>
-            <item>0.49999493</item>
-          </_data>
-        </_gen>
-        <_fit class_id="5" tracking_level="0" version="0">
-          <_value>-4.0586573e-14</_value>
-          <_objs>
-            <count>0</count>
-            <item_version>0</item_version>
-          </_objs>
-        </_fit>
-          </px>
-        </_best>
-      </x>
-      <x class_id="6" tracking_level="0" version="0">
-        <_mean>-5376.9888</_mean>
-      </x>
-    </boost_serialization>
-
-This XML file mirrors the statistics used in this experiment (more about
-this in the next sections). At this point of this overview, you can
-check:
-
--  the :sub:`data` subtree which lists the values of the "optimal"
-   parameters (the result of the experiment);
--  the :sub:`fit` subtree which shows the fitness value of this
-   "optimal" individual;
--  the :sub:`mean` value which corresponds to the mean fitness in the
-   population (another statistics);
 
 Loading a result file
 ---------------------
 
-These XML files can be easily post-processed in your favorite language
-if needed. However, the same executable which generated the result files
-can also read them using the following syntax in the experience
-directory :
+These binary files are designed to be read by the same executable which generated the result files:
 
 .. code:: shell
 
     ../build/default/examples/ex_ea --load gen_1000 -o output_file -n number
 
--  output\ :sub:`file` is a text file which, most of the time (depending
+-  `output_file` is a text file which, most of the time (depending
    on the genotype and phenotype used), describes the best individual
    (or the Pareto-optimal set in multiobjective optimization); in this
    example, it contains the value of the parameters for the best
@@ -122,8 +68,9 @@ directory :
     cat output_file
     8.46386e-05 -4.58956e-05 -4.88758e-05 -6.02007e-05 3.93391e-05 -0.000165701 5.96046e-06 0.00010848 0.000445843 -0.000101328 
 
--  number is the number of the individual described in the file you want
-   to load.
+- `number` is the number of the individual described in the statistics you want to load.
+
+- optionnally, the option `-s` allows to specify the statistics number (e.g, if you have `BestFit<>` and `ParetoFront<>` in your statistics list, then `BestFit<>` is `0` and `ParetoFront<>` is number `1`.
 
 Building your own experiment
 ----------------------------
@@ -307,9 +254,9 @@ Let's start with exp/test/test.cpp, *from the end of the file*.
 
    Last, it's time to write the fitness function. It's a special class
    with an "eval()" function which derives from fit::Fitness. It has to
-   fill this->\ :sub:`value` in single-objective optimization and
-   this->\ :sub:`objs` in multiobjective optimization. In this example,
-   we want to maximize -∑:sub:`i` p\ :sub:`i`\ :sup:`4`, where p is the
+   fill `this->_value` in single-objective optimization and
+   this->_objs` in multiobjective optimization. In this example,
+   we want to maximize -∑_i p_i^4, where p is the
    individual's phenotype.
 
 .. code:: c++
@@ -324,8 +271,8 @@ Let's start with exp/test/test.cpp, *from the end of the file*.
            float v = 0;
            for (unsigned i = 0; i < ind.size(); ++i)
              {
-           float p = ind.data(i);
-           v += p * p * p * p;
+              float p = ind.data(i);
+              v += p * p * p * p;
              }
            this->_value = -v;
          }
