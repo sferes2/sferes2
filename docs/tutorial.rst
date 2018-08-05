@@ -123,7 +123,8 @@ Customizing / writing the experiment
 
 Let's start with exp/test/test.cpp, *from the end of the file*.
 
-#. Main function
+Main function
+^^^^^^^^^^^^^^ 
 
    At the end of the file, you should see a main() function. It defines
    some types using typedef then run the evolutionary algorithm. The
@@ -179,7 +180,8 @@ Let's start with exp/test/test.cpp, *from the end of the file*.
          return 0;
        }
 
-#. Include part
+Include part
+^^^^^^^^^^^^
 
    Let's now go back to the top of the file. The file starts with the
    usual include files, which obviously depends on which classes
@@ -197,7 +199,8 @@ Let's start with exp/test/test.cpp, *from the end of the file*.
        #include <sferes/modif/dummy.hpp>
        #include <sferes/run.hpp>
 
-#. Params
+Params
+^^^^^^
 
    Then, the Params structure defines the parameters of the algorithm.
    This particular way of setting them allows the compiler to propagate
@@ -250,13 +253,14 @@ Let's start with exp/test/test.cpp, *from the end of the file*.
          };
        };
 
-#. Fitness function
+Fitness function
+^^^^^^^^^^^^^^^^
 
    Last, it's time to write the fitness function. It's a special class
    with an "eval()" function which derives from fit::Fitness. It has to
    fill `this->_value` in single-objective optimization and
    this->_objs` in multiobjective optimization. In this example,
-   we want to maximize -∑_i p_i^4, where p is the
+   we want to maximize :math:`-\sum_i p_i^4`, where :math:`p` is the
    individual's phenotype.
 
 .. code:: c++
@@ -275,6 +279,32 @@ Let's start with exp/test/test.cpp, *from the end of the file*.
               v += p * p * p * p;
              }
            this->_value = -v;
+         }
+       };
+
+It can also be useful to print a few things (debug, result, additionnal information, etc.) **when we are in loading mode**. This is easily done like this:
+
+
+.. code:: c++
+
+       SFERES_FITNESS(FitTest, sferes::fit::Fitness)
+       {
+        public:
+         // indiv will have the type defined in the main (phen_t)
+         template<typename Indiv>
+           void eval(const Indiv& ind) 
+         {
+           float v = 0;
+           for (unsigned i = 0; i < ind.size(); ++i)
+             {
+              float p = ind.data(i);
+              v += p * p * p * p;
+             }
+           this->_value = -v;
+           // code specific to loading mode
+           if (this->mode() == sferes::fit::view) {
+              std::cout << "Value:" << this->_value << std::endl;
+           }
          }
        };
 
