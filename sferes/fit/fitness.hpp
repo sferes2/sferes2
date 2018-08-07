@@ -68,6 +68,9 @@ namespace sferes {
       void add_obj() {
         _objs.resize(_objs.size() + 1);
       }
+      void resize_obj(int n) {
+        _objs.resize(n);
+      }
       float obj(size_t i) const {
         assert(i < _objs.size());
         assert(!std::isnan(_objs[i]));
