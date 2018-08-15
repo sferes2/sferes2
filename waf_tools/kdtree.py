@@ -19,7 +19,7 @@ def options(opt):
 def check_kdtree(conf):
 	conf.env['KDTREE_FOUND'] = False
 	conf.start_msg('Checking for ssrc kdtree (KD-tree)')
-	includes_check = ['/usr/include/', '/usr/local/include/', '/usr/local/include/ssrc', '/usr/include/ssrc']
+	includes_check = ['/usr/include/', '/usr/local/include/']
 	if conf.options.kdtree:
 		includes_check = [conf.options.kdtree]
 		conf.env.INCLUDES_KDTREE = [conf.options.kdtree]
@@ -28,8 +28,8 @@ def check_kdtree(conf):
 			includes_check += [path[2:] for path in os.environ['CPPFLAGS'].split() if path[0:2] == '-I']
 
 	try:
-		res = conf.find_file('spatial/kd_tree.h', includes_check)
-		index = includes_check.index(res[:-len('spatial/kd_tree.h')-1])
+		res = conf.find_file('ssrc/spatial/kd_tree.h', includes_check)
+		index = includes_check.index(res[:-len('ssrc/spatial/kd_tree.h')-1])
 		conf.env.INCLUDES_KDTREE = [includes_check[index]]
 		conf.end_msg('ok')
 		if Logs.verbose:

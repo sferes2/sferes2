@@ -270,6 +270,6 @@ namespace sferes {
     } // namespace qd
 } // namespace sferes
 #else
-#warning "No KD_TREE library found: no qd/container/archive
+#warning "No KD_TREE library found: no qd/container/archive.hpp"
 #endif
 #endif
