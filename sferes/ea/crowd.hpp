@@ -49,14 +49,15 @@ namespace sferes {
         std::vector<std::vector<Indiv> >& _fronts;
 
         ~assign_crowd() { }
-        assign_crowd(std::vector<std::vector<Indiv> >& fronts) :
-          _fronts(fronts) {}
-        assign_crowd(const assign_crowd& ev) : _fronts(ev._fronts) {}
+        assign_crowd(std::vector<std::vector<Indiv> >& fronts, bool genoDiv=false ) :
+          _fronts(fronts),_genoDiv(genoDiv) {}
+        assign_crowd(const assign_crowd& ev) : _fronts(ev._fronts),_genoDiv(ev._genoDiv) {}
         void operator() (const parallel::range_t& r) const {
           for (size_t i = r.begin(); i != r.end(); ++i)
             _assign_crowd(_fronts[i]);
         }
        protected:
+	bool _genoDiv;
         typedef typename std::vector<Indiv>::iterator it_t;
         typedef typename std::vector<Indiv>::const_iterator cit_t;
 
@@ -110,54 +111,78 @@ namespace sferes {
             f[1]->set_crowd(crowd::inf);
           }
 
-          size_t nb_objs = f[0]->fit().objs().size();
-
-          // C1
-          BOOST_FOREACH(Indiv& i, f)
-          i->set_crowd(0.0f);
-
-          std::vector<float> fmin, fmax;
-          _fmin_max(f, fmin, fmax);
-
-          // C2 + C3
-          // for each obj
-          for (size_t i = 0; i < nb_objs; ++i) {
-            // sort in order of f_m (best first)
-            parallel::sort(f.begin(), f.end(), fit::compare_obj(i));
-            assert(!std::isnan(f[0]->fit().obj(i)));
-            assert(!std::isinf(f[0]->fit().obj(i)));
-            assert(!std::isnan(f[1]->fit().obj(i)));
-            assert(!std::isinf(f[1]->fit().obj(i)));
-            assert(f[0]->fit().obj(i) >= f[1]->fit().obj(i));
-
-            // assign
-            f[0]->set_crowd(crowd::inf);
-            f[f.size() - 1]->set_crowd(crowd::inf);
-
-            for (it_t it = f.begin() + 1; it != f.end() - 1; ++it) {
-              assert(i < fmin.size());
-              assert(i < fmax.size());
-              assert(!std::isnan(fmax[i]));
-              assert(!std::isinf(fmax[i]));
-              assert(!std::isnan(fmin[i]));
-              assert(!std::isinf(fmin[i]));
-              float f = (*(it - 1))->fit().obj(i) - (*(it + 1))->fit().obj(i);
-              assert(fmax[i] - fmin[i] >= 0);
-              assert(f >= 0);
-              if (fmax[i] - fmin[i] != 0)
-                f /= fmax[i] - fmin[i];
-              else
-                f = 0.0f;
-              assert(!std::isnan(f));
-              assert(!std::isinf(f));
-              assert(f >= 0);
-              (*it)->set_crowd((*it)->crowd() + f);
-            }
-          }
+	  if(!_genoDiv)
+	    {
+	      
+	      size_t nb_objs = f[0]->fit().objs().size();
+	      
+	      // C1
+	      BOOST_FOREACH(Indiv& i, f)
+		i->set_crowd(0.0f);
+	      
+	      std::vector<float> fmin, fmax;
+	      _fmin_max(f, fmin, fmax);
+	      
+	      // C2 + C3
+	      // for each obj
+	      for (size_t i = 0; i < nb_objs; ++i) {
+		// sort in order of f_m (best first)
+		parallel::sort(f.begin(), f.end(), fit::compare_obj(i));
+		assert(!std::isnan(f[0]->fit().obj(i)));
+		assert(!std::isinf(f[0]->fit().obj(i)));
+		assert(!std::isnan(f[1]->fit().obj(i)));
+		assert(!std::isinf(f[1]->fit().obj(i)));
+		assert(f[0]->fit().obj(i) >= f[1]->fit().obj(i));
+		
+		// assign
+		f[0]->set_crowd(crowd::inf);
+		f[f.size() - 1]->set_crowd(crowd::inf);
+		
+		for (it_t it = f.begin() + 1; it != f.end() - 1; ++it) {
+		  assert(i < fmin.size());
+		  assert(i < fmax.size());
+		  assert(!std::isnan(fmax[i]));
+		  assert(!std::isinf(fmax[i]));
+		  assert(!std::isnan(fmin[i]));
+		  assert(!std::isinf(fmin[i]));
+		  float f = (*(it - 1))->fit().obj(i) - (*(it + 1))->fit().obj(i);
+		  assert(fmax[i] - fmin[i] >= 0);
+		  assert(f >= 0);
+		  if (fmax[i] - fmin[i] != 0)
+		    f /= fmax[i] - fmin[i];
+		  else
+		    f = 0.0f;
+		  assert(!std::isnan(f));
+		  assert(!std::isinf(f));
+		  assert(f >= 0);
+		  (*it)->set_crowd((*it)->crowd() + f);
+		}
+	      }
+	    }
+	  else
+	    {
+	      for (it_t it = f.begin() ; it != f.end() ; ++it)
+		{
+		  float d = 0.0f;
+		  for (it_t it2 = f.begin() ; it2 != f.end() ; ++it2)
+		    {
+		      
+		      float dist = 0;
+		      assert((*it)->data().size() == (*it2)->data().size());
+		      for (size_t i = 0; i < (*it)->data().size(); i++)
+			dist += (float) fabs((*it)->data()[i] - (*it2)->data()[i]);
+		      d+=dist / (float)(*it)->data().size();
+		      
+		    }
+		  d /= (float)f.size();
+		  (*it)->set_crowd(d);
+		}
+	      
+	    }
         }
-
+	
       };
-
+      
       struct compare_crowd {
         template<typename I>
         bool operator()(const boost::shared_ptr<I> i1, const boost::shared_ptr<I> i2) const {

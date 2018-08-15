@@ -6,28 +6,28 @@ namespace sferes {
         namespace selector {
 
             struct getFitness {
-                template <typename Phen> inline double getValue(const Phen& p) const
+                template <typename Phen> static inline double getValue(const Phen& p)
                 {
                     return p->fit().value();
                 }
             };
 
             struct getNovelty {
-                template <typename Phen> inline double getValue(const Phen& p) const
+                template <typename Phen> static inline double getValue(const Phen& p)
                 {
                     return p->fit().novelty();
                 }
             };
 
             struct getCuriosity {
-                template <typename Phen> inline double getValue(const Phen& p) const
+                template <typename Phen> static inline double getValue(const Phen& p)
                 {
                     return p->fit().curiosity();
                 }
             };
 
             struct getLocalQuality {
-                template <typename Phen> inline double getValue(const Phen& p) const
+                template <typename Phen> static inline double getValue(const Phen& p)
                 {
                     return p->fit().local_quality();
                 }

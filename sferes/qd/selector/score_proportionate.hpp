@@ -9,7 +9,7 @@ namespace sferes {
         namespace selector {
 
             template <typename Phen, typename ValueSelector, typename Params> 
-						class ScoreProportionate {
+	    class ScoreProportionate {
             public:
                 typedef boost::shared_ptr<Phen> indiv_t;
                 typedef typename std::vector<indiv_t>::iterator it_t;

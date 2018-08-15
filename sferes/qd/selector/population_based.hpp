@@ -1,7 +1,7 @@
 #ifndef QD_SELECTOR_POPULATIONBASED_HPP
 #define QD_SELECTOR_POPULATIONBASED_HPP
 
-#include "scoreProportionate.hpp"
+#include "score_proportionate.hpp"
 
 namespace sferes {
     namespace qd {

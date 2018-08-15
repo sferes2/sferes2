@@ -3,6 +3,7 @@
 
 #ifdef USE_KDTREE
 
+#define LIBSSRCKDTREE_HAVE_BOOST
 #include <ssrc/spatial/kd_tree.h>
 
 #include "tools.hpp"
@@ -31,7 +32,7 @@ namespace sferes {
                         content.push_back((*it).second);
                 }
 
-                bool add(indiv_t i1, indiv_t parent)
+                bool add(indiv_t i1)
                 {
                     // TODO
                     // update archive
@@ -92,35 +93,6 @@ namespace sferes {
                             _replace(nn, i1);
                             return true;
                         }
-                        //-------
-                        // THIS WORKS as well but less
-                        /*int score=0;
-
-                        if(score_cur[0] >= score_nn[0] && score_cur[1] >=
-                        (1-sign(score_nn[1])*Params::nov::eps)*score_nn[1] ) //not replacing
-                        something less efficient
-                          {
-                        _replace(nn,i1);
-                        return true;
-                        }*/
-                        //-------
-                        // THIS WORKS--------  TO STAY IN THE ARCHIVE YOU NEED TO epsilon dominate!
-                        // (kind of)
-                        /*int score=0;
-                        for(int i =0;i<score_cur.size(); i++){
-                          if(score_cur[i] < (1-sign(score_nn[i])*Params::nov::eps)*score_nn[i] )
-                          return false;//nothing below the epsilon in one obj
-                          if(score_cur[i] >=score_nn[i] )
-                        score++;
-                        }
-                        if(score>=1)//if better on at least 1 objective
-                          {
-                        //std::cout<<"replace"<<std::endl;
-                        _replace(nn,i1);
-                        return true;
-                          }
-                        */
-                        //---------------
                         else {
                             return false;
                         }
@@ -138,7 +110,7 @@ namespace sferes {
                 }
 
                 static indiv_t get_nearest(
-                    const indiv_t& indiv, const Tree& apop, const bool omit_query_point)
+                    const indiv_t& indiv, Tree& apop, const bool omit_query_point)
                 {
                     typename Tree::key_type q;
                     Archive::_behavior_to_point(indiv->fit().desc(), &q);
@@ -146,7 +118,7 @@ namespace sferes {
                     return it->second;
                 }
 
-                static void get_knn(const indiv_t& indiv, const Tree& apop, int k, pop_t& nearest,
+                static void get_knn(const indiv_t& indiv,  Tree& apop, int k, pop_t& nearest,
                     const bool omit_query_point)
                 {
                     typename Tree::key_type q;
@@ -165,7 +137,7 @@ namespace sferes {
                     assert(nearest.size() == k);
                 }
 
-                static double get_novelty(const indiv_t& indiv, const Tree& apop)
+                static double get_novelty(const indiv_t& indiv, Tree& apop)
                 {
                     pop_t nearest;
                     if (apop.size() < (Params::nov::k + 1))
@@ -198,7 +170,7 @@ namespace sferes {
                 }
 
                 static std::pair<double, double> get_nov_and_lq(
-                    const indiv_t& indiv, const Tree& apop)
+                    const indiv_t& indiv, Tree& apop)
                 {
                     pop_t nearest;
                     if (apop.size() < (Params::nov::k + 1))
@@ -267,8 +239,8 @@ namespace sferes {
                 }
 
                 struct _p_novelty {
-                    const Tree& _apop;
-                    _p_novelty(const Tree& apop) : _apop(apop) {}
+                    Tree& _apop;
+                    _p_novelty( Tree& apop) : _apop(apop) {}
                     _p_novelty(const _p_novelty& ev) : _apop(ev._apop) {}
 
                     // use the Euclidean distance !

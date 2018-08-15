@@ -1,7 +1,7 @@
 #ifndef QD_SELECTOR_PARETOBASED_HPP
 #define QD_SELECTOR_PARETOBASED_HPP
 
-#include "crowd_genodiv.hpp"
+#include <sferes/ea/crowd.hpp>
 #include <sferes/ea/dom_sort.hpp>
 
 namespace sferes {

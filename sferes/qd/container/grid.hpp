@@ -32,7 +32,6 @@ namespace sferes {
 
                     // allocate space for _array and _array_parents
                     _array.resize(behav_shape);
-                    _array_parents.resize(behav_shape);
                 }
 
                 template <typename I> behav_index_t get_index(const I& indiv) const
@@ -55,7 +54,7 @@ namespace sferes {
                             content.push_back(*i);
                 }
 
-                bool add(indiv_t i1, indiv_t parent)
+                bool add(indiv_t i1)
                 {
                     if (i1->fit().dead())
                         return false;
@@ -68,7 +67,6 @@ namespace sferes {
                         || (fabs(i1->fit().value() - _array(behav_pos)->fit().value()) <= epsilon
                                && _dist_center(i1) < _dist_center(_array(behav_pos)))) {
                         _array(behav_pos) = i1;
-                        _array_parents(behav_pos) = parent;
                         return true;
                     }
                     return false;
@@ -84,7 +82,6 @@ namespace sferes {
                 }
 
                 const array_t& archive() const { return _array; }
-                const array_t& parents() const { return _array_parents; }
 
             protected:
                 // Converts the descriptor into a Point_t
@@ -190,7 +187,6 @@ namespace sferes {
                 }
 
                 array_t _array;
-                array_t _array_parents;
             };
         } // namespace container
     } // namespace qd
