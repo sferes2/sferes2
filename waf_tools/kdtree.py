@@ -19,7 +19,7 @@ def options(opt):
 def check_kdtree(conf):
 	conf.env['KDTREE_FOUND'] = False
 	conf.start_msg('Checking for ssrc kdtree (KD-tree)')
-	includes_check = ['/usr/include/', '/usr/local/include/']
+	includes_check = ['/usr/include', '/usr/local/include']
 	if conf.options.kdtree:
 		includes_check = [conf.options.kdtree]
 		conf.env.INCLUDES_KDTREE = [conf.options.kdtree]
