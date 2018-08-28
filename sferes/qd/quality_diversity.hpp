@@ -49,7 +49,9 @@
 #include <sferes/fit/fitness.hpp>
 #include <sferes/stc.hpp>
 
-#include <sferes/qd/selector/uniform.hpp> 
+#include <sferes/qd/selector/uniform.hpp>
+#include <sferes/qd/container/grid.hpp>
+#include <sferes/qd/container/cvt.hpp>
 
 namespace sferes {
     namespace qd {
@@ -83,7 +85,7 @@ namespace sferes {
                 this->apply_modifier();
 
                 _add(_parents);
-		
+
                 this->_parents = this->_offspring;
                 _offspring.resize(Params::pop::size);
 
@@ -94,7 +96,7 @@ namespace sferes {
 
                 this->_eval_pop(this->_offspring, 0, this->_offspring.size());
                 this->apply_modifier();
-                _add(_offspring); 
+                _add(_offspring);
 
                 this->_pop.clear();
                 _container.get_full_content(this->_pop);
@@ -113,7 +115,7 @@ namespace sferes {
                 // Generation of the offspring
                 std::vector<size_t> a;
                 misc::rand_ind(a, _parents.size());
-								assert(_parents.size() == Params::pop::size);
+                assert(_parents.size() == Params::pop::size);
                 for (size_t i = 0; i < Params::pop::size; i += 2) {
                     boost::shared_ptr<Phen> i1, i2;
                     _parents[a[i]]->cross(_parents[a[i + 1]], i1, i2);
@@ -149,25 +151,24 @@ namespace sferes {
         protected:
             // Add the offspring into the container and update the score of the individuals from the
             // container and both of the sub population (offspring and parents)
-	  void _add(pop_t& pop_off, pop_t& pop_parents)
+            void _add(pop_t& pop_off, pop_t& pop_parents)
             {
                 _added.resize(pop_off.size());
-		  for (size_t i = 0; i < pop_off.size(); ++i)
-		    _added[i] = _add_to_container(pop_off[i], pop_parents[i]);
+                for (size_t i = 0; i < pop_off.size(); ++i)
+                    _added[i] = _add_to_container(pop_off[i], pop_parents[i]);
                 _container.update(pop_off, pop_parents);
             }
-	  
-	  // Same function, but without the need of parent.
-	  void _add(pop_t& pop_off)
-	    {
-	        _added.resize(pop_off.size());
-		for (size_t i = 0; i < pop_off.size(); ++i)
-		    _added[i] = _container.add(pop_off[i]);
-		pop_t empty;
-		_container.update( pop_off, empty );
-	    }
 
-	  
+            // Same function, but without the need of parent.
+            void _add(pop_t& pop_off)
+            {
+                _added.resize(pop_off.size());
+                for (size_t i = 0; i < pop_off.size(); ++i)
+                    _added[i] = _container.add(pop_off[i]);
+                pop_t empty;
+                _container.update(pop_off, empty);
+            }
+
             // add to the container procedure.
             // TODO JBM: curiosity is hardcoded here...
             bool _add_to_container(indiv_t i1, indiv_t parent)
@@ -191,8 +192,13 @@ namespace sferes {
             std::vector<bool> _added;
         };
 
-        template<typename Phen, typename Eval, typename Stat, typename Modifier, typename Params>
-	using MapElites = qd::QualityDiversity<Phen, Eval, Stat, Modifier,  qd::selector::Uniform<Phen, Params>, qd::container::Grid<Phen, Params>, Params>;
+        template <typename Phen, typename Eval, typename Stat, typename Modifier, typename Params>
+        using MapElites = qd::QualityDiversity<Phen, Eval, Stat, Modifier,
+            qd::selector::Uniform<Phen, Params>, qd::container::Grid<Phen, Params>, Params>;
+
+        template <typename Phen, typename Eval, typename Stat, typename Modifier, typename Params>
+        using CvtMapElites = qd::QualityDiversity<Phen, Eval, Stat, Modifier,
+            qd::selector::Uniform<Phen, Params>, qd::container::CVT<Phen, Params>, Params>;
 
     } // namespace qd
 } // namespace sferes

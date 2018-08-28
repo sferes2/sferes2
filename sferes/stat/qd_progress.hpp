@@ -10,9 +10,8 @@ namespace sferes {
         public:
             template <typename E> void refresh(const E& ea)
             {
-                if (ea.gen() % Params::pop::dump_period == 0) {
+                if (ea.gen() % Params::pop::dump_period == 0)
                     _write_progress(std::string("progress"), ea);
-                }
             }
             template <typename EA>
             void _write_progress(const std::string& prefix, const EA& ea) const
