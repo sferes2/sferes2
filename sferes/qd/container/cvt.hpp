@@ -28,6 +28,7 @@ namespace sferes {
                     _archive.resize(n_niches);
                     _archive_parents.resize(n_niches);
 
+                    // we cache the centroids because it can be slow to compute
                     std::string cache_filename = std::string("cache_centroids_")
                         + boost::lexical_cast<std::string>(dim) + "_"
                         + boost::lexical_cast<std::string>(n_niches)
