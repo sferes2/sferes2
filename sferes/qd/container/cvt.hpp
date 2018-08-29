@@ -9,8 +9,9 @@ namespace sferes {
     namespace qd {
         namespace container {
             // parameters:
-            // qd::cvt::n_niches (e.g, 10000): number of niches
-            // The following parameters are not used if you use a cached CVT:
+            // qd::n_niches (e.g, 10000): number of niches
+            // qd::dim (e.g, 2): number of feature dimensions
+            // The following parameters are ignored if you use a cached CVT (but they are required for compilation):
             // qd::cvt::qd::n_samples (e.g., 100000): number of samples for CVT (more than n_niches)
             // qd::cvt::max_iterations (e.g. 100): number of iterations of the CVT algorithm
             // qd::cvt::n_restarts (e.g. 1): number of restarts of the CVT algorithm
@@ -24,7 +25,7 @@ namespace sferes {
                 CVT()
                 {
                     SFERES_CONST int dim = Params::qd::dim;
-                    SFERES_CONST int n_niches = Params::qd::cvt::n_niches;
+                    SFERES_CONST int n_niches = Params::qd::n_niches;
                     _archive.resize(n_niches);
                     _archive_parents.resize(n_niches);
 
@@ -38,7 +39,7 @@ namespace sferes {
                                   << cache_filename << ") "
                                   << "=> computing a new CVT (this might take a dozen of minutes!)"
                                   << std::endl;
-                        _centroids = cvt::cvt(Params::qd::dim, Params::qd::cvt::n_niches,
+                        _centroids = cvt::cvt(Params::qd::dim, Params::qd::n_niches,
                             Params::qd::cvt::n_samples, Params::qd::cvt::max_iterations,
                             Params::qd::cvt::n_restarts, Params::qd::cvt::tolerance);
                         std::ofstream ofs(cache_filename.c_str());
@@ -52,7 +53,7 @@ namespace sferes {
                         boost::archive::binary_iarchive ia_a(ifs);
                         ia_a >> _centroids;
                         std::cerr << _centroids.rows() << " centroids loaded from cache" << std::endl;
-                        assert(_centroids.rows() == Params::qd::cvt::n_niches);
+                        assert(_centroids.rows() == Params::qd::n_niches);
                         assert(_centroids.cols() == dim);
                     }
                 }

@@ -11,37 +11,37 @@ namespace sferes {
                 typedef typename pop_t::iterator it_t;
                 typedef typename std::vector<std::vector<indiv_t>> front_t;
 
-                static const size_t behav_dim = Params::ea::behav_dim;
-                typedef boost::multi_array<indiv_t, behav_dim> array_t;
+                static const size_t dim = Params::qd::dim;
+                typedef boost::multi_array<indiv_t, dim> array_t;
                 typedef typename array_t::multi_array_base::index_range index_range_t;
-                typedef boost::detail::multi_array::index_gen<behav_dim, behav_dim> index_gen_t;
-                typedef typename array_t::template const_array_view<behav_dim>::type view_t;
+                typedef boost::detail::multi_array::index_gen<dim, dim> index_gen_t;
+                typedef typename array_t::template const_array_view<dim>::type view_t;
 
-                typedef boost::array<typename array_t::index, behav_dim> behav_index_t;
+                typedef boost::array<typename array_t::index, dim> behav_index_t;
 
-                typedef boost::array<float, behav_dim> point_t;
+                typedef boost::array<float, dim> point_t;
 
-                behav_index_t behav_shape;
+                behav_index_t grid_shape;
 
                 Grid()
                 {
-                    assert(behav_dim == Params::ea::behav_shape_size());
+                    assert(dim == Params::qd::grid_shape_size());
 
-                    for (size_t i = 0; i < Params::ea::behav_shape_size(); ++i)
-                        behav_shape[i] = Params::ea::behav_shape(i);
+                    for (size_t i = 0; i < Params::qd::grid_shape_size(); ++i)
+                        grid_shape[i] = Params::qd::grid_shape(i);
 
                     // allocate space for _array and _array_parents
-                    _array.resize(behav_shape);
+                    _array.resize(grid_shape);
                 }
 
                 template <typename I> behav_index_t get_index(const I& indiv) const
                 {
                     point_t p = get_point(indiv);
                     behav_index_t behav_pos;
-                    for (size_t i = 0; i < Params::ea::behav_shape_size(); ++i) {
-                        behav_pos[i] = round(p[i] * (behav_shape[i] - 1));
-                        // behav_pos[i] = std::min(behav_pos[i], behav_shape[i] - 1);
-                        assert(behav_pos[i] < behav_shape[i]);
+                    for (size_t i = 0; i < Params::qd::grid_shape_size(); ++i) {
+                        behav_pos[i] = round(p[i] * (grid_shape[i] - 1));
+                        // behav_pos[i] = std::min(behav_pos[i], grid_shape[i] - 1);
+                        assert(behav_pos[i] < grid_shape[i]);
                     }
                     return behav_pos;
                 }
@@ -88,7 +88,7 @@ namespace sferes {
                 template <typename I> point_t get_point(const I& indiv) const
                 {
                     point_t p;
-                    for (size_t i = 0; i < Params::ea::behav_shape_size(); ++i)
+                    for (size_t i = 0; i < Params::qd::grid_shape_size(); ++i)
                         p[i] = std::min(1.0f, indiv->fit().desc()[i]);
 
                     return p;
@@ -99,10 +99,10 @@ namespace sferes {
                     /* Returns distance to center of behavior descriptor cell */
                     float dist = 0.0;
                     point_t p = get_point(indiv);
-                    for (size_t i = 0; i < Params::ea::behav_shape_size(); ++i)
+                    for (size_t i = 0; i < Params::qd::grid_shape_size(); ++i)
                         dist += pow(p[i]
-                                - (float)round(p[i] * (float)(behav_shape[i] - 1))
-                                    / (float)(behav_shape[i] - 1),
+                                - (float)round(p[i] * (float)(grid_shape[i] - 1))
+                                    / (float)(grid_shape[i] - 1),
                             2);
 
                     dist = sqrt(dist);
@@ -177,7 +177,7 @@ namespace sferes {
                     for (auto it = indix.ranges_.begin(); it != indix.ranges_.end(); it++) {
                         *it = index_range_t(std::max((int)ind[i] - (int)Params::nov::deep, 0),
                             std::min(ind[i] + Params::nov::deep + 1,
-                                (size_t)behav_shape[i])); // bound! so stop at id[i]+2-1
+                                (size_t)grid_shape[i])); // bound! so stop at id[i]+2-1
 
                         i++;
                     }

@@ -32,12 +32,7 @@
 //| The fact that you are presently reading this means that you have
 //| had knowledge of the CeCILL license and that you accept its terms.
 
-#define BOOST_TEST_DYN_LINK
-#define BOOST_TEST_MODULE quality_diversity
-
-#include <cmath>
 #include <iostream>
-
 
 #include <sferes/eval/parallel.hpp>
 #include <sferes/gen/evo_float.hpp>
@@ -51,40 +46,47 @@
 
 
 #include <sferes/fit/fit_qd.hpp>
+#include <sferes/qd/container/archive.hpp>
 #include <sferes/qd/container/grid.hpp>
 #include <sferes/qd/quality_diversity.hpp>
+#include <sferes/qd/selector/tournament.hpp>
 #include <sferes/qd/selector/uniform.hpp>
 
 using namespace sferes::gen::evo_float;
 
 struct Params {
-
     struct nov {
-        SFERES_CONST size_t deep = 2;// TODO : what does that mean for map-elites?
+        SFERES_CONST size_t deep = 2;
+        SFERES_CONST double l = 1; // TODO value ???
+        SFERES_CONST double k = 8; // TODO right value?
+        SFERES_CONST double eps = 0.01;// TODO right value??
     };
-    struct ea {
-        SFERES_CONST size_t behav_dim = 2;
-        SFERES_ARRAY(size_t, behav_shape, 256, 256);
-    };
+  
+    // TODO: move to a qd::
     struct pop {
         // number of initial random points
         SFERES_CONST size_t init_size = 1000;
         // size of a batch
         SFERES_CONST size_t size = 200;
-        SFERES_CONST size_t nb_gen = 1000;
-        SFERES_CONST size_t dump_period = 1000;
+        SFERES_CONST size_t nb_gen = 500;
+        SFERES_CONST size_t dump_period = -1;
     };
     struct parameters {
         SFERES_CONST float min = -5;
         SFERES_CONST float max = 5;
     };
     struct evo_float {
-        SFERES_CONST float cross_rate = 0.85f;
+        SFERES_CONST float cross_rate = 0.5f;
         SFERES_CONST float mutation_rate = 0.1f;
         SFERES_CONST float eta_m = 10.0f;
         SFERES_CONST float eta_c = 10.0f;
         SFERES_CONST mutation_t mutation_type = polynomial;
         SFERES_CONST cross_over_t cross_over_type = sbx;
+    };
+    struct qd {
+        SFERES_CONST size_t dim = 2;
+        SFERES_CONST size_t behav_dim = 2;
+        SFERES_ARRAY(size_t, grid_shape, 100, 100);
     };
 };
 
@@ -103,7 +105,7 @@ FIT_QD(Rastrigin){
     }
 };
 
-int main(int argc, char** argv)
+int main(int argc, char **argv) 
 {
     using namespace sferes;
 
@@ -124,6 +126,8 @@ int main(int argc, char** argv)
         qd_t;
 
     qd_t qd;
-    run_ea(argc, argv, qd);
+    qd.run();
+    std::cout<<"best fitness:" << qd.stat<0>().best()->fit().value() << std::endl;
+    std::cout<<"archive size:" << qd.stat<1>().archive().size() << std::endl;
     return 0;
 }

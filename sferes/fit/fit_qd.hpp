@@ -46,7 +46,7 @@ namespace sferes {
         public:
             FitQD()
                 : _dead(false),
-                  _desc(Params::ea::behav_dim),
+                  _desc(Params::qd::dim),
                   _novelty(-std::numeric_limits<double>::infinity()),
                   _curiosity(0),
                   _lq(0)
@@ -64,7 +64,7 @@ namespace sferes {
 
             void set_desc(std::vector<float> & x)
             {
-                assert(x.size() == Params::ea::behav_dim);
+                assert(x.size() == Params::qd::dim);
                 _desc = x;
             }
             bool dead() const { return _dead; }

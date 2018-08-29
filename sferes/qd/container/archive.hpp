@@ -19,7 +19,7 @@ namespace sferes {
                 typedef boost::shared_ptr<Phen> indiv_t;
                 typedef typename std::vector<indiv_t> pop_t;
                 typedef typename pop_t::iterator it_t;
-                typedef std::array<float, Params::ea::behav_dim> point_t;
+                typedef std::array<float, Params::qd::dim> point_t;
                 typedef ssrc::spatial::kd_tree<point_t, indiv_t> Tree;
 
                 Archive() {}

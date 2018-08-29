@@ -75,11 +75,6 @@ struct Params {
         SFERES_CONST double eps = 0.01;// TODO right value??
     };
     // TODO: move to a qd::
-    struct ea {
-        SFERES_CONST size_t behav_dim = 2;
-        SFERES_ARRAY(size_t, behav_shape, 100, 100);
-    };
-    // TODO: move to a qd::
     struct pop {
         // number of initial random points
         SFERES_CONST size_t init_size = 1000;
@@ -101,10 +96,11 @@ struct Params {
         SFERES_CONST cross_over_t cross_over_type = sbx;
     };
     struct qd {
-        SFERES_CONST size_t dim = 2;
+        SFERES_CONST size_t dim = 2; // number of feature dimensions
+        SFERES_ARRAY(size_t, grid_shape, 100, 100); // for grid (map-elites)
+        SFERES_CONST int n_niches = 1000; // for CVT
 
         struct cvt {
-             SFERES_CONST int n_niches = 1000;
             // The following parameters are not used if you use a cached CVT:
             SFERES_CONST int n_samples = 10000;// number of samples for CVT (more than n_niches)
             SFERES_CONST int max_iterations = 100;// number of iterations of the CVT algorithm
