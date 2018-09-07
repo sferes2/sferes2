@@ -24,6 +24,7 @@ namespace sferes {
 
                 Archive() {}
 
+	      
                 void erase_content() { _archive = Tree(); }
 
                 void get_full_content(std::vector<indiv_t>& content)
