@@ -85,8 +85,8 @@ namespace sferes {
                 this->_eval_pop(this->_offspring, 0, this->_offspring.size());
                 this->apply_modifier();
 
-                _add(_parents);
-
+                _add(_offspring);
+		
                 this->_parents = this->_offspring;
                 _offspring.resize(Params::pop::size);
 
@@ -106,13 +106,16 @@ namespace sferes {
             // Main Iteration of the QD algorithm
             void epoch()
             {
+	        _parents.resize(Params::pop::size);
+
                 // Selection of the parents (will fill the _parents vector)
                 _selector(_parents, *this); // not a nice API
 
                 // CLEAR _offspring ONLY after selection, as it can be
                 // used by the selector (via this->_offspring)
                 _offspring.clear();
-
+		_offspring.resize(Params::pop::size);
+		
                 // Generation of the offspring
                 std::vector<size_t> a;
                 misc::rand_ind(a, _parents.size());
@@ -124,8 +127,8 @@ namespace sferes {
                     i2->mutate();
                     i1->develop();
                     i2->develop();
-                    _offspring.push_back(i1);
-                    _offspring.push_back(i2);
+                    _offspring[a[i]]=i1;
+                    _offspring[a[i+1]]=i2;
                 }
 
                 // Evaluation of the offspring

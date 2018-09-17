@@ -37,6 +37,6 @@ def build(bld):
     bld.program(features = 'cxx',
                    source = 'ex_map_elites.cpp',
                    includes = '../',
-                   uselib = 'TBB BOOST EIGEN PTHREAD',
+                   uselib = 'TBB BOOST EIGEN PTHREAD KDTREE',
                    use = 'sferes2',
                    target = 'ex_map_elites')

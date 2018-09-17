@@ -34,6 +34,7 @@ namespace sferes {
                     _array.resize(grid_shape);
                 }
 
+	      
                 template <typename I> behav_index_t get_index(const I& indiv) const
                 {
                     point_t p = get_point(indiv);
