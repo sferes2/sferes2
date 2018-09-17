@@ -98,7 +98,7 @@ struct Params {
     struct qd {
         SFERES_CONST size_t dim = 2; // number of feature dimensions
         SFERES_ARRAY(size_t, grid_shape, 100, 100); // for grid (map-elites)
-        SFERES_CONST int n_niches = 1000; // for CVT
+        SFERES_CONST int n_niches = 10000; // for CVT
 
         struct cvt {
             // The following parameters are not used if you use a cached CVT:
@@ -172,7 +172,7 @@ BOOST_AUTO_TEST_CASE(qd_cvt_map_elites)
     qd.run();
     std::cout << qd.stat<0>().best()->fit().value() << " " << qd.stat<1>().archive().size()
               << std::endl;
-    BOOST_CHECK(qd.stat<1>().archive().size() > 950);
+    BOOST_CHECK(qd.stat<1>().archive().size() > 9500);
     BOOST_CHECK(qd.stat<0>().best()->fit().value() > -50);
 }
 

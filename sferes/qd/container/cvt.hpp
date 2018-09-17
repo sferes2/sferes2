@@ -78,21 +78,7 @@ namespace sferes {
                     point_t p = _get_point(i1);
 
                     // Find the closest cluster
-                    size_t archive_index = -1;
-                    double min_dist = std::numeric_limits<double>::max();
-
-                    for (size_t i = 0; i < _centroids.rows(); ++i) {
-                        double dist = (_centroids.row(i) - p.transpose()).squaredNorm();
-
-                        if (dist < min_dist) {
-                            min_dist = dist;
-                            archive_index = i;
-                        }
-                        // Since the minimum distance cannot be less than 0
-                        // we can accelerate computation by breaking
-                        if (min_dist == 0.0)
-                            break;
-                    }
+                    size_t archive_index = _centroids_storage.nearest(p).second;
 
                     // If the archive is empty or the stored individual is less fit
                     if (!_archive[archive_index]
