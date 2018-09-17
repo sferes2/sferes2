@@ -1,6 +1,8 @@
 #ifndef QD_CONTAINER_ARCHIVE_HPP
 #define QD_CONTAINER_ARCHIVE_HPP
 
+
+#define USE_KDTREE
 #ifdef USE_KDTREE
 
 #define LIBSSRCKDTREE_HAVE_BOOST
@@ -14,7 +16,7 @@ namespace sferes {
         namespace container {
 
             template <typename Phen, typename Params> 
-						class Archive {
+            class Archive {
             public:
                 typedef boost::shared_ptr<Phen> indiv_t;
                 typedef typename std::vector<indiv_t> pop_t;
