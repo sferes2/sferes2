@@ -119,8 +119,8 @@ namespace sferes {
                     return it->second;
                 }
 
-                static void get_knn(const indiv_t& indiv,  Tree& apop, int k, pop_t& nearest,
-                    const bool omit_query_point)
+                static void get_knn(const indiv_t& indiv, const Tree& apop, int k, pop_t& nearest,
+                    const bool omit_query_point) 
                 {
                     typename Tree::key_type q;
                     Archive::_behavior_to_point(indiv->fit().desc(), &q);
@@ -135,7 +135,7 @@ namespace sferes {
                         // for (size_t z = 0; z < it->second && nearest.size() < Params::nov::k;
                         // ++z)
                         nearest.push_back(it->second);
-                    assert(nearest.size() == k);
+                    assert(nearest.size() == k || nearest.size() == apop.size() || nearest.size() == apop.size());
                 }
 
                 static double get_novelty(const indiv_t& indiv, Tree& apop)
@@ -210,6 +210,7 @@ namespace sferes {
                 }
 
                 const Tree& archive() const { return _archive; }
+
 
                 void direct_add(const indiv_t& tobeinserted)
                 {
