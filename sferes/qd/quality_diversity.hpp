@@ -52,6 +52,7 @@
 #include <sferes/qd/selector/uniform.hpp>
 #include <sferes/qd/container/grid.hpp>
 #include <sferes/qd/container/cvt.hpp>
+#include <sferes/qd/container/sort_based_storage.hpp>
 
 namespace sferes {
     namespace qd {
@@ -208,11 +209,11 @@ namespace sferes {
 
         template <typename Phen, typename Eval, typename Stat, typename Modifier, typename Params>
         using MapElites = qd::QualityDiversity<Phen, Eval, Stat, Modifier,
-            qd::selector::Uniform<Phen, Params>, qd::container::Grid<Phen, Params>, Params>;
+            selector::Uniform<Phen, Params>, container::Grid<Phen, Params>, Params>;
 
         template <typename Phen, typename Eval, typename Stat, typename Modifier, typename Params>
         using CvtMapElites = qd::QualityDiversity<Phen, Eval, Stat, Modifier,
-            qd::selector::Uniform<Phen, Params>, qd::container::CVT<Phen, Params>, Params>;
+            selector::Uniform<Phen, Params>, container::CVT<Phen, container::SortBasedStorage<int>, Params>, Params>;
 
     } // namespace qd
 } // namespace sferes

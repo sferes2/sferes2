@@ -14,7 +14,7 @@ namespace sferes {
         namespace container {
 
             template <typename Phen, typename Params> 
-						class Archive {
+            class Archive {
             public:
                 typedef boost::shared_ptr<Phen> indiv_t;
                 typedef typename std::vector<indiv_t> pop_t;

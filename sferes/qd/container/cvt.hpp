@@ -4,6 +4,7 @@
 #include <sferes/misc/eigen.hpp>
 
 #include "compute_cvt.hpp"
+#include "sort_based_storage.hpp"
 
 namespace sferes {
     namespace qd {
@@ -16,11 +17,12 @@ namespace sferes {
             // qd::cvt::max_iterations (e.g. 100): number of iterations of the CVT algorithm
             // qd::cvt::n_restarts (e.g. 1): number of restarts of the CVT algorithm
             // qd::cvt::tolerance (e.g. 1e-8): when to stop the CVT algorithm
-            template <typename Phen, typename Params> class CVT {
+            template <typename Phen, typename Storage, typename Params> class CVT {
             public:
                 typedef boost::shared_ptr<Phen> indiv_t;
                 typedef typename std::vector<indiv_t> pop_t;
                 typedef Eigen::VectorXd point_t;
+                typedef Storage storage_t;
 
                 CVT()
                 {
@@ -56,6 +58,9 @@ namespace sferes {
                         assert(_centroids.rows() == Params::qd::n_niches);
                         assert(_centroids.cols() == dim);
                     }
+                    // put the centroids in storage for fast KNN computation
+                    for (size_t i = 0; i < _centroids.rows(); ++i)
+                        _centroids_storage.add(_centroids.row(i), i);
                 }
 
                 void get_full_content(std::vector<indiv_t>& content) const
@@ -73,21 +78,7 @@ namespace sferes {
                     point_t p = _get_point(i1);
 
                     // Find the closest cluster
-                    size_t archive_index = -1;
-                    double min_dist = std::numeric_limits<double>::max();
-
-                    for (size_t i = 0; i < _centroids.rows(); ++i) {
-                        double dist = (_centroids.row(i) - p.transpose()).squaredNorm();
-
-                        if (dist < min_dist) {
-                            min_dist = dist;
-                            archive_index = i;
-                        }
-                        // Since the minimum distance cannot be less than 0
-                        // we can accelerate computation by breaking
-                        if (min_dist == 0.0)
-                            break;
-                    }
+                    size_t archive_index = _centroids_storage.nearest(p).second;
 
                     // If the archive is empty or the stored individual is less fit
                     if (!_archive[archive_index]
@@ -101,6 +92,13 @@ namespace sferes {
 
                 void update(pop_t& offspring, pop_t& parents)
                 {
+                   // _update_novelty();
+                    // for (size_t i = 0; i < offspring.size(); i++)
+                    //     _update_indiv(offspring[i]);
+                    // for (size_t i = 0; i < parents.size(); i++)
+                    //     _update_indiv(parents[i]);
+
+
                     // Do nothing for now
                     // _update_novelty();
                     // for (size_t i = 0; i < offspring.size(); i++)
@@ -116,6 +114,7 @@ namespace sferes {
                 pop_t _archive;
                 pop_t _archive_parents;
                 Eigen::MatrixXd _centroids;
+                storage_t _centroids_storage;
 
                 // Convert the descriptor into a Point_t
                 template <typename I> point_t _get_point(const I& indiv) const
