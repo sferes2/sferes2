@@ -1,5 +1,6 @@
 Main concepts
 ==============
+.. highlight:: c++
 
 Static object-oriented paradigm
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

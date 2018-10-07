@@ -1,5 +1,6 @@
 Tutorial (basics)
 =================
+.. highlight:: c++
 
 This short example shows how to set up a basic experiment to optimize
 parameters using a user-defined fitness.
@@ -282,7 +283,8 @@ Fitness function
          }
        };
 
-It can also be useful to print a few things (debug, result, additionnal information, etc.) **when we are in loading mode**. This is easily done like this:
+It can also be useful to print a few things (debug, result, 3D graphics, additionnal information, etc.) **when we are in loading mode**. 
+This is easily achieved like this:
 
 
 .. code:: c++
