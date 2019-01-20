@@ -49,10 +49,10 @@
 #include <sferes/fit/fitness.hpp>
 #include <sferes/stc.hpp>
 
-#include <sferes/qd/selector/uniform.hpp>
-#include <sferes/qd/container/grid.hpp>
 #include <sferes/qd/container/cvt.hpp>
+#include <sferes/qd/container/grid.hpp>
 #include <sferes/qd/container/sort_based_storage.hpp>
+#include <sferes/qd/selector/uniform.hpp>
 
 namespace sferes {
     namespace qd {
@@ -78,9 +78,9 @@ namespace sferes {
             {
                 parallel::init();
 
-		this->_pop.clear();
-		
-		_offspring.resize(Params::pop::size);
+                this->_pop.clear();
+
+                _offspring.resize(Params::pop::size);
                 BOOST_FOREACH (indiv_t& indiv, this->_offspring) {
                     indiv = indiv_t(new Phen());
                     indiv->random();
@@ -89,7 +89,7 @@ namespace sferes {
                 this->apply_modifier();
 
                 _add(_offspring, _added);
-		
+
                 this->_parents = this->_offspring;
                 _offspring.resize(Params::pop::size);
 
@@ -102,14 +102,13 @@ namespace sferes {
                 this->apply_modifier();
                 _add(_offspring, _added);
 
-
                 _container.get_full_content(this->_pop);
             }
 
             // Main Iteration of the QD algorithm
             void epoch()
             {
-	        _parents.resize(Params::pop::size);
+                _parents.resize(Params::pop::size);
 
                 // Selection of the parents (will fill the _parents vector)
                 _selector(_parents, *this); // not a nice API
@@ -117,8 +116,8 @@ namespace sferes {
                 // CLEAR _offspring ONLY after selection, as it can be
                 // used by the selector (via this->_offspring)
                 _offspring.clear();
-		_offspring.resize(Params::pop::size);
-		
+                _offspring.resize(Params::pop::size);
+
                 // Generation of the offspring
                 std::vector<size_t> a;
                 misc::rand_ind(a, _parents.size());
@@ -130,8 +129,8 @@ namespace sferes {
                     i2->mutate();
                     i1->develop();
                     i2->develop();
-                    _offspring[a[i]]=i1;
-                    _offspring[a[i+1]]=i2;
+                    _offspring[a[i]] = i1;
+                    _offspring[a[i + 1]] = i2;
                 }
 
                 // Evaluation of the offspring
@@ -150,34 +149,34 @@ namespace sferes {
             }
 
             const Container& container() const { return _container; }
-	  
-	    const pop_t& pop() const { return this->_pop; }
-	    pop_t& pop() { return this->_pop; }
 
-	    const pop_t& offspring() const { return _offspring; }
-	    pop_t& offspring() { return _offspring; }
+            const pop_t& pop() const { return this->_pop; }
+            pop_t& pop() { return this->_pop; }
 
-	    const pop_t& parents() const { return _parents; }
-	    pop_t& parents() { return _parents; }
+            const pop_t& offspring() const { return _offspring; }
+            pop_t& offspring() { return _offspring; }
 
-	    const std::vector<bool>& added() const { return _added; }
-	    std::vector<bool>& added() { return _added; }
+            const pop_t& parents() const { return _parents; }
+            pop_t& parents() { return _parents; }
+
+            const std::vector<bool>& added() const { return _added; }
+            std::vector<bool>& added() { return _added; }
 
         protected:
             // Add the offspring into the container and update the score of the individuals from the
             // container and both of the sub population (offspring and parents)
-	    void _add(pop_t& pop_off, std::vector<bool>& added, pop_t& pop_parents)
+            void _add(pop_t& pop_off, std::vector<bool>& added, pop_t& pop_parents)
             {
-	        added.resize(pop_off.size());
+                added.resize(pop_off.size());
                 for (size_t i = 0; i < pop_off.size(); ++i)
                     added[i] = _add_to_container(pop_off[i], pop_parents[i]);
                 _container.update(pop_off, pop_parents);
             }
 
             // Same function, but without the need of parent.
-	    void _add(pop_t& pop_off, std::vector<bool>& added)
+            void _add(pop_t& pop_off, std::vector<bool>& added)
             {
-	        added.resize(pop_off.size());
+                added.resize(pop_off.size());
                 for (size_t i = 0; i < pop_off.size(); ++i)
                     added[i] = _container.add(pop_off[i]);
                 pop_t empty;
@@ -212,8 +211,9 @@ namespace sferes {
             selector::Uniform<Phen, Params>, container::Grid<Phen, Params>, Params>;
 
         template <typename Phen, typename Eval, typename Stat, typename Modifier, typename Params>
-        using CvtMapElites = qd::QualityDiversity<Phen, Eval, Stat, Modifier,
-            selector::Uniform<Phen, Params>, container::CVT<Phen, container::SortBasedStorage<int>, Params>, Params>;
+        using CvtMapElites
+            = qd::QualityDiversity<Phen, Eval, Stat, Modifier, selector::Uniform<Phen, Params>,
+                container::CVT<Phen, container::SortBasedStorage<int>, Params>, Params>;
 
     } // namespace qd
 } // namespace sferes

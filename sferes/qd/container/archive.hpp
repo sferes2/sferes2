@@ -1,11 +1,6 @@
 #ifndef QD_CONTAINER_ARCHIVE_HPP
 #define QD_CONTAINER_ARCHIVE_HPP
 
-#ifdef USE_KDTREE
-
-#define LIBSSRCKDTREE_HAVE_BOOST
-#include <ssrc/spatial/kd_tree.h>
-
 #include "tools.hpp"
 #include <tbb/parallel_for_each.h>
 
@@ -13,19 +8,19 @@ namespace sferes {
     namespace qd {
         namespace container {
 
-            template <typename Phen, typename Params> 
-            class Archive {
+            template <typename Phen, typename Storage, typename Params> class Archive {
             public:
                 typedef boost::shared_ptr<Phen> indiv_t;
                 typedef typename std::vector<indiv_t> pop_t;
                 typedef typename pop_t::iterator it_t;
                 typedef std::array<float, Params::qd::dim> point_t;
-                typedef ssrc::spatial::kd_tree<point_t, indiv_t> Tree;
+                // typedef ssrc::spatial::kd_tree<point_t, indiv_t> Tree;
+                typedef Storage storage_t;
+                typedef Eigen::Map<Eigen::VectorXd> point_t;
 
                 Archive() {}
 
-	      
-                void erase_content() { _archive = Tree(); }
+                void erase_content() { _archive = storage_t(); }
 
                 void get_full_content(std::vector<indiv_t>& content)
                 {
@@ -35,15 +30,15 @@ namespace sferes {
 
                 bool add(indiv_t i1)
                 {
-                    // TODO
-                    // update archive
+                    // p_i1 is the behavioral coordinate of i1
+                    point_t p_i1(i1->fit().desc().data(), i1->fit().desc().size());
+
                     if (i1->fit().dead())
                         return false;
+
                     if (_archive.size() == 0
-                        || /*_archive.size()<Params::nov::k ||*/ _dist(
-                               get_nearest(i1, _archive, false)->fit().desc(), i1->fit().desc())
-                            > Params::nov::l) // ADD because new
-                    {
+                        || _dist(_archive.get_nearest().first, p_i1) > Params::nov::l) {
+                        // this is novel enough, we add
                         direct_add(i1);
                         return true;
                     }
@@ -53,22 +48,16 @@ namespace sferes {
                     }
                     else // archive size min = 2
                     {
-                        pop_t neigh_current;
-
-                        // Be careful, the first one referes to nn
-                        get_knn(i1, _archive, 2, neigh_current, false);
-                        if (_dist(i1->fit().desc(), neigh_current[1]->fit().desc())
-                            < (1 - Params::nov::eps)
-                                * Params::nov::l) // too close the second NN -- this works better
-                        // if(_dist(i1->fit().desc(), neigh_current[1]->fit().desc())  <
-                        // Params::nov::l)//too close the second NN
+                        auto knn_2 = _archive.knn(p_i1, 2);
+                        if (_dist(p_i1, nn[1].first) < (1 - Params::nov::eps) * Params::nov::l)
                         {
+                            // too close the second nearest neighbor, we skip
                             return false;
                         }
-                        indiv_t nn = neigh_current[0];
+                        indiv_t nn = neigh_cur;
                         std::vector<double> score_cur(2, 0), score_nn(2, 0);
                         score_cur[0] = i1->fit().value();
-                        score_nn[0] = nn->fit().value();
+                        score_nn[0] = nn->second->fit().value();
                         // Compute the Novelty
                         neigh_current.clear();
                         if (_archive.size() < Params::nov::k + 1) {
@@ -84,12 +73,9 @@ namespace sferes {
                         score_nn[1] = get_novelty(nn, _archive);
                         // TEST
                         int score = 0;
-                        if ((score_cur[0]
-                                    >= (1 - sign(score_nn[0]) * Params::nov::eps) * score_nn[0]
-                                && score_cur[1]
-                                    >= (1 - sign(score_nn[1]) * Params::nov::eps) * score_nn[1])
-                            && ((score_cur[0] - score_nn[0]) * std::abs(score_nn[1])
-                                   > -(score_cur[1] - score_nn[1]) * std::abs(score_nn[0]))) {
+                        if ((score_cur[0]>= (1 - sign(score_nn[0]) * Params::nov::eps) * score_nn[0]
+                            && score_cur[1]>= (1 - sign(score_nn[1]) * Params::nov::eps) * score_nn[1])
+                            && ((score_cur[0] - score_nn[0]) * std::abs(score_nn[1]) > -(score_cur[1] - score_nn[1]) * std::abs(score_nn[0]))) {
                             // add if significatively better on one objective
                             _replace(nn, i1);
                             return true;
@@ -110,17 +96,16 @@ namespace sferes {
                     std::for_each(parents.begin(), parents.end(), nov);
                 }
 
-                static indiv_t get_nearest(
-                    const indiv_t& indiv, Tree& apop, const bool omit_query_point)
+                // be careful that if you query this on a member of the archive, you get...the
+                // member of the archive (distance = 0)
+                static indiv_t get_nearest(const indiv_t& indiv, const storage_t& apop)
                 {
-                    typename Tree::key_type q;
-                    Archive::_behavior_to_point(indiv->fit().desc(), &q);
-                    typename Tree::iterator it = apop.find_nearest_neighbor(q, omit_query_point);
-                    return it->second;
+                    point_t point = _behavior_to_point(indiv->fit().desc());
+                    return apop.nearest(point);
                 }
 
                 static void get_knn(const indiv_t& indiv, const Tree& apop, int k, pop_t& nearest,
-                    const bool omit_query_point) 
+                    const bool omit_query_point)
                 {
                     typename Tree::key_type q;
                     Archive::_behavior_to_point(indiv->fit().desc(), &q);
@@ -135,7 +120,8 @@ namespace sferes {
                         // for (size_t z = 0; z < it->second && nearest.size() < Params::nov::k;
                         // ++z)
                         nearest.push_back(it->second);
-                    assert(nearest.size() == k || nearest.size() == apop.size() || nearest.size() == apop.size());
+                    assert(nearest.size() == k || nearest.size() == apop.size()
+                        || nearest.size() == apop.size());
                 }
 
                 static double get_novelty(const indiv_t& indiv, Tree& apop)
@@ -170,8 +156,7 @@ namespace sferes {
                     return sum / std::distance(begin, end); // Params::nov::k;
                 }
 
-                static std::pair<double, double> get_nov_and_lq(
-                    const indiv_t& indiv, Tree& apop)
+                static std::pair<double, double> get_nov_and_lq(const indiv_t& indiv, Tree& apop)
                 {
                     pop_t nearest;
                     if (apop.size() < (Params::nov::k + 1))
@@ -211,7 +196,6 @@ namespace sferes {
 
                 const Tree& archive() const { return _archive; }
 
-
                 void direct_add(const indiv_t& tobeinserted)
                 {
                     point_t p;
@@ -232,17 +216,15 @@ namespace sferes {
                     direct_add(tobeinserted);
                 }
 
-                template <typename Behavior, typename Point>
-                static void _behavior_to_point(const Behavior& b, Point* p)
+                template <typename Behavior>
+                static inline point_t _behavior_to_point(const Behavior& b)
                 {
-                    assert(p->size() == b.size());
-                    for (size_t i = 0; i < p->size(); ++i)
-                        (*p)[i] = b[i];
+                    return p(b.data(), b.size());
                 }
 
                 struct _p_novelty {
                     Tree& _apop;
-                    _p_novelty( Tree& apop) : _apop(apop) {}
+                    _p_novelty(Tree& apop) : _apop(apop) {}
                     _p_novelty(const _p_novelty& ev) : _apop(ev._apop) {}
 
                     // use the Euclidean distance !
@@ -266,12 +248,8 @@ namespace sferes {
                     }
                 };
 
-                Tree _archive;
+                storage_t _archive;
             };
         } // namespace container
     } // namespace qd
 } // namespace sferes
-#else
-#warning "No KD_TREE library found: no qd/container/archive.hpp"
-#endif
-#endif

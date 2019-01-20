@@ -49,7 +49,6 @@
 #include <sferes/qd/container/archive.hpp>
 #include <sferes/qd/container/grid.hpp>
 #include <sferes/qd/quality_diversity.hpp>
-#include <sferes/qd/selector/tournament.hpp>
 #include <sferes/qd/selector/uniform.hpp>
 
 using namespace sferes::gen::evo_float;
@@ -67,16 +66,16 @@ struct Params {
         // number of initial random points
         SFERES_CONST size_t init_size = 1000;
         // size of a batch
-        SFERES_CONST size_t size = 200;
-        SFERES_CONST size_t nb_gen = 500;
-        SFERES_CONST size_t dump_period = -1;
+        SFERES_CONST size_t size = 2000;
+        SFERES_CONST size_t nb_gen = 10001;
+        SFERES_CONST size_t dump_period = 1000;
     };
     struct parameters {
         SFERES_CONST float min = -5;
         SFERES_CONST float max = 5;
     };
     struct evo_float {
-        SFERES_CONST float cross_rate = 0.5f;
+        SFERES_CONST float cross_rate = 0.75f;
         SFERES_CONST float mutation_rate = 0.1f;
         SFERES_CONST float eta_m = 10.0f;
         SFERES_CONST float eta_c = 10.0f;
@@ -86,7 +85,7 @@ struct Params {
     struct qd {
         SFERES_CONST size_t dim = 2;
         SFERES_CONST size_t behav_dim = 2;
-        SFERES_ARRAY(size_t, grid_shape, 100, 100);
+        SFERES_ARRAY(size_t, grid_shape, 128, 128);
     };
 };
 
@@ -118,15 +117,15 @@ int main(int argc, char **argv)
     typedef boost::fusion::vector<
         stat::BestFit<phen_t, Params>, 
         stat::QdContainer<phen_t, Params>, 
-        stat::QdProgress<phen_t, Params>, 
-        stat::QdSelection<phen_t, Params>>
+        stat::QdProgress<phen_t, Params>
+        >
         stat_t; 
     typedef modif::Dummy<> modifier_t;
     typedef qd::MapElites<phen_t, eval_t, stat_t, modifier_t, Params>
         qd_t;
 
     qd_t qd;
-    qd.run();
+    run_ea(argc, argv, qd);
     std::cout<<"best fitness:" << qd.stat<0>().best()->fit().value() << std::endl;
     std::cout<<"archive size:" << qd.stat<1>().archive().size() << std::endl;
     return 0;

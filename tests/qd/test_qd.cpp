@@ -74,7 +74,7 @@ struct Params {
         SFERES_CONST double k = 8; // TODO right value?
         SFERES_CONST double eps = 0.01;// TODO right value??
     };
-    // TODO: move to a qd::
+    // TODO: move to a qd::/ea
     struct pop {
         // number of initial random points
         SFERES_CONST size_t init_size = 1000;
