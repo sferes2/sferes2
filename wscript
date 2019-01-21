@@ -150,6 +150,11 @@ def configure(conf):
     else:
         conf.env['MPI_ENABLED'] = False
 
+    # PTHREAD 
+    conf.env.LIBPATH_PTHREAD = ['/usr/local/lib/', '/usr/lib', '/usr/lib/x86_64-linux-gnu/']
+    conf.env.LIB_PTHREAD = ['pthread']
+
+
     # eigen 3 (optional)
     conf.load('eigen')
     conf.check_eigen()
