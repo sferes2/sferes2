@@ -66,6 +66,7 @@ def options(opt):
     opt.load('tbb')
     opt.load('mpi')
     opt.load('eigen')
+    opt.load('pthread')
 
     # sferes specific
     opt.add_option('--rpath', type='string', help='set rpath', dest='rpath')
@@ -153,6 +154,9 @@ def configure(conf):
     # eigen 3 (optional)
     conf.load('eigen')
     conf.check_eigen()
+
+    conf.load('pthread')
+    conf.check_pthread()
 
     if conf.options.rpath:
         conf.env.append_value("LINKFLAGS", "--rpath="+conf.options.rpath)
