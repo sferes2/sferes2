@@ -10,7 +10,7 @@ import sferes
 
 @conf
 def check_pthread(self, *k, **kw):
-    libpath = ['/usr/local/lib/', '/usr/lib', '/opt/intel/tbb/lib', '/usr/lib/x86_64-linux-gnu/']
+    libpath = ['/usr/local/lib/', '/usr/lib', '/usr/lib/x86_64-linux-gnu/']
     self.start_msg('Checking pthread')
     lib = ''
     try:
