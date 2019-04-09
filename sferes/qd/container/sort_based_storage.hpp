@@ -98,6 +98,8 @@ namespace sferes {
                     return it != _data.end();
                 }
 
+
+	      void optimize(){}//does nothing. 
             protected:
                 std::vector<data_t> _data;
             };

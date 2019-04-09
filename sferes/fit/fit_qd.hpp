@@ -46,14 +46,14 @@ namespace sferes {
         public:
             FitQD()
                 : _dead(false),
-                  _desc(Params::qd::dim),
+                  _desc(Params::qd::behav_dim),
                   _novelty(-std::numeric_limits<double>::infinity()),
                   _curiosity(0),
                   _lq(0)
             {
             }
 
-            const std::vector<float>& desc() const { return _desc; }
+            const std::vector<double>& desc() const { return _desc; }
             double novelty() const { return _novelty; }
             void set_novelty(double nov) { _novelty = nov; }
             double curiosity() const { return _curiosity; }
@@ -62,9 +62,9 @@ namespace sferes {
             double local_quality() const { return _lq; }
             void set_local_quality(double lq) { _lq = lq; }
 
-            void set_desc(std::vector<float> & x)
+            void set_desc(std::vector<double> & x)
             {
-                assert(x.size() == Params::qd::dim);
+	      assert(x.size() == Params::qd::behav_dim);
                 _desc = x;
             }
             bool dead() const { return _dead; }
@@ -73,7 +73,7 @@ namespace sferes {
 
         protected:
             bool _dead;
-            std::vector<float> _desc;
+            std::vector<double> _desc;
             double _novelty;
             double _curiosity;
             double _lq;

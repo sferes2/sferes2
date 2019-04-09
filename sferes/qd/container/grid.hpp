@@ -11,7 +11,7 @@ namespace sferes {
                 typedef typename pop_t::iterator it_t;
                 typedef typename std::vector<std::vector<indiv_t>> front_t;
 
-                static const size_t dim = Params::qd::dim;
+                static const size_t dim = Params::qd::behav_dim;
                 typedef boost::multi_array<indiv_t, dim> array_t;
                 typedef typename array_t::multi_array_base::index_range index_range_t;
                 typedef boost::detail::multi_array::index_gen<dim, dim> index_gen_t;
@@ -90,7 +90,7 @@ namespace sferes {
                 {
                     point_t p;
                     for (size_t i = 0; i < Params::qd::grid_shape_size(); ++i)
-                        p[i] = std::min(1.0f, indiv->fit().desc()[i]);
+                        p[i] = std::min(1.0, indiv->fit().desc()[i]);
 
                     return p;
                 }

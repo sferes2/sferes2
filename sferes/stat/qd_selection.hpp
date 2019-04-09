@@ -11,7 +11,7 @@ namespace sferes {
         SFERES_STAT(QdSelection, Stat) {
         public:
             typedef boost::shared_ptr<Phen> phen_t;
-            typedef boost::multi_array<phen_t, Params::qd::dim> array_t;
+            typedef boost::multi_array<phen_t, Params::qd::behav_dim> array_t;
 
             template <typename E> void refresh(const E& ea)
             {

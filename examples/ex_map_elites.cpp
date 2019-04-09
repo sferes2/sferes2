@@ -83,7 +83,6 @@ struct Params {
         SFERES_CONST cross_over_t cross_over_type = sbx;
     };
     struct qd {
-        SFERES_CONST size_t dim = 2;
         SFERES_CONST size_t behav_dim = 2;
         SFERES_ARRAY(size_t, grid_shape, 128, 128);
     };
@@ -99,7 +98,7 @@ FIT_QD(Rastrigin){
             f += ind.data(i) * ind.data(i) - 10 * cos(2 * M_PI * ind.data(i));
         this->_value = -f;
 
-        std::vector<float> data = {ind.gen().data(0), ind.gen().data(1)};
+        std::vector<double> data = {ind.gen().data(0), ind.gen().data(1)};
         this->set_desc(data);
     }
 };

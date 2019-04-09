@@ -11,7 +11,7 @@ namespace sferes {
         namespace container {
             // parameters:
             // qd::n_niches (e.g, 10000): number of niches
-            // qd::dim (e.g, 2): number of feature dimensions
+            // qd::behav_dim (e.g, 2): number of feature dimensions
             // The following parameters are ignored if you use a cached CVT (but they are required for compilation):
             // qd::cvt::qd::n_samples (e.g., 100000): number of samples for CVT (more than n_niches)
             // qd::cvt::max_iterations (e.g. 100): number of iterations of the CVT algorithm
@@ -26,7 +26,7 @@ namespace sferes {
 
                 CVT()
                 {
-                    SFERES_CONST int dim = Params::qd::dim;
+		  SFERES_CONST int dim = Params::qd::behav_dim;
                     SFERES_CONST int n_niches = Params::qd::n_niches;
                     _archive.resize(n_niches);
                     _archive_parents.resize(n_niches);
@@ -41,7 +41,7 @@ namespace sferes {
                                   << cache_filename << ") "
                                   << "=> computing a new CVT (this might take a dozen of minutes!)"
                                   << std::endl;
-                        _centroids = cvt::cvt(Params::qd::dim, Params::qd::n_niches,
+                        _centroids = cvt::cvt(Params::qd::behav_dim, Params::qd::n_niches,
                             Params::qd::cvt::n_samples, Params::qd::cvt::max_iterations,
                             Params::qd::cvt::n_restarts, Params::qd::cvt::tolerance);
                         std::ofstream ofs(cache_filename.c_str());
@@ -119,9 +119,9 @@ namespace sferes {
                 // Convert the descriptor into a Point_t
                 template <typename I> point_t _get_point(const I& indiv) const
                 {
-                    size_t dim = Params::qd::dim;// needed for linking??
+		  size_t dim = Params::qd::behav_dim;// needed for linking??
                     point_t p(dim);
-                    for (size_t i = 0; i < Params::qd::dim; ++i)
+                    for (size_t i = 0; i < Params::qd::behav_dim; ++i)
                         p(i) = indiv->fit().desc()[i];
                     return p;
                 }

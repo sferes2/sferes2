@@ -48,6 +48,8 @@
 
 #include <sferes/fit/fit_qd.hpp>
 #include <sferes/qd/container/archive.hpp>
+#include <sferes/qd/container/kdtree_storage.hpp>
+#include <sferes/qd/container/sort_based_storage.hpp>
 #include <sferes/qd/container/grid.hpp>
 #include <sferes/qd/quality_diversity.hpp>
 #include <sferes/qd/selector/uniform.hpp>
@@ -84,7 +86,6 @@ struct Params {
         SFERES_CONST cross_over_t cross_over_type = sbx;
     };
     struct qd {
-        SFERES_CONST size_t dim = 2;
         SFERES_CONST size_t behav_dim = 2;
         SFERES_ARRAY(size_t, grid_shape, 100, 100);
     };
@@ -103,7 +104,7 @@ FIT_QD(Robot_arm){
 
     Eigen::Vector3d pos = forward_model(angle);
     
-    std::vector<float> data = {(float) (pos[0]/2 + 0.5), (float) (pos[1]/2 + 0.5)};
+    std::vector<double> data = {pos[0]/2 + 0.5, pos[1]/2 + 0.5};
     this->set_desc(data);
   }
 
@@ -141,7 +142,9 @@ int main(int argc, char **argv)
     typedef phen::Parameters<gen_t, fit_t, Params> phen_t;
 
     typedef qd::selector::Uniform<phen_t, Params> select_t;
-    typedef qd::container::Archive<phen_t, Params> container_t;
+    typedef qd::container::KdtreeStorage< boost::shared_ptr<phen_t>, Params::qd::behav_dim > storage_t;
+    //typedef qd::container::SortBasedStorage< boost::shared_ptr<phen_t> > storage_t;
+    typedef qd::container::Archive<phen_t, storage_t, Params> container_t;
     //typedef qd::container::Grid<phen_t, Params> container_t;
 
 

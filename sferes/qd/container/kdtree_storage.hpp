@@ -96,6 +96,9 @@ namespace sferes {
                         p[i] = v[i];
                     return p;
                 }
+
+	      void optimize(){_data.optimize();}
+	       
             protected:
                 tree_t _data;
             };

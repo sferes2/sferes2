@@ -1,6 +1,8 @@
 #ifndef QD_CONTAINER_TOOL_HPP
 #define QD_CONTAINER_TOOL_HPP
 
+#include <Eigen/Core>
+
 namespace sferes {
     namespace qd {
 
@@ -12,6 +14,7 @@ namespace sferes {
                 return 1;
             }
 
+	  
             template <typename V1, typename V2> double _dist(const V1& v1, const V2& v2)
             {
                 assert(v1.size() == v2.size());
