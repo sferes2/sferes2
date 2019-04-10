@@ -59,6 +59,8 @@
 
 #include <sferes/fit/fit_qd.hpp>
 #include <sferes/qd/container/archive.hpp>
+#include <sferes/qd/container/kdtree_storage.hpp>
+#include <sferes/qd/container/sort_based_storage.hpp>
 #include <sferes/qd/container/grid.hpp>
 #include <sferes/qd/quality_diversity.hpp>
 #include <sferes/qd/selector/tournament.hpp>
@@ -70,9 +72,9 @@ struct Params {
     // TODO: move to a qd::
     struct nov {
         SFERES_CONST size_t deep = 2;
-        SFERES_CONST double l = 1; // TODO value ???
-        SFERES_CONST double k = 8; // TODO right value?
-        SFERES_CONST double eps = 0.01;// TODO right value??
+        SFERES_CONST double l = 0.0075; 
+        SFERES_CONST double k = 24; 
+        SFERES_CONST double eps = 0.1;
     };
     // TODO: move to a qd::/ea
     struct pop {
@@ -172,13 +174,49 @@ BOOST_AUTO_TEST_CASE(qd_cvt_map_elites)
     qd.run();
     std::cout << qd.stat<0>().best()->fit().value() << " " << qd.stat<1>().archive().size()
               << std::endl;
-    BOOST_CHECK(qd.stat<1>().archive().size() > 9500);
+    BOOST_CHECK(qd.stat<1>().archive().size() > 9000);
     BOOST_CHECK(qd.stat<0>().best()->fit().value() > -50);
 }
 
+BOOST_AUTO_TEST_CASE(qd_archive_sortbased)
+{
+    using namespace sferes;
+
+    typedef Rastrigin<Params> fit_t;
+    typedef gen::EvoFloat<10, Params> gen_t;
+    typedef phen::Parameters<gen_t, fit_t, Params> phen_t;
+
+    typedef eval::Parallel<Params> eval_t;
+
+    typedef boost::fusion::vector<stat::BestFit<phen_t, Params>, stat::QdContainer<phen_t, Params>,
+        stat::QdProgress<phen_t, Params>, stat::QdSelection<phen_t, Params>>
+        stat_t;
+    typedef modif::Dummy<> modifier_t;
+    
+    typedef qd::selector::Uniform<phen_t, Params> selector_t;
+    typedef qd::container::KdtreeStorage< boost::shared_ptr<phen_t>, Params::qd::behav_dim > storage_t;
+    typedef qd::container::Archive<phen_t, storage_t, Params> container_t;
+
+    typedef qd::QualityDiversity<phen_t, eval_t, stat_t, modifier_t, selector_t, container_t,
+        Params>
+        qd_t;
+
+    qd_t qd;
+    qd.run();
+
+    std::cout << qd.stat<0>().best()->fit().value() << " " << qd.stat<1>().archive().size()
+              << std::endl;
+    BOOST_CHECK(qd.stat<1>().archive().size() > 9000);
+    BOOST_CHECK(qd.stat<0>().best()->fit().value() > -50);
+
+}
+
+
+
+
 #ifdef USE_KDTREE
 
-BOOST_AUTO_TEST_CASE(qd_archive)
+BOOST_AUTO_TEST_CASE(qd_archive_kdtree)
 {
     using namespace sferes;
 
@@ -203,5 +241,10 @@ BOOST_AUTO_TEST_CASE(qd_archive)
 
     qd_t qd;
     qd.run();
+    std::cout << qd.stat<0>().best()->fit().value() << " " << qd.stat<1>().archive().size()
+              << std::endl;
+    BOOST_CHECK(qd.stat<1>().archive().size() > 9000);
+    BOOST_CHECK(qd.stat<0>().best()->fit().value() > -50);
+
 }
 #endif
