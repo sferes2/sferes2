@@ -56,7 +56,7 @@ namespace sferes {
                     assert(!_data.empty());
                     k = std::min(k, (int)_data.size());
                     point_t p = convert_point(pp);
-                    auto range = _data.find_nearest_neighbors(p, k, true);
+                    auto range = _data.find_nearest_neighbors(p, k, false);
                     std::vector<data_t> res;
                     for (auto it = range.first, end = range.second;
                          it != end && res.size() < k; ++it)
@@ -72,7 +72,7 @@ namespace sferes {
                 {
                     assert(!_data.empty());
                     point_t pp = convert_point(p);
-                    auto it = _data.find_nearest_neighbor(pp, true);
+                    auto it = _data.find_nearest_neighbor(pp, false);
                     return std::make_pair(convert_point(it->first), it->second);
                 }
 
