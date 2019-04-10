@@ -142,9 +142,14 @@ int main(int argc, char **argv)
     typedef phen::Parameters<gen_t, fit_t, Params> phen_t;
 
     typedef qd::selector::Uniform<phen_t, Params> select_t;
+    // For the Archive, you can chose one of the following storage:
+    // kD_tree storage, recommended for small behavioral descriptors (behav_dim<10)
     typedef qd::container::KdtreeStorage< boost::shared_ptr<phen_t>, Params::qd::behav_dim > storage_t;
+    // Sort_based storage, recommended for larger behavioral descriptors. 
     //typedef qd::container::SortBasedStorage< boost::shared_ptr<phen_t> > storage_t;
     typedef qd::container::Archive<phen_t, storage_t, Params> container_t;
+    
+    // You can also use a grid (in place of the archive) with the following template:
     //typedef qd::container::Grid<phen_t, Params> container_t;
 
 

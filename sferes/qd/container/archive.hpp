@@ -71,11 +71,10 @@ namespace sferes {
 			neigh_cur = _archive.knn(p_i1, Params::nov::k + 1);
 			neigh_nn = _archive.knn(p_nn, Params::nov::k + 1);
 			  
-                        score_cur[1] = get_novelty(i1, neigh_cur.begin()++, neigh_cur.end());
-                        score_nn[1] = get_novelty(nn, neigh_nn.begin()++, neigh_nn.end());
+                        score_cur[1] = get_novelty(i1, ++neigh_cur.begin(), neigh_cur.end());
+                        score_nn[1] = get_novelty(nn, ++neigh_nn.begin(), neigh_nn.end());
 
                         // TEST
-                        int score = 0;
                         if ((score_cur[0] >= (1 - sign(score_nn[0]) * Params::nov::eps) * score_nn[0] &&
 			     score_cur[1] >= (1 - sign(score_nn[1]) * Params::nov::eps) * score_nn[1]     ) &&
 			   ((score_cur[0] - score_nn[0]) * std::abs(score_nn[1]) > -(score_cur[1] - score_nn[1]) * std::abs(score_nn[0])))
@@ -108,7 +107,7 @@ namespace sferes {
                     double sum = 0;
                     const_knn_iterator_t it = begin;
 		    for (const_knn_iterator_t it = begin; it != end; it++) {
-		      sum += ((*it).first, p_indiv).norm();
+		      sum += ((*it).first - p_indiv).norm();
 		    }
                     return sum / std::distance(begin, end);
                 }
