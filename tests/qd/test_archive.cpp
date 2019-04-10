@@ -127,7 +127,7 @@ FIT_QD(Rastrigin){
     }
 };
 
-BOOST_AUTO_TEST_CASE(qd_archive_add)
+BOOST_AUTO_TEST_CASE(qd_archive_sortbased)
 {
     using namespace sferes;
 
@@ -197,7 +197,7 @@ BOOST_AUTO_TEST_CASE(qd_archive_add)
 
 #ifdef USE_KDTREE
 
-BOOST_AUTO_TEST_CASE(qd_archive_nothing2)
+BOOST_AUTO_TEST_CASE(qd_archive_kdtree)
 {
     using namespace sferes;
 
