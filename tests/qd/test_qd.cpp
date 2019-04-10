@@ -96,7 +96,7 @@ struct Params {
         SFERES_CONST cross_over_t cross_over_type = sbx;
     };
     struct qd {
-        SFERES_CONST size_t dim = 2; // number of feature dimensions
+      SFERES_CONST size_t behav_dim = 2; // number of feature dimensions
         SFERES_ARRAY(size_t, grid_shape, 100, 100); // for grid (map-elites)
         SFERES_CONST int n_niches = 10000; // for CVT
 
@@ -120,7 +120,7 @@ FIT_QD(Rastrigin){
             f += ind.data(i) * ind.data(i) - 10 * cos(2 * M_PI * ind.data(i));
         this->_value = -f;
 
-        std::vector<float> data = {ind.gen().data(0), ind.gen().data(1)};
+        std::vector<double> data = {ind.gen().data(0), ind.gen().data(1)};
         this->set_desc(data);
     }
 };
@@ -192,8 +192,11 @@ BOOST_AUTO_TEST_CASE(qd_archive)
         stat::QdProgress<phen_t, Params>, stat::QdSelection<phen_t, Params>>
         stat_t;
     typedef modif::Dummy<> modifier_t;
+    
     typedef qd::selector::Uniform<phen_t, Params> selector_t;
-    typedef qd::container::Archive<phen_t, Params> container_t;
+    typedef qd::container::SortBasedStorage< boost::shared_ptr<phen_t> > storage_t;
+    typedef qd::container::Archive<phen_t, storage_t, Params> container_t;
+
     typedef qd::QualityDiversity<phen_t, eval_t, stat_t, modifier_t, selector_t, container_t,
         Params>
         qd_t;
