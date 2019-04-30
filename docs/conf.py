@@ -129,7 +129,10 @@ html_theme_options = {
     'breadcrumb_root': project[1].upper()+project[1:], # set a custom name to the breacumb root
     'contact_url': 'mailto:jean-baptiste.mouret@inria.fr', # add a "Contact us link" at the bottom with URL
     'toc_befores': [("Back to resiBots' website", "http://www.resibots.eu")], # FIXME
-    "toc_afters": [('github', 'http://github.com/resibots' )], # FIXME
+    'toc_afters': [('Limbo (BO library)', 'http://www.resibots.eu/limbo'),
+                    ('Libdynamixel', 'http://www.resibots.eu/libdynamixel'),
+                    ('github', 'http://github.com/resibots' )
+                  ],
 }
 
 # Add any paths that contain custom themes here, relative to this directory.
