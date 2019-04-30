@@ -1,5 +1,6 @@
 Reference manual
 =================
+.. highlight:: c++
 
 UML Diagram
 -----------

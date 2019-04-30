@@ -31,6 +31,7 @@
               href="genindex.html"/>
         <link rel="search" title="Search" href="search.html"/>
     <link rel="top" title="Sferes_v2 0.1 alpha documentation" href="index.html"/>
+        <link rel="next" title="Sferes on clusters (OAR)" href="clusters.html"/>
         <link rel="prev" title="Main concepts" href="concepts.html"/>
 <style type="text/css">
 /* This CSS displays small logos at the bottom of the page, on one line */
@@ -165,6 +166,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#misc">Misc</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="clusters.html">Sferes on clusters (OAR)</a></li>
 </ul>
 
             
@@ -278,22 +280,22 @@ ov)</cite></li>
 const, e.g., <cite>const std::vector&lt;float&gt;&amp; get_objs() const { return _objs; }</cite></li>
 </ul>
 <p>Full example:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">//</span> <span class="n">filename</span><span class="p">:</span> <span class="n">sferes</span><span class="o">/</span><span class="n">fit</span><span class="o">/</span><span class="n">my_test</span><span class="o">.</span><span class="n">hpp</span>
-<span class="n">namespace</span> <span class="n">sferes</span>
+<div class="highlight-c++"><div class="highlight"><pre><span></span><span class="c1">// filename: sferes/fit/my_test.hpp</span>
+<span class="k">namespace</span> <span class="n">sferes</span>
 <span class="p">{</span>
-  <span class="n">namespace</span> <span class="n">fit</span>
+  <span class="k">namespace</span> <span class="n">fit</span>
   <span class="p">{</span>
     <span class="k">class</span> <span class="nc">SFERES_CLASS</span><span class="p">(</span><span class="n">MyTest</span><span class="p">)</span>
     <span class="p">{</span>
-    <span class="n">public</span><span class="p">:</span>
-      <span class="n">typedef</span> <span class="nb">float</span> <span class="n">f_t</span><span class="p">;</span>
+    <span class="k">public</span><span class="o">:</span>
+      <span class="k">typedef</span> <span class="kt">float</span> <span class="n">f_t</span><span class="p">;</span>
       <span class="n">MyTest</span><span class="p">()</span> <span class="p">{}</span>
-      <span class="n">void</span> <span class="n">my_method</span><span class="p">()</span> <span class="p">{</span> <span class="n">_my_impl</span><span class="p">();</span> <span class="p">}</span>
-      <span class="nb">float</span> <span class="n">my_attr</span><span class="p">()</span> <span class="n">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_my_attr</span><span class="p">;}</span>
-      <span class="nb">float</span> <span class="n">set_my_attr</span><span class="p">(</span><span class="nb">float</span> <span class="n">a</span><span class="p">)</span> <span class="p">{</span> <span class="n">_my_attr</span> <span class="o">=</span> <span class="n">v</span><span class="p">;</span> <span class="p">}</span>
-    <span class="n">protected</span><span class="p">:</span>
-      <span class="nb">float</span> <span class="n">_my_attr</span><span class="p">;</span>
-      <span class="n">void</span> <span class="n">_my_impl</span><span class="p">()</span> <span class="p">{}</span>
+      <span class="kt">void</span> <span class="n">my_method</span><span class="p">()</span> <span class="p">{</span> <span class="n">_my_impl</span><span class="p">();</span> <span class="p">}</span>
+      <span class="kt">float</span> <span class="n">my_attr</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_my_attr</span><span class="p">;}</span>
+      <span class="kt">float</span> <span class="n">set_my_attr</span><span class="p">(</span><span class="kt">float</span> <span class="n">a</span><span class="p">)</span> <span class="p">{</span> <span class="n">_my_attr</span> <span class="o">=</span> <span class="n">v</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">protected</span><span class="o">:</span>
+      <span class="kt">float</span> <span class="n">_my_attr</span><span class="p">;</span>
+      <span class="kt">void</span> <span class="nf">_my_impl</span><span class="p">()</span> <span class="p">{}</span>
     <span class="p">};</span>
   <span class="p">}</span>
 <span class="p">}</span>
@@ -336,36 +338,36 @@ methods or attributes to suit your needs.</p>
 </li>
 </ul>
 <p>Example:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">//</span> <span class="n">single</span> <span class="n">objective</span> <span class="n">fitess</span>
-<span class="n">SFERES_FITNESS</span><span class="p">(</span><span class="n">FitnessSingle</span><span class="p">,</span> <span class="n">sferes</span><span class="p">::</span><span class="n">fit</span><span class="p">::</span><span class="n">fitness</span><span class="p">)</span>
+<div class="highlight-c++"><div class="highlight"><pre><span></span><span class="c1">// single objective fitess</span>
+<span class="n">SFERES_FITNESS</span><span class="p">(</span><span class="n">FitnessSingle</span><span class="p">,</span> <span class="n">sferes</span><span class="o">::</span><span class="n">fit</span><span class="o">::</span><span class="n">fitness</span><span class="p">)</span>
 <span class="p">{</span>
-  <span class="o">//</span> <span class="p">(</span><span class="n">optional</span><span class="p">)</span> <span class="n">constructor</span>
+  <span class="c1">// (optional) constructor</span>
   <span class="n">FitnessSingle</span><span class="p">()</span>
     <span class="p">{</span>
-      <span class="n">this</span><span class="o">-&gt;</span><span class="n">_value</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+      <span class="k">this</span><span class="o">-&gt;</span><span class="n">_value</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
     <span class="p">}</span>
-  <span class="o">//</span> <span class="n">evaluation</span>
-  <span class="n">template</span><span class="o">&lt;</span><span class="n">typename</span> <span class="n">Indiv</span><span class="o">&gt;</span>
-  <span class="n">void</span> <span class="nb">eval</span><span class="p">(</span><span class="n">Indiv</span><span class="o">&amp;</span> <span class="n">indiv</span><span class="p">)</span>
+  <span class="c1">// evaluation</span>
+  <span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">Indiv</span><span class="o">&gt;</span>
+  <span class="kt">void</span> <span class="n">eval</span><span class="p">(</span><span class="n">Indiv</span><span class="o">&amp;</span> <span class="n">indiv</span><span class="p">)</span>
   <span class="p">{</span>
-    <span class="n">this</span><span class="o">-&gt;</span><span class="n">_value</span> <span class="o">=</span> <span class="o">-</span><span class="mi">42</span><span class="p">;</span>
+    <span class="k">this</span><span class="o">-&gt;</span><span class="n">_value</span> <span class="o">=</span> <span class="o">-</span><span class="mi">42</span><span class="p">;</span>
   <span class="p">}</span>
 <span class="p">};</span>
 
-<span class="o">//</span> <span class="n">two</span><span class="o">-</span><span class="n">objective</span> <span class="n">fitness</span>
-<span class="n">SFERES_FITNESS</span><span class="p">(</span><span class="n">FitnessMulti</span><span class="p">,</span> <span class="n">sferes</span><span class="p">::</span><span class="n">fit</span><span class="p">::</span><span class="n">fitness</span><span class="p">)</span>
+<span class="c1">// two-objective fitness</span>
+<span class="n">SFERES_FITNESS</span><span class="p">(</span><span class="n">FitnessMulti</span><span class="p">,</span> <span class="n">sferes</span><span class="o">::</span><span class="n">fit</span><span class="o">::</span><span class="n">fitness</span><span class="p">)</span>
 <span class="p">{</span>
-  <span class="o">//</span> <span class="n">constructor</span>
+  <span class="c1">// constructor</span>
   <span class="n">FitnessMulti</span><span class="p">()</span>
     <span class="p">{</span>
-      <span class="n">this</span><span class="o">-&gt;</span><span class="n">_objs</span><span class="o">.</span><span class="n">resize</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
+      <span class="k">this</span><span class="o">-&gt;</span><span class="n">_objs</span><span class="p">.</span><span class="n">resize</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
     <span class="p">}</span>
-  <span class="o">//</span> <span class="n">evaluation</span>
-  <span class="n">template</span><span class="o">&lt;</span><span class="n">typename</span> <span class="n">Indiv</span><span class="o">&gt;</span>
-  <span class="n">void</span> <span class="nb">eval</span><span class="p">(</span><span class="n">Indiv</span><span class="o">&amp;</span> <span class="n">indiv</span><span class="p">)</span>
+  <span class="c1">// evaluation</span>
+  <span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">Indiv</span><span class="o">&gt;</span>
+  <span class="kt">void</span> <span class="n">eval</span><span class="p">(</span><span class="n">Indiv</span><span class="o">&amp;</span> <span class="n">indiv</span><span class="p">)</span>
   <span class="p">{</span>
-    <span class="n">this</span><span class="o">-&gt;</span><span class="n">_objs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mi">42</span><span class="p">;</span>
-    <span class="n">this</span><span class="o">-&gt;</span><span class="n">_objs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">42</span><span class="p">;</span>
+    <span class="k">this</span><span class="o">-&gt;</span><span class="n">_objs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mi">42</span><span class="p">;</span>
+    <span class="k">this</span><span class="o">-&gt;</span><span class="n">_objs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">42</span><span class="p">;</span>
   <span class="p">}</span>
 <span class="p">};</span>
 </pre></div>
@@ -383,19 +385,19 @@ the individual. This can be easily done in sferes2 using the boolean
 evolutionary process)</li>
 </ul>
 <p>Example:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">//</span> <span class="n">single</span> <span class="n">objective</span> <span class="n">fitess</span>
-<span class="n">SFERES_FITNESS</span><span class="p">(</span><span class="n">FitnessSingle</span><span class="p">,</span> <span class="n">sferes</span><span class="p">::</span><span class="n">fit</span><span class="p">::</span><span class="n">fitness</span><span class="p">)</span>
+<div class="highlight-c++"><div class="highlight"><pre><span></span><span class="c1">// single objective fitess</span>
+<span class="n">SFERES_FITNESS</span><span class="p">(</span><span class="n">FitnessSingle</span><span class="p">,</span> <span class="n">sferes</span><span class="o">::</span><span class="n">fit</span><span class="o">::</span><span class="n">fitness</span><span class="p">)</span>
 <span class="p">{</span>
-  <span class="o">//</span> <span class="n">evaluation</span>
-  <span class="n">template</span><span class="o">&lt;</span><span class="n">typename</span> <span class="n">Indiv</span><span class="o">&gt;</span>
-   <span class="n">void</span> <span class="nb">eval</span><span class="p">(</span><span class="n">Indiv</span><span class="o">&amp;</span> <span class="n">indiv</span><span class="p">)</span>
+  <span class="c1">// evaluation</span>
+  <span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">Indiv</span><span class="o">&gt;</span>
+   <span class="kt">void</span> <span class="n">eval</span><span class="p">(</span><span class="n">Indiv</span><span class="o">&amp;</span> <span class="n">indiv</span><span class="p">)</span>
   <span class="p">{</span>
-    <span class="k">if</span> <span class="p">(</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">mode</span><span class="p">()</span> <span class="o">==</span> <span class="n">sferes</span><span class="p">::</span><span class="n">fit</span><span class="p">::</span><span class="n">mode</span><span class="p">::</span><span class="n">view</span><span class="p">)</span>
+    <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">mode</span><span class="p">()</span> <span class="o">==</span> <span class="n">sferes</span><span class="o">::</span><span class="n">fit</span><span class="o">::</span><span class="n">mode</span><span class="o">::</span><span class="n">view</span><span class="p">)</span>
       <span class="p">{</span>
-      <span class="n">std</span><span class="p">::</span><span class="n">ofstream</span> <span class="n">ofs</span><span class="p">(</span><span class="s2">&quot;fit.dat&quot;</span><span class="p">);</span>
-      <span class="n">ofs</span><span class="o">&lt;&lt;</span><span class="s2">&quot;this is a log file !&quot;</span><span class="o">&lt;&lt;</span><span class="n">std</span><span class="p">::</span><span class="n">endl</span><span class="p">;</span>
+      <span class="n">std</span><span class="o">::</span><span class="n">ofstream</span> <span class="n">ofs</span><span class="p">(</span><span class="s">&quot;fit.dat&quot;</span><span class="p">);</span>
+      <span class="n">ofs</span><span class="o">&lt;&lt;</span><span class="s">&quot;this is a log file !&quot;</span><span class="o">&lt;&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
       <span class="p">}</span>
-    <span class="n">this</span><span class="o">-&gt;</span><span class="n">_value</span> <span class="o">=</span> <span class="o">-</span><span class="mi">42</span><span class="p">;</span>
+    <span class="k">this</span><span class="o">-&gt;</span><span class="n">_value</span> <span class="o">=</span> <span class="o">-</span><span class="mi">42</span><span class="p">;</span>
   <span class="p">}</span>
 <span class="p">};</span>
 </pre></div>
@@ -440,7 +442,7 @@ objective. It is equivalent to an elitist, rank-based algorithm.</li>
 <a class="reference external" href="https://github.com/sferes2/sferes2/blob/master/tests/ea/rank_simple.cpp">tests/ea/rank_simple.cpp</a></li>
 <li><strong>Typical typename:</strong>:</li>
 </ul>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">typedef</span> <span class="n">sferes</span><span class="p">::</span><span class="n">ea</span><span class="p">::</span><span class="n">RankSimple</span><span class="o">&lt;</span><span class="n">phen_t</span><span class="p">,</span> <span class="n">eval_t</span><span class="p">,</span> <span class="n">stat_t</span><span class="p">,</span> <span class="n">modifier_t</span><span class="p">,</span> <span class="n">Params</span><span class="o">&gt;</span> <span class="n">ea_t</span><span class="p">;</span>
+<div class="highlight-c++"><div class="highlight"><pre><span></span><span class="k">typedef</span> <span class="n">sferes</span><span class="o">::</span><span class="n">ea</span><span class="o">::</span><span class="n">RankSimple</span><span class="o">&lt;</span><span class="n">phen_t</span><span class="p">,</span> <span class="n">eval_t</span><span class="p">,</span> <span class="n">stat_t</span><span class="p">,</span> <span class="n">modifier_t</span><span class="p">,</span> <span class="n">Params</span><span class="o">&gt;</span> <span class="n">ea_t</span><span class="p">;</span>
 </pre></div>
 </div>
 <ul class="simple">
@@ -481,7 +483,7 @@ value: 0.2 to 0.6</li>
 <a class="reference external" href="https://github.com/sferes2/sferes2/blob/master/sferes/examples/ex_nsga2.cpp">examples/ex_nsga2.cpp</a></li>
 <li><strong>Typical typename:</strong>:</li>
 </ul>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">typedef</span> <span class="n">sferes</span><span class="p">::</span><span class="n">ea</span><span class="p">::</span><span class="n">Nsga2</span><span class="o">&lt;</span><span class="n">phen_t</span><span class="p">,</span> <span class="n">eval_t</span><span class="p">,</span> <span class="n">stat_t</span><span class="p">,</span> <span class="n">modifier_t</span><span class="p">,</span> <span class="n">Params</span><span class="o">&gt;</span> <span class="n">ea_t</span><span class="p">;</span>
+<div class="highlight-c++"><div class="highlight"><pre><span></span><span class="k">typedef</span> <span class="n">sferes</span><span class="o">::</span><span class="n">ea</span><span class="o">::</span><span class="n">Nsga2</span><span class="o">&lt;</span><span class="n">phen_t</span><span class="p">,</span> <span class="n">eval_t</span><span class="p">,</span> <span class="n">stat_t</span><span class="p">,</span> <span class="n">modifier_t</span><span class="p">,</span> <span class="n">Params</span><span class="o">&gt;</span> <span class="n">ea_t</span><span class="p">;</span>
 </pre></div>
 </div>
 <ul class="simple">
@@ -513,7 +515,7 @@ uses it).</li>
 <a class="reference external" href="https://github.com/sferes2/sferes2/blob/master/tests/ea/eps_moea.cpp">tests/ea/eps_moea.cpp</a></li>
 <li><strong>Typical typename:</strong>:</li>
 </ul>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">typedef</span> <span class="n">sferes</span><span class="p">::</span><span class="n">ea</span><span class="p">::</span><span class="n">EpsMOEA</span><span class="o">&lt;</span><span class="n">phen_t</span><span class="p">,</span> <span class="n">eval_t</span><span class="p">,</span> <span class="n">stat_t</span><span class="p">,</span> <span class="n">modifier_t</span><span class="p">,</span> <span class="n">Params</span><span class="o">&gt;</span> <span class="n">ea_t</span>
+<div class="highlight-c++"><div class="highlight"><pre><span></span><span class="k">typedef</span> <span class="n">sferes</span><span class="o">::</span><span class="n">ea</span><span class="o">::</span><span class="n">EpsMOEA</span><span class="o">&lt;</span><span class="n">phen_t</span><span class="p">,</span> <span class="n">eval_t</span><span class="p">,</span> <span class="n">stat_t</span><span class="p">,</span> <span class="n">modifier_t</span><span class="p">,</span> <span class="n">Params</span><span class="o">&gt;</span> <span class="n">ea_t</span>
 </pre></div>
 </div>
 <ul class="simple">
@@ -567,14 +569,14 @@ individuals</li>
 <li>FitModifier: modifier</li>
 <li>Params: parameters</li>
 </ul>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">SFERES_EA</span><span class="p">(</span><span class="n">Test</span><span class="p">,</span> <span class="n">Ea</span><span class="p">)</span>
+<div class="highlight-c++"><div class="highlight"><pre><span></span><span class="n">SFERES_EA</span><span class="p">(</span><span class="n">Test</span><span class="p">,</span> <span class="n">Ea</span><span class="p">)</span>
 <span class="p">{</span>
- <span class="n">public</span><span class="p">:</span>
+ <span class="k">public</span><span class="o">:</span>
  <span class="n">Test</span><span class="p">()</span> <span class="p">{}</span>
- <span class="n">void</span> <span class="n">random_pop</span><span class="p">()</span>
- <span class="p">{</span> <span class="o">/*</span> <span class="n">your</span> <span class="n">code</span> <span class="o">*/</span> <span class="p">}</span>
- <span class="n">void</span> <span class="n">epoch</span><span class="p">()</span>
- <span class="p">{</span> <span class="o">/*</span> <span class="n">your</span> <span class="n">code</span> <span class="o">*/</span> <span class="p">}</span>
+ <span class="kt">void</span> <span class="n">random_pop</span><span class="p">()</span>
+ <span class="p">{</span> <span class="cm">/* your code */</span> <span class="p">}</span>
+ <span class="kt">void</span> <span class="n">epoch</span><span class="p">()</span>
+ <span class="p">{</span> <span class="cm">/* your code */</span> <span class="p">}</span>
 <span class="p">};</span>
 </pre></div>
 </div>
@@ -587,7 +589,7 @@ see <em>ParetoFront</em>.</p>
 <p>Statistics should be combined in a boost::fusion::vector (see:
 http://www.boost.org/doc/libs/1_40_0/libs/fusion/doc/html/fusion/container/vector.html)
 before being passed to a EA. For instance:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">typedef</span> <span class="n">boost</span><span class="p">::</span><span class="n">fusion</span><span class="p">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">stat</span><span class="p">::</span><span class="n">BestFit</span><span class="o">&lt;</span><span class="n">phen_t</span><span class="p">,</span> <span class="n">Params</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">stat</span><span class="p">::</span><span class="n">MeanFit</span><span class="o">&lt;</span><span class="n">Params</span><span class="o">&gt;</span> <span class="o">&gt;</span>  <span class="n">stat_t</span><span class="p">;</span>
+<div class="highlight-c++"><div class="highlight"><pre><span></span><span class="k">typedef</span> <span class="n">boost</span><span class="o">::</span><span class="n">fusion</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">stat</span><span class="o">::</span><span class="n">BestFit</span><span class="o">&lt;</span><span class="n">phen_t</span><span class="p">,</span> <span class="n">Params</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">stat</span><span class="o">::</span><span class="n">MeanFit</span><span class="o">&lt;</span><span class="n">Params</span><span class="o">&gt;</span> <span class="o">&gt;</span>  <span class="n">stat_t</span><span class="p">;</span>
 </pre></div>
 </div>
 <p>(yes, it is a vector of <em>typenames</em>). You can put in the vector as many
@@ -599,7 +601,7 @@ statistics types as you desire.</p>
 <a class="reference external" href="https://github.com/sferes2/sferes2/blob/master/sferes/stat/best_fit.hpp">sferes/stat/best_fit.hpp</a></li>
 <li><strong>Typical typename:</strong></li>
 </ul>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">typedef</span> <span class="n">boost</span><span class="p">::</span><span class="n">fusion</span><span class="p">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">sferes</span><span class="p">::</span><span class="n">ea</span><span class="p">::</span><span class="n">BestFit</span><span class="o">&lt;</span><span class="n">phen_t</span><span class="p">,</span> <span class="n">Params</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">stat_t</span><span class="p">;</span>
+<div class="highlight-c++"><div class="highlight"><pre><span></span><span class="k">typedef</span> <span class="n">boost</span><span class="o">::</span><span class="n">fusion</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">sferes</span><span class="o">::</span><span class="n">ea</span><span class="o">::</span><span class="n">BestFit</span><span class="o">&lt;</span><span class="n">phen_t</span><span class="p">,</span> <span class="n">Params</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">stat_t</span><span class="p">;</span>
 </pre></div>
 </div>
 <ul class="simple">
@@ -625,7 +627,7 @@ plotted with gnuplot, matplotlib/numpy or R.</li>
 <a class="reference external" href="https://github.com/sferes2/sferes2/blob/master/sferes/stat/mean_fit.hpp">sferes/stat/mean_fit.hpp</a></li>
 <li><strong>Typical typename:</strong></li>
 </ul>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">typedef</span> <span class="n">boost</span><span class="p">::</span><span class="n">fusion</span><span class="p">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">sferes</span><span class="p">::</span><span class="n">ea</span><span class="p">::</span><span class="n">MeanFit</span><span class="o">&lt;</span><span class="n">phen_t</span><span class="p">,</span> <span class="n">Params</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">stat_t</span><span class="p">;</span>
+<div class="highlight-c++"><div class="highlight"><pre><span></span><span class="k">typedef</span> <span class="n">boost</span><span class="o">::</span><span class="n">fusion</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">sferes</span><span class="o">::</span><span class="n">ea</span><span class="o">::</span><span class="n">MeanFit</span><span class="o">&lt;</span><span class="n">phen_t</span><span class="p">,</span> <span class="n">Params</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">stat_t</span><span class="p">;</span>
 </pre></div>
 </div>
 <ul class="simple">
@@ -641,7 +643,7 @@ a simple example of statistics.</li>
 <a class="reference external" href="https://github.com/sferes2/sferes2/blob/master/sferes/stat/pareto_front.hpp">sferes/stat/pareto_front.hpp</a></li>
 <li><strong>Typical typename:</strong></li>
 </ul>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">typedef</span> <span class="n">boost</span><span class="p">::</span><span class="n">fusion</span><span class="p">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">sferes</span><span class="p">::</span><span class="n">ea</span><span class="p">::</span><span class="n">ParetoFront</span><span class="o">&lt;</span><span class="n">phen_t</span><span class="p">,</span> <span class="n">Params</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">stat_t</span><span class="p">;</span>
+<div class="highlight-c++"><div class="highlight"><pre><span></span><span class="k">typedef</span> <span class="n">boost</span><span class="o">::</span><span class="n">fusion</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">sferes</span><span class="o">::</span><span class="n">ea</span><span class="o">::</span><span class="n">ParetoFront</span><span class="o">&lt;</span><span class="n">phen_t</span><span class="p">,</span> <span class="n">Params</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">stat_t</span><span class="p">;</span>
 </pre></div>
 </div>
 <ul class="simple">
@@ -651,10 +653,10 @@ ParetoFront does not compute the pareto front; this class assumes
 that the EA computed it. This implies that multiobjective EA classes
 should define the following method:</li>
 </ul>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">SFERES_EA</span><span class="p">(</span><span class="n">MyEA</span><span class="p">,</span> <span class="n">Ea</span><span class="p">)</span>
+<div class="highlight-c++"><div class="highlight"><pre><span></span><span class="n">SFERES_EA</span><span class="p">(</span><span class="n">MyEA</span><span class="p">,</span> <span class="n">Ea</span><span class="p">)</span>
 <span class="p">{</span>
- <span class="n">public</span><span class="p">:</span>
-  <span class="n">std</span><span class="p">:</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">Indiv</span><span class="o">&gt;</span> <span class="o">&amp;</span><span class="n">pareto_front</span><span class="p">()</span> <span class="n">const</span> <span class="p">{</span> <span class="o">/*</span> <span class="n">your</span> <span class="n">code</span> <span class="o">*/</span> <span class="p">}</span>
+ <span class="k">public</span><span class="o">:</span>
+  <span class="nl">std</span><span class="p">:</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">Indiv</span><span class="o">&gt;</span> <span class="o">&amp;</span><span class="n">pareto_front</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="cm">/* your code */</span> <span class="p">}</span>
 <span class="p">};</span>
 </pre></div>
 </div>
@@ -665,23 +667,23 @@ front) to your executable. For instance, assuming that ParetoFront in
 the first (0th) statistics in the stat vector, loading the 10th
 individual should look like:</li>
 </ul>
-<div class="code shell highlight-default"><div class="highlight"><pre><span></span><span class="o">./</span><span class="n">my_exp</span> <span class="o">--</span><span class="n">load</span> <span class="n">gen_100</span> <span class="o">-</span><span class="n">s</span> <span class="mi">0</span> <span class="o">-</span><span class="n">n</span> <span class="mi">10</span> <span class="o">-</span><span class="n">o</span> <span class="n">output</span>
+<div class="code shell highlight-c++"><div class="highlight"><pre><span></span><span class="p">.</span><span class="o">/</span><span class="n">my_exp</span> <span class="o">--</span><span class="n">load</span> <span class="n">gen_100</span> <span class="o">-</span><span class="n">s</span> <span class="mi">0</span> <span class="o">-</span><span class="n">n</span> <span class="mi">10</span> <span class="o">-</span><span class="n">o</span> <span class="n">output</span>
 </pre></div>
 </div>
 </div>
 <div class="section" id="defining-your-own-statistics">
 <h3>Defining your own statistics<a class="headerlink" href="#defining-your-own-statistics" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">SFERES_STAT</span><span class="p">(</span><span class="n">MyStat</span><span class="p">,</span> <span class="n">Stat</span><span class="p">)</span>
+<div class="highlight-c++"><div class="highlight"><pre><span></span><span class="n">SFERES_STAT</span><span class="p">(</span><span class="n">MyStat</span><span class="p">,</span> <span class="n">Stat</span><span class="p">)</span>
 <span class="p">{</span>
-  <span class="o">//</span> <span class="n">examines</span> <span class="n">the</span> <span class="n">population</span> <span class="p">(</span><span class="n">via</span> <span class="n">the</span> <span class="n">EA</span><span class="p">)</span> <span class="n">to</span> <span class="n">update</span> <span class="n">the</span> <span class="n">statistics</span>
-  <span class="n">template</span><span class="o">&lt;</span><span class="n">typename</span> <span class="n">E</span><span class="o">&gt;</span> <span class="n">void</span> <span class="n">refresh</span><span class="p">(</span><span class="n">const</span> <span class="n">E</span><span class="o">&amp;</span> <span class="n">ea</span><span class="p">)</span> <span class="p">{</span> <span class="o">/*</span> <span class="n">your</span> <span class="n">code</span> <span class="o">*/</span> <span class="p">}</span>
-  <span class="o">//</span> <span class="n">writes</span> <span class="n">the</span> <span class="n">content</span> <span class="n">of</span> <span class="n">the</span> <span class="n">statistics</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">stream</span><span class="p">;</span> <span class="n">k</span> <span class="ow">is</span> <span class="n">the</span> <span class="n">number</span>
-  <span class="o">//</span> <span class="n">of</span> <span class="n">the</span> <span class="n">individual</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">statistics</span> <span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">g</span><span class="o">.</span> <span class="ow">in</span> <span class="n">a</span> <span class="n">Pareto</span> <span class="n">front</span><span class="p">,</span> <span class="n">the</span>
-  <span class="o">//</span> <span class="n">statistics</span> <span class="n">contains</span> <span class="n">many</span> <span class="n">individuals</span><span class="p">)</span>
-  <span class="n">void</span> <span class="n">show</span><span class="p">(</span><span class="n">std</span><span class="p">::</span><span class="n">ostream</span><span class="o">&amp;</span> <span class="n">os</span><span class="p">,</span> <span class="n">size_t</span> <span class="n">k</span><span class="p">)</span> <span class="n">const</span> <span class="p">{</span> <span class="o">/*</span> <span class="n">your</span> <span class="n">code</span> <span class="o">*/</span> <span class="p">}</span>
-  <span class="o">//</span> <span class="n">serializes</span> <span class="n">the</span> <span class="n">statistics</span> <span class="n">using</span> <span class="n">boost</span><span class="p">::</span><span class="n">serialization</span>
-  <span class="n">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">Archive</span><span class="o">&gt;</span> <span class="n">void</span> <span class="n">serialize</span><span class="p">(</span><span class="n">Archive</span> <span class="o">&amp;</span> <span class="n">ar</span><span class="p">,</span> <span class="n">const</span> <span class="n">unsigned</span> <span class="nb">int</span> <span class="n">version</span><span class="p">)</span>
-  <span class="p">{</span> <span class="o">/*</span> <span class="n">your</span> <span class="n">code</span> <span class="o">*/</span> <span class="p">}</span>
+  <span class="c1">// examines the population (via the EA) to update the statistics</span>
+  <span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">E</span><span class="o">&gt;</span> <span class="kt">void</span> <span class="n">refresh</span><span class="p">(</span><span class="k">const</span> <span class="n">E</span><span class="o">&amp;</span> <span class="n">ea</span><span class="p">)</span> <span class="p">{</span> <span class="cm">/* your code */</span> <span class="p">}</span>
+  <span class="c1">// writes the content of the statistics in the stream; k is the number</span>
+  <span class="c1">// of the individual in the statistics (e.g. in a Pareto front, the</span>
+  <span class="c1">// statistics contains many individuals)</span>
+  <span class="kt">void</span> <span class="n">show</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">ostream</span><span class="o">&amp;</span> <span class="n">os</span><span class="p">,</span> <span class="kt">size_t</span> <span class="n">k</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span> <span class="cm">/* your code */</span> <span class="p">}</span>
+  <span class="c1">// serializes the statistics using boost::serialization</span>
+  <span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">Archive</span><span class="o">&gt;</span> <span class="kt">void</span> <span class="n">serialize</span><span class="p">(</span><span class="n">Archive</span> <span class="o">&amp;</span> <span class="n">ar</span><span class="p">,</span> <span class="k">const</span> <span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">version</span><span class="p">)</span>
+  <span class="p">{</span> <span class="cm">/* your code */</span> <span class="p">}</span>
 <span class="p">}</span>
 </pre></div>
 </div>
@@ -716,23 +718,23 @@ procedure:</li>
 </ul>
 </li>
 </ul>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">foreach</span><span class="p">(</span><span class="n">bitstring</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">genotype</span><span class="p">)</span>
-  <span class="k">if</span> <span class="p">(</span><span class="n">rand</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">Params</span><span class="p">::</span><span class="n">bit_string</span><span class="p">::</span><span class="n">mutation_rate</span><span class="p">)</span>
-    <span class="n">foreach</span><span class="p">(</span><span class="n">bit</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">b</span><span class="p">)</span>
-      <span class="k">if</span> <span class="p">(</span><span class="n">rand</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">Params</span><span class="p">::</span><span class="n">bit_string</span><span class="p">::</span><span class="n">mutation_bit</span><span class="p">)</span>
+<div class="highlight-c++"><div class="highlight"><pre><span></span><span class="n">foreach</span><span class="p">(</span><span class="n">bitstring</span> <span class="n">b</span> <span class="n">in</span> <span class="n">genotype</span><span class="p">)</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">rand</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">Params</span><span class="o">::</span><span class="n">bit_string</span><span class="o">::</span><span class="n">mutation_rate</span><span class="p">)</span>
+    <span class="n">foreach</span><span class="p">(</span><span class="n">bit</span> <span class="n">i</span> <span class="n">in</span> <span class="n">b</span><span class="p">)</span>
+      <span class="k">if</span> <span class="p">(</span><span class="n">rand</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">Params</span><span class="o">::</span><span class="n">bit_string</span><span class="o">::</span><span class="n">mutation_bit</span><span class="p">)</span>
         <span class="n">flip</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
 </pre></div>
 </div>
 <ul class="simple">
 <li><strong>Typical parameters:</strong></li>
 </ul>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">struct</span> <span class="n">Params</span>
+<div class="highlight-c++"><div class="highlight"><pre><span></span><span class="k">struct</span> <span class="n">Params</span>
 <span class="p">{</span>
-  <span class="n">struct</span> <span class="n">bit_string</span>
+  <span class="k">struct</span> <span class="n">bit_string</span>
   <span class="p">{</span>
-    <span class="n">SFERES_CONST</span> <span class="n">size_t</span> <span class="n">nb_bits</span> <span class="o">=</span> <span class="mi">8</span><span class="p">;</span>
-    <span class="n">SFERES_CONST</span> <span class="nb">float</span> <span class="n">mutate_rate</span> <span class="o">=</span> <span class="mf">0.1</span><span class="n">f</span><span class="p">;</span>
-    <span class="n">SFERES_CONST</span> <span class="nb">float</span> <span class="n">mutate_rate_bit</span> <span class="o">=</span> <span class="mf">0.1</span><span class="n">f</span><span class="p">;</span>
+    <span class="n">SFERES_CONST</span> <span class="kt">size_t</span> <span class="n">nb_bits</span> <span class="o">=</span> <span class="mi">8</span><span class="p">;</span>
+    <span class="n">SFERES_CONST</span> <span class="kt">float</span> <span class="n">mutate_rate</span> <span class="o">=</span> <span class="mf">0.1f</span><span class="p">;</span>
+    <span class="n">SFERES_CONST</span> <span class="kt">float</span> <span class="n">mutate_rate_bit</span> <span class="o">=</span> <span class="mf">0.1f</span><span class="p">;</span>
   <span class="p">};</span>
 <span class="p">};</span>
 </pre></div>
@@ -740,7 +742,7 @@ procedure:</li>
 <ul class="simple">
 <li><strong>Typical typename:</strong></li>
 </ul>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">typedef</span> <span class="n">BitString</span><span class="o">&lt;</span><span class="mi">10</span><span class="p">,</span> <span class="n">Params</span><span class="o">&gt;</span> <span class="n">gen_t</span><span class="p">;</span>
+<div class="highlight-c++"><div class="highlight"><pre><span></span><span class="k">typedef</span> <span class="n">BitString</span><span class="o">&lt;</span><span class="mi">10</span><span class="p">,</span> <span class="n">Params</span><span class="o">&gt;</span> <span class="n">gen_t</span><span class="p">;</span>
 </pre></div>
 </div>
 </div>
@@ -816,50 +818,50 @@ book.</li>
 </li>
 <li><strong>Typical typename:</strong></li>
 </ul>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">typedef</span> <span class="n">sferes</span><span class="p">::</span><span class="n">gen</span><span class="p">::</span><span class="n">EvoFloat</span><span class="o">&lt;</span><span class="mi">10</span><span class="p">,</span> <span class="n">Params1</span><span class="o">&gt;</span> <span class="n">gen_t</span><span class="p">;</span>
+<div class="highlight-c++"><div class="highlight"><pre><span></span><span class="k">typedef</span> <span class="n">sferes</span><span class="o">::</span><span class="n">gen</span><span class="o">::</span><span class="n">EvoFloat</span><span class="o">&lt;</span><span class="mi">10</span><span class="p">,</span> <span class="n">Params1</span><span class="o">&gt;</span> <span class="n">gen_t</span><span class="p">;</span>
 </pre></div>
 </div>
 <ul class="simple">
 <li><strong>Typical parameters:</strong></li>
 </ul>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">using</span> <span class="n">namespace</span> <span class="n">sferes</span><span class="p">::</span><span class="n">gen</span><span class="p">::</span><span class="n">evo_float</span><span class="p">;</span>
+<div class="highlight-c++"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="k">namespace</span> <span class="n">sferes</span><span class="o">::</span><span class="n">gen</span><span class="o">::</span><span class="n">evo_float</span><span class="p">;</span>
 
-<span class="n">struct</span> <span class="n">Params1</span>
+<span class="k">struct</span> <span class="n">Params1</span>
 <span class="p">{</span>
-  <span class="n">struct</span> <span class="n">evo_float</span>
+  <span class="k">struct</span> <span class="n">evo_float</span>
   <span class="p">{</span>
-    <span class="n">SFERES_CONST</span> <span class="nb">float</span> <span class="n">mutation_rate</span> <span class="o">=</span> <span class="mf">0.1</span><span class="n">f</span><span class="p">;</span>
-    <span class="n">SFERES_CONST</span> <span class="nb">float</span> <span class="n">cross_rate</span> <span class="o">=</span> <span class="mf">0.1</span><span class="n">f</span><span class="p">;</span>
+    <span class="n">SFERES_CONST</span> <span class="kt">float</span> <span class="n">mutation_rate</span> <span class="o">=</span> <span class="mf">0.1f</span><span class="p">;</span>
+    <span class="n">SFERES_CONST</span> <span class="kt">float</span> <span class="n">cross_rate</span> <span class="o">=</span> <span class="mf">0.1f</span><span class="p">;</span>
     <span class="n">SFERES_CONST</span> <span class="n">mutation_t</span> <span class="n">mutation_type</span> <span class="o">=</span> <span class="n">polynomial</span><span class="p">;</span>
     <span class="n">SFERES_CONST</span> <span class="n">cross_over_t</span> <span class="n">cross_over_type</span> <span class="o">=</span> <span class="n">sbx</span><span class="p">;</span>
-    <span class="n">SFERES_CONST</span> <span class="nb">float</span> <span class="n">eta_m</span> <span class="o">=</span> <span class="mf">15.0</span><span class="n">f</span><span class="p">;</span>
-    <span class="n">SFERES_CONST</span> <span class="nb">float</span> <span class="n">eta_c</span> <span class="o">=</span> <span class="mf">15.0</span><span class="n">f</span><span class="p">;</span>
+    <span class="n">SFERES_CONST</span> <span class="kt">float</span> <span class="n">eta_m</span> <span class="o">=</span> <span class="mf">15.0f</span><span class="p">;</span>
+    <span class="n">SFERES_CONST</span> <span class="kt">float</span> <span class="n">eta_c</span> <span class="o">=</span> <span class="mf">15.0f</span><span class="p">;</span>
   <span class="p">};</span>
 <span class="p">};</span>
 
-<span class="n">struct</span> <span class="n">Params2</span>
+<span class="k">struct</span> <span class="n">Params2</span>
 <span class="p">{</span>
-  <span class="n">struct</span> <span class="n">evo_float</span>
+  <span class="k">struct</span> <span class="n">evo_float</span>
   <span class="p">{</span>
-    <span class="n">SFERES_CONST</span> <span class="nb">float</span> <span class="n">mutation_rate</span> <span class="o">=</span> <span class="mf">0.1</span><span class="n">f</span><span class="p">;</span>
-    <span class="n">SFERES_CONST</span> <span class="nb">float</span> <span class="n">cross_rate</span> <span class="o">=</span> <span class="mf">0.1</span><span class="n">f</span><span class="p">;</span>
+    <span class="n">SFERES_CONST</span> <span class="kt">float</span> <span class="n">mutation_rate</span> <span class="o">=</span> <span class="mf">0.1f</span><span class="p">;</span>
+    <span class="n">SFERES_CONST</span> <span class="kt">float</span> <span class="n">cross_rate</span> <span class="o">=</span> <span class="mf">0.1f</span><span class="p">;</span>
     <span class="n">SFERES_CONST</span> <span class="n">mutation_t</span> <span class="n">mutation_type</span> <span class="o">=</span> <span class="n">gaussian</span><span class="p">;</span>
     <span class="n">SFERES_CONST</span> <span class="n">cross_over_t</span> <span class="n">cross_over_type</span> <span class="o">=</span> <span class="n">recombination</span><span class="p">;</span>
-    <span class="n">SFERES_CONST</span> <span class="nb">float</span> <span class="n">sigma</span> <span class="o">=</span> <span class="mf">0.3</span><span class="n">f</span><span class="p">;</span>
+    <span class="n">SFERES_CONST</span> <span class="kt">float</span> <span class="n">sigma</span> <span class="o">=</span> <span class="mf">0.3f</span><span class="p">;</span>
   <span class="p">};</span>
 <span class="p">};</span>
 
 
-<span class="n">struct</span> <span class="n">Params3</span>
+<span class="k">struct</span> <span class="n">Params3</span>
 <span class="p">{</span>
-  <span class="n">struct</span> <span class="n">evo_float</span>
+  <span class="k">struct</span> <span class="n">evo_float</span>
   <span class="p">{</span>
-    <span class="n">SFERES_CONST</span> <span class="nb">float</span> <span class="n">mutation_rate</span> <span class="o">=</span> <span class="mf">0.1</span><span class="n">f</span><span class="p">;</span>
-    <span class="n">SFERES_CONST</span> <span class="nb">float</span> <span class="n">cross_rate</span> <span class="o">=</span> <span class="mf">0.1</span><span class="n">f</span><span class="p">;</span>
+    <span class="n">SFERES_CONST</span> <span class="kt">float</span> <span class="n">mutation_rate</span> <span class="o">=</span> <span class="mf">0.1f</span><span class="p">;</span>
+    <span class="n">SFERES_CONST</span> <span class="kt">float</span> <span class="n">cross_rate</span> <span class="o">=</span> <span class="mf">0.1f</span><span class="p">;</span>
     <span class="n">SFERES_CONST</span> <span class="n">mutation_t</span> <span class="n">mutation_type</span> <span class="o">=</span> <span class="n">uniform</span><span class="p">;</span>
     <span class="n">SFERES_CONST</span> <span class="n">cross_over_t</span> <span class="n">cross_over_type</span> <span class="o">=</span> <span class="n">sbx</span><span class="p">;</span>
-    <span class="n">SFERES_CONST</span> <span class="nb">float</span> <span class="nb">max</span> <span class="o">=</span> <span class="mf">0.3</span><span class="n">f</span><span class="p">;</span>
-    <span class="n">SFERES_CONST</span> <span class="nb">float</span> <span class="n">eta_c</span> <span class="o">=</span> <span class="mf">15.0</span><span class="n">f</span><span class="p">;</span>
+    <span class="n">SFERES_CONST</span> <span class="kt">float</span> <span class="n">max</span> <span class="o">=</span> <span class="mf">0.3f</span><span class="p">;</span>
+    <span class="n">SFERES_CONST</span> <span class="kt">float</span> <span class="n">eta_c</span> <span class="o">=</span> <span class="mf">15.0f</span><span class="p">;</span>
   <span class="p">};</span>
 <span class="p">};</span>
 </pre></div>
@@ -867,42 +869,42 @@ book.</li>
 </div>
 <div class="section" id="defining-your-own-genotype">
 <h3>Defining your own genotype<a class="headerlink" href="#defining-your-own-genotype" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="c1">#include &lt;sferes/stc/stc.hpp&gt;</span>
-<span class="n">namespace</span> <span class="n">sferes</span>
+<div class="highlight-c++"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;sferes/stc/stc.hpp&gt;</span><span class="cp"></span>
+<span class="k">namespace</span> <span class="n">sferes</span>
 <span class="p">{</span>
-  <span class="n">namespace</span> <span class="n">gen</span>
+  <span class="k">namespace</span> <span class="n">gen</span>
   <span class="p">{</span>
     <span class="n">SFERES_CLASS</span><span class="p">(</span><span class="n">MyGenotype</span><span class="p">)</span>
     <span class="p">{</span>
-    <span class="n">public</span><span class="p">:</span>
-      <span class="o">//</span> <span class="n">generates</span> <span class="n">a</span> <span class="n">random</span> <span class="n">genotype</span>
-      <span class="n">void</span> <span class="n">random</span><span class="p">()</span>
+    <span class="k">public</span><span class="o">:</span>
+      <span class="c1">// generates a random genotype</span>
+      <span class="kt">void</span> <span class="n">random</span><span class="p">()</span>
       <span class="p">{</span>
-      <span class="o">//</span> <span class="n">your</span> <span class="n">code</span>
+      <span class="c1">// your code</span>
       <span class="p">}</span>
-      <span class="o">//</span> <span class="n">mutates</span> <span class="n">an</span> <span class="n">individual</span>
-      <span class="n">void</span> <span class="n">mutate</span><span class="p">()</span>
+      <span class="c1">// mutates an individual</span>
+      <span class="kt">void</span> <span class="n">mutate</span><span class="p">()</span>
       <span class="p">{</span>
-      <span class="o">//</span> <span class="n">your</span> <span class="n">code</span> <span class="n">to</span> <span class="n">mutate</span> <span class="p">(</span><span class="n">you</span> <span class="n">have</span> <span class="n">to</span> <span class="n">handle</span> <span class="n">your</span> <span class="n">own</span> <span class="n">mutation_rate</span><span class="p">)</span>
+      <span class="c1">// your code to mutate (you have to handle your own mutation_rate)</span>
       <span class="p">}</span>
-      <span class="o">//</span> <span class="n">WARNING</span><span class="p">:</span> <span class="n">the</span> <span class="n">arguments</span> <span class="n">of</span> <span class="n">this</span> <span class="n">method</span> <span class="n">are</span> <span class="n">of</span> <span class="n">the</span> <span class="n">same</span> <span class="nb">type</span>
-      <span class="o">//</span> <span class="n">than</span> <span class="n">your</span> <span class="n">genotype</span>
-      <span class="n">void</span> <span class="n">cross</span><span class="p">(</span><span class="n">const</span> <span class="n">MyGenotype</span><span class="o">&amp;</span> <span class="n">o</span><span class="p">,</span> <span class="n">MyGenotype</span><span class="o">&amp;</span> <span class="n">c1</span><span class="p">,</span> <span class="n">MyGenotype</span><span class="o">&amp;</span> <span class="n">c2</span><span class="p">)</span>
+      <span class="c1">// WARNING: the arguments of this method are of the same type</span>
+      <span class="c1">// than your genotype</span>
+      <span class="kt">void</span> <span class="n">cross</span><span class="p">(</span><span class="k">const</span> <span class="n">MyGenotype</span><span class="o">&amp;</span> <span class="n">o</span><span class="p">,</span> <span class="n">MyGenotype</span><span class="o">&amp;</span> <span class="n">c1</span><span class="p">,</span> <span class="n">MyGenotype</span><span class="o">&amp;</span> <span class="n">c2</span><span class="p">)</span>
       <span class="p">{</span>
-      <span class="o">//</span> <span class="k">if</span> <span class="n">you</span> <span class="n">don</span><span class="s1">&#39;t know what to do, simply use:</span>
-      <span class="k">if</span> <span class="p">(</span><span class="n">misc</span><span class="p">::</span><span class="n">flip_coin</span><span class="p">())</span>
+      <span class="c1">// if you don&#39;t know what to do, simply use:</span>
+      <span class="k">if</span> <span class="p">(</span><span class="n">misc</span><span class="o">::</span><span class="n">flip_coin</span><span class="p">())</span>
         <span class="p">{</span>
-          <span class="n">c1</span> <span class="o">=</span> <span class="o">*</span><span class="n">this</span><span class="p">;</span>
+          <span class="n">c1</span> <span class="o">=</span> <span class="o">*</span><span class="k">this</span><span class="p">;</span>
           <span class="n">c2</span> <span class="o">=</span> <span class="n">o</span><span class="p">;</span>
           <span class="p">}</span>
         <span class="k">else</span>
           <span class="p">{</span>
-            <span class="n">c2</span> <span class="o">=</span> <span class="o">*</span><span class="n">this</span><span class="p">;</span>
+            <span class="n">c2</span> <span class="o">=</span> <span class="o">*</span><span class="k">this</span><span class="p">;</span>
             <span class="n">c1</span> <span class="o">=</span> <span class="n">o</span><span class="p">;</span>
           <span class="p">}</span>
       <span class="p">}</span>
-    <span class="n">protected</span><span class="p">:</span>
-      <span class="o">//</span> <span class="n">your</span> <span class="n">data</span> <span class="n">here</span> <span class="p">(</span><span class="n">your</span> <span class="n">genotype</span><span class="p">)</span>
+    <span class="k">protected</span><span class="o">:</span>
+      <span class="c1">// your data here (your genotype)</span>
     <span class="p">};</span>
   <span class="p">}</span>
 <span class="p">}</span>
@@ -929,26 +931,26 @@ and a <cite>gen_t</cite>.</p>
 <li><strong>Description:</strong> The abstract base class for phenotypes.</li>
 <li><strong>Main public methods:</strong></li>
 </ul>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">//</span> <span class="n">returns</span> <span class="n">the</span> <span class="n">fitness</span>
+<div class="highlight-c++"><div class="highlight"><pre><span></span><span class="c1">// returns the fitness</span>
 <span class="n">Fit</span><span class="o">&amp;</span> <span class="n">fit</span><span class="p">();</span>
-<span class="n">const</span> <span class="n">Fit</span><span class="o">&amp;</span> <span class="n">fit</span><span class="p">()</span> <span class="n">const</span><span class="p">;</span>
-<span class="o">//</span> <span class="n">returns</span> <span class="n">the</span> <span class="n">genotype</span>
+<span class="k">const</span> <span class="n">Fit</span><span class="o">&amp;</span> <span class="n">fit</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+<span class="c1">// returns the genotype</span>
 <span class="n">Gen</span><span class="o">&amp;</span> <span class="n">gen</span><span class="p">()</span>  <span class="p">{</span> <span class="k">return</span> <span class="n">_gen</span><span class="p">;</span> <span class="p">}</span>
-<span class="n">const</span> <span class="n">Gen</span><span class="o">&amp;</span> <span class="n">gen</span><span class="p">()</span> <span class="n">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_gen</span><span class="p">;</span> <span class="p">}</span>
-<span class="o">//</span> <span class="n">develops</span> <span class="n">the</span> <span class="n">genotype</span><span class="p">,</span> <span class="n">called</span> <span class="n">by</span> <span class="n">the</span> <span class="n">evalutar</span> <span class="n">before</span> <span class="n">evaluating</span>
-<span class="o">//</span> <span class="n">the</span> <span class="n">individual</span>
-<span class="n">void</span> <span class="n">develop</span><span class="p">();</span>
-<span class="o">//</span> <span class="n">you</span> <span class="n">can</span> <span class="n">also</span> <span class="n">override</span> <span class="n">the</span> <span class="n">following</span> <span class="n">methods</span> <span class="p">(</span><span class="n">although</span> <span class="ow">in</span> <span class="n">most</span>
-<span class="o">//</span> <span class="n">cases</span><span class="p">,</span> <span class="n">you</span> <span class="n">should</span> <span class="n">override</span> <span class="n">their</span> <span class="n">equivalent</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">genotype</span><span class="p">)</span>
-<span class="n">void</span> <span class="n">mutate</span><span class="p">();</span>
-<span class="n">void</span> <span class="n">random</span><span class="p">();</span>
-<span class="n">void</span> <span class="n">cross</span><span class="p">(</span><span class="n">const</span> <span class="n">boost</span><span class="p">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">Exact</span><span class="o">&gt;</span> <span class="n">i2</span><span class="p">,</span>
-         <span class="n">boost</span><span class="p">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">Exact</span><span class="o">&gt;&amp;</span> <span class="n">o1</span><span class="p">,</span>
-         <span class="n">boost</span><span class="p">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">Exact</span><span class="o">&gt;&amp;</span> <span class="n">o2</span><span class="p">);</span>
-<span class="o">//</span> <span class="n">this</span> <span class="n">method</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">implemented</span> <span class="ow">in</span> <span class="n">Indiv</span> <span class="n">but</span> <span class="n">it</span> <span class="n">must</span> <span class="n">be</span> <span class="ow">in</span> <span class="nb">all</span> <span class="n">the</span>
-<span class="o">//</span> <span class="n">concrete</span> <span class="n">genotypes</span><span class="o">.</span> <span class="n">It</span> <span class="n">should</span> <span class="n">describe</span> <span class="n">this</span> <span class="n">particular</span> <span class="n">individual</span>
-<span class="o">//</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">stream</span> <span class="n">os</span> <span class="p">(</span><span class="n">see</span> <span class="n">the</span> <span class="n">Parameter</span> <span class="n">source</span> <span class="n">code</span> <span class="k">for</span> <span class="n">an</span> <span class="n">example</span><span class="p">)</span>
-<span class="n">void</span> <span class="n">show</span><span class="p">(</span><span class="n">std</span><span class="p">::</span><span class="n">ostream</span><span class="o">&amp;</span> <span class="n">os</span><span class="p">)</span> <span class="n">const</span>
+<span class="k">const</span> <span class="n">Gen</span><span class="o">&amp;</span> <span class="n">gen</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_gen</span><span class="p">;</span> <span class="p">}</span>
+<span class="c1">// develops the genotype, called by the evalutar before evaluating</span>
+<span class="c1">// the individual</span>
+<span class="kt">void</span> <span class="n">develop</span><span class="p">();</span>
+<span class="c1">// you can also override the following methods (although in most</span>
+<span class="c1">// cases, you should override their equivalent in the genotype)</span>
+<span class="kt">void</span> <span class="nf">mutate</span><span class="p">();</span>
+<span class="kt">void</span> <span class="nf">random</span><span class="p">();</span>
+<span class="kt">void</span> <span class="nf">cross</span><span class="p">(</span><span class="k">const</span> <span class="n">boost</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">Exact</span><span class="o">&gt;</span> <span class="n">i2</span><span class="p">,</span>
+         <span class="n">boost</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">Exact</span><span class="o">&gt;&amp;</span> <span class="n">o1</span><span class="p">,</span>
+         <span class="n">boost</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">Exact</span><span class="o">&gt;&amp;</span> <span class="n">o2</span><span class="p">);</span>
+<span class="c1">// this method is not implemented in Indiv but it must be in all the</span>
+<span class="c1">// concrete genotypes. It should describe this particular individual</span>
+<span class="c1">// in the stream os (see the Parameter source code for an example)</span>
+<span class="kt">void</span> <span class="n">show</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">ostream</span><span class="o">&amp;</span> <span class="n">os</span><span class="p">)</span> <span class="k">const</span>
 </pre></div>
 </div>
 <ul class="simple">
@@ -970,34 +972,34 @@ and a <cite>gen_t</cite>.</p>
 [0, 1[ (typically a gen::Bitstring or a gen::EvoFloat) to a list of
 parameter in [min, max[. The genotype class must define a method:</li>
 </ul>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">cont</span> <span class="n">std</span><span class="p">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="nb">float</span><span class="o">&gt;&amp;</span> <span class="n">data</span><span class="p">()</span> <span class="n">const</span> <span class="p">();</span>
+<div class="highlight-c++"><div class="highlight"><pre><span></span><span class="n">cont</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;&amp;</span> <span class="n">data</span><span class="p">()</span> <span class="k">const</span> <span class="p">();</span>
 </pre></div>
 </div>
 <ul class="simple">
 <li><strong>Typical typename:</strong></li>
 </ul>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">typedef</span> <span class="nb">eval</span><span class="p">::</span><span class="n">Parameters</span><span class="o">&lt;</span><span class="n">gen_t</span><span class="p">,</span> <span class="n">fit_t</span><span class="p">,</span> <span class="n">Params</span><span class="o">&gt;</span> <span class="n">phen_t</span><span class="p">;</span>
+<div class="highlight-c++"><div class="highlight"><pre><span></span><span class="k">typedef</span> <span class="n">eval</span><span class="o">::</span><span class="n">Parameters</span><span class="o">&lt;</span><span class="n">gen_t</span><span class="p">,</span> <span class="n">fit_t</span><span class="p">,</span> <span class="n">Params</span><span class="o">&gt;</span> <span class="n">phen_t</span><span class="p">;</span>
 </pre></div>
 </div>
 </div>
 <div class="section" id="defining-your-own-phenotype">
 <h3>Defining your own phenotype<a class="headerlink" href="#defining-your-own-phenotype" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="c1">#include &lt;sferes/phen/indiv.hpp&gt;</span>
-<span class="n">namespace</span> <span class="n">sferes</span>
+<div class="highlight-c++"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;sferes/phen/indiv.hpp&gt;</span><span class="cp"></span>
+<span class="k">namespace</span> <span class="n">sferes</span>
 <span class="p">{</span>
-  <span class="n">namespace</span> <span class="n">phen</span>
+  <span class="k">namespace</span> <span class="n">phen</span>
   <span class="p">{</span>
     <span class="n">SFERES_INDIV</span><span class="p">(</span><span class="n">MyPhenotype</span><span class="p">,</span> <span class="n">Indiv</span><span class="p">)</span>
     <span class="p">{</span>
-    <span class="n">public</span><span class="p">:</span>
-      <span class="o">//</span> <span class="n">constructor</span>
-      <span class="n">MyPhenotype</span><span class="p">()</span> <span class="p">{</span> <span class="o">/*</span> <span class="n">your</span> <span class="n">code</span> <span class="o">*/</span> <span class="p">}</span>
-      <span class="o">//</span> <span class="n">develop</span> <span class="n">the</span> <span class="n">genotype</span> <span class="n">to</span> <span class="n">whatever</span> <span class="n">you</span> <span class="n">want</span>
-      <span class="n">void</span> <span class="n">develop</span><span class="p">(){</span> <span class="o">/*</span> <span class="n">your</span> <span class="n">code</span> <span class="o">*/</span> <span class="p">}</span>
-      <span class="o">//</span> <span class="n">describe</span> <span class="n">this</span> <span class="n">individual</span>
-      <span class="n">void</span> <span class="n">show</span><span class="p">(</span><span class="n">std</span><span class="p">::</span><span class="n">ostream</span><span class="o">&amp;</span> <span class="n">os</span><span class="p">)</span> <span class="n">const</span> <span class="p">{</span> <span class="o">/*</span> <span class="n">your</span> <span class="n">code</span> <span class="o">*/</span> <span class="p">}</span>
-    <span class="n">protected</span><span class="p">:</span>
-      <span class="o">//</span> <span class="n">your</span> <span class="n">data</span>
+    <span class="k">public</span><span class="o">:</span>
+      <span class="c1">// constructor</span>
+      <span class="n">MyPhenotype</span><span class="p">()</span> <span class="p">{</span> <span class="cm">/* your code */</span> <span class="p">}</span>
+      <span class="c1">// develop the genotype to whatever you want</span>
+      <span class="kt">void</span> <span class="n">develop</span><span class="p">(){</span> <span class="cm">/* your code */</span> <span class="p">}</span>
+      <span class="c1">// describe this individual</span>
+      <span class="kt">void</span> <span class="n">show</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">ostream</span><span class="o">&amp;</span> <span class="n">os</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span> <span class="cm">/* your code */</span> <span class="p">}</span>
+    <span class="k">protected</span><span class="o">:</span>
+      <span class="c1">// your data</span>
     <span class="p">};</span>
   <span class="p">}</span>
 <span class="p">}</span>
@@ -1018,7 +1020,7 @@ running phen_t::fit::eval() for each individual).</p>
 loop.</li>
 <li><strong>Typical typename:</strong></li>
 </ul>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">typedef</span> <span class="nb">eval</span><span class="p">::</span><span class="n">Eval</span><span class="o">&lt;</span><span class="n">Params</span><span class="o">&gt;</span> <span class="n">eval_t</span><span class="p">;</span>
+<div class="highlight-c++"><div class="highlight"><pre><span></span><span class="k">typedef</span> <span class="n">eval</span><span class="o">::</span><span class="n">Eval</span><span class="o">&lt;</span><span class="n">Params</span><span class="o">&gt;</span> <span class="n">eval_t</span><span class="p">;</span>
 </pre></div>
 </div>
 </div>
@@ -1032,7 +1034,7 @@ loop.</li>
 thread-safe!</strong></li>
 <li><strong>Typical typename:</strong></li>
 </ul>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">typedef</span> <span class="nb">eval</span><span class="p">::</span><span class="n">Parallel</span><span class="o">&lt;</span><span class="n">Params</span><span class="o">&gt;</span> <span class="n">eval_t</span><span class="p">;</span>
+<div class="highlight-c++"><div class="highlight"><pre><span></span><span class="k">typedef</span> <span class="n">eval</span><span class="o">::</span><span class="n">Parallel</span><span class="o">&lt;</span><span class="n">Params</span><span class="o">&gt;</span> <span class="n">eval_t</span><span class="p">;</span>
 </pre></div>
 </div>
 </div>
@@ -1044,7 +1046,7 @@ thread-safe!</strong></li>
 clusters but keep in mind that every cluster is different!</li>
 <li><strong>Typical typename:</strong></li>
 </ul>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">typedef</span> <span class="nb">eval</span><span class="p">::</span><span class="n">Mpi</span><span class="o">&lt;</span><span class="n">Params</span><span class="o">&gt;</span> <span class="n">eval_t</span><span class="p">;</span>
+<div class="highlight-c++"><div class="highlight"><pre><span></span><span class="k">typedef</span> <span class="n">eval</span><span class="o">::</span><span class="n">Mpi</span><span class="o">&lt;</span><span class="n">Params</span><span class="o">&gt;</span> <span class="n">eval_t</span><span class="p">;</span>
 </pre></div>
 </div>
 </div>
@@ -1053,23 +1055,23 @@ clusters but keep in mind that every cluster is different!</li>
 <p>The only required method is eval. It should call
 phen_t::develop() then phen_t::fit::eval() for each
 individual.</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">namespace</span> <span class="n">sferes</span>
+<div class="highlight-c++"><div class="highlight"><pre><span></span><span class="k">namespace</span> <span class="n">sferes</span>
 <span class="p">{</span>
-  <span class="n">namespace</span> <span class="nb">eval</span>
+  <span class="k">namespace</span> <span class="n">eval</span>
   <span class="p">{</span>
     <span class="n">SFERES_EVAL</span><span class="p">(</span><span class="n">Eval</span><span class="p">)</span>
     <span class="p">{</span>
-    <span class="n">public</span><span class="p">:</span>
-      <span class="n">template</span><span class="o">&lt;</span><span class="n">typename</span> <span class="n">Phen</span><span class="o">&gt;</span>
-        <span class="n">void</span> <span class="nb">eval</span><span class="p">(</span><span class="n">std</span><span class="p">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">boost</span><span class="p">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">Phen</span><span class="o">&gt;</span> <span class="o">&gt;&amp;</span> <span class="n">pop</span><span class="p">,</span> <span class="n">size_t</span> <span class="n">begin</span><span class="p">,</span> <span class="n">size_t</span> <span class="n">end</span><span class="p">)</span>
+    <span class="k">public</span><span class="o">:</span>
+      <span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">Phen</span><span class="o">&gt;</span>
+        <span class="kt">void</span> <span class="n">eval</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">boost</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">Phen</span><span class="o">&gt;</span> <span class="o">&gt;&amp;</span> <span class="n">pop</span><span class="p">,</span> <span class="kt">size_t</span> <span class="n">begin</span><span class="p">,</span> <span class="kt">size_t</span> <span class="n">end</span><span class="p">)</span>
       <span class="p">{</span>
-        <span class="k">for</span> <span class="p">(</span><span class="n">size_t</span> <span class="n">i</span> <span class="o">=</span> <span class="n">begin</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">end</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span>
+        <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span> <span class="o">=</span> <span class="n">begin</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">end</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span>
           <span class="p">{</span>
             <span class="n">pop</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">-&gt;</span><span class="n">develop</span><span class="p">();</span>
-            <span class="n">pop</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">-&gt;</span><span class="n">fit</span><span class="p">()</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="o">*</span><span class="n">pop</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
+            <span class="n">pop</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">-&gt;</span><span class="n">fit</span><span class="p">().</span><span class="n">eval</span><span class="p">(</span><span class="o">*</span><span class="n">pop</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
           <span class="p">}</span>
       <span class="p">}</span>
-    <span class="n">protected</span><span class="p">:</span>
+    <span class="k">protected</span><span class="o">:</span>
     <span class="p">};</span>
   <span class="p">}</span>
 <span class="p">}</span>
@@ -1114,6 +1116,8 @@ mechanisms, etc.</p>
           <footer>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="clusters.html" class="btn btn-neutral float-right" title="Sferes on clusters (OAR)" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="concepts.html" class="btn btn-neutral" title="Main concepts" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>

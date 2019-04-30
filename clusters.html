@@ -1,0 +1,541 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Sferes on clusters (OAR) &mdash; Sferes_v2 0.1 alpha documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="genindex.html"/>
+        <link rel="search" title="Search" href="search.html"/>
+    <link rel="top" title="Sferes_v2 0.1 alpha documentation" href="index.html"/>
+        <link rel="prev" title="Reference manual" href="reference.html"/>
+<style type="text/css">
+/* This CSS displays small logos at the bottom of the page, on one line */
+
+.wy-footer-logo-container {
+  margin-top: 50px;
+  text-align: center;
+}
+
+.wy-footer-logo {
+  display: inline-block;
+  width: 60px;
+}
+</style>
+
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+          
+
+          
+            <a href="http://www.resibots.eu">
+          
+
+          
+            
+            <img src="_static/resibots_logo_black_200px.png" class="logo" />
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                2.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="resibots-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+                  <a class="caption" href="http://www.resibots.eu">Back to resiBots' website</a>
+              
+            
+
+            
+            
+                <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="index.html">Sferes_v2 – documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="compilation.html">Compilation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial (basics)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="concepts.html">Main concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="reference.html">Reference manual</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Sferes on clusters (OAR)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#oar-scheduler-resibots-inria-cluster">OAR Scheduler (ResiBots / Inria cluster)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#introduction-to-oar">Introduction to OAR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#using-sferes-with-oar">Using sferes with OAR</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            
+
+            
+            
+              
+                <a class="caption" href="http://github.com/resibots">github</a>
+              
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="index.html">Sferes_v2</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="index.html">Fferes_v2</a> &raquo;</li>
+    
+    <li>Sferes on clusters (OAR)</li>
+    <li class="wy-breadcrumbs-aside">
+      
+        
+          <a href="_sources/clusters.rst.txt" rel="nofollow"> View page source</a>
+        
+      
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="sferes-on-clusters-oar">
+<h1>Sferes on clusters (OAR)<a class="headerlink" href="#sferes-on-clusters-oar" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="oar-scheduler-resibots-inria-cluster">
+<h2>OAR Scheduler (ResiBots / Inria cluster)<a class="headerlink" href="#oar-scheduler-resibots-inria-cluster" title="Permalink to this headline">¶</a></h2>
+<p><em>This information should work for most OAR clusters but some details might be specific to Inria’s ResiBots cluster (hal</em>).</p>
+<p><em>Inria users: you need to ask JBM for an account</em></p>
+<div class="section" id="introduction-to-oar">
+<h3>Introduction to OAR<a class="headerlink" href="#introduction-to-oar" title="Permalink to this headline">¶</a></h3>
+<p>OAR is a resource and task manager (also called a batch scheduler) for HPC clusters. We are using this one because it also used on Grid‘5000 (Inria large cluster) and because it is very flexible. As a scheduler, OAR will take your job (your program) and send it to one of the nodes according to the availability. If no node is available, it will automatically launch it as soon as a slot is available.</p>
+<p>The user documentation for OAR is available here: <a class="reference external" href="http://oar.imag.fr/docs/2.5/#ref-user-docs">http://oar.imag.fr/docs/2.5/#ref-user-docs</a></p>
+<dl class="docutils">
+<dt>Here is a summary of commands:</dt>
+<dd><ul class="first last simple">
+<li>login to the main node: <code class="docutils literal"><span class="pre">ssh</span> <span class="pre">hal01</span></code> (use your Inria’s password and login; if outside of Inria, you need the VPN)</li>
+<li>list the current jobs: <code class="docutils literal"><span class="pre">oarstat</span></code> or use the web interfaces:  <a class="reference external" href="http://hal01.loria.fr/drawgantt-svg/">http://hal01.loria.fr/drawgantt-svg/</a> or <a class="reference external" href="http://hal01.loria.fr/monika">http://hal01.loria.fr/monika</a> (VPN needed)</li>
+<li>kill a job: <code class="docutils literal"><span class="pre">oardel</span> <span class="pre">your_job_number</span></code> (as listed by <code class="docutils literal"><span class="pre">oarstat</span></code>)</li>
+<li>general command to submit a job: <code class="docutils literal"><span class="pre">oarsub</span></code>; example: <code class="docutils literal"><span class="pre">oarsub</span> <span class="pre">-l</span> <span class="pre">/nodes=1/core=16,walltime=00:30:00</span> <span class="pre">build/debug/examples/ex_nsga2</span></code></li>
+<li><dl class="first docutils">
+<dt>this will run ex_nsga2 one 1 node with 16 cores for 30 minutes (the job will be killed after 30 minutes)</dt>
+<dd><ul class="first last">
+<li>INRIA: <em>you need to run everything from /nfs/hal01/your_user/ and NEVER from your home directory or any local directory (e.g., /tmp).</em> This is because your program and the data are not copied between nodes: it is launched from a shared disk (/nfs/hal01).</li>
+<li>for more complex submissions, <code class="docutils literal"><span class="pre">oarsub</span></code> can take a shell script as an input (useful for LD_LIBRARY_PATH and other settings). Example:</li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+</dl>
+<div class="code shell highlight-c++"><div class="highlight"><pre><span></span>#!/bin/bash
+#OAR -l /core=24/nodes=1,walltime=270:00:00
+#OAR -n hexa_duty_text
+#OAR -O stdout.%jobid%.log
+#OAR -E stderr.%jobid%.log
+export LD_LIBRARY_PATH=&#39;&#39;
+exec  /nfs/hal01/jmouret/data/maps_hexapod//hexa_duty_text/exp_0/hexa_duty_text
+</pre></div>
+</div>
+<ul class="simple">
+<li>This script can be submitted like this: <code class="docutils literal"><span class="pre">oarsub</span> <span class="pre">-d</span> <span class="pre">the_directory_to_launch</span> <span class="pre">-S</span> <span class="pre">your_script_name</span></code></li>
+<li>To see the output of a job: <code class="docutils literal"><span class="pre">cat</span> <span class="pre">OAR.{job-number}.stdout</span></code> and <code class="docutils literal"><span class="pre">cat</span> <span class="pre">OAR.{job-number}.stderr</span></code></li>
+</ul>
+</div>
+<div class="section" id="using-sferes-with-oar">
+<h3>Using sferes with OAR<a class="headerlink" href="#using-sferes-with-oar" title="Permalink to this headline">¶</a></h3>
+<p>Sferes has a high-level interface to make it easy to submit jobs to OAR.</p>
+<p>First, you need to specify your experiment in yaml file:</p>
+<div class="code json highlight-c++"><div class="highlight"><pre><span></span><span class="p">{</span>
+    <span class="s">&quot;email&quot;</span> <span class="o">:</span> <span class="s">&quot;user@example.com&quot;</span><span class="p">,</span>
+    <span class="s">&quot;wall_time&quot;</span> <span class="o">:</span> <span class="s">&quot;24:00:00&quot;</span><span class="p">,</span>
+    <span class="s">&quot;nb_runs&quot;</span><span class="o">:</span> <span class="mi">3</span><span class="p">,</span>
+    <span class="s">&quot;nb_cores&quot;</span><span class="o">:</span><span class="mi">24</span><span class="p">,</span>
+    <span class="s">&quot;bin_dir&quot;</span><span class="o">:</span> <span class="s">&quot;/nfs/hal01/jmouret/git/sferes2/build/examples/&quot;</span><span class="p">,</span>
+    <span class="s">&quot;res_dir&quot;</span><span class="o">:</span> <span class="s">&quot;/nfs/hal01/jmouret/git/sferes2/data/&quot;</span><span class="p">,</span>
+    <span class="s">&quot;exps&quot;</span> <span class="o">:</span> <span class="p">[</span><span class="s">&quot;ex_nsga2&quot;</span><span class="p">,</span> <span class="s">&quot;ex_ea&quot;</span><span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<dl class="docutils">
+<dt>where:</dt>
+<dd><ul class="first last simple">
+<li><code class="docutils literal"><span class="pre">email</span></code> is not used on ResiBots’s cluster for now</li>
+<li><code class="docutils literal"><span class="pre">wall_time</span></code> is the time allocated to your experiment; please keep in mind that asking for too much (e.g., 1 day when you need 1 hour) will make your job less likely to be scheduled soon (because it will have a lower priority and because we keep some nodes for short jobs only)</li>
+<li><code class="docutils literal"><span class="pre">nb_runs</span></code> is the number of <em>replicates</em> of <em>each</em> experiment; in this example, <cite>ex_nsga2</cite> will be run 3 times, and <cite>ex_ea</cite> will be run 3 times</li>
+<li><code class="docutils literal"><span class="pre">bin_dir</span></code> is where to find the binaries that you want to run</li>
+<li><code class="docutils literal"><span class="pre">res_dir</span></code> is where to store the results (they will be organized by experiment, then by replicate)</li>
+<li><code class="docutils literal"><span class="pre">exps</span></code> is the list of binaries (program, experiments) that need to be run</li>
+</ul>
+</dd>
+</dl>
+<p>You then submit this json file with <code class="docutils literal"><span class="pre">waf</span></code>: <code class="docutils literal"><span class="pre">./waf</span> <span class="pre">--oar</span> <span class="pre">path_to_your_json</span></code></p>
+<p>If everything works well, one job for each replicate should be scheduled. A typical output is:</p>
+<div class="code highlight-c++"><div class="highlight"><pre><span></span>WARNING [oar]: MPI not supported yet
+LD_LIBRARY_PATH=&#39;&#39;
+executing:oarsub -d /nfs/hal01/jmouret/git/sferes2/data//ex_nsga2/exp_0 -S /nfs/hal01/jmouret/git/sferes2/data//ex_nsga2/exp_0/ex_nsga2_0.job
+[24hour QUEUE] This job is routed into the medium queue[ADMISSION RULE] Modify resource description with type constraints
+OAR_JOB_ID=737172
+oarsub returned:0
+executing:oarsub -d /nfs/hal01/jmouret/git/sferes2/data//ex_ea/exp_0 -S /nfs/hal01/jmouret/git/sferes2/data//ex_ea/exp_0/ex_ea_0.job
+[24hour QUEUE] This job is routed into the medium queue[ADMISSION RULE] Modify resource description with type constraints
+OAR_JOB_ID=737173
+oarsub returned:0
+executing:oarsub -d /nfs/hal01/jmouret/git/sferes2/data//ex_nsga2/exp_1 -S /nfs/hal01/jmouret/git/sferes2/data//ex_nsga2/exp_1/ex_nsga2_1.job
+[24hour QUEUE] This job is routed into the medium queue[ADMISSION RULE] Modify resource description with type constraints
+OAR_JOB_ID=737174
+oarsub returned:0
+executing:oarsub -d /nfs/hal01/jmouret/git/sferes2/data//ex_ea/exp_1 -S /nfs/hal01/jmouret/git/sferes2/data//ex_ea/exp_1/ex_ea_1.job
+[24hour QUEUE] This job is routed into the medium queue[ADMISSION RULE] Modify resource description with type constraints
+OAR_JOB_ID=737175
+oarsub returned:0
+executing:oarsub -d /nfs/hal01/jmouret/git/sferes2/data//ex_nsga2/exp_2 -S /nfs/hal01/jmouret/git/sferes2/data//ex_nsga2/exp_2/ex_nsga2_2.job
+[24hour QUEUE] This job is routed into the medium queue[ADMISSION RULE] Modify resource description with type constraints
+OAR_JOB_ID=737176
+oarsub returned:0
+executing:oarsub -d /nfs/hal01/jmouret/git/sferes2/data//ex_ea/exp_2 -S /nfs/hal01/jmouret/git/sferes2/data//ex_ea/exp_2/ex_ea_2.job
+[24hour QUEUE] This job is routed into the medium queue[ADMISSION RULE] Modify resource description with type constraints
+OAR_JOB_ID=737177
+oarsub returned:0
+</pre></div>
+</div>
+<p>You can check that your jobs are scheduled with <cite>oarstat</cite>. If you do not see them, this is usually because there is an error (e.g., they did a segmentation fault, or the binary did not run because there is a missing library, etc.). To know the error, check the error file in the <cite>data</cite> directory. For instance:</p>
+<div class="code shell highlight-c++"><div class="highlight"><pre><span></span><span class="cp"># for the error messages:</span>
+<span class="n">cat</span> <span class="n">data</span><span class="o">/</span><span class="n">ex_nsga2</span><span class="o">/</span><span class="n">exp_0</span><span class="o">/</span><span class="n">stderr</span><span class="mf">.737172</span><span class="p">.</span><span class="n">log</span>
+
+<span class="cp"># for the output of your program:</span>
+<span class="n">cat</span> <span class="n">data</span><span class="o">/</span><span class="n">ex_nsga2</span><span class="o">/</span><span class="n">exp_0</span><span class="o">/</span><span class="n">stdout</span><span class="mf">.737172</span><span class="p">.</span><span class="n">log</span>
+
+<span class="cp"># to know how the job was launched:</span>
+<span class="n">data</span><span class="o">/</span><span class="n">ex_nsga2</span><span class="o">/</span><span class="n">exp_0</span><span class="o">/</span><span class="n">ex_nsga2_0</span><span class="p">.</span><span class="n">job</span>
+</pre></div>
+</div>
+<p>This is what you should have in the <code class="docutils literal"><span class="pre">data</span></code> directory once all the jobs are finished:</p>
+<div class="code shell highlight-c++"><div class="highlight"><pre><span></span><span class="n">data</span><span class="o">/</span>
+<span class="n">data</span><span class="o">/</span><span class="n">ex_ea</span>
+<span class="n">data</span><span class="o">/</span><span class="n">ex_ea</span><span class="o">/</span><span class="n">exp_2</span>
+<span class="n">data</span><span class="o">/</span><span class="n">ex_ea</span><span class="o">/</span><span class="n">exp_2</span><span class="o">/</span><span class="n">stderr</span><span class="mf">.737177</span><span class="p">.</span><span class="n">log</span>
+<span class="n">data</span><span class="o">/</span><span class="n">ex_ea</span><span class="o">/</span><span class="n">exp_2</span><span class="o">/</span><span class="n">ex_ea_2</span><span class="p">.</span><span class="n">job</span>
+<span class="n">data</span><span class="o">/</span><span class="n">ex_ea</span><span class="o">/</span><span class="n">exp_2</span><span class="o">/</span><span class="n">ex_ea</span>
+<span class="n">data</span><span class="o">/</span><span class="n">ex_ea</span><span class="o">/</span><span class="n">exp_2</span><span class="o">/</span><span class="n">ex_ea_2019</span><span class="o">-</span><span class="mo">04</span><span class="o">-</span><span class="mi">30</span><span class="n">_11_41_39_129952</span>
+<span class="n">data</span><span class="o">/</span><span class="n">ex_ea</span><span class="o">/</span><span class="n">exp_2</span><span class="o">/</span><span class="n">ex_ea_2019</span><span class="o">-</span><span class="mo">04</span><span class="o">-</span><span class="mi">30</span><span class="n">_11_41_39_129952</span><span class="o">/</span><span class="n">gen_110000</span>
+<span class="n">data</span><span class="o">/</span><span class="n">ex_ea</span><span class="o">/</span><span class="n">exp_2</span><span class="o">/</span><span class="n">ex_ea_2019</span><span class="o">-</span><span class="mo">04</span><span class="o">-</span><span class="mi">30</span><span class="n">_11_41_39_129952</span><span class="o">/</span><span class="n">gen_150000</span>
+<span class="n">data</span><span class="o">/</span><span class="n">ex_ea</span><span class="o">/</span><span class="n">exp_2</span><span class="o">/</span><span class="n">ex_ea_2019</span><span class="o">-</span><span class="mo">04</span><span class="o">-</span><span class="mi">30</span><span class="n">_11_41_39_129952</span><span class="o">/</span><span class="n">gen_85000</span>
+<span class="n">data</span><span class="o">/</span><span class="n">ex_ea</span><span class="o">/</span><span class="n">exp_2</span><span class="o">/</span><span class="n">ex_ea_2019</span><span class="o">-</span><span class="mo">04</span><span class="o">-</span><span class="mi">30</span><span class="n">_11_41_39_129952</span><span class="o">/</span><span class="n">gen_15000</span>
+<span class="n">data</span><span class="o">/</span><span class="n">ex_ea</span><span class="o">/</span><span class="n">exp_2</span><span class="o">/</span><span class="n">ex_ea_2019</span><span class="o">-</span><span class="mo">04</span><span class="o">-</span><span class="mi">30</span><span class="n">_11_41_39_129952</span><span class="o">/</span><span class="n">gen_10000</span>
+<span class="n">data</span><span class="o">/</span><span class="n">ex_ea</span><span class="o">/</span><span class="n">exp_2</span><span class="o">/</span><span class="n">ex_ea_2019</span><span class="o">-</span><span class="mo">04</span><span class="o">-</span><span class="mi">30</span><span class="n">_11_41_39_129952</span><span class="o">/</span><span class="n">status</span>
+<span class="n">data</span><span class="o">/</span><span class="n">ex_ea</span><span class="o">/</span><span class="n">exp_2</span><span class="o">/</span><span class="n">ex_ea_2019</span><span class="o">-</span><span class="mo">04</span><span class="o">-</span><span class="mi">30</span><span class="n">_11_41_39_129952</span><span class="o">/</span><span class="n">gen_135000</span>
+<span class="n">data</span><span class="o">/</span><span class="n">ex_ea</span><span class="o">/</span><span class="n">exp_2</span><span class="o">/</span><span class="n">ex_ea_2019</span><span class="o">-</span><span class="mo">04</span><span class="o">-</span><span class="mi">30</span><span class="n">_11_41_39_129952</span><span class="o">/</span><span class="n">gen_95000</span>
+<span class="n">data</span><span class="o">/</span><span class="n">ex_ea</span><span class="o">/</span><span class="n">exp_2</span><span class="o">/</span><span class="n">ex_ea_2019</span><span class="o">-</span><span class="mo">04</span><span class="o">-</span><span class="mi">30</span><span class="n">_11_41_39_129952</span><span class="o">/</span><span class="n">gen_90000</span>
+<span class="n">data</span><span class="o">/</span><span class="n">ex_ea</span><span class="o">/</span><span class="n">exp_2</span><span class="o">/</span><span class="n">ex_ea_2019</span><span class="o">-</span><span class="mo">04</span><span class="o">-</span><span class="mi">30</span><span class="n">_11_41_39_129952</span><span class="o">/</span><span class="n">gen_160000</span>
+<span class="n">data</span><span class="o">/</span><span class="n">ex_ea</span><span class="o">/</span><span class="n">exp_2</span><span class="o">/</span><span class="n">ex_ea_2019</span><span class="o">-</span><span class="mo">04</span><span class="o">-</span><span class="mi">30</span><span class="n">_11_41_39_129952</span><span class="o">/</span><span class="n">gen_165000</span>
+<span class="n">data</span><span class="o">/</span><span class="n">ex_ea</span><span class="o">/</span><span class="n">exp_2</span><span class="o">/</span><span class="n">ex_ea_2019</span><span class="o">-</span><span class="mo">04</span><span class="o">-</span><span class="mi">30</span><span class="n">_11_41_39_129952</span><span class="o">/</span><span class="n">gen_65000</span>
+<span class="n">data</span><span class="o">/</span><span class="n">ex_ea</span><span class="o">/</span><span class="n">exp_2</span><span class="o">/</span><span class="n">ex_ea_2019</span><span class="o">-</span><span class="mo">04</span><span class="o">-</span><span class="mi">30</span><span class="n">_11_41_39_129952</span><span class="o">/</span><span class="n">gen_115000</span>
+<span class="n">data</span><span class="o">/</span><span class="n">ex_ea</span><span class="o">/</span><span class="n">exp_2</span><span class="o">/</span><span class="n">ex_ea_2019</span><span class="o">-</span><span class="mo">04</span><span class="o">-</span><span class="mi">30</span><span class="n">_11_41_39_129952</span><span class="o">/</span><span class="n">gen_155000</span>
+<span class="n">data</span><span class="o">/</span><span class="n">ex_ea</span><span class="o">/</span><span class="n">exp_2</span><span class="o">/</span><span class="n">ex_ea_2019</span><span class="o">-</span><span class="mo">04</span><span class="o">-</span><span class="mi">30</span><span class="n">_11_41_39_129952</span><span class="o">/</span><span class="n">gen_50000</span>
+<span class="n">data</span><span class="o">/</span><span class="n">ex_ea</span><span class="o">/</span><span class="n">exp_2</span><span class="o">/</span><span class="n">ex_ea_2019</span><span class="o">-</span><span class="mo">04</span><span class="o">-</span><span class="mi">30</span><span class="n">_11_41_39_129952</span><span class="o">/</span><span class="n">gen_0</span>
+<span class="n">data</span><span class="o">/</span><span class="n">ex_ea</span><span class="o">/</span><span class="n">exp_2</span><span class="o">/</span><span class="n">ex_ea_2019</span><span class="o">-</span><span class="mo">04</span><span class="o">-</span><span class="mi">30</span><span class="n">_11_41_39_129952</span><span class="o">/</span><span class="n">bestfit</span><span class="p">.</span><span class="n">dat</span>
+<span class="n">data</span><span class="o">/</span><span class="n">ex_ea</span><span class="o">/</span><span class="n">exp_2</span><span class="o">/</span><span class="n">ex_ea_2019</span><span class="o">-</span><span class="mo">04</span><span class="o">-</span><span class="mi">30</span><span class="n">_11_41_39_129952</span><span class="o">/</span><span class="n">gen_180000</span>
+<span class="n">data</span><span class="o">/</span><span class="n">ex_ea</span><span class="o">/</span><span class="n">exp_2</span><span class="o">/</span><span class="n">ex_ea_2019</span><span class="o">-</span><span class="mo">04</span><span class="o">-</span><span class="mi">30</span><span class="n">_11_41_39_129952</span><span class="o">/</span><span class="n">gen_195000</span>
+<span class="n">data</span><span class="o">/</span><span class="n">ex_ea</span><span class="o">/</span><span class="n">exp_2</span><span class="o">/</span><span class="n">ex_ea_2019</span><span class="o">-</span><span class="mo">04</span><span class="o">-</span><span class="mi">30</span><span class="n">_11_41_39_129952</span><span class="o">/</span><span class="n">gen_25000</span>
+<span class="n">data</span><span class="o">/</span><span class="n">ex_ea</span><span class="o">/</span><span class="n">exp_2</span><span class="o">/</span><span class="n">ex_ea_2019</span><span class="o">-</span><span class="mo">04</span><span class="o">-</span><span class="mi">30</span><span class="n">_11_41_39_129952</span><span class="o">/</span><span class="n">gen_140000</span>
+<span class="n">data</span><span class="o">/</span><span class="n">ex_ea</span><span class="o">/</span><span class="n">exp_2</span><span class="o">/</span><span class="n">ex_ea_2019</span><span class="o">-</span><span class="mo">04</span><span class="o">-</span><span class="mi">30</span><span class="n">_11_41_39_129952</span><span class="o">/</span><span class="n">gen_45000</span>
+<span class="n">data</span><span class="o">/</span><span class="n">ex_ea</span><span class="o">/</span><span class="n">exp_2</span><span class="o">/</span><span class="n">ex_ea_2019</span><span class="o">-</span><span class="mo">04</span><span class="o">-</span><span class="mi">30</span><span class="n">_11_41_39_129952</span><span class="o">/</span><span class="n">gen_105000</span>
+<span class="n">data</span><span class="o">/</span><span class="n">ex_ea</span><span class="o">/</span><span class="n">exp_2</span><span class="o">/</span><span class="n">ex_ea_2019</span><span class="o">-</span><span class="mo">04</span><span class="o">-</span><span class="mi">30</span><span class="n">_11_41_39_129952</span><span class="o">/</span><span class="n">gen_30000</span>
+<span class="n">data</span><span class="o">/</span><span class="n">ex_ea</span><span class="o">/</span><span class="n">exp_2</span><span class="o">/</span><span class="n">ex_ea_2019</span><span class="o">-</span><span class="mo">04</span><span class="o">-</span><span class="mi">30</span><span class="n">_11_41_39_129952</span><span class="o">/</span><span class="n">gen_40000</span>
+<span class="n">data</span><span class="o">/</span><span class="n">ex_ea</span><span class="o">/</span><span class="n">exp_2</span><span class="o">/</span><span class="n">ex_ea_2019</span><span class="o">-</span><span class="mo">04</span><span class="o">-</span><span class="mi">30</span><span class="n">_11_41_39_129952</span><span class="o">/</span><span class="n">gen_200000</span>
+<span class="n">data</span><span class="o">/</span><span class="n">ex_ea</span><span class="o">/</span><span class="n">exp_2</span><span class="o">/</span><span class="n">ex_ea_2019</span><span class="o">-</span><span class="mo">04</span><span class="o">-</span><span class="mi">30</span><span class="n">_11_41_39_129952</span><span class="o">/</span><span class="n">gen_145000</span>
+<span class="n">data</span><span class="o">/</span><span class="n">ex_ea</span><span class="o">/</span><span class="n">exp_2</span><span class="o">/</span><span class="n">ex_ea_2019</span><span class="o">-</span><span class="mo">04</span><span class="o">-</span><span class="mi">30</span><span class="n">_11_41_39_129952</span><span class="o">/</span><span class="n">gen_100000</span>
+<span class="n">data</span><span class="o">/</span><span class="n">ex_ea</span><span class="o">/</span><span class="n">exp_2</span><span class="o">/</span><span class="n">ex_ea_2019</span><span class="o">-</span><span class="mo">04</span><span class="o">-</span><span class="mi">30</span><span class="n">_11_41_39_129952</span><span class="o">/</span><span class="n">gen_70000</span>
+<span class="n">data</span><span class="o">/</span><span class="n">ex_ea</span><span class="o">/</span><span class="n">exp_2</span><span class="o">/</span><span class="n">ex_ea_2019</span><span class="o">-</span><span class="mo">04</span><span class="o">-</span><span class="mi">30</span><span class="n">_11_41_39_129952</span><span class="o">/</span><span class="n">gen_130000</span>
+<span class="n">data</span><span class="o">/</span><span class="n">ex_ea</span><span class="o">/</span><span class="n">exp_2</span><span class="o">/</span><span class="n">ex_ea_2019</span><span class="o">-</span><span class="mo">04</span><span class="o">-</span><span class="mi">30</span><span class="n">_11_41_39_129952</span><span class="o">/</span><span class="n">gen_175000</span>
+<span class="n">data</span><span class="o">/</span><span class="n">ex_ea</span><span class="o">/</span><span class="n">exp_2</span><span class="o">/</span><span class="n">ex_ea_2019</span><span class="o">-</span><span class="mo">04</span><span class="o">-</span><span class="mi">30</span><span class="n">_11_41_39_129952</span><span class="o">/</span><span class="n">gen_80000</span>
+<span class="n">data</span><span class="o">/</span><span class="n">ex_ea</span><span class="o">/</span><span class="n">exp_2</span><span class="o">/</span><span class="n">ex_ea_2019</span><span class="o">-</span><span class="mo">04</span><span class="o">-</span><span class="mi">30</span><span class="n">_11_41_39_129952</span><span class="o">/</span><span class="n">gen_120000</span>
+<span class="n">data</span><span class="o">/</span><span class="n">ex_ea</span><span class="o">/</span><span class="n">exp_2</span><span class="o">/</span><span class="n">ex_ea_2019</span><span class="o">-</span><span class="mo">04</span><span class="o">-</span><span class="mi">30</span><span class="n">_11_41_39_129952</span><span class="o">/</span><span class="n">gen_190000</span>
+<span class="n">data</span><span class="o">/</span><span class="n">ex_ea</span><span class="o">/</span><span class="n">exp_2</span><span class="o">/</span><span class="n">ex_ea_2019</span><span class="o">-</span><span class="mo">04</span><span class="o">-</span><span class="mi">30</span><span class="n">_11_41_39_129952</span><span class="o">/</span><span class="n">gen_60000</span>
+<span class="n">data</span><span class="o">/</span><span class="n">ex_ea</span><span class="o">/</span><span class="n">exp_2</span><span class="o">/</span><span class="n">ex_ea_2019</span><span class="o">-</span><span class="mo">04</span><span class="o">-</span><span class="mi">30</span><span class="n">_11_41_39_129952</span><span class="o">/</span><span class="n">gen_20000</span>
+<span class="n">data</span><span class="o">/</span><span class="n">ex_ea</span><span class="o">/</span><span class="n">exp_2</span><span class="o">/</span><span class="n">ex_ea_2019</span><span class="o">-</span><span class="mo">04</span><span class="o">-</span><span class="mi">30</span><span class="n">_11_41_39_129952</span><span class="o">/</span><span class="n">gen_55000</span>
+<span class="n">data</span><span class="o">/</span><span class="n">ex_ea</span><span class="o">/</span><span class="n">exp_2</span><span class="o">/</span><span class="n">ex_ea_2019</span><span class="o">-</span><span class="mo">04</span><span class="o">-</span><span class="mi">30</span><span class="n">_11_41_39_129952</span><span class="o">/</span><span class="n">gen_125000</span>
+<span class="n">data</span><span class="o">/</span><span class="n">ex_ea</span><span class="o">/</span><span class="n">exp_2</span><span class="o">/</span><span class="n">ex_ea_2019</span><span class="o">-</span><span class="mo">04</span><span class="o">-</span><span class="mi">30</span><span class="n">_11_41_39_129952</span><span class="o">/</span><span class="n">gen_75000</span>
+<span class="n">data</span><span class="o">/</span><span class="n">ex_ea</span><span class="o">/</span><span class="n">exp_2</span><span class="o">/</span><span class="n">ex_ea_2019</span><span class="o">-</span><span class="mo">04</span><span class="o">-</span><span class="mi">30</span><span class="n">_11_41_39_129952</span><span class="o">/</span><span class="n">gen_170000</span>
+<span class="n">data</span><span class="o">/</span><span class="n">ex_ea</span><span class="o">/</span><span class="n">exp_2</span><span class="o">/</span><span class="n">ex_ea_2019</span><span class="o">-</span><span class="mo">04</span><span class="o">-</span><span class="mi">30</span><span class="n">_11_41_39_129952</span><span class="o">/</span><span class="n">gen_35000</span>
+<span class="n">data</span><span class="o">/</span><span class="n">ex_ea</span><span class="o">/</span><span class="n">exp_2</span><span class="o">/</span><span class="n">ex_ea_2019</span><span class="o">-</span><span class="mo">04</span><span class="o">-</span><span class="mi">30</span><span class="n">_11_41_39_129952</span><span class="o">/</span><span class="n">gen_185000</span>
+<span class="n">data</span><span class="o">/</span><span class="n">ex_ea</span><span class="o">/</span><span class="n">exp_2</span><span class="o">/</span><span class="n">ex_ea_2019</span><span class="o">-</span><span class="mo">04</span><span class="o">-</span><span class="mi">30</span><span class="n">_11_41_39_129952</span><span class="o">/</span><span class="n">gen_5000</span>
+<span class="n">data</span><span class="o">/</span><span class="n">ex_ea</span><span class="o">/</span><span class="n">exp_2</span><span class="o">/</span><span class="n">stdout</span><span class="mf">.737177</span><span class="p">.</span><span class="n">log</span>
+<span class="n">data</span><span class="o">/</span><span class="n">ex_ea</span><span class="o">/</span><span class="n">exp_0</span>
+<span class="n">data</span><span class="o">/</span><span class="n">ex_ea</span><span class="o">/</span><span class="n">exp_0</span><span class="o">/</span><span class="n">ex_ea_2019</span><span class="o">-</span><span class="mo">04</span><span class="o">-</span><span class="mi">30</span><span class="n">_11_41_25_100343</span>
+<span class="n">data</span><span class="o">/</span><span class="n">ex_ea</span><span class="o">/</span><span class="n">exp_0</span><span class="o">/</span><span class="n">ex_ea_2019</span><span class="o">-</span><span class="mo">04</span><span class="o">-</span><span class="mi">30</span><span class="n">_11_41_25_100343</span><span class="o">/</span><span class="n">gen_110000</span>
+<span class="n">data</span><span class="o">/</span><span class="n">ex_ea</span><span class="o">/</span><span class="n">exp_0</span><span class="o">/</span><span class="n">ex_ea_2019</span><span class="o">-</span><span class="mo">04</span><span class="o">-</span><span class="mi">30</span><span class="n">_11_41_25_100343</span><span class="o">/</span><span class="n">gen_150000</span>
+<span class="n">data</span><span class="o">/</span><span class="n">ex_ea</span><span class="o">/</span><span class="n">exp_0</span><span class="o">/</span><span class="n">ex_ea_2019</span><span class="o">-</span><span class="mo">04</span><span class="o">-</span><span class="mi">30</span><span class="n">_11_41_25_100343</span><span class="o">/</span><span class="n">gen_85000</span>
+<span class="n">data</span><span class="o">/</span><span class="n">ex_ea</span><span class="o">/</span><span class="n">exp_0</span><span class="o">/</span><span class="n">ex_ea_2019</span><span class="o">-</span><span class="mo">04</span><span class="o">-</span><span class="mi">30</span><span class="n">_11_41_25_100343</span><span class="o">/</span><span class="n">gen_15000</span>
+<span class="n">data</span><span class="o">/</span><span class="n">ex_ea</span><span class="o">/</span><span class="n">exp_0</span><span class="o">/</span><span class="n">ex_ea_2019</span><span class="o">-</span><span class="mo">04</span><span class="o">-</span><span class="mi">30</span><span class="n">_11_41_25_100343</span><span class="o">/</span><span class="n">gen_10000</span>
+<span class="n">data</span><span class="o">/</span><span class="n">ex_ea</span><span class="o">/</span><span class="n">exp_0</span><span class="o">/</span><span class="n">ex_ea_2019</span><span class="o">-</span><span class="mo">04</span><span class="o">-</span><span class="mi">30</span><span class="n">_11_41_25_100343</span><span class="o">/</span><span class="n">status</span>
+<span class="n">data</span><span class="o">/</span><span class="n">ex_ea</span><span class="o">/</span><span class="n">exp_0</span><span class="o">/</span><span class="n">ex_ea_2019</span><span class="o">-</span><span class="mo">04</span><span class="o">-</span><span class="mi">30</span><span class="n">_11_41_25_100343</span><span class="o">/</span><span class="n">gen_135000</span>
+<span class="n">data</span><span class="o">/</span><span class="n">ex_ea</span><span class="o">/</span><span class="n">exp_0</span><span class="o">/</span><span class="n">ex_ea_2019</span><span class="o">-</span><span class="mo">04</span><span class="o">-</span><span class="mi">30</span><span class="n">_11_41_25_100343</span><span class="o">/</span><span class="n">gen_95000</span>
+<span class="n">data</span><span class="o">/</span><span class="n">ex_ea</span><span class="o">/</span><span class="n">exp_0</span><span class="o">/</span><span class="n">ex_ea_2019</span><span class="o">-</span><span class="mo">04</span><span class="o">-</span><span class="mi">30</span><span class="n">_11_41_25_100343</span><span class="o">/</span><span class="n">gen_90000</span>
+<span class="n">data</span><span class="o">/</span><span class="n">ex_ea</span><span class="o">/</span><span class="n">exp_0</span><span class="o">/</span><span class="n">ex_ea_2019</span><span class="o">-</span><span class="mo">04</span><span class="o">-</span><span class="mi">30</span><span class="n">_11_41_25_100343</span><span class="o">/</span><span class="n">gen_160000</span>
+<span class="n">data</span><span class="o">/</span><span class="n">ex_ea</span><span class="o">/</span><span class="n">exp_0</span><span class="o">/</span><span class="n">ex_ea_2019</span><span class="o">-</span><span class="mo">04</span><span class="o">-</span><span class="mi">30</span><span class="n">_11_41_25_100343</span><span class="o">/</span><span class="n">gen_165000</span>
+<span class="n">data</span><span class="o">/</span><span class="n">ex_ea</span><span class="o">/</span><span class="n">exp_0</span><span class="o">/</span><span class="n">ex_ea_2019</span><span class="o">-</span><span class="mo">04</span><span class="o">-</span><span class="mi">30</span><span class="n">_11_41_25_100343</span><span class="o">/</span><span class="n">gen_65000</span>
+<span class="n">data</span><span class="o">/</span><span class="n">ex_ea</span><span class="o">/</span><span class="n">exp_0</span><span class="o">/</span><span class="n">ex_ea_2019</span><span class="o">-</span><span class="mo">04</span><span class="o">-</span><span class="mi">30</span><span class="n">_11_41_25_100343</span><span class="o">/</span><span class="n">gen_115000</span>
+<span class="n">data</span><span class="o">/</span><span class="n">ex_ea</span><span class="o">/</span><span class="n">exp_0</span><span class="o">/</span><span class="n">ex_ea_2019</span><span class="o">-</span><span class="mo">04</span><span class="o">-</span><span class="mi">30</span><span class="n">_11_41_25_100343</span><span class="o">/</span><span class="n">gen_155000</span>
+<span class="n">data</span><span class="o">/</span><span class="n">ex_ea</span><span class="o">/</span><span class="n">exp_0</span><span class="o">/</span><span class="n">ex_ea_2019</span><span class="o">-</span><span class="mo">04</span><span class="o">-</span><span class="mi">30</span><span class="n">_11_41_25_100343</span><span class="o">/</span><span class="n">gen_50000</span>
+<span class="n">data</span><span class="o">/</span><span class="n">ex_ea</span><span class="o">/</span><span class="n">exp_0</span><span class="o">/</span><span class="n">ex_ea_2019</span><span class="o">-</span><span class="mo">04</span><span class="o">-</span><span class="mi">30</span><span class="n">_11_41_25_100343</span><span class="o">/</span><span class="n">gen_0</span>
+<span class="n">data</span><span class="o">/</span><span class="n">ex_ea</span><span class="o">/</span><span class="n">exp_0</span><span class="o">/</span><span class="n">ex_ea_2019</span><span class="o">-</span><span class="mo">04</span><span class="o">-</span><span class="mi">30</span><span class="n">_11_41_25_100343</span><span class="o">/</span><span class="n">bestfit</span><span class="p">.</span><span class="n">dat</span>
+<span class="n">data</span><span class="o">/</span><span class="n">ex_ea</span><span class="o">/</span><span class="n">exp_0</span><span class="o">/</span><span class="n">ex_ea_2019</span><span class="o">-</span><span class="mo">04</span><span class="o">-</span><span class="mi">30</span><span class="n">_11_41_25_100343</span><span class="o">/</span><span class="n">gen_180000</span>
+<span class="n">data</span><span class="o">/</span><span class="n">ex_ea</span><span class="o">/</span><span class="n">exp_0</span><span class="o">/</span><span class="n">ex_ea_2019</span><span class="o">-</span><span class="mo">04</span><span class="o">-</span><span class="mi">30</span><span class="n">_11_41_25_100343</span><span class="o">/</span><span class="n">gen_195000</span>
+<span class="n">data</span><span class="o">/</span><span class="n">ex_ea</span><span class="o">/</span><span class="n">exp_0</span><span class="o">/</span><span class="n">ex_ea_2019</span><span class="o">-</span><span class="mo">04</span><span class="o">-</span><span class="mi">30</span><span class="n">_11_41_25_100343</span><span class="o">/</span><span class="n">gen_25000</span>
+<span class="n">data</span><span class="o">/</span><span class="n">ex_ea</span><span class="o">/</span><span class="n">exp_0</span><span class="o">/</span><span class="n">ex_ea_2019</span><span class="o">-</span><span class="mo">04</span><span class="o">-</span><span class="mi">30</span><span class="n">_11_41_25_100343</span><span class="o">/</span><span class="n">gen_140000</span>
+<span class="n">data</span><span class="o">/</span><span class="n">ex_ea</span><span class="o">/</span><span class="n">exp_0</span><span class="o">/</span><span class="n">ex_ea_2019</span><span class="o">-</span><span class="mo">04</span><span class="o">-</span><span class="mi">30</span><span class="n">_11_41_25_100343</span><span class="o">/</span><span class="n">gen_45000</span>
+<span class="n">data</span><span class="o">/</span><span class="n">ex_ea</span><span class="o">/</span><span class="n">exp_0</span><span class="o">/</span><span class="n">ex_ea_2019</span><span class="o">-</span><span class="mo">04</span><span class="o">-</span><span class="mi">30</span><span class="n">_11_41_25_100343</span><span class="o">/</span><span class="n">gen_105000</span>
+<span class="n">data</span><span class="o">/</span><span class="n">ex_ea</span><span class="o">/</span><span class="n">exp_0</span><span class="o">/</span><span class="n">ex_ea_2019</span><span class="o">-</span><span class="mo">04</span><span class="o">-</span><span class="mi">30</span><span class="n">_11_41_25_100343</span><span class="o">/</span><span class="n">gen_30000</span>
+<span class="n">data</span><span class="o">/</span><span class="n">ex_ea</span><span class="o">/</span><span class="n">exp_0</span><span class="o">/</span><span class="n">ex_ea_2019</span><span class="o">-</span><span class="mo">04</span><span class="o">-</span><span class="mi">30</span><span class="n">_11_41_25_100343</span><span class="o">/</span><span class="n">gen_40000</span>
+<span class="n">data</span><span class="o">/</span><span class="n">ex_ea</span><span class="o">/</span><span class="n">exp_0</span><span class="o">/</span><span class="n">ex_ea_2019</span><span class="o">-</span><span class="mo">04</span><span class="o">-</span><span class="mi">30</span><span class="n">_11_41_25_100343</span><span class="o">/</span><span class="n">gen_200000</span>
+<span class="n">data</span><span class="o">/</span><span class="n">ex_ea</span><span class="o">/</span><span class="n">exp_0</span><span class="o">/</span><span class="n">ex_ea_2019</span><span class="o">-</span><span class="mo">04</span><span class="o">-</span><span class="mi">30</span><span class="n">_11_41_25_100343</span><span class="o">/</span><span class="n">gen_145000</span>
+<span class="n">data</span><span class="o">/</span><span class="n">ex_ea</span><span class="o">/</span><span class="n">exp_0</span><span class="o">/</span><span class="n">ex_ea_2019</span><span class="o">-</span><span class="mo">04</span><span class="o">-</span><span class="mi">30</span><span class="n">_11_41_25_100343</span><span class="o">/</span><span class="n">gen_100000</span>
+<span class="n">data</span><span class="o">/</span><span class="n">ex_ea</span><span class="o">/</span><span class="n">exp_0</span><span class="o">/</span><span class="n">ex_ea_2019</span><span class="o">-</span><span class="mo">04</span><span class="o">-</span><span class="mi">30</span><span class="n">_11_41_25_100343</span><span class="o">/</span><span class="n">gen_70000</span>
+<span class="n">data</span><span class="o">/</span><span class="n">ex_ea</span><span class="o">/</span><span class="n">exp_0</span><span class="o">/</span><span class="n">ex_ea_2019</span><span class="o">-</span><span class="mo">04</span><span class="o">-</span><span class="mi">30</span><span class="n">_11_41_25_100343</span><span class="o">/</span><span class="n">gen_130000</span>
+<span class="n">data</span><span class="o">/</span><span class="n">ex_ea</span><span class="o">/</span><span class="n">exp_0</span><span class="o">/</span><span class="n">ex_ea_2019</span><span class="o">-</span><span class="mo">04</span><span class="o">-</span><span class="mi">30</span><span class="n">_11_41_25_100343</span><span class="o">/</span><span class="n">gen_175000</span>
+<span class="n">data</span><span class="o">/</span><span class="n">ex_ea</span><span class="o">/</span><span class="n">exp_0</span><span class="o">/</span><span class="n">ex_ea_2019</span><span class="o">-</span><span class="mo">04</span><span class="o">-</span><span class="mi">30</span><span class="n">_11_41_25_100343</span><span class="o">/</span><span class="n">gen_80000</span>
+<span class="n">data</span><span class="o">/</span><span class="n">ex_ea</span><span class="o">/</span><span class="n">exp_0</span><span class="o">/</span><span class="n">ex_ea_2019</span><span class="o">-</span><span class="mo">04</span><span class="o">-</span><span class="mi">30</span><span class="n">_11_41_25_100343</span><span class="o">/</span><span class="n">gen_120000</span>
+<span class="n">data</span><span class="o">/</span><span class="n">ex_ea</span><span class="o">/</span><span class="n">exp_0</span><span class="o">/</span><span class="n">ex_ea_2019</span><span class="o">-</span><span class="mo">04</span><span class="o">-</span><span class="mi">30</span><span class="n">_11_41_25_100343</span><span class="o">/</span><span class="n">gen_190000</span>
+<span class="n">data</span><span class="o">/</span><span class="n">ex_ea</span><span class="o">/</span><span class="n">exp_0</span><span class="o">/</span><span class="n">ex_ea_2019</span><span class="o">-</span><span class="mo">04</span><span class="o">-</span><span class="mi">30</span><span class="n">_11_41_25_100343</span><span class="o">/</span><span class="n">gen_60000</span>
+<span class="n">data</span><span class="o">/</span><span class="n">ex_ea</span><span class="o">/</span><span class="n">exp_0</span><span class="o">/</span><span class="n">ex_ea_2019</span><span class="o">-</span><span class="mo">04</span><span class="o">-</span><span class="mi">30</span><span class="n">_11_41_25_100343</span><span class="o">/</span><span class="n">gen_20000</span>
+<span class="n">data</span><span class="o">/</span><span class="n">ex_ea</span><span class="o">/</span><span class="n">exp_0</span><span class="o">/</span><span class="n">ex_ea_2019</span><span class="o">-</span><span class="mo">04</span><span class="o">-</span><span class="mi">30</span><span class="n">_11_41_25_100343</span><span class="o">/</span><span class="n">gen_55000</span>
+<span class="n">data</span><span class="o">/</span><span class="n">ex_ea</span><span class="o">/</span><span class="n">exp_0</span><span class="o">/</span><span class="n">ex_ea_2019</span><span class="o">-</span><span class="mo">04</span><span class="o">-</span><span class="mi">30</span><span class="n">_11_41_25_100343</span><span class="o">/</span><span class="n">gen_125000</span>
+<span class="n">data</span><span class="o">/</span><span class="n">ex_ea</span><span class="o">/</span><span class="n">exp_0</span><span class="o">/</span><span class="n">ex_ea_2019</span><span class="o">-</span><span class="mo">04</span><span class="o">-</span><span class="mi">30</span><span class="n">_11_41_25_100343</span><span class="o">/</span><span class="n">gen_75000</span>
+<span class="n">data</span><span class="o">/</span><span class="n">ex_ea</span><span class="o">/</span><span class="n">exp_0</span><span class="o">/</span><span class="n">ex_ea_2019</span><span class="o">-</span><span class="mo">04</span><span class="o">-</span><span class="mi">30</span><span class="n">_11_41_25_100343</span><span class="o">/</span><span class="n">gen_170000</span>
+<span class="n">data</span><span class="o">/</span><span class="n">ex_ea</span><span class="o">/</span><span class="n">exp_0</span><span class="o">/</span><span class="n">ex_ea_2019</span><span class="o">-</span><span class="mo">04</span><span class="o">-</span><span class="mi">30</span><span class="n">_11_41_25_100343</span><span class="o">/</span><span class="n">gen_35000</span>
+<span class="n">data</span><span class="o">/</span><span class="n">ex_ea</span><span class="o">/</span><span class="n">exp_0</span><span class="o">/</span><span class="n">ex_ea_2019</span><span class="o">-</span><span class="mo">04</span><span class="o">-</span><span class="mi">30</span><span class="n">_11_41_25_100343</span><span class="o">/</span><span class="n">gen_185000</span>
+<span class="n">data</span><span class="o">/</span><span class="n">ex_ea</span><span class="o">/</span><span class="n">exp_0</span><span class="o">/</span><span class="n">ex_ea_2019</span><span class="o">-</span><span class="mo">04</span><span class="o">-</span><span class="mi">30</span><span class="n">_11_41_25_100343</span><span class="o">/</span><span class="n">gen_5000</span>
+<span class="n">data</span><span class="o">/</span><span class="n">ex_ea</span><span class="o">/</span><span class="n">exp_0</span><span class="o">/</span><span class="n">ex_ea</span>
+<span class="n">data</span><span class="o">/</span><span class="n">ex_ea</span><span class="o">/</span><span class="n">exp_0</span><span class="o">/</span><span class="n">ex_ea_0</span><span class="p">.</span><span class="n">job</span>
+<span class="n">data</span><span class="o">/</span><span class="n">ex_ea</span><span class="o">/</span><span class="n">exp_0</span><span class="o">/</span><span class="n">stderr</span><span class="mf">.737173</span><span class="p">.</span><span class="n">log</span>
+<span class="n">data</span><span class="o">/</span><span class="n">ex_ea</span><span class="o">/</span><span class="n">exp_0</span><span class="o">/</span><span class="n">stdout</span><span class="mf">.737173</span><span class="p">.</span><span class="n">log</span>
+<span class="n">data</span><span class="o">/</span><span class="n">ex_ea</span><span class="o">/</span><span class="n">exp_1</span>
+<span class="n">data</span><span class="o">/</span><span class="n">ex_ea</span><span class="o">/</span><span class="n">exp_1</span><span class="o">/</span><span class="n">ex_ea_2019</span><span class="o">-</span><span class="mo">04</span><span class="o">-</span><span class="mi">30</span><span class="n">_11_41_39_185934</span>
+<span class="n">data</span><span class="o">/</span><span class="n">ex_ea</span><span class="o">/</span><span class="n">exp_1</span><span class="o">/</span><span class="n">ex_ea_2019</span><span class="o">-</span><span class="mo">04</span><span class="o">-</span><span class="mi">30</span><span class="n">_11_41_39_185934</span><span class="o">/</span><span class="n">gen_110000</span>
+<span class="n">data</span><span class="o">/</span><span class="n">ex_ea</span><span class="o">/</span><span class="n">exp_1</span><span class="o">/</span><span class="n">ex_ea_2019</span><span class="o">-</span><span class="mo">04</span><span class="o">-</span><span class="mi">30</span><span class="n">_11_41_39_185934</span><span class="o">/</span><span class="n">gen_150000</span>
+<span class="n">data</span><span class="o">/</span><span class="n">ex_ea</span><span class="o">/</span><span class="n">exp_1</span><span class="o">/</span><span class="n">ex_ea_2019</span><span class="o">-</span><span class="mo">04</span><span class="o">-</span><span class="mi">30</span><span class="n">_11_41_39_185934</span><span class="o">/</span><span class="n">gen_85000</span>
+<span class="n">data</span><span class="o">/</span><span class="n">ex_ea</span><span class="o">/</span><span class="n">exp_1</span><span class="o">/</span><span class="n">ex_ea_2019</span><span class="o">-</span><span class="mo">04</span><span class="o">-</span><span class="mi">30</span><span class="n">_11_41_39_185934</span><span class="o">/</span><span class="n">gen_15000</span>
+<span class="n">data</span><span class="o">/</span><span class="n">ex_ea</span><span class="o">/</span><span class="n">exp_1</span><span class="o">/</span><span class="n">ex_ea_2019</span><span class="o">-</span><span class="mo">04</span><span class="o">-</span><span class="mi">30</span><span class="n">_11_41_39_185934</span><span class="o">/</span><span class="n">gen_10000</span>
+<span class="n">data</span><span class="o">/</span><span class="n">ex_ea</span><span class="o">/</span><span class="n">exp_1</span><span class="o">/</span><span class="n">ex_ea_2019</span><span class="o">-</span><span class="mo">04</span><span class="o">-</span><span class="mi">30</span><span class="n">_11_41_39_185934</span><span class="o">/</span><span class="n">status</span>
+<span class="n">data</span><span class="o">/</span><span class="n">ex_ea</span><span class="o">/</span><span class="n">exp_1</span><span class="o">/</span><span class="n">ex_ea_2019</span><span class="o">-</span><span class="mo">04</span><span class="o">-</span><span class="mi">30</span><span class="n">_11_41_39_185934</span><span class="o">/</span><span class="n">gen_135000</span>
+<span class="n">data</span><span class="o">/</span><span class="n">ex_ea</span><span class="o">/</span><span class="n">exp_1</span><span class="o">/</span><span class="n">ex_ea_2019</span><span class="o">-</span><span class="mo">04</span><span class="o">-</span><span class="mi">30</span><span class="n">_11_41_39_185934</span><span class="o">/</span><span class="n">gen_95000</span>
+<span class="n">data</span><span class="o">/</span><span class="n">ex_ea</span><span class="o">/</span><span class="n">exp_1</span><span class="o">/</span><span class="n">ex_ea_2019</span><span class="o">-</span><span class="mo">04</span><span class="o">-</span><span class="mi">30</span><span class="n">_11_41_39_185934</span><span class="o">/</span><span class="n">gen_90000</span>
+<span class="n">data</span><span class="o">/</span><span class="n">ex_ea</span><span class="o">/</span><span class="n">exp_1</span><span class="o">/</span><span class="n">ex_ea_2019</span><span class="o">-</span><span class="mo">04</span><span class="o">-</span><span class="mi">30</span><span class="n">_11_41_39_185934</span><span class="o">/</span><span class="n">gen_160000</span>
+<span class="n">data</span><span class="o">/</span><span class="n">ex_ea</span><span class="o">/</span><span class="n">exp_1</span><span class="o">/</span><span class="n">ex_ea_2019</span><span class="o">-</span><span class="mo">04</span><span class="o">-</span><span class="mi">30</span><span class="n">_11_41_39_185934</span><span class="o">/</span><span class="n">gen_165000</span>
+<span class="n">data</span><span class="o">/</span><span class="n">ex_ea</span><span class="o">/</span><span class="n">exp_1</span><span class="o">/</span><span class="n">ex_ea_2019</span><span class="o">-</span><span class="mo">04</span><span class="o">-</span><span class="mi">30</span><span class="n">_11_41_39_185934</span><span class="o">/</span><span class="n">gen_65000</span>
+<span class="n">data</span><span class="o">/</span><span class="n">ex_ea</span><span class="o">/</span><span class="n">exp_1</span><span class="o">/</span><span class="n">ex_ea_2019</span><span class="o">-</span><span class="mo">04</span><span class="o">-</span><span class="mi">30</span><span class="n">_11_41_39_185934</span><span class="o">/</span><span class="n">gen_115000</span>
+<span class="n">data</span><span class="o">/</span><span class="n">ex_ea</span><span class="o">/</span><span class="n">exp_1</span><span class="o">/</span><span class="n">ex_ea_2019</span><span class="o">-</span><span class="mo">04</span><span class="o">-</span><span class="mi">30</span><span class="n">_11_41_39_185934</span><span class="o">/</span><span class="n">gen_155000</span>
+<span class="n">data</span><span class="o">/</span><span class="n">ex_ea</span><span class="o">/</span><span class="n">exp_1</span><span class="o">/</span><span class="n">ex_ea_2019</span><span class="o">-</span><span class="mo">04</span><span class="o">-</span><span class="mi">30</span><span class="n">_11_41_39_185934</span><span class="o">/</span><span class="n">gen_50000</span>
+<span class="n">data</span><span class="o">/</span><span class="n">ex_ea</span><span class="o">/</span><span class="n">exp_1</span><span class="o">/</span><span class="n">ex_ea_2019</span><span class="o">-</span><span class="mo">04</span><span class="o">-</span><span class="mi">30</span><span class="n">_11_41_39_185934</span><span class="o">/</span><span class="n">gen_0</span>
+<span class="n">data</span><span class="o">/</span><span class="n">ex_ea</span><span class="o">/</span><span class="n">exp_1</span><span class="o">/</span><span class="n">ex_ea_2019</span><span class="o">-</span><span class="mo">04</span><span class="o">-</span><span class="mi">30</span><span class="n">_11_41_39_185934</span><span class="o">/</span><span class="n">bestfit</span><span class="p">.</span><span class="n">dat</span>
+<span class="n">data</span><span class="o">/</span><span class="n">ex_ea</span><span class="o">/</span><span class="n">exp_1</span><span class="o">/</span><span class="n">ex_ea_2019</span><span class="o">-</span><span class="mo">04</span><span class="o">-</span><span class="mi">30</span><span class="n">_11_41_39_185934</span><span class="o">/</span><span class="n">gen_180000</span>
+<span class="n">data</span><span class="o">/</span><span class="n">ex_ea</span><span class="o">/</span><span class="n">exp_1</span><span class="o">/</span><span class="n">ex_ea_2019</span><span class="o">-</span><span class="mo">04</span><span class="o">-</span><span class="mi">30</span><span class="n">_11_41_39_185934</span><span class="o">/</span><span class="n">gen_195000</span>
+<span class="n">data</span><span class="o">/</span><span class="n">ex_ea</span><span class="o">/</span><span class="n">exp_1</span><span class="o">/</span><span class="n">ex_ea_2019</span><span class="o">-</span><span class="mo">04</span><span class="o">-</span><span class="mi">30</span><span class="n">_11_41_39_185934</span><span class="o">/</span><span class="n">gen_25000</span>
+<span class="n">data</span><span class="o">/</span><span class="n">ex_ea</span><span class="o">/</span><span class="n">exp_1</span><span class="o">/</span><span class="n">ex_ea_2019</span><span class="o">-</span><span class="mo">04</span><span class="o">-</span><span class="mi">30</span><span class="n">_11_41_39_185934</span><span class="o">/</span><span class="n">gen_140000</span>
+<span class="n">data</span><span class="o">/</span><span class="n">ex_ea</span><span class="o">/</span><span class="n">exp_1</span><span class="o">/</span><span class="n">ex_ea_2019</span><span class="o">-</span><span class="mo">04</span><span class="o">-</span><span class="mi">30</span><span class="n">_11_41_39_185934</span><span class="o">/</span><span class="n">gen_45000</span>
+<span class="n">data</span><span class="o">/</span><span class="n">ex_ea</span><span class="o">/</span><span class="n">exp_1</span><span class="o">/</span><span class="n">ex_ea_2019</span><span class="o">-</span><span class="mo">04</span><span class="o">-</span><span class="mi">30</span><span class="n">_11_41_39_185934</span><span class="o">/</span><span class="n">gen_105000</span>
+<span class="n">data</span><span class="o">/</span><span class="n">ex_ea</span><span class="o">/</span><span class="n">exp_1</span><span class="o">/</span><span class="n">ex_ea_2019</span><span class="o">-</span><span class="mo">04</span><span class="o">-</span><span class="mi">30</span><span class="n">_11_41_39_185934</span><span class="o">/</span><span class="n">gen_30000</span>
+<span class="n">data</span><span class="o">/</span><span class="n">ex_ea</span><span class="o">/</span><span class="n">exp_1</span><span class="o">/</span><span class="n">ex_ea_2019</span><span class="o">-</span><span class="mo">04</span><span class="o">-</span><span class="mi">30</span><span class="n">_11_41_39_185934</span><span class="o">/</span><span class="n">gen_40000</span>
+<span class="n">data</span><span class="o">/</span><span class="n">ex_ea</span><span class="o">/</span><span class="n">exp_1</span><span class="o">/</span><span class="n">ex_ea_2019</span><span class="o">-</span><span class="mo">04</span><span class="o">-</span><span class="mi">30</span><span class="n">_11_41_39_185934</span><span class="o">/</span><span class="n">gen_200000</span>
+<span class="n">data</span><span class="o">/</span><span class="n">ex_ea</span><span class="o">/</span><span class="n">exp_1</span><span class="o">/</span><span class="n">ex_ea_2019</span><span class="o">-</span><span class="mo">04</span><span class="o">-</span><span class="mi">30</span><span class="n">_11_41_39_185934</span><span class="o">/</span><span class="n">gen_145000</span>
+<span class="n">data</span><span class="o">/</span><span class="n">ex_ea</span><span class="o">/</span><span class="n">exp_1</span><span class="o">/</span><span class="n">ex_ea_2019</span><span class="o">-</span><span class="mo">04</span><span class="o">-</span><span class="mi">30</span><span class="n">_11_41_39_185934</span><span class="o">/</span><span class="n">gen_100000</span>
+<span class="n">data</span><span class="o">/</span><span class="n">ex_ea</span><span class="o">/</span><span class="n">exp_1</span><span class="o">/</span><span class="n">ex_ea_2019</span><span class="o">-</span><span class="mo">04</span><span class="o">-</span><span class="mi">30</span><span class="n">_11_41_39_185934</span><span class="o">/</span><span class="n">gen_70000</span>
+<span class="n">data</span><span class="o">/</span><span class="n">ex_ea</span><span class="o">/</span><span class="n">exp_1</span><span class="o">/</span><span class="n">ex_ea_2019</span><span class="o">-</span><span class="mo">04</span><span class="o">-</span><span class="mi">30</span><span class="n">_11_41_39_185934</span><span class="o">/</span><span class="n">gen_130000</span>
+<span class="n">data</span><span class="o">/</span><span class="n">ex_ea</span><span class="o">/</span><span class="n">exp_1</span><span class="o">/</span><span class="n">ex_ea_2019</span><span class="o">-</span><span class="mo">04</span><span class="o">-</span><span class="mi">30</span><span class="n">_11_41_39_185934</span><span class="o">/</span><span class="n">gen_175000</span>
+<span class="n">data</span><span class="o">/</span><span class="n">ex_ea</span><span class="o">/</span><span class="n">exp_1</span><span class="o">/</span><span class="n">ex_ea_2019</span><span class="o">-</span><span class="mo">04</span><span class="o">-</span><span class="mi">30</span><span class="n">_11_41_39_185934</span><span class="o">/</span><span class="n">gen_80000</span>
+<span class="n">data</span><span class="o">/</span><span class="n">ex_ea</span><span class="o">/</span><span class="n">exp_1</span><span class="o">/</span><span class="n">ex_ea_2019</span><span class="o">-</span><span class="mo">04</span><span class="o">-</span><span class="mi">30</span><span class="n">_11_41_39_185934</span><span class="o">/</span><span class="n">gen_120000</span>
+<span class="n">data</span><span class="o">/</span><span class="n">ex_ea</span><span class="o">/</span><span class="n">exp_1</span><span class="o">/</span><span class="n">ex_ea_2019</span><span class="o">-</span><span class="mo">04</span><span class="o">-</span><span class="mi">30</span><span class="n">_11_41_39_185934</span><span class="o">/</span><span class="n">gen_190000</span>
+<span class="n">data</span><span class="o">/</span><span class="n">ex_ea</span><span class="o">/</span><span class="n">exp_1</span><span class="o">/</span><span class="n">ex_ea_2019</span><span class="o">-</span><span class="mo">04</span><span class="o">-</span><span class="mi">30</span><span class="n">_11_41_39_185934</span><span class="o">/</span><span class="n">gen_60000</span>
+<span class="n">data</span><span class="o">/</span><span class="n">ex_ea</span><span class="o">/</span><span class="n">exp_1</span><span class="o">/</span><span class="n">ex_ea_2019</span><span class="o">-</span><span class="mo">04</span><span class="o">-</span><span class="mi">30</span><span class="n">_11_41_39_185934</span><span class="o">/</span><span class="n">gen_20000</span>
+<span class="n">data</span><span class="o">/</span><span class="n">ex_ea</span><span class="o">/</span><span class="n">exp_1</span><span class="o">/</span><span class="n">ex_ea_2019</span><span class="o">-</span><span class="mo">04</span><span class="o">-</span><span class="mi">30</span><span class="n">_11_41_39_185934</span><span class="o">/</span><span class="n">gen_55000</span>
+<span class="n">data</span><span class="o">/</span><span class="n">ex_ea</span><span class="o">/</span><span class="n">exp_1</span><span class="o">/</span><span class="n">ex_ea_2019</span><span class="o">-</span><span class="mo">04</span><span class="o">-</span><span class="mi">30</span><span class="n">_11_41_39_185934</span><span class="o">/</span><span class="n">gen_125000</span>
+<span class="n">data</span><span class="o">/</span><span class="n">ex_ea</span><span class="o">/</span><span class="n">exp_1</span><span class="o">/</span><span class="n">ex_ea_2019</span><span class="o">-</span><span class="mo">04</span><span class="o">-</span><span class="mi">30</span><span class="n">_11_41_39_185934</span><span class="o">/</span><span class="n">gen_75000</span>
+<span class="n">data</span><span class="o">/</span><span class="n">ex_ea</span><span class="o">/</span><span class="n">exp_1</span><span class="o">/</span><span class="n">ex_ea_2019</span><span class="o">-</span><span class="mo">04</span><span class="o">-</span><span class="mi">30</span><span class="n">_11_41_39_185934</span><span class="o">/</span><span class="n">gen_170000</span>
+<span class="n">data</span><span class="o">/</span><span class="n">ex_ea</span><span class="o">/</span><span class="n">exp_1</span><span class="o">/</span><span class="n">ex_ea_2019</span><span class="o">-</span><span class="mo">04</span><span class="o">-</span><span class="mi">30</span><span class="n">_11_41_39_185934</span><span class="o">/</span><span class="n">gen_35000</span>
+<span class="n">data</span><span class="o">/</span><span class="n">ex_ea</span><span class="o">/</span><span class="n">exp_1</span><span class="o">/</span><span class="n">ex_ea_2019</span><span class="o">-</span><span class="mo">04</span><span class="o">-</span><span class="mi">30</span><span class="n">_11_41_39_185934</span><span class="o">/</span><span class="n">gen_185000</span>
+<span class="n">data</span><span class="o">/</span><span class="n">ex_ea</span><span class="o">/</span><span class="n">exp_1</span><span class="o">/</span><span class="n">ex_ea_2019</span><span class="o">-</span><span class="mo">04</span><span class="o">-</span><span class="mi">30</span><span class="n">_11_41_39_185934</span><span class="o">/</span><span class="n">gen_5000</span>
+<span class="n">data</span><span class="o">/</span><span class="n">ex_ea</span><span class="o">/</span><span class="n">exp_1</span><span class="o">/</span><span class="n">stdout</span><span class="mf">.737175</span><span class="p">.</span><span class="n">log</span>
+<span class="n">data</span><span class="o">/</span><span class="n">ex_ea</span><span class="o">/</span><span class="n">exp_1</span><span class="o">/</span><span class="n">ex_ea_1</span><span class="p">.</span><span class="n">job</span>
+<span class="n">data</span><span class="o">/</span><span class="n">ex_ea</span><span class="o">/</span><span class="n">exp_1</span><span class="o">/</span><span class="n">ex_ea</span>
+<span class="n">data</span><span class="o">/</span><span class="n">ex_ea</span><span class="o">/</span><span class="n">exp_1</span><span class="o">/</span><span class="n">stderr</span><span class="mf">.737175</span><span class="p">.</span><span class="n">log</span>
+<span class="n">data</span><span class="o">/</span><span class="n">ex_nsga2</span>
+<span class="n">data</span><span class="o">/</span><span class="n">ex_nsga2</span><span class="o">/</span><span class="n">exp_2</span>
+<span class="n">data</span><span class="o">/</span><span class="n">ex_nsga2</span><span class="o">/</span><span class="n">exp_2</span><span class="o">/</span><span class="n">ex_nsga2</span>
+<span class="n">data</span><span class="o">/</span><span class="n">ex_nsga2</span><span class="o">/</span><span class="n">exp_2</span><span class="o">/</span><span class="n">stderr</span><span class="mf">.737176</span><span class="p">.</span><span class="n">log</span>
+<span class="n">data</span><span class="o">/</span><span class="n">ex_nsga2</span><span class="o">/</span><span class="n">exp_2</span><span class="o">/</span><span class="n">stdout</span><span class="mf">.737176</span><span class="p">.</span><span class="n">log</span>
+<span class="n">data</span><span class="o">/</span><span class="n">ex_nsga2</span><span class="o">/</span><span class="n">exp_2</span><span class="o">/</span><span class="n">ex_nsga2_2</span><span class="p">.</span><span class="n">job</span>
+<span class="n">data</span><span class="o">/</span><span class="n">ex_nsga2</span><span class="o">/</span><span class="n">exp_0</span>
+<span class="n">data</span><span class="o">/</span><span class="n">ex_nsga2</span><span class="o">/</span><span class="n">exp_0</span><span class="o">/</span><span class="n">ex_nsga2</span>
+<span class="n">data</span><span class="o">/</span><span class="n">ex_nsga2</span><span class="o">/</span><span class="n">exp_0</span><span class="o">/</span><span class="n">stderr</span><span class="mf">.737172</span><span class="p">.</span><span class="n">log</span>
+<span class="n">data</span><span class="o">/</span><span class="n">ex_nsga2</span><span class="o">/</span><span class="n">exp_0</span><span class="o">/</span><span class="n">ex_nsga2_0</span><span class="p">.</span><span class="n">job</span>
+<span class="n">data</span><span class="o">/</span><span class="n">ex_nsga2</span><span class="o">/</span><span class="n">exp_0</span><span class="o">/</span><span class="n">stdout</span><span class="mf">.737172</span><span class="p">.</span><span class="n">log</span>
+<span class="n">data</span><span class="o">/</span><span class="n">ex_nsga2</span><span class="o">/</span><span class="n">exp_1</span>
+<span class="n">data</span><span class="o">/</span><span class="n">ex_nsga2</span><span class="o">/</span><span class="n">exp_1</span><span class="o">/</span><span class="n">ex_nsga2</span>
+<span class="n">data</span><span class="o">/</span><span class="n">ex_nsga2</span><span class="o">/</span><span class="n">exp_1</span><span class="o">/</span><span class="n">ex_nsga2_1</span><span class="p">.</span><span class="n">job</span>
+<span class="n">data</span><span class="o">/</span><span class="n">ex_nsga2</span><span class="o">/</span><span class="n">exp_1</span><span class="o">/</span><span class="n">stdout</span><span class="mf">.737174</span><span class="p">.</span><span class="n">log</span>
+<span class="n">data</span><span class="o">/</span><span class="n">ex_nsga2</span><span class="o">/</span><span class="n">exp_1</span><span class="o">/</span><span class="n">stderr</span><span class="mf">.737174</span><span class="p">.</span><span class="n">log</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href="reference.html" class="btn btn-neutral" title="Reference manual" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo" class="wy-footer">
+    <div role="contentinfo">
+      <p>
+          &copy; Copyright 2008-2018, UPMC / Inria.
+
+      
+      
+        <br/>
+        <a href="mailto:jean-baptiste.mouret@inria.fr"> Contact us </a>
+      
+      </p>
+    </div>
+    <div class="wy-footer-aside">
+      Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> modified for <a href="http://resibots.eu">Resibots</a>.
+    </div>
+    <div style="clear: both;"></div>
+  </div>
+<div class="wy-footer-logo-container">
+  <div class="wy-footer-logo"><img src="_static/logos/logo_eu.png"/></div>
+  <div class="wy-footer-logo"><img src="_static/logos/logo_erc_nonofficial.svg"/></div>
+  <div class="wy-footer-logo"><img src="_static/logos/logo_loria.jpg"/></div>
+  <div class="wy-footer-logo"><img src="_static/logos/logo-inria.svg"/></div>
+  <div class="wy-footer-logo"><img src="_static/logos/logo_cnrs.png"/></div>
+  <div class="wy-footer-logo"><img src="_static/logos/logo_universite_lorraine.jpg"/></div>
+</div>
+
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'0.1 alpha',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  <script type="text/javascript" src="_static/js/theme.js"></script>
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxResibotsTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

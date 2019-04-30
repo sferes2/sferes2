@@ -127,6 +127,7 @@
 <li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial (basics)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="concepts.html">Main concepts</a></li>
 <li class="toctree-l1"><a class="reference internal" href="reference.html">Reference manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="clusters.html">Sferes on clusters (OAR)</a></li>
 </ul>
 
             
@@ -186,18 +187,20 @@
 <h3>Ubuntu / Debian<a class="headerlink" href="#ubuntu-debian" title="Permalink to this headline">¶</a></h3>
 <p>We list here the Ubuntu package names:</p>
 <ul class="simple">
-<li>[required] libboost-dev &gt;= 1.35 (including test, serialization,
-graph, program_options, filesystem); see
-<a class="reference external" href="http://www.boost.org">http://www.boost.org</a>;</li>
-<li>[required] libboost-test-dev &gt;= 1.35</li>
-<li>[required] libboost-filesystem-dev &gt;= 1.35</li>
-<li>[required] libboost-program-options-dev &gt;= 1.35</li>
-<li>[required] libboost-graph-parallel-dev &gt;= 1.35</li>
-<li>[required] python &gt;= 2.4;</li>
-<li>[required] g++ &gt;= 4.2 (this should work with icc and clang too);</li>
+<li>[required] libboost-all-dev &gt;= 1.35 (including test, serialization, graph,</li>
+</ul>
+<blockquote>
+<div><dl class="docutils">
+<dt>program_options, filesystem); see [[<a class="reference external" href="http://www.boost.org">http://www.boost.org</a>]]; &gt;</dt>
+<dd><a class="reference external" href="http://www.boost.org">http://www.boost.org</a>;</dd>
+</dl>
+</div></blockquote>
+<ul class="simple">
+<li>[required] python &gt;= 3.x</li>
+<li>[required] g++ &gt;= 4.2 or clang (defaut on mac);</li>
 <li>[optional but highly recommended] libtbb-dev; see
 <a class="reference external" href="http://www.threadingbuildingblocks.org/">http://www.threadingbuildingblocks.org/</a></li>
-<li>[optional but recommended] libeigen3-dev ; see
+<li>[optional but highly recommended] libeigen3-dev ; see
 <a class="reference external" href="http://eigen.tuxfamily.org/">http://eigen.tuxfamily.org/</a></li>
 <li>[optional but recommended] python-simplejson;</li>
 <li>[optional] libboost-mpi-dev , if you need the optional MPI support
@@ -230,7 +233,7 @@ to compile sferes2 by typing (in the main sferes directory):</p>
 </pre></div>
 </div>
 <p>You should then run the unit tests:</p>
-<div class="code shell highlight-default"><div class="highlight"><pre><span></span><span class="o">./</span><span class="n">waf</span> <span class="n">check</span>
+<div class="code shell highlight-default"><div class="highlight"><pre><span></span><span class="o">./</span><span class="n">waf</span> <span class="o">--</span><span class="n">tests</span>
 </pre></div>
 </div>
 <p>If everything is green, sferes2 is working! If not, please send an

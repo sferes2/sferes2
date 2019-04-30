@@ -127,6 +127,7 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="reference.html">Reference manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="clusters.html">Sferes on clusters (OAR)</a></li>
 </ul>
 
             
@@ -197,21 +198,21 @@ re-usability) and the efficiency of low-level languages.</p>
 <p>One solution in C++ is to use the “curiously recurring template pattern”
 (<a class="reference external" href="http://en.wikipedia.org/wiki/Curiously_Recurring_Template_Pattern">http://en.wikipedia.org/wiki/Curiously_Recurring_Template_Pattern</a>).
 Here is the idea:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">Derived</span><span class="o">&gt;</span> <span class="n">struct</span> <span class="n">Base</span>
+<div class="highlight-c++"><div class="highlight"><pre><span></span><span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">Derived</span><span class="o">&gt;</span> <span class="k">struct</span> <span class="n">Base</span>
 <span class="p">{</span>
-    <span class="n">void</span> <span class="n">interface</span><span class="p">()</span>
+    <span class="kt">void</span> <span class="n">interface</span><span class="p">()</span>
     <span class="p">{</span>
-        <span class="n">static_cast</span><span class="o">&lt;</span><span class="n">Derived</span><span class="o">*&gt;</span><span class="p">(</span><span class="n">this</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">implementation</span><span class="p">();</span>
+        <span class="k">static_cast</span><span class="o">&lt;</span><span class="n">Derived</span><span class="o">*&gt;</span><span class="p">(</span><span class="k">this</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">implementation</span><span class="p">();</span>
     <span class="p">}</span>
-    <span class="n">void</span> <span class="n">f</span><span class="p">()</span>
+    <span class="kt">void</span> <span class="n">f</span><span class="p">()</span>
     <span class="p">{</span>
-       <span class="k">for</span><span class="p">(</span><span class="nb">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">3</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="n">interface</span><span class="p">();</span>
+       <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">3</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="n">interface</span><span class="p">();</span>
     <span class="p">}</span>
 <span class="p">};</span>
 
-<span class="n">struct</span> <span class="n">Derived</span> <span class="p">:</span> <span class="n">public</span> <span class="n">Base</span><span class="o">&lt;</span><span class="n">Derived</span><span class="o">&gt;</span>
+<span class="k">struct</span> <span class="nl">Derived</span> <span class="p">:</span> <span class="k">public</span> <span class="n">Base</span><span class="o">&lt;</span><span class="n">Derived</span><span class="o">&gt;</span>
 <span class="p">{</span>
-    <span class="n">void</span> <span class="n">implementation</span><span class="p">()</span> <span class="p">{</span> <span class="n">std</span><span class="p">::</span><span class="n">cout</span><span class="o">&lt;&lt;</span><span class="s2">&quot;impl&quot;</span><span class="o">&lt;&lt;</span><span class="n">std</span><span class="p">::</span><span class="n">endl</span><span class="p">;</span> <span class="p">}</span>
+    <span class="kt">void</span> <span class="n">implementation</span><span class="p">()</span> <span class="p">{</span> <span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="o">&lt;&lt;</span><span class="s">&quot;impl&quot;</span><span class="o">&lt;&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span> <span class="p">}</span>
 <span class="p">};</span>
 </pre></div>
 </div>
@@ -279,45 +280,45 @@ defined in the derived classes</li>
 (<cite>SFERES_FITNESS</cite>, <cite>SFERES_INDIV</cite>, <cite>SFERES_EA</cite>, etc.). See <em>ref</em>.</p>
 <blockquote>
 <div><p>Example:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">SFERES_CLASS</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+<div class="highlight-c++"><div class="highlight"><pre><span></span><span class="n">SFERES_CLASS</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
 <span class="p">{</span>
-  <span class="n">X</span><span class="p">()</span> <span class="p">{</span> <span class="n">std</span><span class="p">::</span><span class="n">cout</span><span class="o">&lt;&lt;</span><span class="s2">&quot;X&quot;</span><span class="o">&lt;&lt;</span><span class="n">std</span><span class="p">::</span><span class="n">endl</span><span class="p">;</span> <span class="p">}</span>
-  <span class="n">void</span> <span class="n">test</span><span class="p">()</span> <span class="p">{</span> <span class="n">stc</span><span class="p">::</span><span class="n">exact</span><span class="p">(</span><span class="n">this</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">blah</span><span class="p">();</span> <span class="p">}</span>
-  <span class="n">void</span> <span class="n">test2</span><span class="p">()</span> <span class="p">{</span> <span class="n">std</span><span class="p">::</span><span class="n">cout</span><span class="o">&lt;&lt;</span><span class="s2">&quot;test2&quot;</span><span class="o">&lt;&lt;</span><span class="n">std</span><span class="p">::</span><span class="n">endl</span><span class="p">;</span> <span class="p">}</span>
+  <span class="n">X</span><span class="p">()</span> <span class="p">{</span> <span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="o">&lt;&lt;</span><span class="s">&quot;X&quot;</span><span class="o">&lt;&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span> <span class="p">}</span>
+  <span class="kt">void</span> <span class="n">test</span><span class="p">()</span> <span class="p">{</span> <span class="n">stc</span><span class="o">::</span><span class="n">exact</span><span class="p">(</span><span class="k">this</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">blah</span><span class="p">();</span> <span class="p">}</span>
+  <span class="kt">void</span> <span class="n">test2</span><span class="p">()</span> <span class="p">{</span> <span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="o">&lt;&lt;</span><span class="s">&quot;test2&quot;</span><span class="o">&lt;&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span> <span class="p">}</span>
 <span class="p">};</span>
-<span class="o">//</span> <span class="n">Y</span> <span class="n">derives</span> <span class="kn">from</span> <span class="nn">X</span>
+<span class="c1">// Y derives from X</span>
 <span class="n">SFERES_CLASS_D</span><span class="p">(</span><span class="n">Y</span><span class="p">,</span> <span class="n">X</span><span class="p">)</span>
 <span class="p">{</span>
-  <span class="n">Y</span><span class="p">()</span> <span class="p">{</span> <span class="n">std</span><span class="p">::</span><span class="n">cout</span><span class="o">&lt;&lt;</span><span class="s2">&quot;Y&quot;</span><span class="o">&lt;&lt;</span><span class="n">std</span><span class="p">::</span><span class="n">endl</span><span class="p">;</span> <span class="p">}</span>
-  <span class="n">void</span> <span class="n">blah</span><span class="p">()</span>
+  <span class="n">Y</span><span class="p">()</span> <span class="p">{</span> <span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="o">&lt;&lt;</span><span class="s">&quot;Y&quot;</span><span class="o">&lt;&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span> <span class="p">}</span>
+  <span class="kt">void</span> <span class="n">blah</span><span class="p">()</span>
   <span class="p">{</span>
-    <span class="n">std</span><span class="p">::</span><span class="n">cout</span><span class="o">&lt;&lt;</span><span class="s2">&quot;param::test::x&quot;</span><span class="o">&lt;&lt;</span><span class="n">Param</span><span class="p">::</span><span class="n">test</span><span class="p">::</span><span class="n">x</span><span class="o">&lt;&lt;</span><span class="n">std</span><span class="p">::</span><span class="n">endl</span><span class="p">;</span>
-    <span class="n">SFERES_PARENT</span><span class="p">(</span><span class="n">Y</span><span class="p">,</span> <span class="n">X</span><span class="p">)::</span><span class="n">test2</span><span class="p">();</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="o">&lt;&lt;</span><span class="s">&quot;param::test::x&quot;</span><span class="o">&lt;&lt;</span><span class="n">Param</span><span class="o">::</span><span class="n">test</span><span class="o">::</span><span class="n">x</span><span class="o">&lt;&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+    <span class="n">SFERES_PARENT</span><span class="p">(</span><span class="n">Y</span><span class="p">,</span> <span class="n">X</span><span class="p">)</span><span class="o">::</span><span class="n">test2</span><span class="p">();</span>
   <span class="p">}</span>
 <span class="p">};</span>
-<span class="o">//</span> <span class="n">Z</span> <span class="n">derives</span> <span class="kn">from</span> <span class="nn">Y</span>
+<span class="c1">// Z derives from Y</span>
 <span class="n">SFERES_CLASS_D</span><span class="p">(</span><span class="n">Z</span><span class="p">,</span> <span class="n">Y</span><span class="p">)</span>
 <span class="p">{</span>
-  <span class="n">Z</span><span class="p">()</span> <span class="p">{</span> <span class="n">std</span><span class="p">::</span><span class="n">cout</span><span class="o">&lt;&lt;</span><span class="s2">&quot;Z&quot;</span><span class="o">&lt;&lt;</span><span class="n">std</span><span class="p">::</span><span class="n">endl</span><span class="p">;</span> <span class="p">}</span>
-  <span class="n">void</span> <span class="n">blah</span><span class="p">()</span>
+  <span class="n">Z</span><span class="p">()</span> <span class="p">{</span> <span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="o">&lt;&lt;</span><span class="s">&quot;Z&quot;</span><span class="o">&lt;&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span> <span class="p">}</span>
+  <span class="kt">void</span> <span class="n">blah</span><span class="p">()</span>
   <span class="p">{</span>
-    <span class="n">std</span><span class="p">::</span><span class="n">cout</span><span class="o">&lt;&lt;</span><span class="s2">&quot;Z&quot;</span><span class="o">&lt;&lt;</span><span class="n">std</span><span class="p">::</span><span class="n">endl</span><span class="p">;</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="o">&lt;&lt;</span><span class="s">&quot;Z&quot;</span><span class="o">&lt;&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
   <span class="p">}</span>
 <span class="p">};</span>
-<span class="o">//</span> <span class="n">sample</span> <span class="n">parameter</span> <span class="p">(</span><span class="n">see</span> <span class="nb">next</span> <span class="n">subsection</span><span class="p">)</span>
-<span class="n">struct</span> <span class="n">Params_test</span>
+<span class="c1">// sample parameter (see next subsection)</span>
+<span class="k">struct</span> <span class="n">Params_test</span>
 <span class="p">{</span>
-  <span class="n">struct</span> <span class="n">test</span>
+  <span class="k">struct</span> <span class="n">test</span>
   <span class="p">{</span>
-    <span class="n">SFERES_CONST</span> <span class="nb">float</span> <span class="n">x</span> <span class="o">=</span> <span class="mf">0.1</span><span class="n">f</span><span class="p">;</span>
+    <span class="n">SFERES_CONST</span> <span class="kt">float</span> <span class="n">x</span> <span class="o">=</span> <span class="mf">0.1f</span><span class="p">;</span>
   <span class="p">};</span>
 <span class="p">};</span>
-<span class="o">//</span> <span class="n">to</span> <span class="n">instantiate</span> <span class="n">Y</span> <span class="ow">and</span> <span class="n">Z</span> <span class="p">(</span><span class="n">X</span> <span class="ow">is</span> <span class="n">abstract</span><span class="p">):</span>
-<span class="nb">int</span> <span class="n">main</span><span class="p">()</span>
+<span class="c1">// to instantiate Y and Z (X is abstract):</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
 <span class="p">{</span>
-  <span class="o">//</span> <span class="n">Y</span> <span class="n">uses</span> <span class="n">a</span> <span class="n">parameter</span>
+  <span class="c1">// Y uses a parameter</span>
   <span class="n">Y</span><span class="o">&lt;</span><span class="n">Param_test</span><span class="o">&gt;</span> <span class="n">y</span><span class="p">;</span>
-  <span class="o">//</span> <span class="n">Z</span> <span class="n">doesn</span><span class="s1">&#39;t use any parameter, these two forms are possible:</span>
+  <span class="c1">// Z doesn&#39;t use any parameter, these two forms are possible:</span>
   <span class="n">Z</span><span class="o">&lt;&gt;</span> <span class="n">z1</span><span class="p">;</span>
   <span class="n">Z</span><span class="o">&lt;</span><span class="n">Param_test</span><span class="o">&gt;</span> <span class="n">z2</span><span class="p">;</span>
   <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
@@ -330,12 +331,12 @@ defined in the derived classes</li>
 <h3>Parameter handling<a class="headerlink" href="#parameter-handling" title="Permalink to this headline">¶</a></h3>
 <p>The basic parameter format employs <cite>SFERES_CONST</cite> members in nested structures. For instance:</p>
 <blockquote>
-<div><div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">struct</span> <span class="n">Param</span>
+<div><div class="highlight-c++"><div class="highlight"><pre><span></span><span class="k">struct</span> <span class="n">Param</span>
 <span class="p">{</span>
-  <span class="n">struct</span> <span class="n">pop</span>
+  <span class="k">struct</span> <span class="n">pop</span>
   <span class="p">{</span>
-    <span class="n">SFERES_CONST</span> <span class="n">size_t</span> <span class="n">size</span> <span class="o">=</span> <span class="mi">100</span><span class="p">;</span>
-    <span class="n">SFERES_CONST</span> <span class="nb">float</span> <span class="n">x</span> <span class="o">=</span> <span class="mf">0.2</span><span class="n">f</span><span class="p">;</span>
+    <span class="n">SFERES_CONST</span> <span class="kt">size_t</span> <span class="n">size</span> <span class="o">=</span> <span class="mi">100</span><span class="p">;</span>
+    <span class="n">SFERES_CONST</span> <span class="kt">float</span> <span class="n">x</span> <span class="o">=</span> <span class="mf">0.2f</span><span class="p">;</span>
   <span class="p">};</span>
 <span class="p">};</span>
 </pre></div>
@@ -349,12 +350,12 @@ two macros:</p>
 <li><cite>SFERES_ARRAY (type, name, val1, val2, …)</cite></li>
 <li><cite>SFERES_STRING(name, “string”)</cite></li>
 </ul>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">struct</span> <span class="n">Param</span>
+<div class="highlight-c++"><div class="highlight"><pre><span></span><span class="k">struct</span> <span class="n">Param</span>
 <span class="p">{</span>
-  <span class="n">struct</span> <span class="n">test</span>
+  <span class="k">struct</span> <span class="n">test</span>
   <span class="p">{</span>
-    <span class="n">SFERES_ARRAY</span><span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="n">my_array</span><span class="p">,</span> <span class="mf">1.0</span><span class="n">f</span><span class="p">,</span> <span class="mf">2.0</span><span class="n">f</span><span class="p">,</span> <span class="mf">3.0</span><span class="n">f</span><span class="p">);</span>
-    <span class="n">SFERES_STRING</span><span class="p">(</span><span class="n">my_string</span><span class="p">,</span> <span class="s2">&quot;hello world&quot;</span><span class="p">);</span>
+    <span class="n">SFERES_ARRAY</span><span class="p">(</span><span class="kt">float</span><span class="p">,</span> <span class="n">my_array</span><span class="p">,</span> <span class="mf">1.0f</span><span class="p">,</span> <span class="mf">2.0f</span><span class="p">,</span> <span class="mf">3.0f</span><span class="p">);</span>
+    <span class="n">SFERES_STRING</span><span class="p">(</span><span class="n">my_string</span><span class="p">,</span> <span class="s">&quot;hello world&quot;</span><span class="p">);</span>
   <span class="p">};</span>
 <span class="p">};</span>
 </pre></div>
@@ -362,13 +363,13 @@ two macros:</p>
 </div></blockquote>
 <p>These parameters can then be retrieved in the source code in the following way:</p>
 <blockquote>
-<div><div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">...</span>
-<span class="o">//</span> <span class="n">size</span>
-<span class="n">size_t</span> <span class="n">s</span> <span class="o">=</span> <span class="n">Params</span><span class="p">::</span><span class="n">test</span><span class="p">::</span><span class="n">my_array_size</span><span class="p">();</span>
-<span class="o">//</span> <span class="mi">2</span><span class="n">nd</span> <span class="n">element</span>
-<span class="nb">float</span> <span class="n">v</span> <span class="o">=</span> <span class="n">Param</span><span class="p">::</span><span class="n">test</span><span class="p">::</span><span class="n">my_array</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
-<span class="o">//</span> <span class="n">string</span>
-<span class="n">const</span> <span class="n">char</span><span class="o">*</span> <span class="n">c</span> <span class="o">=</span> <span class="n">Params</span><span class="p">::</span><span class="n">test</span><span class="p">::</span><span class="n">my_string</span><span class="p">();</span>
+<div><div class="highlight-c++"><div class="highlight"><pre><span></span><span class="p">...</span>
+<span class="c1">// size</span>
+<span class="kt">size_t</span> <span class="n">s</span> <span class="o">=</span> <span class="n">Params</span><span class="o">::</span><span class="n">test</span><span class="o">::</span><span class="n">my_array_size</span><span class="p">();</span>
+<span class="c1">// 2nd element</span>
+<span class="kt">float</span> <span class="n">v</span> <span class="o">=</span> <span class="n">Param</span><span class="o">::</span><span class="n">test</span><span class="o">::</span><span class="n">my_array</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
+<span class="c1">// string</span>
+<span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">c</span> <span class="o">=</span> <span class="n">Params</span><span class="o">::</span><span class="n">test</span><span class="o">::</span><span class="n">my_string</span><span class="p">();</span>
 </pre></div>
 </div>
 </div></blockquote>
