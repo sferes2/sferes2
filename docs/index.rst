@@ -49,6 +49,7 @@ Contents:
   tutorial
   concepts  
   reference
+  clusters
 
 
 Indices and tables
