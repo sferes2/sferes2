@@ -136,5 +136,5 @@ You can then run the tests by using waf check:
 
 .. code:: shell
 
-    ./waf check
+    ./waf --tests
 
