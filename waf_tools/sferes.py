@@ -1,6 +1,5 @@
 import sys, os
 import subprocess
-import commands
 import stat
 
 json_ok = True
@@ -8,7 +7,7 @@ try:
    import simplejson
 except:
    json_ok = False
-   print "WARNING simplejson not found some function may not work"
+   print("WARNING simplejson not found some function may not work")
 
 import glob
 
@@ -79,7 +78,7 @@ def _sub_script(tpl, conf_file):
         ld_lib_path = os.environ['LD_LIBRARY_PATH']
     else:
         ld_lib_path = "''"
-    print 'LD_LIBRARY_PATH=' + ld_lib_path
+    print('LD_LIBRARY_PATH=' + ld_lib_path)
      # parse conf
     conf = simplejson.load(open(conf_file))
     exps = conf['exps']
@@ -116,7 +115,7 @@ def _sub_script(tpl, conf_file):
             try:
                 os.makedirs(directory)
             except:
-                print "WARNING, dir:" + directory + " not be created"
+                print("WARNING, dir:" + directory + " not be created")
             subprocess.call('cp ' + bin_dir + '/' + e + ' ' + directory, shell=True)
             fname = directory + "/" + e + "_" + str(i) + ".job"
             f = open(fname, "w")
@@ -155,9 +154,9 @@ exec @exec
     fnames = _sub_script(tpl, conf_file)
     for (fname, directory) in fnames:
         s = "qsub -d " + directory + " " + fname
-        print "executing:" + s
+        print("executing:" + s)
         retcode = subprocess.call(s, shell=True, env=None)
-        print "qsub returned:" + str(retcode)
+        print("qsub returned:" + str(retcode))
 
 
 def oar(conf_file):
@@ -169,10 +168,10 @@ def oar(conf_file):
 export LD_LIBRARY_PATH=@ld_lib_path
 exec @exec
 """
-    print 'WARNING [oar]: MPI not supported yet'
+    print('WARNING [oar]: MPI not supported yet')
     fnames = _sub_script(tpl, conf_file)
     for (fname, directory) in fnames:
         s = "oarsub -d " + directory + " -S " + fname
-        print "executing:" + s
+        print("executing:" + s)
         retcode = subprocess.call(s, shell=True, env=None)
-        print "oarsub returned:" + str(retcode)
+        print("oarsub returned:" + str(retcode))

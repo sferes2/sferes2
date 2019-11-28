@@ -23,6 +23,13 @@ def build(bld):
                    uselib = 'TBB BOOST EIGEN PTHREAD MPI',
                    use = 'sferes2',
                    target = 'ex_nsga2')
+    # ex_diversity
+    bld.program(features = 'cxx',
+                   source = 'ex_diversity.cpp',
+                   includes = '../',
+                   uselib = 'TBB BOOST EIGEN PTHREAD MPI',
+                   use = 'sferes2',
+                   target = 'ex_diversity')
 
     # ex_eps_moea
     bld.program(features = 'cxx',
