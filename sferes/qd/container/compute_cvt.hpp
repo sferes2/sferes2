@@ -53,8 +53,8 @@ namespace cvt {
         {
             size_t nb_points = data.rows();
             double sum = 0.0;
-            static tbb::mutex sm;
 #ifndef NO_PARALLEL
+            static tbb::mutex sm;
             tbb::parallel_for(size_t(0), nb_points, size_t(1),
                 [&](size_t i) {
 #else

@@ -32,8 +32,8 @@
 //| The fact that you are presently reading this means that you have
 //| had knowledge of the CeCILL license and that you accept its terms.
 
-#include <iostream>
 #include <Eigen/Core>
+#include <iostream>
 
 #include <sferes/eval/parallel.hpp>
 #include <sferes/gen/evo_float.hpp>
@@ -42,15 +42,16 @@
 #include <sferes/run.hpp>
 #include <sferes/stat/best_fit.hpp>
 #include <sferes/stat/qd_container.hpp>
-#include <sferes/stat/qd_selection.hpp>
 #include <sferes/stat/qd_progress.hpp>
-
+#include <sferes/stat/qd_selection.hpp>
 
 #include <sferes/fit/fit_qd.hpp>
 #include <sferes/qd/container/archive.hpp>
-#include <sferes/qd/container/kdtree_storage.hpp>
-#include <sferes/qd/container/sort_based_storage.hpp>
 #include <sferes/qd/container/grid.hpp>
+#ifdef USE_KDTREE
+#include <sferes/qd/container/kdtree_storage.hpp>
+#endif
+#include <sferes/qd/container/sort_based_storage.hpp>
 #include <sferes/qd/quality_diversity.hpp>
 #include <sferes/qd/selector/uniform.hpp>
 
@@ -61,9 +62,9 @@ struct Params {
         SFERES_CONST size_t deep = 2;
         SFERES_CONST double l = 0.01; // TODO value ???
         SFERES_CONST double k = 25; // TODO right value?
-        SFERES_CONST double eps = 0.1;// TODO right value??
+        SFERES_CONST double eps = 0.1; // TODO right value??
     };
-  
+
     // TODO: move to a qd::
     struct pop {
         // number of initial random points
@@ -91,49 +92,49 @@ struct Params {
     };
 };
 
-// Rastrigin
+// clang-format off
 FIT_QD(Robot_arm){
- public : 
-  template <typename Indiv> 
-    void eval(Indiv & ind){
-    size_t nb_dofs= ind.size();
-    Eigen::VectorXd angle(nb_dofs);
-    for (size_t i = 0; i < ind.size(); ++i)
-      angle[i] = ind.data(i);
-    this->_value = - sqrt((angle.array()-angle.mean()).square().mean());
+    public :
+        template <typename Indiv>
+        void eval(Indiv & ind)
+        {
+            size_t nb_dofs = ind.size();
+            Eigen::VectorXd angle(nb_dofs);
+            for (size_t i = 0; i < ind.size(); ++i)
+                angle[i] = ind.data(i);
+            this->_value = -sqrt((angle.array() - angle.mean()).square().mean());
 
-    Eigen::Vector3d pos = forward_model(angle);
-    
-    std::vector<double> data = {pos[0]/2 + 0.5, pos[1]/2 + 0.5};
-    this->set_desc(data);
-  }
+            Eigen::Vector3d pos = forward_model(angle);
 
-  
-  Eigen::Vector3d forward_model(Eigen::VectorXd a){
-    
-    Eigen::VectorXd _l_arm=Eigen::VectorXd::Ones(a.size()+1);
-    _l_arm(0)=0;
-    _l_arm = _l_arm/_l_arm.sum();
+            std::vector<double> data = {pos[0] / 2 + 0.5, pos[1] / 2 + 0.5};
+            this->set_desc(data);
+        }
 
-    Eigen::Matrix4d mat=Eigen::Matrix4d::Identity(4,4);
-    for(size_t i=0;i<a.size();i++){
-      Eigen::Matrix4d submat;
-      submat<<cos(a(i)), -sin(a(i)), 0, _l_arm(i), sin(a(i)), cos(a(i)), 0 , 0, 0, 0, 1, 0, 0, 0, 0, 1;
-      mat=mat*submat;
-    }
-    
-    Eigen::Matrix4d submat;
-    submat<<1, 0, 0, _l_arm(a.size()), 0, 1, 0 , 0, 0, 0, 1, 0, 0, 0, 0, 1;
-    mat=mat*submat;
-    Eigen::VectorXd v=mat*Eigen::Vector4d(0,0,0,1);
+        Eigen::Vector3d forward_model(Eigen::VectorXd a)
+        {
 
-    return v.head(3);
+            Eigen::VectorXd _l_arm = Eigen::VectorXd::Ones(a.size() + 1);
+            _l_arm(0) = 0;
+            _l_arm = _l_arm / _l_arm.sum();
 
-  }
-  
+            Eigen::Matrix4d mat = Eigen::Matrix4d::Identity(4, 4);
+            for (size_t i = 0; i < a.size(); i++) {
+                Eigen::Matrix4d submat;
+                submat << cos(a(i)), -sin(a(i)), 0, _l_arm(i), sin(a(i)), cos(a(i)), 0, 0, 0, 0, 1, 0, 0, 0, 0, 1;
+                mat = mat * submat;
+            }
+
+            Eigen::Matrix4d submat;
+            submat << 1, 0, 0, _l_arm(a.size()), 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1;
+            mat = mat * submat;
+            Eigen::VectorXd v = mat * Eigen::Vector4d(0, 0, 0, 1);
+
+            return v.head(3);
+        }
 };
+// clang-format on
 
-int main(int argc, char **argv) 
+int main(int argc, char** argv)
 {
     using namespace sferes;
 
@@ -142,37 +143,32 @@ int main(int argc, char **argv)
     typedef phen::Parameters<gen_t, fit_t, Params> phen_t;
 
     typedef qd::selector::Uniform<phen_t, Params> select_t;
+#ifdef USE_KDTREE
     // For the Archive, you can chose one of the following storage:
     // kD_tree storage, recommended for small behavioral descriptors (behav_dim<10)
-    typedef qd::container::KdtreeStorage< boost::shared_ptr<phen_t>, Params::qd::behav_dim > storage_t;
-    // Sort_based storage, recommended for larger behavioral descriptors. 
-    //typedef qd::container::SortBasedStorage< boost::shared_ptr<phen_t> > storage_t;
+    typedef qd::container::KdtreeStorage<boost::shared_ptr<phen_t>, Params::qd::behav_dim> storage_t;
+#else
+    // Sort_based storage, recommended for larger behavioral descriptors.
+    typedef qd::container::SortBasedStorage<boost::shared_ptr<phen_t>> storage_t;
+#endif
     typedef qd::container::Archive<phen_t, storage_t, Params> container_t;
-    
+
     // You can also use a grid (in place of the archive) with the following template:
     //typedef qd::container::Grid<phen_t, Params> container_t;
 
-
-    
     typedef eval::Parallel<Params> eval_t;
 
     typedef boost::fusion::vector<
-        stat::BestFit<phen_t, Params>, 
-        stat::QdContainer<phen_t, Params>, 
-        stat::QdProgress<phen_t, Params>
-        >
-        stat_t; 
+        stat::BestFit<phen_t, Params>,
+        stat::QdContainer<phen_t, Params>,
+        stat::QdProgress<phen_t, Params>>
+        stat_t;
     typedef modif::Dummy<> modifier_t;
     typedef qd::QualityDiversity<phen_t, eval_t, stat_t, modifier_t, select_t, container_t, Params> qd_t;
 
     qd_t qd;
     run_ea(argc, argv, qd);
-    std::cout<<"best fitness:" << qd.stat<0>().best()->fit().value() << std::endl;
-    std::cout<<"archive size:" << qd.stat<1>().archive().size() << std::endl;
+    std::cout << "best fitness:" << qd.stat<0>().best()->fit().value() << std::endl;
+    std::cout << "archive size:" << qd.stat<1>().archive().size() << std::endl;
     return 0;
-    
 }
-
-
-
-

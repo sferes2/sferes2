@@ -67,7 +67,7 @@ namespace sferes {
                     auto dist = [&](int x1, int x2) { return distances[x1] < distances[x2]; };
                     std::partial_sort(indices.begin(), indices.begin() + k, indices.end(), dist);
                     std::vector<data_t> result(k);
-                    for (size_t i = 0; i < k; ++i)
+                    for (int i = 0; i < k; ++i)
                         result[i] = _data[indices[i]];
                     return result;
                 }

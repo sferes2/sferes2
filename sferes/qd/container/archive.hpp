@@ -105,7 +105,6 @@ namespace sferes {
                 {
 		   point_t p_indiv(indiv->fit().desc().data(), indiv->fit().desc().size());
                     double sum = 0;
-                    const_knn_iterator_t it = begin;
 		    for (const_knn_iterator_t it = begin; it != end; it++) {
 		      sum += ((*it).first - p_indiv).norm();
 		    }
