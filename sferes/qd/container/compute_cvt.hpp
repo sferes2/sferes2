@@ -4,6 +4,10 @@
 #ifndef COMPUTE_CVT_HPP_
 #define COMPUTE_CVT_HPP_
 
+#ifndef EIGEN3_ENABLED
+#warning ComputeCvt requires Eigen
+#else
+
 #include <algorithm> //for random_shuffle
 #include <fstream>
 #include <iostream>
@@ -47,7 +51,7 @@ namespace cvt {
             return centroids;
         }
 
-        template<typename D>
+        template <typename D>
         double calc_distances(const Eigen::MatrixXd& data, const Eigen::MatrixXd& centroids,
             Eigen::MatrixXd& new_centroids, std::vector<size_t>& counts, const D& dist_fun)
         {
@@ -117,7 +121,7 @@ namespace cvt {
         const Distance& dist_fun = details::euclidean_distance, const Init& init_fun = details::init_uniform)
     {
         Eigen::MatrixXd data = init_fun(num_points, dimensionality);
-        std::vector<Eigen::MatrixXd> 
+        std::vector<Eigen::MatrixXd>
             all_centroids(restarts, Eigen::MatrixXd::Zero(num_clusters, data.cols()));
         std::vector<double> all_losses(restarts, 0.0);
 
@@ -166,4 +170,5 @@ namespace cvt {
     }
 } // namespace cvt
 
+#endif
 #endif

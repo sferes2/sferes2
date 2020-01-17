@@ -37,18 +37,19 @@
 
 #include <boost/test/unit_test.hpp>
 
-
 #include <cmath>
 #include <iostream>
 #include <sferes/qd/container/compute_cvt.hpp>
 
-
 // test only the CVT computation (not cvt-map-elites)
 BOOST_AUTO_TEST_CASE(test_cvt)
 {
+#ifndef EIGEN3_ENABLED
+#warning CvtContainer requires Eigen
+#else
     Eigen::MatrixXd centroids = cvt::cvt(2, 1000);
     BOOST_CHECK(centroids.rows() == 1000);
     BOOST_CHECK(centroids.cols() == 2);
-    std::cout<<"cvt done"<<std::endl;
+    std::cout << "cvt done" << std::endl;
+#endif
 }
-

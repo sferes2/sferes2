@@ -1,5 +1,10 @@
 #ifndef QD_CONTAINER_CVT_HPP
 #define QD_CONTAINER_CVT_HPP
+
+#ifndef EIGEN3_ENABLED
+#warning CvtContainer requires Eigen
+#else
+
 #include <Eigen/Core>
 #include <sferes/misc/eigen.hpp>
 
@@ -17,7 +22,8 @@ namespace sferes {
             // qd::cvt::max_iterations (e.g. 100): number of iterations of the CVT algorithm
             // qd::cvt::n_restarts (e.g. 1): number of restarts of the CVT algorithm
             // qd::cvt::tolerance (e.g. 1e-8): when to stop the CVT algorithm
-            template <typename Phen, typename Storage, typename Params> class CVT {
+            template <typename Phen, typename Storage, typename Params>
+            class CVT {
             public:
                 typedef boost::shared_ptr<Phen> indiv_t;
                 typedef typename std::vector<indiv_t> pop_t;
@@ -26,7 +32,7 @@ namespace sferes {
 
                 CVT()
                 {
-		  SFERES_CONST int dim = Params::qd::behav_dim;
+                    SFERES_CONST int dim = Params::qd::behav_dim;
                     SFERES_CONST int n_niches = Params::qd::n_niches;
                     _archive.resize(n_niches);
                     _archive_parents.resize(n_niches);
@@ -36,7 +42,7 @@ namespace sferes {
                         + boost::lexical_cast<std::string>(dim) + "_"
                         + boost::lexical_cast<std::string>(n_niches)
                         + ".bin";
-                    if(!boost::filesystem::exists(cache_filename)) {
+                    if (!boost::filesystem::exists(cache_filename)) {
                         std::cerr << "CVT: no centroid cache found ("
                                   << cache_filename << ") "
                                   << "=> computing a new CVT (this might take a dozen of minutes!)"
@@ -92,12 +98,11 @@ namespace sferes {
 
                 void update(pop_t& offspring, pop_t& parents)
                 {
-                   // _update_novelty();
+                    // _update_novelty();
                     // for (size_t i = 0; i < offspring.size(); i++)
                     //     _update_indiv(offspring[i]);
                     // for (size_t i = 0; i < parents.size(); i++)
                     //     _update_indiv(parents[i]);
-
 
                     // Do nothing for now
                     // _update_novelty();
@@ -117,9 +122,10 @@ namespace sferes {
                 storage_t _centroids_storage;
 
                 // Convert the descriptor into a Point_t
-                template <typename I> point_t _get_point(const I& indiv) const
+                template <typename I>
+                point_t _get_point(const I& indiv) const
                 {
-		  size_t dim = Params::qd::behav_dim;// needed for linking??
+                    size_t dim = Params::qd::behav_dim; // needed for linking??
                     point_t p(dim);
                     for (size_t i = 0; i < Params::qd::behav_dim; ++i)
                         p(i) = indiv->fit().desc()[i];
@@ -136,4 +142,6 @@ namespace sferes {
         } // namespace container
     } // namespace qd
 } // namespace sferes
+
+#endif
 #endif
