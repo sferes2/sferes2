@@ -53,15 +53,16 @@
 #include <sferes/run.hpp>
 #include <sferes/stat/best_fit.hpp>
 #include <sferes/stat/qd_container.hpp>
-#include <sferes/stat/qd_selection.hpp>
 #include <sferes/stat/qd_progress.hpp>
-
+#include <sferes/stat/qd_selection.hpp>
 
 #include <sferes/fit/fit_qd.hpp>
 #include <sferes/qd/container/archive.hpp>
+#ifdef USE_KDTREE
 #include <sferes/qd/container/kdtree_storage.hpp>
-#include <sferes/qd/container/sort_based_storage.hpp>
+#endif
 #include <sferes/qd/container/grid.hpp>
+#include <sferes/qd/container/sort_based_storage.hpp>
 #include <sferes/qd/quality_diversity.hpp>
 #include <sferes/qd/selector/tournament.hpp>
 #include <sferes/qd/selector/uniform.hpp>
@@ -72,8 +73,8 @@ struct Params {
     // TODO: move to a qd::
     struct nov {
         SFERES_CONST size_t deep = 2;
-        SFERES_CONST double l = 0.0075; 
-        SFERES_CONST double k = 24; 
+        SFERES_CONST double l = 0.0075;
+        SFERES_CONST double k = 24;
         SFERES_CONST double eps = 0.1;
     };
     // TODO: move to a qd::/ea
@@ -98,14 +99,14 @@ struct Params {
         SFERES_CONST cross_over_t cross_over_type = sbx;
     };
     struct qd {
-      SFERES_CONST size_t behav_dim = 2; // number of feature dimensions
+        SFERES_CONST size_t behav_dim = 2; // number of feature dimensions
         SFERES_ARRAY(size_t, grid_shape, 100, 100); // for grid (map-elites)
         SFERES_CONST int n_niches = 10000; // for CVT
 
         struct cvt {
             // The following parameters are not used if you use a cached CVT:
-            SFERES_CONST int n_samples = 10000;// number of samples for CVT (more than n_niches)
-            SFERES_CONST int max_iterations = 100;// number of iterations of the CVT algorithm
+            SFERES_CONST int n_samples = 10000; // number of samples for CVT (more than n_niches)
+            SFERES_CONST int max_iterations = 100; // number of iterations of the CVT algorithm
             SFERES_CONST int n_restarts = 1; // number of restarts of the CVT algorithm
             SFERES_CONST double tolerance = 1e-8; // when to stop the CVT algorithm
         };
@@ -113,19 +114,22 @@ struct Params {
 };
 
 // Rastrigin
+// clang-format off
 FIT_QD(Rastrigin){
-    public : 
-    template <typename Indiv> 
-    void eval(Indiv & ind){
-        float f = 10 * ind.size();
-        for (size_t i = 0; i < ind.size(); ++i)
-            f += ind.data(i) * ind.data(i) - 10 * cos(2 * M_PI * ind.data(i));
-        this->_value = -f;
+    public :
+        template <typename Indiv>
+        void eval(Indiv & ind)
+        {
+            float f = 10 * ind.size();
+            for (size_t i = 0; i < ind.size(); ++i)
+                f += ind.data(i) * ind.data(i) - 10 * cos(2 * M_PI * ind.data(i));
+            this->_value = -f;
 
-        std::vector<double> data = {ind.gen().data(0), ind.gen().data(1)};
-        this->set_desc(data);
-    }
+            std::vector<double> data = {ind.gen().data(0), ind.gen().data(1)};
+            this->set_desc(data);
+        }
 };
+// clang-format on
 
 BOOST_AUTO_TEST_CASE(qd_map_elites)
 {
@@ -138,18 +142,18 @@ BOOST_AUTO_TEST_CASE(qd_map_elites)
     typedef eval::Parallel<Params> eval_t;
 
     typedef boost::fusion::vector<
-        stat::BestFit<phen_t, Params>, 
-        stat::QdContainer<phen_t, Params>, 
-        stat::QdProgress<phen_t, Params>, 
+        stat::BestFit<phen_t, Params>,
+        stat::QdContainer<phen_t, Params>,
+        stat::QdProgress<phen_t, Params>,
         stat::QdSelection<phen_t, Params>>
-        stat_t; 
+        stat_t;
     typedef modif::Dummy<> modifier_t;
     typedef qd::MapElites<phen_t, eval_t, stat_t, modifier_t, Params>
         qd_t;
 
     qd_t qd;
     qd.run();
-    std::cout<<qd.stat<0>().best()->fit().value()<<" "<<qd.stat<1>().archive().size()<<std::endl;
+    std::cout << qd.stat<0>().best()->fit().value() << " " << qd.stat<1>().archive().size() << std::endl;
     BOOST_CHECK(qd.stat<1>().archive().size() > 8500);
     BOOST_CHECK(qd.stat<0>().best()->fit().value() > -50);
 }
@@ -192,9 +196,9 @@ BOOST_AUTO_TEST_CASE(qd_archive_sortbased)
         stat::QdProgress<phen_t, Params>, stat::QdSelection<phen_t, Params>>
         stat_t;
     typedef modif::Dummy<> modifier_t;
-    
+
     typedef qd::selector::Uniform<phen_t, Params> selector_t;
-    typedef qd::container::KdtreeStorage< boost::shared_ptr<phen_t>, Params::qd::behav_dim > storage_t;
+    typedef qd::container::SortBasedStorage<boost::shared_ptr<phen_t>> storage_t;
     typedef qd::container::Archive<phen_t, storage_t, Params> container_t;
 
     typedef qd::QualityDiversity<phen_t, eval_t, stat_t, modifier_t, selector_t, container_t,
@@ -208,11 +212,7 @@ BOOST_AUTO_TEST_CASE(qd_archive_sortbased)
               << std::endl;
     BOOST_CHECK(qd.stat<1>().archive().size() > 9000);
     BOOST_CHECK(qd.stat<0>().best()->fit().value() > -50);
-
 }
-
-
-
 
 #ifdef USE_KDTREE
 
@@ -230,9 +230,9 @@ BOOST_AUTO_TEST_CASE(qd_archive_kdtree)
         stat::QdProgress<phen_t, Params>, stat::QdSelection<phen_t, Params>>
         stat_t;
     typedef modif::Dummy<> modifier_t;
-    
+
     typedef qd::selector::Uniform<phen_t, Params> selector_t;
-    typedef qd::container::SortBasedStorage< boost::shared_ptr<phen_t> > storage_t;
+    typedef qd::container::KdtreeStorage<boost::shared_ptr<phen_t>, Params::qd::behav_dim> storage_t;
     typedef qd::container::Archive<phen_t, storage_t, Params> container_t;
 
     typedef qd::QualityDiversity<phen_t, eval_t, stat_t, modifier_t, selector_t, container_t,
@@ -245,6 +245,5 @@ BOOST_AUTO_TEST_CASE(qd_archive_kdtree)
               << std::endl;
     BOOST_CHECK(qd.stat<1>().archive().size() > 9000);
     BOOST_CHECK(qd.stat<0>().best()->fit().value() > -50);
-
 }
 #endif
