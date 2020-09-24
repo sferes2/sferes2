@@ -48,7 +48,6 @@
 
 #include <sferes/fit/fit_qd.hpp>
 #include <sferes/qd/container/archive.hpp>
-#include <sferes/qd/container/kdtree_storage.hpp>
 #include <sferes/qd/container/sort_based_storage.hpp>
 #include <sferes/qd/container/grid.hpp>
 #include <sferes/qd/quality_diversity.hpp>
@@ -59,9 +58,9 @@ using namespace sferes::gen::evo_float;
 struct Params {
     struct nov {
         SFERES_CONST size_t deep = 2;
-        SFERES_CONST double l = 0.01; // TODO value ???
-        SFERES_CONST double k = 25; // TODO right value?
-        SFERES_CONST double eps = 0.1;// TODO right value??
+        SFERES_CONST double l = 0.01;
+        SFERES_CONST double k = 25; 
+        SFERES_CONST double eps = 0.1;
     };
   
     // TODO: move to a qd::
@@ -143,10 +142,10 @@ int main(int argc, char **argv)
 
     typedef qd::selector::Uniform<phen_t, Params> select_t;
     // For the Archive, you can chose one of the following storage:
-    // kD_tree storage, recommended for small behavioral descriptors (behav_dim<10)
-    typedef qd::container::KdtreeStorage< boost::shared_ptr<phen_t>, Params::qd::behav_dim > storage_t;
+    // kD_tree storage, recommended for small behavioral descriptors (behav_dim<10). Requires the ssrc kdtree.
+    // typedef qd::container::KdtreeStorage< boost::shared_ptr<phen_t>, Params::qd::behav_dim > storage_t;
     // Sort_based storage, recommended for larger behavioral descriptors. 
-    //typedef qd::container::SortBasedStorage< boost::shared_ptr<phen_t> > storage_t;
+    typedef qd::container::SortBasedStorage< boost::shared_ptr<phen_t> > storage_t;
     typedef qd::container::Archive<phen_t, storage_t, Params> container_t;
     
     // You can also use a grid (in place of the archive) with the following template:
