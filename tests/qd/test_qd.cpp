@@ -194,7 +194,7 @@ BOOST_AUTO_TEST_CASE(qd_archive_sortbased)
     typedef modif::Dummy<> modifier_t;
     
     typedef qd::selector::Uniform<phen_t, Params> selector_t;
-    typedef qd::container::KdtreeStorage< boost::shared_ptr<phen_t>, Params::qd::behav_dim > storage_t;
+    typedef qd::container::SortBasedStorage< boost::shared_ptr<phen_t> > storage_t;
     typedef qd::container::Archive<phen_t, storage_t, Params> container_t;
 
     typedef qd::QualityDiversity<phen_t, eval_t, stat_t, modifier_t, selector_t, container_t,
@@ -232,8 +232,9 @@ BOOST_AUTO_TEST_CASE(qd_archive_kdtree)
     typedef modif::Dummy<> modifier_t;
     
     typedef qd::selector::Uniform<phen_t, Params> selector_t;
-    typedef qd::container::SortBasedStorage< boost::shared_ptr<phen_t> > storage_t;
+    typedef qd::container::KdtreeStorage< boost::shared_ptr<phen_t>, Params::qd::behav_dim > storage_t;    
     typedef qd::container::Archive<phen_t, storage_t, Params> container_t;
+
 
     typedef qd::QualityDiversity<phen_t, eval_t, stat_t, modifier_t, selector_t, container_t,
         Params>
