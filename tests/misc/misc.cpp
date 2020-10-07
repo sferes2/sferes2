@@ -33,17 +33,18 @@
 //| The fact that you are presently reading this means that you have
 //| had knowledge of the CeCILL license and that you accept its terms.
 
-
-
 #define BOOST_TEST_DYN_LINK
 #define BOOST_TEST_MODULE misc
+#include <boost/archive/binary_iarchive.hpp>
+#include <boost/archive/binary_oarchive.hpp>
+#include <boost/archive/tmpdir.hpp>
 #include <fstream>
 #include <iostream>
-#include <boost/archive/binary_oarchive.hpp>
-#include <boost/archive/binary_iarchive.hpp>
-#include <boost/archive/tmpdir.hpp>
 
 #include <boost/test/unit_test.hpp>
+
+#ifdef EIGEN3_ENABLED
+
 #include <Eigen/Core>
 #include <sferes/misc/eigen.hpp>
 
@@ -73,3 +74,7 @@ BOOST_AUTO_TEST_CASE(serialize_eigen)
                 BOOST_CHECK_EQUAL(m1(i, j), m2(i, j));
     }
 }
+#else
+// no test
+int main() { return 0; }
+#endif
