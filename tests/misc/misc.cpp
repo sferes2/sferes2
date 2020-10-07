@@ -76,5 +76,5 @@ BOOST_AUTO_TEST_CASE(serialize_eigen)
 }
 #else
 // no test
-int main() { return 0; }
+BOOST_AUTO_TEST_CASE(serialize_eigen) {}
 #endif
