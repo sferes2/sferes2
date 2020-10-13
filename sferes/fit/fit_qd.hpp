@@ -71,6 +71,19 @@ namespace sferes {
 
             void set_value(float val) { this->_value = val; }
 
+  	    // Serialization
+	    template<class Archive> void serialize(Archive & ar, const unsigned int version) 
+	    {
+	      ar & BOOST_SERIALIZATION_NVP(this->_objs);
+	      ar & BOOST_SERIALIZATION_NVP(this->_value);
+	      ar & BOOST_SERIALIZATION_NVP(_dead);
+	      ar & BOOST_SERIALIZATION_NVP(_desc);
+	      ar & BOOST_SERIALIZATION_NVP(_novelty);
+	      ar & BOOST_SERIALIZATION_NVP(_curiosity);
+	      ar & BOOST_SERIALIZATION_NVP(_lq);
+	    }
+	    
+	    
         protected:
             bool _dead;
             std::vector<double> _desc;

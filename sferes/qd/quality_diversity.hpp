@@ -162,6 +162,16 @@ namespace sferes {
             const std::vector<bool>& added() const { return _added; }
             std::vector<bool>& added() { return _added; }
 
+	    // Override _set_pop for resume with qd
+      	    void _set_pop(const pop_t& p) 
+	    { 
+		_offspring = p;
+                _added.resize(p.size());
+                for (size_t i = 0; i < p.size(); ++i)
+                    _added[i] = _container.add(p[i]);
+                _container.get_full_content(this->_pop);
+	    }
+
         protected:
             // Add the offspring into the container and update the score of the individuals from the
             // container and both of the sub population (offspring and parents)
