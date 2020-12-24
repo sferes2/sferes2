@@ -129,6 +129,46 @@ FIT_QD(Rastrigin){
     }
 };
 
+template <typename TQualityDiversity>
+void test_resume() {
+    // Run algorithm
+    std::cout<<"Running the algorithm for 501 generations"<<std::endl;
+    Params::pop::nb_gen = 501;
+    TQualityDiversity qd_1;
+    qd_1.run();
+
+    // General test
+    std::cout<<qd_1.template stat<0>().best()->fit().value()<<" "<<qd_1.template stat<1>().archive().size()<<std::endl;
+    BOOST_CHECK(qd_1.template stat<1>().archive().size() > 8500);
+    BOOST_CHECK(qd_1.template stat<0>().best()->fit().value() > -50);
+
+
+    // Resume for same number of gen to see similarities
+    std::cout<<"Resuming it for same number of gen"<<std::endl;
+    TQualityDiversity qd_2;
+    qd_2.resume(qd_1.res_dir() + "/gen_500");
+
+    // General test
+    std::cout<<qd_2.template stat<0>().best()->fit().value()<<" "<<qd_2.template stat<1>().archive().size()<<std::endl;
+    BOOST_CHECK(qd_2.template stat<1>().archive().size() > 8500);
+    BOOST_CHECK(qd_2.template stat<0>().best()->fit().value() > -50);
+
+    // Test similarity to previous algo
+    BOOST_CHECK(qd_2.template stat<1>().archive().size() == qd_1.template stat<1>().archive().size());
+    BOOST_CHECK(qd_2.template stat<0>().best()->fit().value() == qd_1.template stat<0>().best()->fit().value());
+
+
+    // Resume for higher number of generations
+    std::cout<<"Resuming it for double number of gen"<<std::endl;
+    Params::pop::nb_gen = 1001;
+    TQualityDiversity qd_3;
+    qd_3.resume(qd_1.res_dir() + "/gen_500");
+    // General test
+    std::cout<<qd_3.template stat<0>().best()->fit().value()<<" "<<qd_3.template stat<1>().archive().size()<<std::endl;
+    BOOST_CHECK(qd_3.template stat<1>().archive().size() > 8500);
+    BOOST_CHECK(qd_3.template stat<0>().best()->fit().value() > -50);
+}
+
 
 BOOST_AUTO_TEST_CASE(resume_map_elites)
 {
@@ -150,46 +190,10 @@ BOOST_AUTO_TEST_CASE(resume_map_elites)
     typedef qd::MapElites<phen_t, eval_t, stat_t, modifier_t, Params>
         qd_t;
 
-    // Run algorithm
-    std::cout<<"Running the algorithm for 501 generations"<<std::endl;
-    Params::pop::nb_gen = 501;
-    qd_t qd_1;
-    qd_1.run();
-
-    // General test
-    std::cout<<qd_1.stat<0>().best()->fit().value()<<" "<<qd_1.stat<1>().archive().size()<<std::endl;
-    BOOST_CHECK(qd_1.stat<1>().archive().size() > 8500);
-    BOOST_CHECK(qd_1.stat<0>().best()->fit().value() > -50);
-
-
-    // Resume for same number of gen to see similarities
-    std::cout<<"Resuming it for same number of gen"<<std::endl;
-    qd_t qd_2;
-    qd_2.resume(qd_1.res_dir() + "/gen_500");
-
-    // General test
-    std::cout<<qd_2.stat<0>().best()->fit().value()<<" "<<qd_2.stat<1>().archive().size()<<std::endl;
-    BOOST_CHECK(qd_2.stat<1>().archive().size() > 8500);
-    BOOST_CHECK(qd_2.stat<0>().best()->fit().value() > -50);
-
-    // Test similarity to previous algo
-    BOOST_CHECK(qd_2.stat<1>().archive().size() == qd_1.stat<1>().archive().size());
-    BOOST_CHECK(qd_2.stat<0>().best()->fit().value() == qd_1.stat<0>().best()->fit().value());
-
-
-    // Resume for higher number of generations
-    std::cout<<"Resuming it for double number of gen"<<std::endl;
-    Params::pop::nb_gen = 1000;
-    qd_t qd_3;
-    qd_3.resume(qd_1.res_dir() + "/gen_500");
-    // General test
-    std::cout<<qd_3.stat<0>().best()->fit().value()<<" "<<qd_3.stat<1>().archive().size()<<std::endl;
-    BOOST_CHECK(qd_3.stat<1>().archive().size() > 8500);
-    BOOST_CHECK(qd_3.stat<0>().best()->fit().value() > -50);
-
+    test_resume<qd_t>();
 }
 
-BOOST_AUTO_TEST_CASE(resume_cvt_map_elites)
+BOOST_AUTO_TEST_CASE(resume_archive)
 {
     using namespace sferes;
 
@@ -212,8 +216,8 @@ BOOST_AUTO_TEST_CASE(resume_cvt_map_elites)
         Params>
         qd_t;
 
+    test_resume<qd_t>();
 }
-
 #ifdef USE_KDTREE
 
 BOOST_AUTO_TEST_CASE(resume_archive_kdtree)

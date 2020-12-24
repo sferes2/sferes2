@@ -166,9 +166,8 @@ namespace sferes {
       	    void _set_pop(const pop_t& p) 
 	    { 
 		_offspring = p;
-                _added.resize(p.size());
                 for (size_t i = 0; i < p.size(); ++i)
-                    _added[i] = _container.add(p[i]);
+                    _container.direct_add(p[i]);
                 _container.get_full_content(this->_pop);
 	    }
 
