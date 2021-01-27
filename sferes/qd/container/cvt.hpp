@@ -90,6 +90,20 @@ namespace sferes {
                     return false;
                 }
 
+                /**
+                 * adds directly an individual to the container regardless of its fitness
+                 * This method is mostly used for resuming a qd algorithm
+                 *
+                 * @param indiv_to_insert Individual to add to the grid
+                 */
+                void direct_add(const indiv_t& indiv_to_insert)
+                {
+                  point_t point_indiv_to_insert = _get_point(indiv_to_insert);
+                  size_t indiv_bd_index = _centroids_storage.nearest(point_indiv_to_insert).second;
+
+                  _archive[indiv_bd_index] = indiv_to_insert;
+                }
+
                 void update(pop_t& offspring, pop_t& parents)
                 {
                    // _update_novelty();
