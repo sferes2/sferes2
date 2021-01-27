@@ -54,22 +54,67 @@
 #include <sferes/qd/container/sort_based_storage.hpp>
 #include <sferes/qd/selector/uniform.hpp>
 
+#include <sferes/stat/state.hpp>
+#include <sferes/stat/state_qd.hpp>
+
 namespace sferes {
     namespace qd {
+
+        // Structure for resume archive
+        template<typename T, typename A>
+        struct ResumeQD {
+
+            template<typename EA> void resume(EA& ea) {
+
+              typedef stat::StateQD<typename EA::phen_t, typename EA::params_t>  stat_state_qd_t;
+
+              const stat_state_qd_t& stat_state_qd = *boost::fusion::find<stat_state_qd_t>(ea.stat());
+
+              ea.parents() = stat_state_qd.parents();
+              ea.offspring() = stat_state_qd.offspring();
+            }
+        };
+
+        // Do nothing if there is no  archive stat
+        template<typename T>
+        struct ResumeQD<T, typename boost::fusion::result_of::end<T>::type> {
+            template<typename EA>
+            void resume(EA& ea) {}
+        };
+
 
         // Main class
         template <typename Phen, typename Eval, typename Stat, typename FitModifier,
             typename Selector, typename Container, typename Params, typename Exact = stc::Itself>
         class QualityDiversity
-            : public ea::Ea<Phen, Eval, Stat, FitModifier, Params,
-                  typename stc::FindExact<QualityDiversity<Phen, Eval, Stat, FitModifier, Selector,
-                                              Container, Params, Exact>,
-                      Exact>::ret> {
+            : public ea::Ea<Phen,
+                            Eval,
+                            Stat,
+                            FitModifier,
+                            Params,
+                            typename stc::FindExact<QualityDiversity<Phen,
+                                                                     Eval,
+                                                                     Stat,
+                                                                     FitModifier,
+                                                                     Selector,
+                                                                     Container,
+                                                                     Params,
+                                                                     Exact>,
+                                                     Exact>::ret
+                            > {
         public:
             typedef Phen phen_t;
             typedef boost::shared_ptr<Phen> indiv_t;
             typedef typename std::vector<indiv_t> pop_t;
             typedef typename pop_t::iterator it_t;
+
+#ifdef SFERES_NO_STATE
+            typedef Stat stat_t;
+#else
+            typedef typename boost::fusion::vector<stat::State<Phen, Params> > state_v_t;
+            typedef typename boost::fusion::joint_view<Stat, state_v_t> joint_t;
+            typedef typename boost::fusion::result_of::as_vector<joint_t>::type  stat_t;
+#endif
 
             QualityDiversity() {}
 
@@ -146,6 +191,48 @@ namespace sferes {
 
                 // Copy of the containt of the container into the _pop object.
                 _container.get_full_content(this->_pop);
+            }
+
+            // Override the resume function
+            void
+            resume(const std::string& fname)
+            {
+              dbg::trace trace("ea", DBG_HERE);
+
+              // Create directory, load file
+              this->_make_res_dir();
+              this->_set_status("resumed");
+              if ((boost::fusion::find<sferes::stat::State<Phen, Params>>(this->_stat) ==
+                   boost::fusion::end(this->_stat)) or
+                  (boost::fusion::find<sferes::stat::StateQD<Phen, Params>>(this->_stat) ==
+                   boost::fusion::end(this->_stat))) {
+                std::cout << "WARNING: State or StateQD not found in stat_t, cannot resume" << std::endl;
+                return;
+              }
+              this->_load(fname);
+
+              // Use ea Resume structure
+              typedef typename boost::fusion::result_of::find<stat_t, sferes::stat::State<Phen, Params>>::type
+                      has_state_t;
+
+              sferes::ea::Resume<stat_t, has_state_t> r;
+              r.resume(*this);
+
+              // Use new Resume structure
+              typedef typename boost::fusion::result_of::find<stat_t, sferes::stat::StateQD<Phen, Params>>::type
+                      has_state_qd_t;
+
+              sferes::qd::ResumeQD<stat_t, has_state_qd_t> resume_qd;
+              resume_qd.resume(*this);
+
+              // Perform few test and resume algorithm
+              assert(!this->_pop.empty()); // test pop size
+              std::cout << "Resuming at gen " << this->_gen;
+              std::cout << std::endl;
+              for (; this->_gen < Params::pop::nb_gen && !this->_stop; ++this->_gen)
+                this->_iter();
+              if (!this->_stop)
+                this->_set_status("finished");
             }
 
             const Container& container() const { return _container; }
