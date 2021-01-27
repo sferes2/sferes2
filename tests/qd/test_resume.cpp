@@ -214,7 +214,8 @@ BOOST_AUTO_TEST_CASE(resume_cvt_map_elites)
     stat::BestFit<phen_t, Params>,
     stat::QdContainer<phen_t, Params>,
     stat::QdProgress<phen_t, Params>,
-    stat::QdSelection<phen_t, Params>>
+    stat::QdSelection<phen_t, Params>,
+    stat::StateQD<phen_t, Params>>
     stat_t;
 
     typedef modif::Dummy<> modifier_t;
