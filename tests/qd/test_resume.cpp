@@ -218,6 +218,38 @@ BOOST_AUTO_TEST_CASE(resume_archive)
 
     test_resume<qd_t>();
 }
+
+
+BOOST_AUTO_TEST_CASE(resume_archive_population_based_selector)
+{
+  using namespace sferes;
+
+  typedef Rastrigin<Params> fit_t;
+  typedef gen::EvoFloat<10, Params> gen_t;
+  typedef phen::Parameters<gen_t, fit_t, Params> phen_t;
+
+  typedef eval::Parallel<Params> eval_t;
+
+  typedef boost::fusion::vector<
+          stat::BestFit<phen_t, Params>,
+          stat::QdContainer<phen_t, Params>,
+          stat::QdProgress<phen_t, Params>,
+          stat::QdSelection<phen_t, Params>
+          > stat_t;
+  typedef modif::Dummy<> modifier_t;
+
+  typedef qd::selector::Uniform<phen_t, Params> selector_t;
+
+  typedef qd::selector::PopulationBased<phen_t, qd::selector::Uniform<phen_t, Params>, Params > selector_t;
+  typedef qd::container::SortBasedStorage< boost::shared_ptr<phen_t> > storage_t;
+  typedef qd::container::Archive<phen_t, storage_t, Params> container_t;
+
+  typedef qd::QualityDiversity<phen_t, eval_t, stat_t, modifier_t, selector_t, container_t, Params> qd_t;
+
+  test_resume<qd_t>();
+}
+
+
 #ifdef USE_KDTREE
 
 BOOST_AUTO_TEST_CASE(resume_archive_kdtree)
