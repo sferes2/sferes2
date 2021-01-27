@@ -68,6 +68,7 @@
 #include <sferes/stat/qd_container.hpp>
 #include <sferes/stat/qd_selection.hpp>
 #include <sferes/stat/qd_progress.hpp>
+#include <sferes/stat/state_qd.hpp>
 
 using namespace sferes::gen::evo_float;
 
@@ -186,7 +187,8 @@ BOOST_AUTO_TEST_CASE(resume_map_elites)
         stat::BestFit<phen_t, Params>, 
         stat::QdContainer<phen_t, Params>, 
         stat::QdProgress<phen_t, Params>, 
-        stat::QdSelection<phen_t, Params>>
+        stat::QdSelection<phen_t, Params>,
+        stat::StateQD<phen_t, Params>>
         stat_t; 
     typedef modif::Dummy<> modifier_t;
     typedef qd::MapElites<phen_t, eval_t, stat_t, modifier_t, Params>
@@ -206,7 +208,8 @@ BOOST_AUTO_TEST_CASE(resume_archive)
     typedef eval::Parallel<Params> eval_t;
 
     typedef boost::fusion::vector<stat::BestFit<phen_t, Params>, stat::QdContainer<phen_t, Params>,
-        stat::QdProgress<phen_t, Params>, stat::QdSelection<phen_t, Params>>
+        stat::QdProgress<phen_t, Params>, stat::QdSelection<phen_t, Params>,
+        stat::StateQD<phen_t, Params>>
         stat_t;
     typedef modif::Dummy<> modifier_t;
     
@@ -236,7 +239,8 @@ BOOST_AUTO_TEST_CASE(resume_archive_population_based_selector)
           stat::BestFit<phen_t, Params>,
           stat::QdContainer<phen_t, Params>,
           stat::QdProgress<phen_t, Params>,
-          stat::QdSelection<phen_t, Params>
+          stat::QdSelection<phen_t, Params>,
+          stat::StateQD<phen_t, Params>
           > stat_t;
   typedef modif::Dummy<> modifier_t;
 
@@ -272,7 +276,8 @@ BOOST_AUTO_TEST_CASE(resume_archive_kdtree)
     typedef eval::Parallel<Params> eval_t;
 
     typedef boost::fusion::vector<stat::BestFit<phen_t, Params>, stat::QdContainer<phen_t, Params>,
-        stat::QdProgress<phen_t, Params>, stat::QdSelection<phen_t, Params>>
+        stat::QdProgress<phen_t, Params>, stat::QdSelection<phen_t, Params>,
+          stat::StateQD<phen_t, Params>>
         stat_t;
     typedef modif::Dummy<> modifier_t;
     
