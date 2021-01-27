@@ -61,6 +61,7 @@
 #include <sferes/qd/container/sort_based_storage.hpp>
 #include <sferes/qd/selector/tournament.hpp>
 #include <sferes/qd/selector/uniform.hpp>
+#include <sferes/qd/selector/population_based.hpp>
 
 #include <sferes/stat/best_fit.hpp>
 #include <sferes/stat/qd_container.hpp>
