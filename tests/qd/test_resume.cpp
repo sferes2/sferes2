@@ -62,6 +62,7 @@
 #include <sferes/qd/selector/tournament.hpp>
 #include <sferes/qd/selector/uniform.hpp>
 #include <sferes/qd/selector/population_based.hpp>
+#include <sferes/qd/selector/score_proportionate.hpp>
 
 #include <sferes/stat/best_fit.hpp>
 #include <sferes/stat/qd_container.hpp>
@@ -239,7 +240,16 @@ BOOST_AUTO_TEST_CASE(resume_archive_population_based_selector)
           > stat_t;
   typedef modif::Dummy<> modifier_t;
 
-  typedef qd::selector::PopulationBased<phen_t, qd::selector::Uniform<phen_t, Params>, Params > selector_t;
+  typedef qd::selector::PopulationBased<
+    phen_t,
+    qd::selector::ScoreProportionate<
+      phen_t,
+      qd::selector::getNovelty,
+      Params
+      >,
+    Params
+    > selector_t;
+
   typedef qd::container::SortBasedStorage< boost::shared_ptr<phen_t> > storage_t;
   typedef qd::container::Archive<phen_t, storage_t, Params> container_t;
 
