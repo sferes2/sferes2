@@ -83,6 +83,14 @@ public:
     this->_behavior[1] = ind.data(1);
   }
 
+  template<class Archive>
+  void serialize(Archive & ar, const unsigned int version) {
+      dbg::trace trace("fit", DBG_HERE);
+      ar & boost::serialization::make_nvp("_value", this->_value);
+      ar & boost::serialization::make_nvp("_objs", this->_objs);
+      ar & BOOST_SERIALIZATION_NVP(_behavior);
+  }
+
   // for behavioral diversity we need a dist() method
   // this method can use whatever you saved from the fitness evaluation
   template<typename Indiv>
