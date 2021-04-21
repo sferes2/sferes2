@@ -1,0 +1,186 @@
+Reference manual
+=================
+.. highlight:: c++
+
+
+The QD framework introduces 4 new types to consider:
+-  `qd_t` : type of Quality Diversity (QD) algorithm (e.g. qd::QualityDiversity, which is itself a subclass of ea::Ea).
+-  `selector_t` : type of selector, used for selecting individuals from the container (e.g. qd::selector::Uniform)
+-  `container_t` : type of QD container (e.g. qd::container::Grid).
+The container may rely on a specific storage for its individuals.
+-  `storage_t` : type of storage; may be used for organising the individuals of the container.
+Some containers require such a storage (e.g. unstructured containers: qd::container::Archive).
+
+The QD framework relies on a Fitness definition which is specific to QD (FitQD).
+Also, some additional statistics were defined to generate logs for QD algorithms.
+
+QualityDiversity
+----------------
+
+-  **File:**
+   `sferes/qd/quality_diversity.hpp <https://github.com/sferes2/sferes2/blob/master/sferes/qd/quality_diversity.hpp>`__
+
+-  **Description:** General implementation of a Quality Diversity algorithm. At each iteration:
+    1) Parents are selected from the Container based by using the Selector
+    2) The offspring is generated via cross-overs and mutations of parents
+    3) The offspring is evaluated
+    4) We apply the Modifiers.
+    5) We attempt to add the individuals in the offspring to the Container.
+
+-  **Example:**
+   `sferes/qd/quality_diversity.hpp <https://github.com/sferes2/sferes2/blob/master/examples/ex_qd.cpp>`__
+
+-  **Typical typename:**
+
+::
+
+    typedef qd::QualityDiversity<phen_t, eval_t, stat_t, modifier_t, selector_t, container_t, Params> qd_t;
+
+
+
+-  **Parameters:**
+    - `SFERES_CONST size_t Params::pop::size`: Number of individuals selected from the container at each QD iteration (also used as an initial population size)
+
+
+Container
+---------
+
+Grid
+~~~~
+
+-  **File:**
+-  **Description:**
+-  **Example:**
+-  **Typical typename:**
+-  **Parameters:**
+-  **Notes:**
+
+CVT
+~~~
+
+Archive
+~~~~~~~
+
+
+
+Defining your own container
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. Description
+
+Example:
+
+.. Example
+
+
+
+
+Storage
+-------
+
+SortBasedStorage
+~~~~~~~~~~~~~~~~
+
+-  **File:**
+-  **Description:**
+-  **Example:**
+-  **Typical typename:**
+-  **Parameters:**
+-  **Notes:**
+
+KdtreeStorage
+~~~~~~~~~~~~~
+
+
+
+
+Selector
+--------
+
+Uniform
+~~~~~~~
+
+-  **File:**
+-  **Description:**
+-  **Example:**
+-  **Typical typename:**
+-  **Parameters:**
+-  **Notes:**
+
+NoSelection
+~~~~~~~~~~~
+
+ScoreProportionate
+~~~~~~~~~~~~~~~~~~
+
+Tournament
+~~~~~~~~~~
+
+ParetoBased
+~~~~~~~~~~~
+
+PopulationBased
+~~~~~~~~~~~~~~~
+
+Choosing a ValueSelector
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. Description
+
+- **getFitness:**
+- **getNovelty:**
+- **getCuriosity:**
+- **getLocalQuality:**
+
+Defining your own selector
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+
+
+QD Fitness
+----------
+
+FitQD
+~~~~~
+
+-  **File:**
+-  **Description:**
+-  **Example:**
+-  **Typical typename:**
+-  **Parameters:**
+-  **Notes:**
+
+Defining your own QD Fitness
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+
+
+QD Statistics
+-------------
+
+QdContainer
+~~~~~~~~~~~
+
+-  **File:**
+-  **Description:**
+-  **Example:**
+-  **Typical typename:**
+-  **Parameters:**
+-  **Notes:**
+
+QdProgress
+~~~~~~~~~~
+
+QdSelection
+~~~~~~~~~~~
+
+
+
+
+
+
+
+
+
