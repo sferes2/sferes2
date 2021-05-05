@@ -152,6 +152,7 @@ FitQD
     You can define what you want in the fitness function but the eval function needs to be defined since it is used after each offspring generation to evaluate the new individuals.
 -  **Example:**
 `sferes/qd/examples/ex_qd.hpp <https://github.com/sferes2/sferes2/blob/qd/examples/ex_qd.cpp>`__
+
 -  **Typical typename:**
 ::
     typedef Fitness_Function_Name<Params> fit_t;
