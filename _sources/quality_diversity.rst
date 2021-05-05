@@ -145,10 +145,18 @@ FitQD
 ~~~~~
 
 -  **File:**
+`sferes/fit/fit_qd.hpp <https://github.com/sferes2/sferes2/blob/qd/sferes/fit/fit_qd.hpp>`__
+
 -  **Description:**
+    - The fitness function has the purpose of evaluating your individual and attributing it a Behavioral Descriptor and a fitness value (if needed). 
+    You can define what you want in the fitness function but the eval function needs to be defined since it is used after each offspring generation to evaluate the new individuals.
 -  **Example:**
+`sferes/qd/examples/ex_qd.hpp <https://github.com/sferes2/sferes2/blob/qd/examples/ex_qd.cpp>`__
 -  **Typical typename:**
+::
+    typedef Fitness_Function_Name<Params> fit_t;
 -  **Parameters:**
+    - `Params::qd::behav_dim` : Dimensions of the Behavioral Descriptor 
 -  **Notes:**
 
 Defining your own QD Fitness
