@@ -49,10 +49,23 @@ Grid
 ~~~~
 
 -  **File:**
+`sferes/qd/container/grid.hpp <https://github.com/sferes2/sferes2/blob/qd/sferes/qd/container/grid.hpp>`__
+
 -  **Description:**
+    - This type of container creates a grid container (e.g. as seen in  MAP Elites). The idea is to discretize the Behavioural Descriptor space in evenly sized cells and then fill these up with a qd algorithm.
 -  **Example:**
+- `sferes/qd/examples/ex_map_elites.cpp <https://github.com/sferes2/sferes2/blob/qd/examples/ex_map_elites.cpp>`__
+
+- `AIRL/examples/cpp/standard/robotdart-example/src/dart_exp.cpp <https://gitlab.doc.ic.ac.uk/AIRL/examples/cpp/standard/robotdart-example/-/blob/master/src/dart_exp.cpp>`__
+
 -  **Typical typename:**
--  **Parameters:**
+
+::
+ typedef qd::container::Grid<phen_t, Params> container_t;
+
+-  **Parameters:*`
+    - ` Params::qd::grid_shape : size of the grid in each dimension`
+    -  ` Params::nov::deep :  this parameter defines how deep we should go around our cell to calculate the novelty`
 -  **Notes:**
 
 CVT
@@ -154,8 +167,10 @@ FitQD
 `sferes/qd/examples/ex_qd.hpp <https://github.com/sferes2/sferes2/blob/qd/examples/ex_qd.cpp>`__
 
 -  **Typical typename:**
+
 ::
     typedef Fitness_Function_Name<Params> fit_t;
+    
 -  **Parameters:**
     - `Params::qd::behav_dim` : Dimensions of the Behavioral Descriptor 
 -  **Notes:**
