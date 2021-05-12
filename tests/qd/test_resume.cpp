@@ -193,6 +193,29 @@ BOOST_AUTO_TEST_CASE(resume_map_elites)
     test_resume<qd_t>();
 }
 
+BOOST_AUTO_TEST_CASE(resume_cvt_map_elites)
+{
+    using namespace sferes;
+
+    typedef Rastrigin<Params> fit_t;
+    typedef gen::EvoFloat<10, Params> gen_t;
+    typedef phen::Parameters<gen_t, fit_t, Params> phen_t;
+
+    typedef eval::Parallel<Params> eval_t;
+
+    typedef boost::fusion::vector<
+    stat::BestFit<phen_t, Params>,
+    stat::QdContainer<phen_t, Params>,
+    stat::QdProgress<phen_t, Params>,
+    stat::QdSelection<phen_t, Params>>
+    stat_t;
+
+    typedef modif::Dummy<> modifier_t;
+    typedef qd::CvtMapElites<phen_t, eval_t, stat_t, modifier_t, Params> qd_t;
+
+    test_resume<qd_t>();
+}
+
 BOOST_AUTO_TEST_CASE(resume_archive)
 {
     using namespace sferes;
