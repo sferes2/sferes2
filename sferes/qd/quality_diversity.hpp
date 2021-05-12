@@ -60,6 +60,15 @@
 namespace sferes {
     namespace qd {
 
+        // Add StateQD in stats list for ea
+#ifdef SFERES_NO_STATE
+	template<typename Stat, typename Phen, typename Params> using stat_qd_t = Stat;
+#else
+	template<typename Stat, typename Phen, typename Params> using stat_qd_t = 
+	     typename boost::fusion::result_of::as_vector<boost::fusion::joint_view<Stat, 
+		      boost::fusion::vector<stat::StateQD<Phen, Params>>>>::type;
+#endif
+
         // Structure for resume archive
         template<typename T, typename A>
         struct ResumeQD {
@@ -89,7 +98,7 @@ namespace sferes {
         class QualityDiversity
             : public ea::Ea<Phen,
                             Eval,
-                            Stat,
+			    stat_qd_t<Stat, Phen, Params>,
                             FitModifier,
                             Params,
                             typename stc::FindExact<QualityDiversity<Phen,
@@ -111,9 +120,9 @@ namespace sferes {
 #ifdef SFERES_NO_STATE
             typedef Stat stat_t;
 #else
-            typedef typename boost::fusion::vector<stat::State<Phen, Params> > state_v_t;
-            typedef typename boost::fusion::joint_view<Stat, state_v_t> joint_t;
-            typedef typename boost::fusion::result_of::as_vector<joint_t>::type  stat_t;
+            typedef typename boost::fusion::joint_view<stat_qd_t<Stat, Phen, Params>, 
+		    				       boost::fusion::vector<stat::State<Phen, Params> >> joint_qd_t;
+            typedef typename boost::fusion::result_of::as_vector<joint_qd_t>::type  stat_t;
 #endif
 
             QualityDiversity() {}
