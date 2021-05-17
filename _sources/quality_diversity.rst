@@ -142,27 +142,54 @@ NoSelection
 
  typedef qd::selector::NoSelection<phen_t, Params> select_t;
 
-ScoreProportionate
-~~~~~~~~~~~~~~~~~~
+ValueSelector
+~~~~~~~~~~~~~
 
-Tournament
-~~~~~~~~~~
+-  **File:** `sferes/qd/selector/value_selector.hpp <https://github.com/sferes2/sferes2/blob/qd/sferes/qd/selector/value_selector.hpp>`__
 
-ParetoBased
-~~~~~~~~~~~
+-  **Description:** Some selectors, described later in this section, are based on a score allocated to each individual such as fitness or novelty. ValueSelector structs allow to choose which score is used by these selectors. One can choose among the followings:
+   - **getFitness:** use the fitness of each individual given by the evaluation.
+   - **getNovelty:** use the novelty of each individual with respect to the task.
+   - **getCuriosity:** use the curiosity of each individual, computed based on the performance of its offspring.
+   - **getLocalQuality:** use the local quality of each individual with respect to the task.
 
-PopulationBased
-~~~~~~~~~~~~~~~
+ValueSelector-based: ScoreProportionate
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Choosing a ValueSelector
-~~~~~~~~~~~~~~~~~~~~~~~~
+-  **File:** `sferes/qd/selector/noselection.hpp <https://github.com/sferes2/sferes2/blob/qd/sferes/qd/selector/noselection.hpp>`__
 
-.. Description
+-  **Description:** This selector selects individuals in the algorithm population with a probability proportional to a given score. The score used for this selection is determined by the ValueSelector given as template parameters. The individual of the population with the lower score has a 0 probability to be chosen and all other individuals have consequent probability based on their score values.
 
-- **getFitness:**
-- **getNovelty:**
-- **getCuriosity:**
-- **getLocalQuality:**
+-  **Example:** None
+
+-  **Typical typename:**
+::
+
+ typedef qd::selector::ScoreProportionate<phen_t, valueselector_t, Params> select_t;
+
+-  **Notes:** This selector is based on ValueSelector, see previous sub-section "ValueSelector" for more information.
+
+ValueSelector-based: Tournament
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+-  **File:** `sferes/qd/selector/tournament.hpp <https://github.com/sferes2/sferes2/blob/qd/sferes/qd/selector/tournament.hpp>`__
+
+-  **Description:** This selector selects individuals in the algorithm population with tournaments based on a given score. The score is determined by the ValueSelector given as template parameters. The selector uniformly selects two individuals from the population and keeps the one that has the highest score.
+
+-  **Example:** None
+
+-  **Typical typename:**
+::
+
+ typedef qd::selector::Tournament<phen_t, valueselector_t, Params> select_t;
+
+-  **Notes:** This selector is based on ValueSelector, see previous sub-section "ValueSelector" for more information.
+
+Meta-Selector: ParetoBased
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Meta-Selector: PopulationBased
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Defining your own selector
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
