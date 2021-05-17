@@ -117,46 +117,30 @@ Selector
 Uniform
 ~~~~~~~
 
--  **File:**
-`sferes/qd/selector/uniform.hpp <https://github.com/sferes2/sferes2/blob/qd/sferes/qd/selector/uniform.hpp>`__
+-  **File:** `sferes/qd/selector/uniform.hpp <https://github.com/sferes2/sferes2/blob/qd/sferes/qd/selector/uniform.hpp>`__
 
--  **Description:**
-  - This selector selects individuals from the population of the algorithm with uniform probability. 
+-  **Description:** This selector selects individuals from the population of the algorithm with uniform probability. 
 
--  **Example:**
-    - `sferes/qd/examples/ex_qd.cpp <https://github.com/sferes2/sferes2/blob/qd/examples/ex_qd.cpp>`__
+-  **Example:** `sferes/qd/examples/ex_qd.cpp <https://github.com/sferes2/sferes2/blob/qd/examples/ex_qd.cpp>`__
 
 -  **Typical typename:**
 ::
 
  typedef qd::selector::Uniform<phen_t, Params> select_t;
 
--  **Parameters:**
-  - None
-
--  **Notes:**
-
 NoSelection
 ~~~~~~~~~~~
 
--  **File:**
-`sferes/qd/selector/noselection.hpp <https://github.com/sferes2/sferes2/blob/qd/sferes/qd/selector/noselection.hpp>`__
+-  **File:** `sferes/qd/selector/noselection.hpp <https://github.com/sferes2/sferes2/blob/qd/sferes/qd/selector/noselection.hpp>`__
 
--  **Description:**
-  - This selector returns a population of random individuals. In other words, it is not performing any selection from the existing algorithm population.
+-  **Description:** This selector returns a population of random individuals. In other words, it is not performing any selection from the existing algorithm population.
 
--  **Example:**
-  - None
+-  **Example:** None
 
 -  **Typical typename:**
 ::
 
  typedef qd::selector::NoSelection<phen_t, Params> select_t;
-
--  **Parameters:**
-  - None
-
--  **Notes:**
 
 ScoreProportionate
 ~~~~~~~~~~~~~~~~~~
