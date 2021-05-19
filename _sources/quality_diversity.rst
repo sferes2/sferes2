@@ -119,7 +119,7 @@ Uniform
 
 -  **File:** `sferes/qd/selector/uniform.hpp <https://github.com/sferes2/sferes2/blob/qd/sferes/qd/selector/uniform.hpp>`__
 
--  **Description:** This selector selects individuals from the population of the algorithm with uniform probability. 
+-  **Description:** This selector selects individuals from the population of the algorithm with uniform probability. All individuals from the population have the exact same probability to be selected.
 
 -  **Example:** `sferes/qd/examples/ex_qd.cpp <https://github.com/sferes2/sferes2/blob/qd/examples/ex_qd.cpp>`__
 
@@ -133,7 +133,7 @@ NoSelection
 
 -  **File:** `sferes/qd/selector/noselection.hpp <https://github.com/sferes2/sferes2/blob/qd/sferes/qd/selector/noselection.hpp>`__
 
--  **Description:** This selector returns a population of random individuals. In other words, it is not performing any selection from the existing algorithm population.
+-  **Description:** This selector returns a population of random individuals. In other words, it is not performing any selection from the existing algorithm population, but returns new individuals.
 
 -  **Example:** None
 
@@ -142,23 +142,43 @@ NoSelection
 
  typedef qd::selector::NoSelection<phen_t, Params> select_t;
 
+ParetoBased
+~~~~~~~~~~~
+
+-  **File:** `sferes/qd/selector/pareto_based.hpp <https://github.com/sferes2/sferes2/blob/qd/sferes/qd/selector/pareto_based.hpp>`__
+
+-  **Description:** This selector selects individuals in the joint parents and offspring populations based on pareto-dominance. It selects individuals from this joint-population uniformly, and then performs tournament to keep the bests according to pareto-dominance. The template parameters ObjSelector determines which objectives defined in the fitness class are used to compute the pareto-dominance. 
+
+-  **Notes:** This selector relies on the definition of the different objectives in the fitness class. It also relies on multiple classes define in `sferes/ea/crowd.hpp <https://github.com/sferes2/sferes2/blob/qd/sferes/ea/crowd.hpp>`__ to approximate the pareto front. 
+
+-  **Parameters:** `Params::pareto::genoDiv`: boolean to choose if the crowding distance should be based on the distance in genotype space (true) or in objective space (false).
+
+-  **Example:** None
+
+-  **Typical typename:**
+::
+
+ typedef qd::selector::ParetoBased<phen_t, objselector_t, Params> select_t;
+
 ValueSelector
 ~~~~~~~~~~~~~
 
 -  **File:** `sferes/qd/selector/value_selector.hpp <https://github.com/sferes2/sferes2/blob/qd/sferes/qd/selector/value_selector.hpp>`__
 
--  **Description:** Some selectors, described later in this section, are based on a score allocated to each individual such as fitness or novelty. ValueSelector structs allow to choose which score is used by these selectors. One can choose among the followings:
-   - **getFitness:** use the fitness of each individual given by the evaluation.
-   - **getNovelty:** use the novelty of each individual with respect to the task.
-   - **getCuriosity:** use the curiosity of each individual, computed based on the performance of its offspring.
-   - **getLocalQuality:** use the local quality of each individual with respect to the task.
+-  **Description:** Some selectors, described later in this section, are based on a score allocated to each individual. ValueSelector structs allow to choose which score is used by these selectors. One can choose among the followings:
+    - **getFitness:** use the fitness of each individual given by the evaluation.
+    - **getNovelty:** use the novelty of each individual with respect to the task.
+    - **getCuriosity:** use the curiosity of each individual, computed based on the performance of its offspring.
+    - **getLocalQuality:** use the local quality of each individual with respect to the task.
 
 ValueSelector-based: ScoreProportionate
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 -  **File:** `sferes/qd/selector/noselection.hpp <https://github.com/sferes2/sferes2/blob/qd/sferes/qd/selector/noselection.hpp>`__
 
--  **Description:** This selector selects individuals in the algorithm population with a probability proportional to a given score. The score used for this selection is determined by the ValueSelector given as template parameters. The individual of the population with the lower score has a 0 probability to be chosen and all other individuals have consequent probability based on their score values.
+-  **Description:** This selector selects individuals in the algorithm population with a probability proportional to a given score. The score used for this selection is determined by the ValueSelector given as template parameters. The individual of the population with the lower score has a 0 probability to be chosen, and all other individuals have consequent probability based on their score values.
+
+-  **Notes:** This selector is based on ValueSelector, see previous sub-section "ValueSelector" for more information.
 
 -  **Example:** None
 
@@ -167,14 +187,14 @@ ValueSelector-based: ScoreProportionate
 
  typedef qd::selector::ScoreProportionate<phen_t, valueselector_t, Params> select_t;
 
--  **Notes:** This selector is based on ValueSelector, see previous sub-section "ValueSelector" for more information.
-
 ValueSelector-based: Tournament
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 -  **File:** `sferes/qd/selector/tournament.hpp <https://github.com/sferes2/sferes2/blob/qd/sferes/qd/selector/tournament.hpp>`__
 
--  **Description:** This selector selects individuals in the algorithm population with tournaments based on a given score. The score is determined by the ValueSelector given as template parameters. The selector uniformly selects two individuals from the population and keeps the one that has the highest score.
+-  **Description:** This selector selects individuals in the algorithm population with tournaments based on a given score. The score is determined by the ValueSelector given as template parameters. To perform tournaments, the selector uniformly selects two individuals from the population and keeps the one that has the highest score.
+
+-  **Notes:** This selector is based on ValueSelector, see previous sub-section "ValueSelector" for more information.
 
 -  **Example:** None
 
@@ -183,13 +203,21 @@ ValueSelector-based: Tournament
 
  typedef qd::selector::Tournament<phen_t, valueselector_t, Params> select_t;
 
--  **Notes:** This selector is based on ValueSelector, see previous sub-section "ValueSelector" for more information.
-
-Meta-Selector: ParetoBased
-~~~~~~~~~~~~~~~~~~~~~~~~~~
-
 Meta-Selector: PopulationBased
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+-  **File:** `sferes/qd/selector/population_based.hpp <https://github.com/sferes2/sferes2/blob/qd/sferes/qd/selector/population_based.hpp>`__
+
+-  **Description:** This meta-selector allows to select from the joint offspring and parents populations of the algorithm, instead of its current population. The selector that is applied on this joint-population is given as the second template parameter.
+
+-  **Notes:** This selector is a meta-selector: it takes as template argument another selector and acts as a wrapper around it.
+
+-  **Example:** None
+
+-  **Typical typename:**
+::
+
+ typedef qd::selector::PopulationBased<phen_t, sub_select_t, Params> select_t;
 
 Defining your own selector
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
