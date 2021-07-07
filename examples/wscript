@@ -38,3 +38,20 @@ def build(bld):
                    uselib = 'TBB BOOST EIGEN PTHREAD MPI',
                    use = 'sferes2',
                    target = 'ex_eps_moea')
+
+
+    # ex_map_elites
+    bld.program(features = 'cxx',
+                   source = 'ex_map_elites.cpp',
+                   includes = '../',
+                   uselib = 'TBB BOOST EIGEN PTHREAD KDTREE',
+                   use = 'sferes2',
+                   target = 'ex_map_elites')
+
+    # ex_qd
+    bld.program(features = 'cxx',
+                   source = 'ex_qd.cpp',
+                   includes = '../',
+                   uselib = 'TBB BOOST EIGEN PTHREAD KDTREE',
+                   use = 'sferes2',
+                   target = 'ex_qd')

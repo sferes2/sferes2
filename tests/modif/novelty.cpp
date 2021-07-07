@@ -67,7 +67,7 @@ struct Params {
     SFERES_CONST cross_over_t cross_over_type = sbx;
   };
   struct pop {
-    SFERES_CONST unsigned size = 100;
+    SFERES_CONST unsigned size = 1200;
     SFERES_CONST unsigned nb_gen = 500;
     SFERES_CONST float initial_aleat = 2.0f;
     SFERES_CONST int dump_period = -1;

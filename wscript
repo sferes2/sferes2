@@ -1,4 +1,5 @@
 #! /usr/bin/env python
+# encoding: utf-8
 #| This file is a part of the sferes2 framework.
 #| Copyright 2009, ISIR / Universite Pierre et Marie Curie (UPMC)
 #| Main contributor(s): Jean-Baptiste Mouret, mouret@isir.fr
@@ -66,6 +67,7 @@ def options(opt):
     opt.load('tbb')
     opt.load('mpi')
     opt.load('eigen')
+    opt.load('kdtree')
     opt.load('pthread')
 
     # sferes specific
@@ -155,6 +157,10 @@ def configure(conf):
     conf.load('eigen')
     conf.check_eigen()
 
+    # ssrc kdtree
+    conf.load('kdtree')
+    conf.check_kdtree()
+
     conf.load('pthread')
     conf.check_pthread()
 
@@ -192,6 +198,8 @@ def configure(conf):
         conf.env['CXXFLAGS'] += ['-DNO_PARALLEL']
     if conf.env['EIGEN_FOUND']:
         conf.env['CXXFLAGS'] += ['-DEIGEN3_ENABLED']
+    if conf.env['KDTREE_FOUND']:
+        conf.env['CXXFLAGS'] += ['-DUSE_KDTREE']
     if conf.options.no_asserts:
         conf.env['CXXFLAGS'] += ['-DNDEBUG']
 
