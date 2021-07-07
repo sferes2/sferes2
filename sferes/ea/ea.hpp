@@ -59,6 +59,9 @@
 #include <boost/lexical_cast.hpp>
 #include <boost/filesystem.hpp>
 #include <boost/mpl/joint_view.hpp>
+#include <boost/iostreams/stream.hpp>
+#include <boost/iostreams/stream_buffer.hpp>
+
 
 #include <sferes/dbg/dbg.hpp>
 #include <sferes/misc.hpp>
@@ -374,23 +377,42 @@ namespace sferes {
 	}
         boost::filesystem::path my_path(_res_dir);
         boost::filesystem::create_directory(my_path);
+	std::cout<<"directory :"<<_res_dir<<" created"<<std::endl;
       }
+
+      // to add a CRC, we first serialize in a string, then compute the CRC,
+      // then we serialize this string + CRC
       void _write(int gen) const {
         dbg::trace trace("ea", DBG_HERE);
         if (Params::pop::dump_period == -1)
           return;
-        std::string fname = _res_dir + std::string("/gen_")
-                            + boost::lexical_cast<std::string>(gen);
-        std::ofstream ofs(fname.c_str());
+	// choose between XML or binary (default) archive
 #ifdef  SFERES_XML_WRITE
         typedef boost::archive::xml_oarchive oa_t;
 #else
         typedef boost::archive::binary_oarchive oa_t;
 #endif
-        oa_t oa(ofs);
+	// serialize in the string
+	std::ostringstream ss;
+        oa_t oa(ss);
         boost::fusion::for_each(_stat, WriteStat_f<oa_t>(oa));
-        std::cout << fname << " written" << std::endl;
+	// compute the size of the actual archive
+	size_t file_size = ss.str().size();
+	// file name
+        std::string fname = _res_dir + std::string("/gen_")
+                            + boost::lexical_cast<std::string>(gen);
+	std::cout<<" writing "<<fname<<" size="<<file_size<<std::endl;
+
+        std::ofstream ofs(fname.c_str());
+	// write the size (in binary, no boost::serialization here)
+	ofs.write((char*)(&file_size), sizeof(size_t));
+	// now write the content of the archive
+	ofs.write(ss.str().c_str(), ss.str().size());
+	
       }
+
+      // to read the CRC, we first de-serialize the CRC and the content (a string)
+      // we check the CRC, then we de-serialize the string
       void _load(const std::string& fname) {
         dbg::trace trace("ea", DBG_HERE);
         std::cout << "loading " << fname << std::endl;
@@ -400,13 +422,32 @@ namespace sferes {
                     << "(does file exist ?)" << std::endl;
           exit(1);
         }
+	size_t actual_file_size = boost::filesystem::file_size(fname);
 #ifdef SFERES_XML_WRITE
         typedef boost::archive::xml_iarchive ia_t;
 #else
         typedef boost::archive::binary_iarchive ia_t;
 #endif
-        ia_t ia(ifs);
-        boost::fusion::for_each(_stat, ReadStat_f<ia_t>(ia));
+	// read the file size
+	size_t file_size;
+	ifs.read((char*)(&file_size), sizeof(size_t));
+	if (file_size + sizeof(size_t) == actual_file_size)
+	  std::cout << "gen file is OK (file size matches)" << std::endl;
+         else{
+ 	 std::cerr<<"invalid archive (file size=" << actual_file_size
+ 		  <<" expected file size :" << file_size + sizeof(size_t) << ")" << std::endl;
+	 exit(1);
+        }
+	// read the string (the content)
+	char* str = new char[file_size];
+	ifs.read(str, file_size);
+	// load from the string (we cannot use std::istringstream because of potential
+	// \0 in the buffer (str))
+	boost::iostreams::basic_array_source<char> device(str, file_size);
+	boost::iostreams::stream<boost::iostreams::basic_array_source<char> > iss(device);
+	ia_t ias(iss);
+        boost::fusion::for_each(_stat, ReadStat_f<ia_t>(ias));
+	delete[] str;
       }
     };
   }
