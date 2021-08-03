@@ -343,7 +343,22 @@ Meta-Selector: PopulationBased
 Defining your own selector
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+::
 
+    template <typename Phen, typename Params>
+    struct CustomSelector
+    {
+        typedef boost::shared_ptr<Phen> indiv_t;
+
+        template <typename EA>
+        void operator()(std::vector<indiv_t>& pop, const EA& ea) const
+        {
+            /* your code that
+               (1) selects individuals based on `ea` object
+               (2) places those individuals in the vector of selected individuals `pop`
+            */
+        }
+    };
 
 
 QD Fitness
