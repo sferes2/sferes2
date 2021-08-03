@@ -4,12 +4,11 @@ Reference manual
 
 
 The QD framework introduces 4 new types to consider:
+
 -  `qd_t` : type of Quality Diversity (QD) algorithm (e.g. qd::QualityDiversity, which is itself a subclass of ea::Ea).
 -  `selector_t` : type of selector, used for selecting individuals from the container (e.g. qd::selector::Uniform)
--  `container_t` : type of QD container (e.g. qd::container::Grid).
-The container may rely on a specific storage for its individuals.
--  `storage_t` : type of storage; may be used for organising the individuals of the container.
-Some containers require such a storage (e.g. unstructured containers: qd::container::Archive).
+-  `container_t` : type of QD container (e.g. qd::container::Grid). The container may rely on a specific storage for its individuals.
+-  `storage_t` : type of storage; may be used for organising the individuals of the container. Some containers require such a storage (e.g. unstructured containers: qd::container::Archive).
 
 The QD framework relies on a Fitness definition which is specific to QD (FitQD).
 Also, some additional statistics were defined to generate logs for QD algorithms.
