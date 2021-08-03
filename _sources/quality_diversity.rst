@@ -45,6 +45,9 @@ QualityDiversity
 Container
 ---------
 
+The container is used to gather a collection of diverse and high-performing solutions.
+Each type of container presents its own rules for preserving the behavioural diversity and local performance of the solutions.
+
 Grid
 ~~~~
 
@@ -55,8 +58,8 @@ Grid
     - This type of container creates a grid container (e.g. as seen in  MAP Elites). The idea is to discretize the Behavioural Descriptor space in evenly sized cells and then fill these up with a qd algorithm.
 -  **Example:**
     - `sferes/qd/examples/ex_map_elites.cpp <https://github.com/sferes2/sferes2/blob/qd/examples/ex_map_elites.cpp>`__
-
     - `AIRL/examples/cpp/standard/robotdart-example/src/dart_exp.cpp <https://gitlab.doc.ic.ac.uk/AIRL/examples/cpp/standard/robotdart-example/-/blob/master/src/dart_exp.cpp>`__
+    - `tests/qd/test_qd.cpp <https://github.com/sferes2/sferes2/blob/qd/tests/qd/test_qd.cpp>`__
 
 -  **Typical typename:**
 
@@ -67,48 +70,167 @@ Grid
 
 
 -  **Parameters:**
-    - `Params::qd::grid_shape : size of the grid in each dimension`
-    -  `Params::nov::deep :  this parameter defines how deep we should go around our cell to calculate the novelty`
+    - `Params::qd::grid_shape`: size of the grid in each dimension
+    - `Params::qd::behav_dim`: Dimensions of the Behavioral Descriptor
+    - `Params::nov::deep`:  this parameter defines how deep we should go around our cell to calculate the novelty
+
 -  **Notes:**
 
 CVT
 ~~~
 
+-  **File:**
+`sferes/qd/container/cvt.hpp <https://github.com/sferes2/sferes2/blob/qd/sferes/qd/container/cvt.hpp>`__
+
+-  **Description:**
+    - This type of container discretises the feature space with a Centroidal Voronoi Tessellation (CVT), e.g. as seen in `CVT-MAP-Elites <https://ieeexplore.ieee.org/document/8000667>`__. That CVT splits the Behavioural Descriptor space in evenly sized cells and then fill these up with a QD algorithm.
+-  **Example:**
+    - `tests/qd/test_qd.cpp <https://github.com/sferes2/sferes2/blob/qd/tests/qd/test_qd.cpp>`__
+
+-  **Typical typename:**
+
+::
+
+ typedef qd::container::CVT<phen_t, storage_t, Params> container_t;
+
+
+
+-  **Parameters:**
+    - `Params::qd::n_niches` (e.g, 10000): number of niches
+    - `Params::qd::behav_dim` (e.g, 2): number of feature dimensions
+    - `Params::qd::cvt::n_samples` (e.g, 100000): number of samples for CVT (more than n_niches); ignored if using a cached CVT
+    - `Params::qd::cvt::max_iterations` (e.g, 100): number of iterations of the CVT algorithm; ignored if using a cached CVT
+    - `Params::qd::cvt::n_restarts` (e.g, 1):  number of restarts of the CVT algorithm; ignored if using a cached CVT
+    - `Params::qd::cvt::tolerance` (e.g, 1e-8):  when to stop the CVT algorithm; ignored if using a cached CVT
+-  **Notes:**
+    - During initialisation, the presence of cached centroids `cache_centroids_<dim>_<n_niches>.bin` is checked.
+        - If that file is not present, then the file `sferes/qd/container/compute_cvt.hpp <https://github.com/sferes2/sferes2/blob/qd/sferes/qd/container/compute_cvt.hpp>`__ is used to compute the CVT that partitions the feature space.
+        - If that file is present, then the CVT centroids are directly loaded from it. The parameters in `Params::qd::cvt::` are then ignored.
+    - The centroids are stored in a specific storage of type <storage_t>, which facilitates the computation of k-Nearest Neighbours (kNN). The different types of possible storages are detailed below.
+
 Archive
 ~~~~~~~
 
+-  **File:**
+`sferes/qd/container/archive.hpp <https://github.com/sferes2/sferes2/blob/qd/sferes/qd/container/archive.hpp>`__
 
+-  **Description:**
+    - The Archive corresponds to an unstructured container, here called `Archive` (e.g. as introduced in the `QD framework paper <https://ieeexplore.ieee.org/document/7959075>`__). The idea is to avoid discretising the Behavioural Descriptor (BD) space. Instead, solutions may be added depending on the distance between their BDs and their kNNs.
+    - More precisely, a solution `i` is added to the container if the distance between its BD and its nearest neighbour is inferior to `Params::nov::l`.
+    - Also, a solution `i` may replace its nearest neighbour `nn` if the following conditions hold:
+        - `N(i) >= (1-eps) N(nn)`, where `N(.)` represents the novelty score (average distance to kNNs).
+        - `F(i) >= (1-eps) F(nn)`, where `F(.)` represents the fitness score (supposed positive in this description).
+        - `(N(i) - N(nn)) / N(nn) > -(F(i) - F(nn)) / F(nn)`
+
+-  **Example:**
+    - see `qd_archive_sortbased` and `qd_archive_kdtree` in `tests/qd/test_qd.cpp <https://github.com/sferes2/sferes2/blob/qd/tests/qd/test_qd.cpp>`__
+
+-  **Typical typename:**
+
+::
+
+ typedef qd::container::Archive<phen_t, storage_t, Params> container_t;
+
+
+
+-  **Parameters:**
+    - `Params::nov::k`: number of nearest neighbours to consider for computing the novelty score.
+    - `Params::nov::l`: minimal distance for adding a new individual to the container.
+    - `Params::nov::eps`: used to set the conditions for epsilon dominance, as detailed above.
+
+-  **Notes:**
+    - The individuals are stored in a specific storage of type <storage_t>, which facilitates the computation of k-Nearest Neighbours (kNN) and novelty scores. The different types of possible storages are detailed below.
+    - When the container is updated (at each iteration of the QD algorithm), the novelty scores and local quality scores are re-computed for all individuals.
 
 Defining your own container
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. Description
+::
 
-Example:
+template <typename Phen, typename Params>
+class CustomContainer {
+public:
+    typedef boost::shared_ptr<Phen> indiv_t;
+    typedef typename std::vector<indiv_t> pop_t;
 
-.. Example
+    CustomContainer() {}
 
+    // Adds all the individuals/solutions of the container to the population `content`
+    void get_full_content(pop_t& content) const
+    { /* your code */ }
 
+    // Adds an individual `i1` to the container if all the container conditions are verified
+    bool add(indiv_t i1)
+    { /* your code */ }
 
+    // Adds an individual `i1` to the container regardless of the container conditions
+    void direct_add(const indiv_t& i1)
+    { /* your code */ }
+
+    // Updates attributes of the container, and of individuals from `offspring` and `parents`
+    // such attributes may include the novelty score, and the local quality score
+    void update(pop_t& offspring, pop_t& parents)
+    { /* your code */ }
+};
 
 Storage
 -------
+
+The purpose of the storage is to provide an interface facilitating the computation of k-Nearest Neighbours (kNN) and novelty scores.
 
 SortBasedStorage
 ~~~~~~~~~~~~~~~~
 
 -  **File:**
+`sferes/qd/container/sort_based_storage.hpp <https://github.com/sferes2/sferes2/blob/qd/sferes/qd/container/sort_based_storage.hpp>`__
+
 -  **Description:**
+    - Relies on `std::partial_sort` to compute the k-nearest neighbors.
+
 -  **Example:**
+    - `tests/qd/test_qd.cpp <https://github.com/sferes2/sferes2/blob/qd/tests/qd/test_qd.cpp>`__
+
 -  **Typical typename:**
+
+::
+
+typedef sferes::qd::container::SortBasedStorage<boost::shared_ptr<phen_t>> storage_t;
+
+
 -  **Parameters:**
+    - None
+
 -  **Notes:**
+    - With the above typename, the storage stores pairs `(bd, indiv_t)` where `indiv_t = boost::shared_ptr<phen_t>`
+    - This is not effective in low-dimensional spaces (dim(bd) < 10); but it works better than a kd-tree for more than 10-dimensional spaces
 
 
 KdtreeStorage
 ~~~~~~~~~~~~~
 
 
+-  **File:**
+`sferes/qd/container/kdtree_storage.hpp <https://github.com/sferes2/sferes2/blob/qd/sferes/qd/container/kdtree_storage.hpp>`__
+
+-  **Description:**
+    - Computes the k-nearest neighbors using a `kd-tree <https://en.wikipedia.org/wiki/K-d_tree>`__ (optional external library).
+
+-  **Example:**
+    - `tests/qd/test_qd.cpp <https://github.com/sferes2/sferes2/blob/qd/tests/qd/test_qd.cpp>`__
+
+-  **Typical typename:**
+
+::
+
+typedef sferes::qd::container::KdtreeStorage<boost::shared_ptr<phen_t>, Params::qd::behav_dim> storage_t;
+
+
+-  **Parameters:**
+    - None
+
+-  **Notes:**
+    - With the above typename, the storage stores pairs `(bd, indiv_t)` where `indiv_t = boost::shared_ptr<phen_t>`
+    - This is effective in low-dimensional spaces (dim(bd) < 10); but not in high-dimensional spaces (dim(bd) > 10)
 
 
 Selector
@@ -255,7 +377,20 @@ FitQD
 Defining your own QD Fitness
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+FIT_QD(CustomFitnessQD)
+{
+  // (optional) constructor
+  CustomFitnessQD()
+    { /* your code */ }
 
+  // evaluation
+  template<typename Indiv>
+  void eval(Indiv& indiv)
+  {
+    this->_value = -42; // Set fitness score
+    this->set_desc({0.3, 0.7, 0.1}); // Set behavioural descriptor, supposing Params::qd::behav_dim == 3
+  }
+};
 
 
 QD Statistics
@@ -264,24 +399,106 @@ QD Statistics
 QdContainer
 ~~~~~~~~~~~
 
+
 -  **File:**
+`sferes/stat/qd_container.hpp <https://github.com/sferes2/sferes2/blob/qd/sferes/stat/qd_container.hpp>`__
+
 -  **Description:**
+    - Every `dump_period`, writes a file `archive_<gen>.dat` (where `gen` is the generation number), with some information related to all individuals present in the archive at generation `gen`.
+      Every line of such a file presents some information related to one individual.
+      For each individual, the following values are saved (in order):
+        - Index
+        - Behavioural Descriptor
+        - Fitness Score
+        - Genotype
+
 -  **Example:**
+    - `examples/ex_qd.cpp <https://github.com/sferes2/sferes2/blob/qd/examples/ex_qd.cpp>`__
+
 -  **Typical typename:**
+
+::
+
+typedef boost::fusion::vector<
+           // Other Stats, ...,
+           stat::QdContainer<phen_t, Params>
+        >
+        stat_t;
+
 -  **Parameters:**
--  **Notes:**
+    - `Params::pop::dump_period` : Generation period for writing a file `archive_<gen>.dat`
+
 
 QdProgress
 ~~~~~~~~~~
 
+
+-  **File:**
+`sferes/stat/qd_container.hpp <https://github.com/sferes2/sferes2/blob/qd/sferes/stat/qd_container.hpp>`__
+
+-  **Description:**
+    - Every `dump_period`, writes a line at the end of the file `progress.dat` with some information related to the state of the container at generation `gen`.
+      For each line, the following values are saved (in order):
+        - Generation number
+        - Archive size
+        - Maximum fitness score from the archive
+        - Sum of the fitness scores from the archive (also known as `QD score`)
+        - Sum of the novelty scores from the archive
+        - Variance of the novelty scores from the archive
+
+-  **Example:**
+    - `examples/ex_qd.cpp <https://github.com/sferes2/sferes2/blob/qd/examples/ex_qd.cpp>`__
+
+-  **Typical typename:**
+
+::
+
+typedef boost::fusion::vector<
+           // Other Stats, ...,
+           stat::QdProgress<phen_t, Params>
+        >
+        stat_t;
+
+-  **Parameters:**
+    - `Params::pop::dump_period` : Generation period for writing a file `archive_<gen>.dat`
+
+
+
 QdSelection
 ~~~~~~~~~~~
 
+-  **File:**
+`sferes/stat/qd_selection.hpp <https://github.com/sferes2/sferes2/blob/qd/sferes/stat/qd_selection.hpp>`__
 
+-  **Description:**
+    - Every generation `gen`, writes several lines at the end of the file `selection.dat` with some information related to the state of the parents and offspring populations at generation `gen`.
+      At each generation, `n` lines are written. For each `i` between `0` and `n`, the following values are saved (in order):
+        - Generation number
+        - Behavioural Descriptor of individual having index `i` in the parents population
+        - Fitness score of parent `i`
+        - Novelty score of parent `i`
+        - Local Quality score of parent `i`
+        - Curiosity score of parent `i`
+        - Behavioural Descriptor of individual having index `i` in the offspring population
+        - Fitness score of offspring individual `i`
+        - Novelty score of offspring individual `i`
+        - Local Quality score of offspring individual `i`
+        - Curiosity score of offspring individual `i`
+        - Boolean indicating if offspring individual `i` was added to the container
 
+-  **Typical typename:**
 
+::
 
+typedef boost::fusion::vector<
+           // Other Stats, ...,
+           stat::QdSelection<phen_t, Params>
+        >
+        stat_t;
 
+-  **Parameters:**
+    - `Params::qd::behav_dim`: Dimensions of the Behavioral Descriptor
 
-
+-  **Notes:**
+    - the populations `ea.parents()`, `ea.offspring()` and the vector of booleans `ea.added()` need to have the same size.
 
