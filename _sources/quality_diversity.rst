@@ -147,31 +147,31 @@ Defining your own container
 
 ::
 
-template <typename Phen, typename Params>
-class CustomContainer {
-public:
-    typedef boost::shared_ptr<Phen> indiv_t;
-    typedef typename std::vector<indiv_t> pop_t;
+    template <typename Phen, typename Params>
+    class CustomContainer {
+    public:
+        typedef boost::shared_ptr<Phen> indiv_t;
+        typedef typename std::vector<indiv_t> pop_t;
 
-    CustomContainer() {}
+        CustomContainer() {}
 
-    // Adds all the individuals/solutions of the container to the population `content`
-    void get_full_content(pop_t& content) const
-    { /* your code */ }
+        // Adds all the individuals/solutions of the container to the population `content`
+        void get_full_content(pop_t& content) const
+        { /* your code */ }
 
-    // Adds an individual `i1` to the container if all the container conditions are verified
-    bool add(indiv_t i1)
-    { /* your code */ }
+        // Adds an individual `i1` to the container if all the container conditions are verified
+        bool add(indiv_t i1)
+        { /* your code */ }
 
-    // Adds an individual `i1` to the container regardless of the container conditions
-    void direct_add(const indiv_t& i1)
-    { /* your code */ }
+        // Adds an individual `i1` to the container regardless of the container conditions
+        void direct_add(const indiv_t& i1)
+        { /* your code */ }
 
-    // Updates attributes of the container, and of individuals from `offspring` and `parents`
-    // such attributes may include the novelty score, and the local quality score
-    void update(pop_t& offspring, pop_t& parents)
-    { /* your code */ }
-};
+        // Updates attributes of the container, and of individuals from `offspring` and `parents`
+        // such attributes may include the novelty score, and the local quality score
+        void update(pop_t& offspring, pop_t& parents)
+        { /* your code */ }
+    };
 
 Storage
 -------
@@ -377,20 +377,22 @@ FitQD
 Defining your own QD Fitness
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-FIT_QD(CustomFitnessQD)
-{
-  // (optional) constructor
-  CustomFitnessQD()
-    { /* your code */ }
+::
 
-  // evaluation
-  template<typename Indiv>
-  void eval(Indiv& indiv)
-  {
-    this->_value = -42; // Set fitness score
-    this->set_desc({0.3, 0.7, 0.1}); // Set behavioural descriptor, supposing Params::qd::behav_dim == 3
-  }
-};
+    FIT_QD(CustomFitnessQD)
+    {
+        // (optional) constructor
+        CustomFitnessQD()
+        { /* your code */ }
+
+        // evaluation
+        template<typename Indiv>
+        void eval(Indiv& indiv)
+        {
+            this->_value = -42; // Set fitness score
+            this->set_desc({0.3, 0.7, 0.1}); // Set behavioural descriptor, supposing Params::qd::behav_dim == 3
+        }
+    };
 
 
 QD Statistics
@@ -404,9 +406,7 @@ QdContainer
 `sferes/stat/qd_container.hpp <https://github.com/sferes2/sferes2/blob/qd/sferes/stat/qd_container.hpp>`__
 
 -  **Description:**
-    - Every `dump_period`, writes a file `archive_<gen>.dat` (where `gen` is the generation number), with some information related to all individuals present in the archive at generation `gen`.
-      Every line of such a file presents some information related to one individual.
-      For each individual, the following values are saved (in order):
+    - Every `dump_period`, writes a file `archive_<gen>.dat` (where `gen` is the generation number), with some information related to all individuals present in the archive at generation `gen`. Every line of such a file presents some information related to one individual. For each individual, the following values are saved (in order):
         - Index
         - Behavioural Descriptor
         - Fitness Score
@@ -419,11 +419,11 @@ QdContainer
 
 ::
 
-typedef boost::fusion::vector<
-           // Other Stats, ...,
-           stat::QdContainer<phen_t, Params>
-        >
-        stat_t;
+    typedef boost::fusion::vector<
+                // Other Stats, ...,
+                stat::QdContainer<phen_t, Params>
+            >
+            stat_t;
 
 -  **Parameters:**
     - `Params::pop::dump_period` : Generation period for writing a file `archive_<gen>.dat`
@@ -437,8 +437,7 @@ QdProgress
 `sferes/stat/qd_container.hpp <https://github.com/sferes2/sferes2/blob/qd/sferes/stat/qd_container.hpp>`__
 
 -  **Description:**
-    - Every `dump_period`, writes a line at the end of the file `progress.dat` with some information related to the state of the container at generation `gen`.
-      For each line, the following values are saved (in order):
+    - Every `dump_period`, writes a line at the end of the file `progress.dat` with some information related to the state of the container at generation `gen`. For each line, the following values are saved (in order):
         - Generation number
         - Archive size
         - Maximum fitness score from the archive
@@ -453,11 +452,11 @@ QdProgress
 
 ::
 
-typedef boost::fusion::vector<
-           // Other Stats, ...,
-           stat::QdProgress<phen_t, Params>
-        >
-        stat_t;
+    typedef boost::fusion::vector<
+                // Other Stats, ...,
+                stat::QdProgress<phen_t, Params>
+            >
+            stat_t;
 
 -  **Parameters:**
     - `Params::pop::dump_period` : Generation period for writing a file `archive_<gen>.dat`
@@ -471,8 +470,7 @@ QdSelection
 `sferes/stat/qd_selection.hpp <https://github.com/sferes2/sferes2/blob/qd/sferes/stat/qd_selection.hpp>`__
 
 -  **Description:**
-    - Every generation `gen`, writes several lines at the end of the file `selection.dat` with some information related to the state of the parents and offspring populations at generation `gen`.
-      At each generation, `n` lines are written. For each `i` between `0` and `n`, the following values are saved (in order):
+    - Every generation `gen`, writes several lines at the end of the file `selection.dat` with some information related to the state of the parents and offspring populations at generation `gen`. At each generation, `n` lines are written. For each `i` between `0` and `n`, the following values are saved (in order):
         - Generation number
         - Behavioural Descriptor of individual having index `i` in the parents population
         - Fitness score of parent `i`
@@ -490,11 +488,11 @@ QdSelection
 
 ::
 
-typedef boost::fusion::vector<
-           // Other Stats, ...,
-           stat::QdSelection<phen_t, Params>
-        >
-        stat_t;
+    typedef boost::fusion::vector<
+                // Other Stats, ...,
+                stat::QdSelection<phen_t, Params>
+            >
+            stat_t;
 
 -  **Parameters:**
     - `Params::qd::behav_dim`: Dimensions of the Behavioral Descriptor
