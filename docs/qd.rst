@@ -195,7 +195,8 @@ SortBasedStorage
 -  **Typical typename:**
 
 ::
-typedef sferes::qd::container::SortBasedStorage<boost::shared_ptr<phen_t>> storage_t;
+
+ typedef sferes::qd::container::SortBasedStorage<boost::shared_ptr<phen_t>> storage_t;
 
 -  **Parameters:**
 
@@ -223,7 +224,8 @@ KdtreeStorage
 -  **Typical typename:**
 
 ::
-typedef sferes::qd::container::KdtreeStorage<boost::shared_ptr<phen_t>, Params::qd::behav_dim> storage_t;
+
+ typedef sferes::qd::container::KdtreeStorage<boost::shared_ptr<phen_t>, Params::qd::behav_dim> storage_t;
 
 -  **Parameters:**
 
