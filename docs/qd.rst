@@ -1,5 +1,5 @@
 Quality-Diversity Framework
-=================
+===========================
 .. highlight:: c++
 
 
