@@ -268,9 +268,9 @@ ParetoBased
 
 -  **File:** `sferes/qd/selector/pareto_based.hpp <https://github.com/sferes2/sferes2/blob/qd/sferes/qd/selector/pareto_based.hpp>`__
 
--  **Description:** This selector selects individuals in the joint parents and offspring populations based on pareto-dominance. It selects individuals from this joint-population uniformly, and then performs tournament to keep the bests according to pareto-dominance. The template parameters ObjSelector determines which objectives defined in the fitness class are used to compute the pareto-dominance. 
+-  **Description:** This selector selects individuals in the joint parents and offspring populations based on pareto-dominance. It selects individuals from this joint-population uniformly, and then performs tournament to keep the bests according to pareto-dominance. The template parameters ObjSelector determines which objectives defined in the fitness class are used to compute the pareto-dominance.
 
--  **Notes:** This selector relies on the definition of the different objectives in the fitness class. It also relies on multiple classes define in `sferes/ea/crowd.hpp <https://github.com/sferes2/sferes2/blob/qd/sferes/ea/crowd.hpp>`__ to approximate the pareto front. 
+-  **Notes:** This selector relies on the definition of the different objectives in the fitness class. It also relies on multiple classes define in `sferes/ea/crowd.hpp <https://github.com/sferes2/sferes2/blob/qd/sferes/ea/crowd.hpp>`__ to approximate the pareto front.
 
 -  **Parameters:** `Params::pareto::genoDiv`: boolean to choose if the crowding distance should be based on the distance in genotype space (true) or in objective space (false).
 
@@ -371,7 +371,7 @@ FitQD
 `sferes/fit/fit_qd.hpp <https://github.com/sferes2/sferes2/blob/qd/sferes/fit/fit_qd.hpp>`__
 
 -  **Description:**
-    - The fitness function has the purpose of evaluating your individual and attributing it a Behavioral Descriptor and a fitness value (if needed). 
+    - The fitness function has the purpose of evaluating your individual and attributing it a Behavioral Descriptor and a fitness value (if needed).
     You can define what you want in the fitness function but the eval function needs to be defined since it is used after each offspring generation to evaluate the new individuals.
 -  **Example:**
 `sferes/qd/examples/ex_qd.hpp <https://github.com/sferes2/sferes2/blob/qd/examples/ex_qd.cpp>`__
@@ -381,11 +381,11 @@ FitQD
 ::
 
     typedef Fitness_Function_Name<Params> fit_t;
-    
+
 
 
 -  **Parameters:**
-    - `Params::qd::behav_dim` : Dimensions of the Behavioral Descriptor 
+    - `Params::qd::behav_dim` : Dimensions of the Behavioral Descriptor
 -  **Notes:**
 
 Defining your own QD Fitness
@@ -513,4 +513,3 @@ QdSelection
 
 -  **Notes:**
     - the populations `ea.parents()`, `ea.offspring()` and the vector of booleans `ea.added()` need to have the same size.
-

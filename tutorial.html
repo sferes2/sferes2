@@ -5,7 +5,8 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  
+  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
   <title>Tutorial (basics) &mdash; Sferes_v2 0.1 alpha documentation</title>
@@ -25,13 +26,17 @@
   <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
 
   
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
 
   
         <link rel="index" title="Index"
               href="genindex.html"/>
         <link rel="search" title="Search" href="search.html"/>
     <link rel="top" title="Sferes_v2 0.1 alpha documentation" href="index.html"/>
-        <link rel="next" title="Main concepts" href="concepts.html"/>
+        <link rel="next" title="Quality-Diversity Framework" href="qd.html"/>
         <link rel="prev" title="Compilation" href="compilation.html"/>
 <style type="text/css">
 /* This CSS displays small logos at the bottom of the page, on one line */
@@ -127,6 +132,7 @@
 </li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="qd.html">Quality-Diversity Framework</a></li>
 <li class="toctree-l1"><a class="reference internal" href="concepts.html">Main concepts</a></li>
 <li class="toctree-l1"><a class="reference internal" href="reference.html">Reference manual</a></li>
 <li class="toctree-l1"><a class="reference internal" href="clusters.html">Sferes on clusters (OAR)</a></li>
@@ -169,7 +175,7 @@
 
 <div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
-    <li><a href="index.html">Fferes_v2</a> &raquo;</li>
+    <li><a href="index.html">Sferes_v2</a> &raquo;</li>
     
     <li>Tutorial (basics)</li>
     <li class="wy-breadcrumbs-aside">
@@ -185,11 +191,11 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="tutorial-basics">
+  <section id="tutorial-basics">
 <h1>Tutorial (basics)<a class="headerlink" href="#tutorial-basics" title="Permalink to this headline">¶</a></h1>
 <p>This short example shows how to set up a basic experiment to optimize
 parameters using a user-defined fitness.</p>
-<div class="section" id="running-a-sferes2-executable">
+<section id="running-a-sferes2-executable">
 <h2>Running a sferes2 executable<a class="headerlink" href="#running-a-sferes2-executable" title="Permalink to this headline">¶</a></h2>
 <p>Waf put all the compiled files in the “build” directory. Two variants
 are produced: “default” and “debug”. You should always run the debug
@@ -198,279 +204,283 @@ mirrors the architecture of the main sferes2 directory.</p>
 <p>Sferes2 contains some basic examples in the “examples” directory. For
 instance, let’s check “ex_ea.cpp”, a basic single-objective
 optimization of parameters. To launch the debug version, you should run:</p>
-<div class="code shell highlight-c++"><div class="highlight"><pre><span></span><span class="n">build</span><span class="o">/</span><span class="n">debug</span><span class="o">/</span><span class="n">examples</span><span class="o">/</span><span class="n">ex_ea</span>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>build/debug/examples/ex_ea
 </pre></div>
 </div>
 <p>A verbose mode is also available:</p>
-<div class="code shell highlight-c++"><div class="highlight"><pre><span></span><span class="n">build</span><span class="o">/</span><span class="n">debug</span><span class="o">/</span><span class="n">examples</span><span class="o">/</span><span class="n">ex_ea</span> <span class="o">-</span><span class="n">v</span> <span class="n">all</span>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>build/debug/examples/ex_ea -v all
 </pre></div>
 </div>
 <p>And a more verbose one:</p>
-<div class="code shell highlight-c++"><div class="highlight"><pre><span></span><span class="n">build</span><span class="o">/</span><span class="n">debug</span><span class="o">/</span><span class="n">examples</span><span class="o">/</span><span class="n">ex_ea</span> <span class="o">-</span><span class="n">v</span> <span class="n">all</span> <span class="o">-</span><span class="n">v</span> <span class="n">trace</span>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>build/debug/examples/ex_ea -v all -v trace
 </pre></div>
 </div>
 <p>For the optimized version:</p>
-<div class="code shell highlight-c++"><div class="highlight"><pre><span></span><span class="n">build</span><span class="o">/</span><span class="k">default</span><span class="o">/</span><span class="n">examples</span><span class="o">/</span><span class="n">ex_ea</span>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>build/default/examples/ex_ea
 </pre></div>
 </div>
 <p>Running one of those commands should create a directory named using the
 schema binary_name_year-month-day_hours_min_seconds_PID (this is designed to be a unique name to avoid overwriting any previous result). In this directory there are:</p>
 <ul class="simple">
-<li>a file called “bestfit.dat”, which contains, for each generation, the
-value of the best fitness;</li>
-<li>many files calles <cite>gen_xxx</cite> where xxx is a generation number.</li>
+<li><p>a file called “bestfit.dat”, which contains, for each generation, the
+value of the best fitness;</p></li>
+<li><p>many files calles <cite>gen_xxx</cite> where xxx is a generation number.</p></li>
 </ul>
 <p>These files are boost::serialization binary files (optionnaly XML files, if needed) that typically store the best candidates solutions for each generation (xxx is the generation number). It actually saves all the <cite>statistics</cite> instances (e.g., <cite>BestFit</cite>, <cite>ParetoFront</cite>, etc.).</p>
-</div>
-<div class="section" id="loading-a-result-file">
+</section>
+<section id="loading-a-result-file">
 <h2>Loading a result file<a class="headerlink" href="#loading-a-result-file" title="Permalink to this headline">¶</a></h2>
 <p>These binary files are designed to be read by the same executable which generated the result files:</p>
-<div class="code shell highlight-c++"><div class="highlight"><pre><span></span><span class="p">..</span><span class="o">/</span><span class="n">build</span><span class="o">/</span><span class="k">default</span><span class="o">/</span><span class="n">examples</span><span class="o">/</span><span class="n">ex_ea</span> <span class="o">--</span><span class="n">load</span> <span class="n">gen_1000</span> <span class="o">-</span><span class="n">o</span> <span class="n">output_file</span> <span class="o">-</span><span class="n">n</span> <span class="n">number</span>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>../build/default/examples/ex_ea --load gen_1000 -o output_file -n number
 </pre></div>
 </div>
 <ul class="simple">
-<li><cite>output_file</cite> is a text file which, most of the time (depending
+<li><p><cite>output_file</cite> is a text file which, most of the time (depending
 on the genotype and phenotype used), describes the best individual
 (or the Pareto-optimal set in multiobjective optimization); in this
 example, it contains the value of the parameters for the best
-individual:</li>
+individual:</p></li>
 </ul>
-<div class="code shell highlight-c++"><div class="highlight"><pre><span></span><span class="n">cat</span> <span class="n">output_file</span>
-<span class="mf">8.46386e-05</span> <span class="o">-</span><span class="mf">4.58956e-05</span> <span class="o">-</span><span class="mf">4.88758e-05</span> <span class="o">-</span><span class="mf">6.02007e-05</span> <span class="mf">3.93391e-05</span> <span class="o">-</span><span class="mf">0.000165701</span> <span class="mf">5.96046e-06</span> <span class="mf">0.00010848</span> <span class="mf">0.000445843</span> <span class="o">-</span><span class="mf">0.000101328</span>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>cat output_file
+<span class="m">8</span>.46386e-05 -4.58956e-05 -4.88758e-05 -6.02007e-05 <span class="m">3</span>.93391e-05 -0.000165701 <span class="m">5</span>.96046e-06 <span class="m">0</span>.00010848 <span class="m">0</span>.000445843 -0.000101328
 </pre></div>
 </div>
 <ul class="simple">
-<li><cite>number</cite> is the number of the individual described in the statistics you want to load.</li>
-<li>optionnally, the option <cite>-s</cite> allows to specify the statistics number (e.g, if you have <cite>BestFit&lt;&gt;</cite> and <cite>ParetoFront&lt;&gt;</cite> in your statistics list, then <cite>BestFit&lt;&gt;</cite> is <cite>0</cite> and <cite>ParetoFront&lt;&gt;</cite> is number <cite>1</cite>.</li>
+<li><p><cite>number</cite> is the number of the individual described in the statistics you want to load.</p></li>
+<li><p>optionnally, the option <cite>-s</cite> allows to specify the statistics number (e.g, if you have <cite>BestFit&lt;&gt;</cite> and <cite>ParetoFront&lt;&gt;</cite> in your statistics list, then <cite>BestFit&lt;&gt;</cite> is <cite>0</cite> and <cite>ParetoFront&lt;&gt;</cite> is number <cite>1</cite>.</p></li>
 </ul>
-</div>
-<div class="section" id="building-your-own-experiment">
+</section>
+<section id="building-your-own-experiment">
 <h2>Building your own experiment<a class="headerlink" href="#building-your-own-experiment" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="setting-everything-up">
+<section id="setting-everything-up">
 <h3>Setting everything up<a class="headerlink" href="#setting-everything-up" title="Permalink to this headline">¶</a></h3>
 <ol class="arabic">
-<li><p class="first">Create directories and files</p>
+<li><p>Create directories and files</p>
 <ul class="simple">
-<li>At the root of the sferes repository (the main directory), use waf
-to create a new experiment. Let’s call it “test”:</li>
+<li><p>At the root of the sferes repository (the main directory), use waf
+to create a new experiment. Let’s call it “test”:</p></li>
 </ul>
-<div class="code shell highlight-c++"><div class="highlight"><pre><span></span><span class="p">.</span><span class="o">/</span><span class="n">waf</span> <span class="o">--</span><span class="n">create</span> <span class="n">test</span>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>./waf --create <span class="nb">test</span>
 </pre></div>
 </div>
 <p>This should have created a new directory exp/test, a waf file
 exp/test/wscript and a basic file exp/test/test.cpp. You can now
 edit/customize them.</p>
 </li>
-<li><p class="first">Compiling</p>
+<li><p>Compiling</p>
 <ul class="simple">
-<li>In the main sferes2 directory (not in the experiment’s directory):</li>
+<li><p>In the main sferes2 directory (not in the experiment’s directory):</p></li>
 </ul>
-<div class="code shell highlight-c++"><div class="highlight"><pre><span></span><span class="p">.</span><span class="o">/</span><span class="n">waf</span> <span class="o">--</span><span class="n">exp</span> <span class="n">my_exp</span>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>./waf --exp my_exp
 </pre></div>
 </div>
 <p>If the experiment is called “test”, the command line is:</p>
-<div class="code shell highlight-c++"><div class="highlight"><pre><span></span><span class="p">.</span><span class="o">/</span><span class="n">waf</span> <span class="o">--</span><span class="n">exp</span> <span class="n">test</span>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>./waf --exp <span class="nb">test</span>
 </pre></div>
 </div>
 </li>
-<li><p class="first">Running</p>
-<div class="code shell highlight-c++"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="n">exp</span><span class="o">/</span><span class="n">test</span>
-<span class="p">..</span><span class="o">/</span><span class="p">..</span><span class="o">/</span><span class="n">build</span><span class="o">/</span><span class="n">debug</span><span class="o">/</span><span class="n">exp</span><span class="o">/</span><span class="n">test</span><span class="o">/</span><span class="n">test</span>
+<li><p>Running</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span> exp/test
+../../build/debug/exp/test/test
 </pre></div>
 </div>
 <p>and for the optimized version:</p>
-<div class="code shell highlight-c++"><div class="highlight"><pre><span></span><span class="p">..</span><span class="o">/</span><span class="p">..</span><span class="o">/</span><span class="n">build</span><span class="o">/</span><span class="k">default</span><span class="o">/</span><span class="n">exp</span><span class="o">/</span><span class="n">test</span><span class="o">/</span><span class="n">test</span>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>../../build/default/exp/test/test
 </pre></div>
 </div>
 </li>
 </ol>
-</div>
-<div class="section" id="customizing-writing-the-experiment">
+</section>
+<section id="customizing-writing-the-experiment">
 <h3>Customizing / writing the experiment<a class="headerlink" href="#customizing-writing-the-experiment" title="Permalink to this headline">¶</a></h3>
 <p>Let’s start with exp/test/test.cpp, <em>from the end of the file</em>.</p>
-<div class="section" id="main-function">
+<section id="main-function">
 <h4>Main function<a class="headerlink" href="#main-function" title="Permalink to this headline">¶</a></h4>
 <blockquote>
-<div>At the end of the file, you should see a main() function. It defines
+<div><p>At the end of the file, you should see a main() function. It defines
 some types using typedef then run the evolutionary algorithm. The
 types describe our experiment (what kind of genotype? what kind of
 fitness? what kind of algorithm?). We will go back to the Params
-class in the following section. Ignore it for now.</div></blockquote>
-<div class="code c++ highlight-c++"><div class="highlight"><pre><span></span><span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="o">**</span><span class="n">argv</span><span class="p">)</span>
-<span class="p">{</span>
-  <span class="c1">// Our fitness is the class FitTest (see above), that we call</span>
-  <span class="c1">// fit_t. Params is the set of parameters (struct Params) defined in</span>
-  <span class="c1">// this file.</span>
-  <span class="k">typedef</span> <span class="n">FitTest</span><span class="o">&lt;</span><span class="n">Params</span><span class="o">&gt;</span> <span class="n">fit_t</span><span class="p">;</span>
-  <span class="c1">// We define the genotype. Here we choose EvoFloat (real</span>
-  <span class="c1">// numbers). We evolve 10 real numbers, with the params defined in</span>
-  <span class="c1">// Params (cf the beginning of this file)</span>
-  <span class="k">typedef</span> <span class="n">gen</span><span class="o">::</span><span class="n">EvoFloat</span><span class="o">&lt;</span><span class="mi">10</span><span class="p">,</span> <span class="n">Params</span><span class="o">&gt;</span> <span class="n">gen_t</span><span class="p">;</span>
-  <span class="c1">// This genotype should be simply transformed into a vector of</span>
-  <span class="c1">// parameters (phen::Parameters). The genotype could also have been</span>
-  <span class="c1">// transformed into a shape, a neural network... The phenotype need</span>
-  <span class="c1">// to know which fitness to use; we pass fit_t to it.</span>
-  <span class="k">typedef</span> <span class="n">phen</span><span class="o">::</span><span class="n">Parameters</span><span class="o">&lt;</span><span class="n">gen_t</span><span class="p">,</span> <span class="n">fit_t</span><span class="p">,</span> <span class="n">Params</span><span class="o">&gt;</span> <span class="n">phen_t</span><span class="p">;</span>
-  <span class="c1">// The evaluator is in charge of distributing the evaluation of the</span>
-  <span class="c1">// population. It can be simple eval::Eval (nothing special),</span>
-  <span class="c1">// parallel (for multicore machines, eval::Parallel) or distributed</span>
-  <span class="c1">// (for clusters, eval::Mpi).</span>
-  <span class="k">typedef</span> <span class="n">eval</span><span class="o">::</span><span class="n">Eval</span><span class="o">&lt;</span><span class="n">Params</span><span class="o">&gt;</span> <span class="n">eval_t</span><span class="p">;</span>
-  <span class="c1">// Statistics gather data about the evolutionary process (mean</span>
-  <span class="c1">// fitness, Pareto front, ...). Since they can also store the best</span>
-  <span class="c1">// individuals, they are the container of our results. We can add as</span>
-  <span class="c1">// many statistics as required thanks to the boost::fusion::vector.</span>
-  <span class="k">typedef</span> <span class="n">boost</span><span class="o">::</span><span class="n">fusion</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">stat</span><span class="o">::</span><span class="n">BestFit</span><span class="o">&lt;</span><span class="n">phen_t</span><span class="p">,</span> <span class="n">Params</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">stat</span><span class="o">::</span><span class="n">MeanFit</span><span class="o">&lt;</span><span class="n">Params</span><span class="o">&gt;</span> <span class="o">&gt;</span>  <span class="n">stat_t</span><span class="p">;</span>
-  <span class="c1">// Modifiers are functors which are run once all individuals have</span>
-  <span class="c1">// been evalutated. Their typical use is to add some evolutionary</span>
-  <span class="c1">// pressures towards diversity (e.g. fitness sharing). Here we don&#39;t</span>
-  <span class="c1">// use this feature. As a consequence we use a &quot;dummy&quot; modifier that</span>
-  <span class="c1">// does nothing.</span>
-  <span class="k">typedef</span> <span class="n">modif</span><span class="o">::</span><span class="n">Dummy</span><span class="o">&lt;&gt;</span> <span class="n">modifier_t</span><span class="p">;</span>
-  <span class="c1">// We can finally put everything together. RankSimple is the</span>
-  <span class="c1">// evolutionary algorithm. It is parametrized by the phenotype, the</span>
-  <span class="c1">// evaluator, the statistics list, the modifier and the general params.</span>
-  <span class="k">typedef</span> <span class="n">ea</span><span class="o">::</span><span class="n">RankSimple</span><span class="o">&lt;</span><span class="n">phen_t</span><span class="p">,</span> <span class="n">eval_t</span><span class="p">,</span> <span class="n">stat_t</span><span class="p">,</span> <span class="n">modifier_t</span><span class="p">,</span> <span class="n">Params</span><span class="o">&gt;</span> <span class="n">ea_t</span><span class="p">;</span>
-  <span class="c1">// We now have a special class for our experiment: ea_t. The next</span>
-  <span class="c1">// line instantiates an object of this class</span>
-  <span class="n">ea_t</span> <span class="n">ea</span><span class="p">;</span>
-  <span class="c1">// We can now process the command line options and run the</span>
-  <span class="c1">// evolutionary algorithm (if a --load argument is passed, the file</span>
-  <span class="c1">// is loaded; otherwise, the algorithm is launched).</span>
-  <span class="n">run_ea</span><span class="p">(</span><span class="n">argc</span><span class="p">,</span> <span class="n">argv</span><span class="p">,</span> <span class="n">ea</span><span class="p">);</span>
-  <span class="c1">//</span>
-  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
-<span class="p">}</span>
+class in the following section. Ignore it for now.</p>
+</div></blockquote>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">argc</span><span class="p">,</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="o">**</span><span class="n">argv</span><span class="p">)</span><span class="w"></span>
+<span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="c1">// Our fitness is the class FitTest (see above), that we call</span>
+<span class="w">  </span><span class="c1">// fit_t. Params is the set of parameters (struct Params) defined in</span>
+<span class="w">  </span><span class="c1">// this file.</span>
+<span class="w">  </span><span class="k">typedef</span><span class="w"> </span><span class="n">FitTest</span><span class="o">&lt;</span><span class="n">Params</span><span class="o">&gt;</span><span class="w"> </span><span class="n">fit_t</span><span class="p">;</span><span class="w"></span>
+<span class="w">  </span><span class="c1">// We define the genotype. Here we choose EvoFloat (real</span>
+<span class="w">  </span><span class="c1">// numbers). We evolve 10 real numbers, with the params defined in</span>
+<span class="w">  </span><span class="c1">// Params (cf the beginning of this file)</span>
+<span class="w">  </span><span class="k">typedef</span><span class="w"> </span><span class="n">gen</span><span class="o">::</span><span class="n">EvoFloat</span><span class="o">&lt;</span><span class="mi">10</span><span class="p">,</span><span class="w"> </span><span class="n">Params</span><span class="o">&gt;</span><span class="w"> </span><span class="n">gen_t</span><span class="p">;</span><span class="w"></span>
+<span class="w">  </span><span class="c1">// This genotype should be simply transformed into a vector of</span>
+<span class="w">  </span><span class="c1">// parameters (phen::Parameters). The genotype could also have been</span>
+<span class="w">  </span><span class="c1">// transformed into a shape, a neural network... The phenotype need</span>
+<span class="w">  </span><span class="c1">// to know which fitness to use; we pass fit_t to it.</span>
+<span class="w">  </span><span class="k">typedef</span><span class="w"> </span><span class="n">phen</span><span class="o">::</span><span class="n">Parameters</span><span class="o">&lt;</span><span class="n">gen_t</span><span class="p">,</span><span class="w"> </span><span class="n">fit_t</span><span class="p">,</span><span class="w"> </span><span class="n">Params</span><span class="o">&gt;</span><span class="w"> </span><span class="n">phen_t</span><span class="p">;</span><span class="w"></span>
+<span class="w">  </span><span class="c1">// The evaluator is in charge of distributing the evaluation of the</span>
+<span class="w">  </span><span class="c1">// population. It can be simple eval::Eval (nothing special),</span>
+<span class="w">  </span><span class="c1">// parallel (for multicore machines, eval::Parallel) or distributed</span>
+<span class="w">  </span><span class="c1">// (for clusters, eval::Mpi).</span>
+<span class="w">  </span><span class="k">typedef</span><span class="w"> </span><span class="n">eval</span><span class="o">::</span><span class="n">Eval</span><span class="o">&lt;</span><span class="n">Params</span><span class="o">&gt;</span><span class="w"> </span><span class="n">eval_t</span><span class="p">;</span><span class="w"></span>
+<span class="w">  </span><span class="c1">// Statistics gather data about the evolutionary process (mean</span>
+<span class="w">  </span><span class="c1">// fitness, Pareto front, ...). Since they can also store the best</span>
+<span class="w">  </span><span class="c1">// individuals, they are the container of our results. We can add as</span>
+<span class="w">  </span><span class="c1">// many statistics as required thanks to the boost::fusion::vector.</span>
+<span class="w">  </span><span class="k">typedef</span><span class="w"> </span><span class="n">boost</span><span class="o">::</span><span class="n">fusion</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">stat</span><span class="o">::</span><span class="n">BestFit</span><span class="o">&lt;</span><span class="n">phen_t</span><span class="p">,</span><span class="w"> </span><span class="n">Params</span><span class="o">&gt;</span><span class="p">,</span><span class="w"> </span><span class="n">stat</span><span class="o">::</span><span class="n">MeanFit</span><span class="o">&lt;</span><span class="n">Params</span><span class="o">&gt;</span><span class="w"> </span><span class="o">&gt;</span><span class="w">  </span><span class="n">stat_t</span><span class="p">;</span><span class="w"></span>
+<span class="w">  </span><span class="c1">// Modifiers are functors which are run once all individuals have</span>
+<span class="w">  </span><span class="c1">// been evalutated. Their typical use is to add some evolutionary</span>
+<span class="w">  </span><span class="c1">// pressures towards diversity (e.g. fitness sharing). Here we don&#39;t</span>
+<span class="w">  </span><span class="c1">// use this feature. As a consequence we use a &quot;dummy&quot; modifier that</span>
+<span class="w">  </span><span class="c1">// does nothing.</span>
+<span class="w">  </span><span class="k">typedef</span><span class="w"> </span><span class="n">modif</span><span class="o">::</span><span class="n">Dummy</span><span class="o">&lt;&gt;</span><span class="w"> </span><span class="n">modifier_t</span><span class="p">;</span><span class="w"></span>
+<span class="w">  </span><span class="c1">// We can finally put everything together. RankSimple is the</span>
+<span class="w">  </span><span class="c1">// evolutionary algorithm. It is parametrized by the phenotype, the</span>
+<span class="w">  </span><span class="c1">// evaluator, the statistics list, the modifier and the general params.</span>
+<span class="w">  </span><span class="k">typedef</span><span class="w"> </span><span class="n">ea</span><span class="o">::</span><span class="n">RankSimple</span><span class="o">&lt;</span><span class="n">phen_t</span><span class="p">,</span><span class="w"> </span><span class="n">eval_t</span><span class="p">,</span><span class="w"> </span><span class="n">stat_t</span><span class="p">,</span><span class="w"> </span><span class="n">modifier_t</span><span class="p">,</span><span class="w"> </span><span class="n">Params</span><span class="o">&gt;</span><span class="w"> </span><span class="n">ea_t</span><span class="p">;</span><span class="w"></span>
+<span class="w">  </span><span class="c1">// We now have a special class for our experiment: ea_t. The next</span>
+<span class="w">  </span><span class="c1">// line instantiates an object of this class</span>
+<span class="w">  </span><span class="n">ea_t</span><span class="w"> </span><span class="n">ea</span><span class="p">;</span><span class="w"></span>
+<span class="w">  </span><span class="c1">// We can now process the command line options and run the</span>
+<span class="w">  </span><span class="c1">// evolutionary algorithm (if a --load argument is passed, the file</span>
+<span class="w">  </span><span class="c1">// is loaded; otherwise, the algorithm is launched).</span>
+<span class="w">  </span><span class="n">run_ea</span><span class="p">(</span><span class="n">argc</span><span class="p">,</span><span class="w"> </span><span class="n">argv</span><span class="p">,</span><span class="w"> </span><span class="n">ea</span><span class="p">);</span><span class="w"></span>
+<span class="w">  </span><span class="c1">//</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="include-part">
+</section>
+<section id="include-part">
 <h4>Include part<a class="headerlink" href="#include-part" title="Permalink to this headline">¶</a></h4>
 <blockquote>
-<div>Let’s now go back to the top of the file. The file starts with the
+<div><p>Let’s now go back to the top of the file. The file starts with the
 usual include files, which obviously depends on which classes
-(genotype, phenotype, ea, …) you selected in the main function:</div></blockquote>
-<div class="code c++ highlight-c++"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp"></span>
-<span class="cp">#include</span> <span class="cpf">&lt;sferes/phen/parameters.hpp&gt;</span><span class="cp"></span>
-<span class="cp">#include</span> <span class="cpf">&lt;sferes/gen/evo_float.hpp&gt;</span><span class="cp"></span>
-<span class="cp">#include</span> <span class="cpf">&lt;sferes/ea/rank_simple.hpp&gt;</span><span class="cp"></span>
-<span class="cp">#include</span> <span class="cpf">&lt;sferes/eval/eval.hpp&gt;</span><span class="cp"></span>
-<span class="cp">#include</span> <span class="cpf">&lt;sferes/stat/best_fit.hpp&gt;</span><span class="cp"></span>
-<span class="cp">#include</span> <span class="cpf">&lt;sferes/stat/mean_fit.hpp&gt;</span><span class="cp"></span>
-<span class="cp">#include</span> <span class="cpf">&lt;sferes/modif/dummy.hpp&gt;</span><span class="cp"></span>
-<span class="cp">#include</span> <span class="cpf">&lt;sferes/run.hpp&gt;</span><span class="cp"></span>
+(genotype, phenotype, ea, …) you selected in the main function:</p>
+</div></blockquote>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;iostream&gt;</span><span class="cp"></span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;sferes/phen/parameters.hpp&gt;</span><span class="cp"></span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;sferes/gen/evo_float.hpp&gt;</span><span class="cp"></span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;sferes/ea/rank_simple.hpp&gt;</span><span class="cp"></span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;sferes/eval/eval.hpp&gt;</span><span class="cp"></span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;sferes/stat/best_fit.hpp&gt;</span><span class="cp"></span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;sferes/stat/mean_fit.hpp&gt;</span><span class="cp"></span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;sferes/modif/dummy.hpp&gt;</span><span class="cp"></span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;sferes/run.hpp&gt;</span><span class="cp"></span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="params">
+</section>
+<section id="params">
 <h4>Params<a class="headerlink" href="#params" title="Permalink to this headline">¶</a></h4>
 <blockquote>
-<div>Then, the Params structure defines the parameters of the algorithm.
+<div><p>Then, the Params structure defines the parameters of the algorithm.
 This particular way of setting them allows the compiler to propagate
 constants to the whole programm (i.e. it replaces the parameters in
 the code by their values), allowing some optimizations. This
 parameters will depend on the algorithms you chose to use in your
-main function.</div></blockquote>
-<div class="code c++ highlight-c++"><div class="highlight"><pre><span></span><span class="k">struct</span> <span class="n">Params</span>
-<span class="p">{</span>
-  <span class="k">struct</span> <span class="n">evo_float</span>
-  <span class="p">{</span>
-    <span class="c1">// we choose the polynomial mutation type</span>
-    <span class="n">SFERES_CONST</span> <span class="n">mutation_t</span> <span class="n">mutation_type</span> <span class="o">=</span> <span class="n">polynomial</span><span class="p">;</span>
-    <span class="c1">// we choose the polynomial cross-over type</span>
-    <span class="n">SFERES_CONST</span> <span class="n">cross_over_t</span> <span class="n">cross_over_type</span> <span class="o">=</span> <span class="n">sbx</span><span class="p">;</span>
-    <span class="c1">// the mutation rate of the real-valued vector</span>
-    <span class="n">SFERES_CONST</span> <span class="kt">float</span> <span class="n">mutation_rate</span> <span class="o">=</span> <span class="mf">0.1f</span><span class="p">;</span>
-    <span class="c1">// a parameter of the polynomial mutation</span>
-    <span class="n">SFERES_CONST</span> <span class="kt">float</span> <span class="n">eta_m</span> <span class="o">=</span> <span class="mf">15.0f</span><span class="p">;</span>
-    <span class="c1">// a parameter of the polynomial cross-over</span>
-    <span class="n">SFERES_CONST</span> <span class="kt">float</span> <span class="n">eta_c</span> <span class="o">=</span> <span class="mf">10.0f</span><span class="p">;</span>
-  <span class="p">};</span>
-  <span class="k">struct</span> <span class="n">pop</span>
-  <span class="p">{</span>
-    <span class="c1">// size of the population</span>
-    <span class="n">SFERES_CONST</span> <span class="kt">unsigned</span> <span class="n">size</span> <span class="o">=</span> <span class="mi">200</span><span class="p">;</span>
-    <span class="c1">// number of generations</span>
-    <span class="n">SFERES_CONST</span> <span class="kt">unsigned</span> <span class="n">nb_gen</span> <span class="o">=</span> <span class="mi">2000</span><span class="p">;</span>
-    <span class="c1">// how often should the result file be written (here, each 5</span>
-    <span class="c1">// generation)</span>
-    <span class="n">SFERES_CONST</span> <span class="kt">int</span> <span class="n">dump_period</span> <span class="o">=</span> <span class="mi">5</span><span class="p">;</span>
-    <span class="c1">// how many individuals should be created during the random</span>
-    <span class="c1">// generation process?</span>
-    <span class="n">SFERES_CONST</span> <span class="kt">int</span> <span class="n">initial_aleat</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
-    <span class="c1">// used by RankSimple to select the pressure</span>
-    <span class="n">SFERES_CONST</span> <span class="kt">float</span> <span class="n">coeff</span> <span class="o">=</span> <span class="mf">1.1f</span><span class="p">;</span>
-    <span class="c1">// the number of individuals which are kept from one generation to</span>
-    <span class="c1">// another (elitism)</span>
-    <span class="n">SFERES_CONST</span> <span class="kt">float</span> <span class="n">keep_rate</span> <span class="o">=</span> <span class="mf">0.6f</span><span class="p">;</span>
-  <span class="p">};</span>
-  <span class="k">struct</span> <span class="n">parameters</span>
-  <span class="p">{</span>
-    <span class="c1">// maximum value of the phenotype parameters</span>
-    <span class="n">SFERES_CONST</span> <span class="kt">float</span> <span class="n">min</span> <span class="o">=</span> <span class="o">-</span><span class="mf">10.0f</span><span class="p">;</span>
-    <span class="c1">// minimum value</span>
-    <span class="n">SFERES_CONST</span> <span class="kt">float</span> <span class="n">max</span> <span class="o">=</span> <span class="mf">10.0f</span><span class="p">;</span>
-  <span class="p">};</span>
-<span class="p">};</span>
+main function.</p>
+</div></blockquote>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="k">struct</span><span class="w"> </span><span class="nc">Params</span><span class="w"></span>
+<span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="k">struct</span><span class="w"> </span><span class="nc">evo_float</span><span class="w"></span>
+<span class="w">  </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="c1">// we choose the polynomial mutation type</span>
+<span class="w">    </span><span class="n">SFERES_CONST</span><span class="w"> </span><span class="n">mutation_t</span><span class="w"> </span><span class="n">mutation_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">polynomial</span><span class="p">;</span><span class="w"></span>
+<span class="w">    </span><span class="c1">// we choose the polynomial cross-over type</span>
+<span class="w">    </span><span class="n">SFERES_CONST</span><span class="w"> </span><span class="n">cross_over_t</span><span class="w"> </span><span class="n">cross_over_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sbx</span><span class="p">;</span><span class="w"></span>
+<span class="w">    </span><span class="c1">// the mutation rate of the real-valued vector</span>
+<span class="w">    </span><span class="n">SFERES_CONST</span><span class="w"> </span><span class="kt">float</span><span class="w"> </span><span class="n">mutation_rate</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.1f</span><span class="p">;</span><span class="w"></span>
+<span class="w">    </span><span class="c1">// a parameter of the polynomial mutation</span>
+<span class="w">    </span><span class="n">SFERES_CONST</span><span class="w"> </span><span class="kt">float</span><span class="w"> </span><span class="n">eta_m</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">15.0f</span><span class="p">;</span><span class="w"></span>
+<span class="w">    </span><span class="c1">// a parameter of the polynomial cross-over</span>
+<span class="w">    </span><span class="n">SFERES_CONST</span><span class="w"> </span><span class="kt">float</span><span class="w"> </span><span class="n">eta_c</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">10.0f</span><span class="p">;</span><span class="w"></span>
+<span class="w">  </span><span class="p">};</span><span class="w"></span>
+<span class="w">  </span><span class="k">struct</span><span class="w"> </span><span class="nc">pop</span><span class="w"></span>
+<span class="w">  </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="c1">// size of the population</span>
+<span class="w">    </span><span class="n">SFERES_CONST</span><span class="w"> </span><span class="kt">unsigned</span><span class="w"> </span><span class="n">size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">200</span><span class="p">;</span><span class="w"></span>
+<span class="w">    </span><span class="c1">// number of generations</span>
+<span class="w">    </span><span class="n">SFERES_CONST</span><span class="w"> </span><span class="kt">unsigned</span><span class="w"> </span><span class="n">nb_gen</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2000</span><span class="p">;</span><span class="w"></span>
+<span class="w">    </span><span class="c1">// how often should the result file be written (here, each 5</span>
+<span class="w">    </span><span class="c1">// generation)</span>
+<span class="w">    </span><span class="n">SFERES_CONST</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">dump_period</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">5</span><span class="p">;</span><span class="w"></span>
+<span class="w">    </span><span class="c1">// how many individuals should be created during the random</span>
+<span class="w">    </span><span class="c1">// generation process?</span>
+<span class="w">    </span><span class="n">SFERES_CONST</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">initial_aleat</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span><span class="w"></span>
+<span class="w">    </span><span class="c1">// used by RankSimple to select the pressure</span>
+<span class="w">    </span><span class="n">SFERES_CONST</span><span class="w"> </span><span class="kt">float</span><span class="w"> </span><span class="n">coeff</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">1.1f</span><span class="p">;</span><span class="w"></span>
+<span class="w">    </span><span class="c1">// the number of individuals which are kept from one generation to</span>
+<span class="w">    </span><span class="c1">// another (elitism)</span>
+<span class="w">    </span><span class="n">SFERES_CONST</span><span class="w"> </span><span class="kt">float</span><span class="w"> </span><span class="n">keep_rate</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.6f</span><span class="p">;</span><span class="w"></span>
+<span class="w">  </span><span class="p">};</span><span class="w"></span>
+<span class="w">  </span><span class="k">struct</span><span class="w"> </span><span class="nc">parameters</span><span class="w"></span>
+<span class="w">  </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="c1">// maximum value of the phenotype parameters</span>
+<span class="w">    </span><span class="n">SFERES_CONST</span><span class="w"> </span><span class="kt">float</span><span class="w"> </span><span class="n">min</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">-10.0f</span><span class="p">;</span><span class="w"></span>
+<span class="w">    </span><span class="c1">// minimum value</span>
+<span class="w">    </span><span class="n">SFERES_CONST</span><span class="w"> </span><span class="kt">float</span><span class="w"> </span><span class="n">max</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">10.0f</span><span class="p">;</span><span class="w"></span>
+<span class="w">  </span><span class="p">};</span><span class="w"></span>
+<span class="p">};</span><span class="w"></span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="fitness-function">
+</section>
+<section id="fitness-function">
 <h4>Fitness function<a class="headerlink" href="#fitness-function" title="Permalink to this headline">¶</a></h4>
 <blockquote>
-<div>Last, it’s time to write the fitness function. It’s a special class
+<div><p>Last, it’s time to write the fitness function. It’s a special class
 with an “eval()” function which derives from fit::Fitness. It has to
 fill <cite>this-&gt;_value</cite> in single-objective optimization and
 this-&gt;_objs` in multiobjective optimization. In this example,
-we want to maximize <span class="math">\(-\sum_i p_i^4\)</span>, where <span class="math">\(p\)</span> is the
-individual’s phenotype.</div></blockquote>
-<div class="code c++ highlight-c++"><div class="highlight"><pre><span></span><span class="n">SFERES_FITNESS</span><span class="p">(</span><span class="n">FitTest</span><span class="p">,</span> <span class="n">sferes</span><span class="o">::</span><span class="n">fit</span><span class="o">::</span><span class="n">Fitness</span><span class="p">)</span>
-<span class="p">{</span>
- <span class="k">public</span><span class="o">:</span>
-  <span class="c1">// indiv will have the type defined in the main (phen_t)</span>
-  <span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">Indiv</span><span class="o">&gt;</span>
-    <span class="kt">void</span> <span class="n">eval</span><span class="p">(</span><span class="k">const</span> <span class="n">Indiv</span><span class="o">&amp;</span> <span class="n">ind</span><span class="p">)</span>
-  <span class="p">{</span>
-    <span class="kt">float</span> <span class="n">v</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-    <span class="k">for</span> <span class="p">(</span><span class="kt">unsigned</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">ind</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span>
-      <span class="p">{</span>
-       <span class="kt">float</span> <span class="n">p</span> <span class="o">=</span> <span class="n">ind</span><span class="p">.</span><span class="n">data</span><span class="p">(</span><span class="n">i</span><span class="p">);</span>
-       <span class="n">v</span> <span class="o">+=</span> <span class="n">p</span> <span class="o">*</span> <span class="n">p</span> <span class="o">*</span> <span class="n">p</span> <span class="o">*</span> <span class="n">p</span><span class="p">;</span>
-      <span class="p">}</span>
-    <span class="k">this</span><span class="o">-&gt;</span><span class="n">_value</span> <span class="o">=</span> <span class="o">-</span><span class="n">v</span><span class="p">;</span>
-  <span class="p">}</span>
-<span class="p">};</span>
+we want to maximize <span class="math notranslate nohighlight">\(-\sum_i p_i^4\)</span>, where <span class="math notranslate nohighlight">\(p\)</span> is the
+individual’s phenotype.</p>
+</div></blockquote>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="n">SFERES_FITNESS</span><span class="p">(</span><span class="n">FitTest</span><span class="p">,</span><span class="w"> </span><span class="n">sferes</span><span class="o">::</span><span class="n">fit</span><span class="o">::</span><span class="n">Fitness</span><span class="p">)</span><span class="w"></span>
+<span class="p">{</span><span class="w"></span>
+<span class="w"> </span><span class="k">public</span><span class="o">:</span><span class="w"></span>
+<span class="w">  </span><span class="c1">// indiv will have the type defined in the main (phen_t)</span>
+<span class="w">  </span><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span><span class="w"> </span><span class="nc">Indiv</span><span class="o">&gt;</span><span class="w"></span>
+<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="n">eval</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">Indiv</span><span class="o">&amp;</span><span class="w"> </span><span class="n">ind</span><span class="p">)</span><span class="w"></span>
+<span class="w">  </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="kt">float</span><span class="w"> </span><span class="n">v</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"></span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">unsigned</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">ind</span><span class="p">.</span><span class="n">size</span><span class="p">();</span><span class="w"> </span><span class="o">++</span><span class="n">i</span><span class="p">)</span><span class="w"></span>
+<span class="w">      </span><span class="p">{</span><span class="w"></span>
+<span class="w">       </span><span class="kt">float</span><span class="w"> </span><span class="n">p</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ind</span><span class="p">.</span><span class="n">data</span><span class="p">(</span><span class="n">i</span><span class="p">);</span><span class="w"></span>
+<span class="w">       </span><span class="n">v</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">p</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">p</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">p</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">p</span><span class="p">;</span><span class="w"></span>
+<span class="w">      </span><span class="p">}</span><span class="w"></span>
+<span class="w">    </span><span class="k">this</span><span class="o">-&gt;</span><span class="n">_value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">-</span><span class="n">v</span><span class="p">;</span><span class="w"></span>
+<span class="w">  </span><span class="p">}</span><span class="w"></span>
+<span class="p">};</span><span class="w"></span>
 </pre></div>
 </div>
 <p>It can also be useful to print a few things (debug, result, 3D graphics, additionnal information, etc.) <strong>when we are in loading mode</strong>.
 This is easily achieved like this:</p>
-<div class="code c++ highlight-c++"><div class="highlight"><pre><span></span><span class="n">SFERES_FITNESS</span><span class="p">(</span><span class="n">FitTest</span><span class="p">,</span> <span class="n">sferes</span><span class="o">::</span><span class="n">fit</span><span class="o">::</span><span class="n">Fitness</span><span class="p">)</span>
-<span class="p">{</span>
- <span class="k">public</span><span class="o">:</span>
-  <span class="c1">// indiv will have the type defined in the main (phen_t)</span>
-  <span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">Indiv</span><span class="o">&gt;</span>
-    <span class="kt">void</span> <span class="n">eval</span><span class="p">(</span><span class="k">const</span> <span class="n">Indiv</span><span class="o">&amp;</span> <span class="n">ind</span><span class="p">)</span>
-  <span class="p">{</span>
-    <span class="kt">float</span> <span class="n">v</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-    <span class="k">for</span> <span class="p">(</span><span class="kt">unsigned</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">ind</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span>
-      <span class="p">{</span>
-       <span class="kt">float</span> <span class="n">p</span> <span class="o">=</span> <span class="n">ind</span><span class="p">.</span><span class="n">data</span><span class="p">(</span><span class="n">i</span><span class="p">);</span>
-       <span class="n">v</span> <span class="o">+=</span> <span class="n">p</span> <span class="o">*</span> <span class="n">p</span> <span class="o">*</span> <span class="n">p</span> <span class="o">*</span> <span class="n">p</span><span class="p">;</span>
-      <span class="p">}</span>
-    <span class="k">this</span><span class="o">-&gt;</span><span class="n">_value</span> <span class="o">=</span> <span class="o">-</span><span class="n">v</span><span class="p">;</span>
-    <span class="c1">// code specific to loading mode</span>
-    <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">mode</span><span class="p">()</span> <span class="o">==</span> <span class="n">sferes</span><span class="o">::</span><span class="n">fit</span><span class="o">::</span><span class="n">view</span><span class="p">)</span> <span class="p">{</span>
-       <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Value:&quot;</span> <span class="o">&lt;&lt;</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">_value</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
-    <span class="p">}</span>
-  <span class="p">}</span>
-<span class="p">};</span>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="n">SFERES_FITNESS</span><span class="p">(</span><span class="n">FitTest</span><span class="p">,</span><span class="w"> </span><span class="n">sferes</span><span class="o">::</span><span class="n">fit</span><span class="o">::</span><span class="n">Fitness</span><span class="p">)</span><span class="w"></span>
+<span class="p">{</span><span class="w"></span>
+<span class="w"> </span><span class="k">public</span><span class="o">:</span><span class="w"></span>
+<span class="w">  </span><span class="c1">// indiv will have the type defined in the main (phen_t)</span>
+<span class="w">  </span><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span><span class="w"> </span><span class="nc">Indiv</span><span class="o">&gt;</span><span class="w"></span>
+<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="n">eval</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">Indiv</span><span class="o">&amp;</span><span class="w"> </span><span class="n">ind</span><span class="p">)</span><span class="w"></span>
+<span class="w">  </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="kt">float</span><span class="w"> </span><span class="n">v</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"></span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">unsigned</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">ind</span><span class="p">.</span><span class="n">size</span><span class="p">();</span><span class="w"> </span><span class="o">++</span><span class="n">i</span><span class="p">)</span><span class="w"></span>
+<span class="w">      </span><span class="p">{</span><span class="w"></span>
+<span class="w">       </span><span class="kt">float</span><span class="w"> </span><span class="n">p</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ind</span><span class="p">.</span><span class="n">data</span><span class="p">(</span><span class="n">i</span><span class="p">);</span><span class="w"></span>
+<span class="w">       </span><span class="n">v</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">p</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">p</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">p</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">p</span><span class="p">;</span><span class="w"></span>
+<span class="w">      </span><span class="p">}</span><span class="w"></span>
+<span class="w">    </span><span class="k">this</span><span class="o">-&gt;</span><span class="n">_value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">-</span><span class="n">v</span><span class="p">;</span><span class="w"></span>
+<span class="w">    </span><span class="c1">// code specific to loading mode</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">mode</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">sferes</span><span class="o">::</span><span class="n">fit</span><span class="o">::</span><span class="n">view</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">       </span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;Value:&quot;</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="k">this</span><span class="o">-&gt;</span><span class="n">_value</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span><span class="w"></span>
+<span class="w">    </span><span class="p">}</span><span class="w"></span>
+<span class="w">  </span><span class="p">}</span><span class="w"></span>
+<span class="p">};</span><span class="w"></span>
 </pre></div>
 </div>
 <p>You can now have a look at the <cite>examples</cite> directory.</p>
-</div>
-</div>
-</div>
-</div>
+</section>
+</section>
+</section>
+</section>
 
 
            </div>
@@ -479,7 +489,7 @@ This is easily achieved like this:</p>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="concepts.html" class="btn btn-neutral float-right" title="Main concepts" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="qd.html" class="btn btn-neutral float-right" title="Quality-Diversity Framework" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="compilation.html" class="btn btn-neutral" title="Compilation" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
@@ -538,10 +548,11 @@ This is easily achieved like this:</p>
             HAS_SOURCE:  true
         };
     </script>
+      <script type="text/javascript" src="_static/documentation_options.js"></script>
       <script type="text/javascript" src="_static/jquery.js"></script>
       <script type="text/javascript" src="_static/underscore.js"></script>
       <script type="text/javascript" src="_static/doctools.js"></script>
-      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+      <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 
   
 

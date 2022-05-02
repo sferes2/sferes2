@@ -5,7 +5,8 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  
+  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
   <title>Compilation &mdash; Sferes_v2 0.1 alpha documentation</title>
@@ -24,6 +25,10 @@
 
   <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
 
+  
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   
 
   
@@ -125,6 +130,7 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial (basics)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="qd.html">Quality-Diversity Framework</a></li>
 <li class="toctree-l1"><a class="reference internal" href="concepts.html">Main concepts</a></li>
 <li class="toctree-l1"><a class="reference internal" href="reference.html">Reference manual</a></li>
 <li class="toctree-l1"><a class="reference internal" href="clusters.html">Sferes on clusters (OAR)</a></li>
@@ -167,7 +173,7 @@
 
 <div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
-    <li><a href="index.html">Fferes_v2</a> &raquo;</li>
+    <li><a href="index.html">Sferes_v2</a> &raquo;</li>
     
     <li>Compilation</li>
     <li class="wy-breadcrumbs-aside">
@@ -183,101 +189,101 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="compilation">
+  <section id="compilation">
 <h1>Compilation<a class="headerlink" href="#compilation" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="dependencies">
+<section id="dependencies">
 <h2>Dependencies<a class="headerlink" href="#dependencies" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="ubuntu-debian">
+<section id="ubuntu-debian">
 <h3>Ubuntu / Debian<a class="headerlink" href="#ubuntu-debian" title="Permalink to this headline">¶</a></h3>
 <p>We list here the Ubuntu package names:</p>
 <ul class="simple">
-<li>[required] libboost-all-dev &gt;= 1.35 (including test, serialization, graph,</li>
+<li><p>[required] libboost-all-dev &gt;= 1.35 (including test, serialization, graph,</p></li>
 </ul>
 <blockquote>
-<div><dl class="docutils">
-<dt>program_options, filesystem); see [[<a class="reference external" href="http://www.boost.org">http://www.boost.org</a>]]; &gt;</dt>
-<dd><a class="reference external" href="http://www.boost.org">http://www.boost.org</a>;</dd>
+<div><dl class="simple">
+<dt>program_options, filesystem); see [[<a class="reference external" href="http://www.boost.org">http://www.boost.org</a>]]; &gt;</dt><dd><p><a class="reference external" href="http://www.boost.org">http://www.boost.org</a>;</p>
+</dd>
 </dl>
 </div></blockquote>
 <ul class="simple">
-<li>[required] python &gt;= 3.x</li>
-<li>[required] g++ &gt;= 4.2 or clang (defaut on mac);</li>
-<li>[optional but highly recommended] libtbb-dev; see
-<a class="reference external" href="http://www.threadingbuildingblocks.org/">http://www.threadingbuildingblocks.org/</a></li>
-<li>[optional but highly recommended] libeigen3-dev ; see
-<a class="reference external" href="http://eigen.tuxfamily.org/">http://eigen.tuxfamily.org/</a></li>
-<li>[optional but recommended] python-simplejson;</li>
-<li>[optional] libboost-mpi-dev , if you need the optional MPI support
+<li><p>[required] python &gt;= 3.x</p></li>
+<li><p>[required] g++ &gt;= 4.2 or clang (defaut on mac);</p></li>
+<li><p>[optional but highly recommended] libtbb-dev; see
+<a class="reference external" href="http://www.threadingbuildingblocks.org/">http://www.threadingbuildingblocks.org/</a></p></li>
+<li><p>[optional but highly recommended] libeigen3-dev ; see
+<a class="reference external" href="http://eigen.tuxfamily.org/">http://eigen.tuxfamily.org/</a></p></li>
+<li><p>[optional but recommended] python-simplejson;</p></li>
+<li><p>[optional] libboost-mpi-dev , if you need the optional MPI support
 (Warning: the Ubuntu packages of boost are not compiled with MPI
-support; you will have to compile boost yourself to use MPI).</li>
-<li>[optional] OpenMPI or another MPI implementation (tested with IBM MPI
-and OpenMPI)</li>
-<li>[optional] libgoogle-perftools-dev.</li>
+support; you will have to compile boost yourself to use MPI).</p></li>
+<li><p>[optional] OpenMPI or another MPI implementation (tested with IBM MPI
+and OpenMPI)</p></li>
+<li><p>[optional] libgoogle-perftools-dev.</p></li>
 </ul>
-<div class="code shell highlight-default"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="n">libboost</span><span class="o">-</span><span class="n">dev</span> <span class="n">libboost</span><span class="o">-</span><span class="n">test</span><span class="o">-</span><span class="n">dev</span> <span class="n">libboost</span><span class="o">-</span><span class="n">filesystem</span><span class="o">-</span><span class="n">dev</span> <span class="n">libboost</span><span class="o">-</span><span class="n">program</span><span class="o">-</span><span class="n">options</span><span class="o">-</span><span class="n">dev</span> <span class="n">libboost</span><span class="o">-</span><span class="n">graph</span><span class="o">-</span><span class="n">parallel</span><span class="o">-</span><span class="n">dev</span> <span class="n">python</span> <span class="n">g</span><span class="o">++</span> <span class="n">libtbb</span><span class="o">-</span><span class="n">dev</span> <span class="n">libeigen3</span><span class="o">-</span><span class="n">dev</span> <span class="n">python</span><span class="o">-</span><span class="n">simplejson</span> <span class="n">libgoogle</span><span class="o">-</span><span class="n">perftools</span><span class="o">-</span><span class="n">dev</span>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>sudo apt-get install libboost-dev libboost-test-dev libboost-filesystem-dev libboost-program-options-dev libboost-graph-parallel-dev python g++ libtbb-dev libeigen3-dev python-simplejson libgoogle-perftools-dev
 </pre></div>
 </div>
-</div>
-<div class="section" id="osx-brew">
+</section>
+<section id="osx-brew">
 <h3>OSX (brew)<a class="headerlink" href="#osx-brew" title="Permalink to this headline">¶</a></h3>
 <p>To install MPI support with brew:</p>
-<div class="code shell highlight-default"><div class="highlight"><pre><span></span><span class="n">brew</span> <span class="o">-</span><span class="n">v</span> <span class="n">install</span>  <span class="n">boost</span> <span class="o">--</span><span class="k">with</span><span class="o">-</span><span class="n">mpi</span> <span class="o">--</span><span class="n">without</span><span class="o">-</span><span class="n">single</span>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>brew -v install  boost --with-mpi --without-single
 </pre></div>
 </div>
-</div>
-</div>
-<div class="section" id="id1">
+</section>
+</section>
+<section id="id1">
 <h2>Compilation<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="simple-compilation">
+<section id="simple-compilation">
 <h3>Simple compilation<a class="headerlink" href="#simple-compilation" title="Permalink to this headline">¶</a></h3>
 <p>Assuming that everything has been properly installed you should be able
 to compile sferes2 by typing (in the main sferes directory):</p>
-<div class="code shell highlight-default"><div class="highlight"><pre><span></span><span class="o">./</span><span class="n">waf</span> <span class="n">configure</span>
-<span class="o">./</span><span class="n">waf</span> <span class="n">build</span>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>./waf configure
+./waf build
 </pre></div>
 </div>
 <p>You should then run the unit tests:</p>
-<div class="code shell highlight-default"><div class="highlight"><pre><span></span><span class="o">./</span><span class="n">waf</span> <span class="o">--</span><span class="n">tests</span>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>./waf --tests
 </pre></div>
 </div>
 <p>If everything is green, sferes2 is working! If not, please send an
 e-mail to the authors with as many details as possible about your
 problem.</p>
-</div>
-<div class="section" id="configuration-and-details">
+</section>
+<section id="configuration-and-details">
 <h3>Configuration and details<a class="headerlink" href="#configuration-and-details" title="Permalink to this headline">¶</a></h3>
 <p>Sferes2 employs the waf build system (<a class="reference external" href="http://code.google.com/p/waf/">http://code.google.com/p/waf/</a>)
 instead of autoconf/automake and make. Waf employs files named <em>wscript</em>
 to describe the compilation process in python.</p>
 <p>The main wscript of sferes2 accepts the following configuration options:</p>
 <ul class="simple">
-<li>–-boost-includes=BOOSTINCLUDES : path to the boost directory where the
-includes are e.g. /usr/local/include/boost-1_35`</li>
-<li>–-boost-libs=BOOSTLIBS: path to the directory where the boost libs are
-e.g. /usr/local/lib</li>
-<li>–eigen=EIGEN: path to eigen (if not in the default directory)</li>
-<li>–-no-mpi: disable mpi (MPI is automatically disabled if no MPI
-implementation is found)</li>
-<li>–cpp14=CPP14: force / disable c++-14 compilation</li>
-<li>–-mpi=MPI: path to MPI [e.g. /usr/lib/openmpi ]</li>
-<li>–-tbb=TBB: path to TBB if it’s not installed in the default directory</li>
-<li>–-rpath: set an optional rpath (useful in case of link failure)</li>
-<li>–debug=yes/no: compile with debugging symbols</li>
+<li><p>–-boost-includes=BOOSTINCLUDES : path to the boost directory where the
+includes are e.g. /usr/local/include/boost-1_35`</p></li>
+<li><p>–-boost-libs=BOOSTLIBS: path to the directory where the boost libs are
+e.g. /usr/local/lib</p></li>
+<li><p>–eigen=EIGEN: path to eigen (if not in the default directory)</p></li>
+<li><p>–-no-mpi: disable mpi (MPI is automatically disabled if no MPI
+implementation is found)</p></li>
+<li><p>–cpp14=CPP14: force / disable c++-14 compilation</p></li>
+<li><p>–-mpi=MPI: path to MPI [e.g. /usr/lib/openmpi ]</p></li>
+<li><p>–-tbb=TBB: path to TBB if it’s not installed in the default directory</p></li>
+<li><p>–-rpath: set an optional rpath (useful in case of link failure)</p></li>
+<li><p>–debug=yes/no: compile with debugging symbols</p></li>
 </ul>
 <p>To use these options, pass them to the waf script during the
 configuration step. For example:</p>
-<div class="code shell highlight-default"><div class="highlight"><pre><span></span><span class="o">./</span><span class="n">waf</span> <span class="n">configure</span> <span class="o">--</span><span class="n">mpi</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">openmpi</span><span class="o">/</span>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>./waf configure --mpi /usr/lib/openmpi/
 </pre></div>
 </div>
 <p>or, to disable MPI:</p>
-<div class="code shell highlight-default"><div class="highlight"><pre><span></span><span class="o">./</span><span class="n">waf</span> <span class="n">configure</span> <span class="o">--</span><span class="n">no</span><span class="o">-</span><span class="n">mpi</span>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>./waf configure --no-mpi
 </pre></div>
 </div>
 <p>The configure options used during the last call of the “configure”
 command are in the file build/configure.options.</p>
-</div>
-</div>
-<div class="section" id="optional-modules">
+</section>
+</section>
+<section id="optional-modules">
 <h2>Optional modules<a class="headerlink" href="#optional-modules" title="Permalink to this headline">¶</a></h2>
 <p>The previous compilation provided you with a minimal sferes install.
 Several modules are available here: <a class="reference external" href="https://github.com/sferes2">https://github.com/sferes2</a></p>
@@ -288,21 +294,21 @@ install (where waf is). You should then list the modules you want to use
 in this file, with one module per line.</p>
 <p>For example, if you want to use the modules cartpole and nn2, your
 modules.conf file should look like:</p>
-<div class="code shell highlight-default"><div class="highlight"><pre><span></span><span class="n">cartpole</span>
-<span class="n">nn2</span>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>cartpole
+nn2
 </pre></div>
 </div>
 <p>You should then recompile sferes with the updated file :</p>
-<div class="code shell highlight-default"><div class="highlight"><pre><span></span><span class="o">./</span><span class="n">waf</span> <span class="n">build</span>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>./waf build
 </pre></div>
 </div>
 <p>This should compile all the add-on modules.</p>
 <p>You can then run the tests by using waf check:</p>
-<div class="code shell highlight-default"><div class="highlight"><pre><span></span><span class="o">./</span><span class="n">waf</span> <span class="o">--</span><span class="n">tests</span>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>./waf --tests
 </pre></div>
 </div>
-</div>
-</div>
+</section>
+</section>
 
 
            </div>
@@ -370,10 +376,10 @@ modules.conf file should look like:</p>
             HAS_SOURCE:  true
         };
     </script>
+      <script type="text/javascript" src="_static/documentation_options.js"></script>
       <script type="text/javascript" src="_static/jquery.js"></script>
       <script type="text/javascript" src="_static/underscore.js"></script>
       <script type="text/javascript" src="_static/doctools.js"></script>
-      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 
   
 

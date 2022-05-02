@@ -5,7 +5,8 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  
+  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
   <title>Reference manual &mdash; Sferes_v2 0.1 alpha documentation</title>
@@ -24,6 +25,10 @@
 
   <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
 
+  
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   
 
   
@@ -112,6 +117,7 @@
 <li class="toctree-l1"><a class="reference internal" href="index.html">Sferes_v2 – documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="compilation.html">Compilation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial (basics)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="qd.html">Quality-Diversity Framework</a></li>
 <li class="toctree-l1"><a class="reference internal" href="concepts.html">Main concepts</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Reference manual</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#uml-diagram">UML Diagram</a></li>
@@ -206,7 +212,7 @@
 
 <div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
-    <li><a href="index.html">Fferes_v2</a> &raquo;</li>
+    <li><a href="index.html">Sferes_v2</a> &raquo;</li>
     
     <li>Reference manual</li>
     <li class="wy-breadcrumbs-aside">
@@ -222,9 +228,9 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="reference-manual">
+  <section id="reference-manual">
 <h1>Reference manual<a class="headerlink" href="#reference-manual" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="uml-diagram">
+<section id="uml-diagram">
 <h2>UML Diagram<a class="headerlink" href="#uml-diagram" title="Permalink to this headline">¶</a></h2>
 <p>Here is a “conceptual” UML diagram of the sferes2 framework (modules are
 not represented). It’s “conceptual” because some abstract classes are
@@ -232,691 +238,709 @@ not implemented (because they are useless from an implementation point
 of view) but should exist in the mind of the user. Moreover, each class
 is parametrized by the Params class (see previous section), which is not
 represented on the diagram.</p>
-<div class="figure">
+<figure class="align-default">
 <a class="reference external image-reference" href="_images/sferes_uml.jpg"><img alt="Call graph" src="_images/sferes_uml.jpg" /></a>
-</div>
-</div>
-<div class="section" id="overview-of-the-call-graph">
+</figure>
+</section>
+<section id="overview-of-the-call-graph">
 <h2>Overview of the call graph<a class="headerlink" href="#overview-of-the-call-graph" title="Permalink to this headline">¶</a></h2>
-<div class="figure">
+<figure class="align-default">
 <a class="reference external image-reference" href="_images/sferes_call_graph.jpg"><img alt="Call graph" src="_images/sferes_call_graph.jpg" /></a>
-</div>
+</figure>
 <p>On this simplified call graph:</p>
 <ul class="simple">
-<li><cite>ea_t</cite> : type of your EA (e.g. ea::Nsga2)</li>
-<li><cite>eval_t</cite> : type of your evaluator (e.g. eval::Parallel)</li>
-<li><cite>gen_t</cite> : type of your genotype (e.g gen::EvoFloat)</li>
-<li><cite>modifier_t</cite> : type of your modifier (e.g. modif::Dummy)</li>
-<li><cite>phen_t</cite> : type of your phenotype (e.g. phen::Parameters)</li>
-<li><cite>stat_t</cite> : type of your statistics vector (e.g.
-<cite>boost::fusion::vector&lt;stat::BestFit&lt;phen_t&gt; &gt;</cite> )</li>
+<li><p><cite>ea_t</cite> : type of your EA (e.g. ea::Nsga2)</p></li>
+<li><p><cite>eval_t</cite> : type of your evaluator (e.g. eval::Parallel)</p></li>
+<li><p><cite>gen_t</cite> : type of your genotype (e.g gen::EvoFloat)</p></li>
+<li><p><cite>modifier_t</cite> : type of your modifier (e.g. modif::Dummy)</p></li>
+<li><p><cite>phen_t</cite> : type of your phenotype (e.g. phen::Parameters)</p></li>
+<li><p><cite>stat_t</cite> : type of your statistics vector (e.g.
+<cite>boost::fusion::vector&lt;stat::BestFit&lt;phen_t&gt; &gt;</cite> )</p></li>
 </ul>
 <p>Time flows from left to right (i.e. <cite>random_pop()</cite> is called
 before <cite>epoch()</cite> and so on). Methods with a double bar are called for each
 individual or each new individual.</p>
-</div>
-<div class="section" id="naming-conventions">
+</section>
+<section id="naming-conventions">
 <h2>Naming conventions<a class="headerlink" href="#naming-conventions" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
-<li>Names representing <strong>classes</strong> must be in mixed case starting with
-upper case: MyClass</li>
-<li><strong>Variable and method names</strong> must be in lower case, using
+<li><p>Names representing <strong>classes</strong> must be in mixed case starting with
+upper case: MyClass</p></li>
+<li><p><strong>Variable and method names</strong> must be in lower case, using
 underscores to separate words: my_variable`,
-my_method`()</li>
-<li>Names of <strong>protected and private members</strong> must start with an
-underscore: <cite>_my_private_member</cite>, <cite>_my_private_method()</cite></li>
-<li><strong>File names</strong> must be in lower case, using underscores to separate
+my_method`()</p></li>
+<li><p>Names of <strong>protected and private members</strong> must start with an
+underscore: <cite>_my_private_member</cite>, <cite>_my_private_method()</cite></p></li>
+<li><p><strong>File names</strong> must be in lower case, using underscores to separate
 words. A file which contains a class MyClass should be put in a file
-<cite>my_class.hpp</cite></li>
-<li><strong>File structure</strong> mirrors namespace structure. For instance
-gen::MyClass is in the file <cite>gen/my_class.hpp</cite></li>
-<li><strong>Named constants</strong> (including enumeration values) must be all
-uppercase using underscores to separate words</li>
-<li><strong>Getters</strong> should have the name of the attribute. For instance,
-<cite>this-&gt;_objs</cite> should be accessed using <cite>this-&gt;objs()</cite></li>
-<li><strong>Setters</strong> should start with “<a href="#id2"><span class="problematic" id="id3">set_</span></a>” followed by the name of the
+<cite>my_class.hpp</cite></p></li>
+<li><p><strong>File structure</strong> mirrors namespace structure. For instance
+gen::MyClass is in the file <cite>gen/my_class.hpp</cite></p></li>
+<li><p><strong>Named constants</strong> (including enumeration values) must be all
+uppercase using underscores to separate words</p></li>
+<li><p><strong>Getters</strong> should have the name of the attribute. For instance,
+<cite>this-&gt;_objs</cite> should be accessed using <cite>this-&gt;objs()</cite></p></li>
+<li><p><strong>Setters</strong> should start with “<a href="#id2"><span class="problematic" id="id3">set_</span></a>” followed by the name of the
 attribute. For instance: <cite>set_objs(const std::vector&lt;float&gt;&amp;
-ov)</cite></li>
-<li>The <strong>public section</strong> should be the first section of a class</li>
-<li>Type names defined using <strong>typedefs</strong> should end with <cite>_t</cite> (e.g. <cite>iterator_t</cite>)</li>
-<li>The <strong>default argument argument passing</strong> is <cite>const&amp;</cite> (except for <cite>char/int/double</cite> types), e.g., <cite>void my_function(const std::vector&lt;float&gt;&amp; x)</cite></li>
-<li>Methods should be declared as <cite>const</cite> except if there is a good reason for them to not be
-const, e.g., <cite>const std::vector&lt;float&gt;&amp; get_objs() const { return _objs; }</cite></li>
+ov)</cite></p></li>
+<li><p>The <strong>public section</strong> should be the first section of a class</p></li>
+<li><p>Type names defined using <strong>typedefs</strong> should end with <cite>_t</cite> (e.g. <cite>iterator_t</cite>)</p></li>
+<li><p>The <strong>default argument argument passing</strong> is <cite>const&amp;</cite> (except for <cite>char/int/double</cite> types), e.g., <cite>void my_function(const std::vector&lt;float&gt;&amp; x)</cite></p></li>
+<li><p>Methods should be declared as <cite>const</cite> except if there is a good reason for them to not be
+const, e.g., <cite>const std::vector&lt;float&gt;&amp; get_objs() const { return _objs; }</cite></p></li>
 </ul>
 <p>Full example:</p>
-<div class="highlight-c++"><div class="highlight"><pre><span></span><span class="c1">// filename: sferes/fit/my_test.hpp</span>
-<span class="k">namespace</span> <span class="n">sferes</span>
-<span class="p">{</span>
-  <span class="k">namespace</span> <span class="n">fit</span>
-  <span class="p">{</span>
-    <span class="k">class</span> <span class="nc">SFERES_CLASS</span><span class="p">(</span><span class="n">MyTest</span><span class="p">)</span>
-    <span class="p">{</span>
-    <span class="k">public</span><span class="o">:</span>
-      <span class="k">typedef</span> <span class="kt">float</span> <span class="n">f_t</span><span class="p">;</span>
-      <span class="n">MyTest</span><span class="p">()</span> <span class="p">{}</span>
-      <span class="kt">void</span> <span class="n">my_method</span><span class="p">()</span> <span class="p">{</span> <span class="n">_my_impl</span><span class="p">();</span> <span class="p">}</span>
-      <span class="kt">float</span> <span class="n">my_attr</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_my_attr</span><span class="p">;}</span>
-      <span class="kt">float</span> <span class="n">set_my_attr</span><span class="p">(</span><span class="kt">float</span> <span class="n">a</span><span class="p">)</span> <span class="p">{</span> <span class="n">_my_attr</span> <span class="o">=</span> <span class="n">v</span><span class="p">;</span> <span class="p">}</span>
-    <span class="k">protected</span><span class="o">:</span>
-      <span class="kt">float</span> <span class="n">_my_attr</span><span class="p">;</span>
-      <span class="kt">void</span> <span class="nf">_my_impl</span><span class="p">()</span> <span class="p">{}</span>
-    <span class="p">};</span>
-  <span class="p">}</span>
-<span class="p">}</span>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="c1">// filename: sferes/fit/my_test.hpp</span>
+<span class="k">namespace</span><span class="w"> </span><span class="nn">sferes</span><span class="w"></span>
+<span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="k">namespace</span><span class="w"> </span><span class="nn">fit</span><span class="w"></span>
+<span class="w">  </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="k">class</span><span class="w"> </span><span class="nc">SFERES_CLASS</span><span class="p">(</span><span class="n">MyTest</span><span class="p">)</span><span class="w"></span>
+<span class="w">    </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="k">public</span><span class="o">:</span><span class="w"></span>
+<span class="w">      </span><span class="k">typedef</span><span class="w"> </span><span class="kt">float</span><span class="w"> </span><span class="n">f_t</span><span class="p">;</span><span class="w"></span>
+<span class="w">      </span><span class="n">MyTest</span><span class="p">()</span><span class="w"> </span><span class="p">{}</span><span class="w"></span>
+<span class="w">      </span><span class="kt">void</span><span class="w"> </span><span class="n">my_method</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">_my_impl</span><span class="p">();</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
+<span class="w">      </span><span class="kt">float</span><span class="w"> </span><span class="n">my_attr</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_my_attr</span><span class="p">;}</span><span class="w"></span>
+<span class="w">      </span><span class="kt">float</span><span class="w"> </span><span class="n">set_my_attr</span><span class="p">(</span><span class="kt">float</span><span class="w"> </span><span class="n">a</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">_my_attr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">v</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
+<span class="w">    </span><span class="k">protected</span><span class="o">:</span><span class="w"></span>
+<span class="w">      </span><span class="kt">float</span><span class="w"> </span><span class="n">_my_attr</span><span class="p">;</span><span class="w"></span>
+<span class="w">      </span><span class="kt">void</span><span class="w"> </span><span class="nf">_my_impl</span><span class="p">()</span><span class="w"> </span><span class="p">{}</span><span class="w"></span>
+<span class="w">    </span><span class="p">};</span><span class="w"></span>
+<span class="w">  </span><span class="p">}</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="fitness">
+</section>
+<section id="fitness">
 <h2>Fitness<a class="headerlink" href="#fitness" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="fitness-1">
+<section id="fitness-1">
 <span id="id1"></span><h3>Fitness<a class="headerlink" href="#fitness-1" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
-<li><strong>File:</strong>
-<a class="reference external" href="https://github.com/sferes2/sferes2/blob/master/sferes/fit/fitness.hpp">sferes/fit/fitness.hpp</a></li>
-<li><strong>Description:</strong> Fitness is the base class of fitness functions in
-sferes2. It has two main attributes:<ul>
-<li><cite>float _value</cite> (setter/getter <cite>Fitness::value()/Fitness::set_value()</cite>) -&gt; the value
-of the fitness for single-objective optimization</li>
-<li><cite>std::vector&lt;float&gt; _objs</cite> (setter/getter <cite>Fitness::objs()/Fitness::set_obj(i, x)</cite>) -&gt;
-the value of each objective, for multiobjective optimization</li>
+<li><p><strong>File:</strong>
+<a class="reference external" href="https://github.com/sferes2/sferes2/blob/master/sferes/fit/fitness.hpp">sferes/fit/fitness.hpp</a></p></li>
+<li><p><strong>Description:</strong> Fitness is the base class of fitness functions in
+sferes2. It has two main attributes:</p>
+<ul>
+<li><p><cite>float _value</cite> (setter/getter <cite>Fitness::value()/Fitness::set_value()</cite>) -&gt; the value
+of the fitness for single-objective optimization</p></li>
+<li><p><cite>std::vector&lt;float&gt; _objs</cite> (setter/getter <cite>Fitness::objs()/Fitness::set_obj(i, x)</cite>) -&gt;
+the value of each objective, for multiobjective optimization</p></li>
 </ul>
 </li>
-<li>This class is abstract</li>
-<li>Note: in multi-objective algorithms, <cite>this-&gt;_value</cite> is ignored; and in singe-objective algorithms, <cite>this-&gt;_objs</cite> is ignored.</li>
+<li><p>This class is abstract</p></li>
+<li><p>Note: in multi-objective algorithms, <cite>this-&gt;_value</cite> is ignored; and in singe-objective algorithms, <cite>this-&gt;_objs</cite> is ignored.</p></li>
 </ul>
-</div>
-<div class="section" id="defining-your-own-fitness">
+</section>
+<section id="defining-your-own-fitness">
 <h3>Defining your own fitness<a class="headerlink" href="#defining-your-own-fitness" title="Permalink to this headline">¶</a></h3>
 <p>In most sferes2 experiments, you will have to design your own fitness. A
 fitness should:</p>
 <ul>
-<li><p class="first">be defined using <cite>SFERES_FITNESS(MyFitness,
-sferes::fit::Fitness)</cite></p>
-</li>
-<li><p class="first">define the <cite>eval()</cite> method, which takes an individual</p>
-</li>
-<li><p class="first">attribute a fitness value in <cite>this-&gt;_value</cite> (single objective
+<li><p>be defined using <cite>SFERES_FITNESS(MyFitness,
+sferes::fit::Fitness)</cite></p></li>
+<li><p>define the <cite>eval()</cite> method, which takes an individual</p></li>
+<li><p>attribute a fitness value in <cite>this-&gt;_value</cite> (single objective
 optimization) or <cite>this-&gt;_objs</cite> (multiobjective optimization)</p>
 <p>A fitness is a “normal” class and consequently you can add other
 methods or attributes to suit your needs.</p>
 </li>
 </ul>
 <p>Example:</p>
-<div class="highlight-c++"><div class="highlight"><pre><span></span><span class="c1">// single objective fitess</span>
-<span class="n">SFERES_FITNESS</span><span class="p">(</span><span class="n">FitnessSingle</span><span class="p">,</span> <span class="n">sferes</span><span class="o">::</span><span class="n">fit</span><span class="o">::</span><span class="n">fitness</span><span class="p">)</span>
-<span class="p">{</span>
-  <span class="c1">// (optional) constructor</span>
-  <span class="n">FitnessSingle</span><span class="p">()</span>
-    <span class="p">{</span>
-      <span class="k">this</span><span class="o">-&gt;</span><span class="n">_value</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
-    <span class="p">}</span>
-  <span class="c1">// evaluation</span>
-  <span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">Indiv</span><span class="o">&gt;</span>
-  <span class="kt">void</span> <span class="n">eval</span><span class="p">(</span><span class="n">Indiv</span><span class="o">&amp;</span> <span class="n">indiv</span><span class="p">)</span>
-  <span class="p">{</span>
-    <span class="k">this</span><span class="o">-&gt;</span><span class="n">_value</span> <span class="o">=</span> <span class="o">-</span><span class="mi">42</span><span class="p">;</span>
-  <span class="p">}</span>
-<span class="p">};</span>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="c1">// single objective fitess</span>
+<span class="n">SFERES_FITNESS</span><span class="p">(</span><span class="n">FitnessSingle</span><span class="p">,</span><span class="w"> </span><span class="n">sferes</span><span class="o">::</span><span class="n">fit</span><span class="o">::</span><span class="n">fitness</span><span class="p">)</span><span class="w"></span>
+<span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="c1">// (optional) constructor</span>
+<span class="w">  </span><span class="n">FitnessSingle</span><span class="p">()</span><span class="w"></span>
+<span class="w">    </span><span class="p">{</span><span class="w"></span>
+<span class="w">      </span><span class="k">this</span><span class="o">-&gt;</span><span class="n">_value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">-1</span><span class="p">;</span><span class="w"></span>
+<span class="w">    </span><span class="p">}</span><span class="w"></span>
+<span class="w">  </span><span class="c1">// evaluation</span>
+<span class="w">  </span><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span><span class="w"> </span><span class="nc">Indiv</span><span class="o">&gt;</span><span class="w"></span>
+<span class="w">  </span><span class="kt">void</span><span class="w"> </span><span class="n">eval</span><span class="p">(</span><span class="n">Indiv</span><span class="o">&amp;</span><span class="w"> </span><span class="n">indiv</span><span class="p">)</span><span class="w"></span>
+<span class="w">  </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="k">this</span><span class="o">-&gt;</span><span class="n">_value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">-42</span><span class="p">;</span><span class="w"></span>
+<span class="w">  </span><span class="p">}</span><span class="w"></span>
+<span class="p">};</span><span class="w"></span>
 
 <span class="c1">// two-objective fitness</span>
-<span class="n">SFERES_FITNESS</span><span class="p">(</span><span class="n">FitnessMulti</span><span class="p">,</span> <span class="n">sferes</span><span class="o">::</span><span class="n">fit</span><span class="o">::</span><span class="n">fitness</span><span class="p">)</span>
-<span class="p">{</span>
-  <span class="c1">// constructor</span>
-  <span class="n">FitnessMulti</span><span class="p">()</span>
-    <span class="p">{</span>
-      <span class="k">this</span><span class="o">-&gt;</span><span class="n">_objs</span><span class="p">.</span><span class="n">resize</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
-    <span class="p">}</span>
-  <span class="c1">// evaluation</span>
-  <span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">Indiv</span><span class="o">&gt;</span>
-  <span class="kt">void</span> <span class="n">eval</span><span class="p">(</span><span class="n">Indiv</span><span class="o">&amp;</span> <span class="n">indiv</span><span class="p">)</span>
-  <span class="p">{</span>
-    <span class="k">this</span><span class="o">-&gt;</span><span class="n">_objs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mi">42</span><span class="p">;</span>
-    <span class="k">this</span><span class="o">-&gt;</span><span class="n">_objs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">42</span><span class="p">;</span>
-  <span class="p">}</span>
-<span class="p">};</span>
+<span class="n">SFERES_FITNESS</span><span class="p">(</span><span class="n">FitnessMulti</span><span class="p">,</span><span class="w"> </span><span class="n">sferes</span><span class="o">::</span><span class="n">fit</span><span class="o">::</span><span class="n">fitness</span><span class="p">)</span><span class="w"></span>
+<span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="c1">// constructor</span>
+<span class="w">  </span><span class="n">FitnessMulti</span><span class="p">()</span><span class="w"></span>
+<span class="w">    </span><span class="p">{</span><span class="w"></span>
+<span class="w">      </span><span class="k">this</span><span class="o">-&gt;</span><span class="n">_objs</span><span class="p">.</span><span class="n">resize</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span><span class="w"></span>
+<span class="w">    </span><span class="p">}</span><span class="w"></span>
+<span class="w">  </span><span class="c1">// evaluation</span>
+<span class="w">  </span><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span><span class="w"> </span><span class="nc">Indiv</span><span class="o">&gt;</span><span class="w"></span>
+<span class="w">  </span><span class="kt">void</span><span class="w"> </span><span class="n">eval</span><span class="p">(</span><span class="n">Indiv</span><span class="o">&amp;</span><span class="w"> </span><span class="n">indiv</span><span class="p">)</span><span class="w"></span>
+<span class="w">  </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="k">this</span><span class="o">-&gt;</span><span class="n">_objs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">-42</span><span class="p">;</span><span class="w"></span>
+<span class="w">    </span><span class="k">this</span><span class="o">-&gt;</span><span class="n">_objs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">42</span><span class="p">;</span><span class="w"></span>
+<span class="w">  </span><span class="p">}</span><span class="w"></span>
+<span class="p">};</span><span class="w"></span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="view-mode">
+</section>
+<section id="view-mode">
 <h3>View mode<a class="headerlink" href="#view-mode" title="Permalink to this headline">¶</a></h3>
 <p>When loading a result file, it is often useful to slightly change the
 fitness function, for instance to display data about the behavior of
 the individual. This can be easily done in sferes2 using the boolean
 <cite>Fitness::mode()</cite> than can takes two values:</p>
 <ul class="simple">
-<li><cite>fit::mode::view</cite> when you are viewing an individual via <cite>–load</cite></li>
-<li><cite>fit::mode::eval</cite> when you are evaluting individuals (during the
-evolutionary process)</li>
+<li><p><cite>fit::mode::view</cite> when you are viewing an individual via <cite>–load</cite></p></li>
+<li><p><cite>fit::mode::eval</cite> when you are evaluting individuals (during the
+evolutionary process)</p></li>
 </ul>
 <p>Example:</p>
-<div class="highlight-c++"><div class="highlight"><pre><span></span><span class="c1">// single objective fitess</span>
-<span class="n">SFERES_FITNESS</span><span class="p">(</span><span class="n">FitnessSingle</span><span class="p">,</span> <span class="n">sferes</span><span class="o">::</span><span class="n">fit</span><span class="o">::</span><span class="n">fitness</span><span class="p">)</span>
-<span class="p">{</span>
-  <span class="c1">// evaluation</span>
-  <span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">Indiv</span><span class="o">&gt;</span>
-   <span class="kt">void</span> <span class="n">eval</span><span class="p">(</span><span class="n">Indiv</span><span class="o">&amp;</span> <span class="n">indiv</span><span class="p">)</span>
-  <span class="p">{</span>
-    <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">mode</span><span class="p">()</span> <span class="o">==</span> <span class="n">sferes</span><span class="o">::</span><span class="n">fit</span><span class="o">::</span><span class="n">mode</span><span class="o">::</span><span class="n">view</span><span class="p">)</span>
-      <span class="p">{</span>
-      <span class="n">std</span><span class="o">::</span><span class="n">ofstream</span> <span class="n">ofs</span><span class="p">(</span><span class="s">&quot;fit.dat&quot;</span><span class="p">);</span>
-      <span class="n">ofs</span><span class="o">&lt;&lt;</span><span class="s">&quot;this is a log file !&quot;</span><span class="o">&lt;&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
-      <span class="p">}</span>
-    <span class="k">this</span><span class="o">-&gt;</span><span class="n">_value</span> <span class="o">=</span> <span class="o">-</span><span class="mi">42</span><span class="p">;</span>
-  <span class="p">}</span>
-<span class="p">};</span>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="c1">// single objective fitess</span>
+<span class="n">SFERES_FITNESS</span><span class="p">(</span><span class="n">FitnessSingle</span><span class="p">,</span><span class="w"> </span><span class="n">sferes</span><span class="o">::</span><span class="n">fit</span><span class="o">::</span><span class="n">fitness</span><span class="p">)</span><span class="w"></span>
+<span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="c1">// evaluation</span>
+<span class="w">  </span><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span><span class="w"> </span><span class="nc">Indiv</span><span class="o">&gt;</span><span class="w"></span>
+<span class="w">   </span><span class="kt">void</span><span class="w"> </span><span class="n">eval</span><span class="p">(</span><span class="n">Indiv</span><span class="o">&amp;</span><span class="w"> </span><span class="n">indiv</span><span class="p">)</span><span class="w"></span>
+<span class="w">  </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">mode</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">sferes</span><span class="o">::</span><span class="n">fit</span><span class="o">::</span><span class="n">mode</span><span class="o">::</span><span class="n">view</span><span class="p">)</span><span class="w"></span>
+<span class="w">      </span><span class="p">{</span><span class="w"></span>
+<span class="w">      </span><span class="n">std</span><span class="o">::</span><span class="n">ofstream</span><span class="w"> </span><span class="nf">ofs</span><span class="p">(</span><span class="s">&quot;fit.dat&quot;</span><span class="p">);</span><span class="w"></span>
+<span class="w">      </span><span class="n">ofs</span><span class="o">&lt;&lt;</span><span class="s">&quot;this is a log file !&quot;</span><span class="o">&lt;&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span><span class="w"></span>
+<span class="w">      </span><span class="p">}</span><span class="w"></span>
+<span class="w">    </span><span class="k">this</span><span class="o">-&gt;</span><span class="n">_value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">-42</span><span class="p">;</span><span class="w"></span>
+<span class="w">  </span><span class="p">}</span><span class="w"></span>
+<span class="p">};</span><span class="w"></span>
 </pre></div>
 </div>
-</div>
-</div>
-<div class="section" id="evolutionary-algorithms">
+</section>
+</section>
+<section id="evolutionary-algorithms">
 <h2>Evolutionary algorithms<a class="headerlink" href="#evolutionary-algorithms" title="Permalink to this headline">¶</a></h2>
 <p><strong>Warning</strong> Evolutionary algorithms <em>maximize</em> the fitness (whereas most
 optimization algorithms minimize the cost function).</p>
-<div class="section" id="shared-parameters">
+<section id="shared-parameters">
 <h3>Shared parameters<a class="headerlink" href="#shared-parameters" title="Permalink to this headline">¶</a></h3>
 <p>All evolutionary algorithms (EA) use the following parameters:</p>
 <ul class="simple">
-<li><cite>SFERES_CONST size_t Params::pop::size</cite>: population
-size (e.g., 100)</li>
-<li><cite>SFERES_CONST float Params::pop::initial_aleat</cite>: during the
+<li><p><cite>SFERES_CONST size_t Params::pop::size</cite>: population
+size (e.g., 100)</p></li>
+<li><p><cite>SFERES_CONST float Params::pop::initial_aleat</cite>: during the
 random generation, <cite>Params::pop::initial_aleat × Params::pop::size</cite>
 individuals are generated and only the <cite>Params::pop::size</cite> best ones
-are kept (Note: some algorithms might ignore this parameters)</li>
-<li><cite>SFERES_CONST int Params::pop::dump_period</cite>: the period
-between each write of results, examples:<ul>
-<li><cite>1</cite>: statistics are written at each generation (<cite>gen_0</cite>,
-<cite>gen_1</cite>, <cite>gen_2</cite>, …)</li>
-<li><cite>-1</cite>: statistics are never written (useful for unit tests)</li>
-<li><cite>10</cite>: statistics are written each 10 generations (<cite>gen_0</cite>,
-<cite>gen_10</cite>, …)</li>
+are kept (Note: some algorithms might ignore this parameters)</p></li>
+<li><p><cite>SFERES_CONST int Params::pop::dump_period</cite>: the period
+between each write of results, examples:</p>
+<ul>
+<li><p><cite>1</cite>: statistics are written at each generation (<cite>gen_0</cite>,
+<cite>gen_1</cite>, <cite>gen_2</cite>, …)</p></li>
+<li><p><cite>-1</cite>: statistics are never written (useful for unit tests)</p></li>
+<li><p><cite>10</cite>: statistics are written each 10 generations (<cite>gen_0</cite>,
+<cite>gen_10</cite>, …)</p></li>
 </ul>
 </li>
 </ul>
 <p>Keep in mind that the <cite>statistics</cite> classes are where final results are stored.</p>
-</div>
-<div class="section" id="ranksimple">
+</section>
+<section id="ranksimple">
 <h3>RankSimple<a class="headerlink" href="#ranksimple" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
-<li><strong>Status:</strong> Deprecated (we keep this algorithm only as an example of an EA). If
+<li><p><strong>Status:</strong> Deprecated (we keep this algorithm only as an example of an EA). If
 you need single-objective optimisation, use NSGA-2 with a single
-objective. It is equivalent to an elitist, rank-based algorithm.</li>
-<li><strong>File:</strong>
-<a class="reference external" href="https://github.com/sferes2/sferes2/blob/master/sferes/ea/rank_simple.hpp">sferes/ea/rank_simple.hpp</a></li>
-<li><strong>Unit test:</strong>
-<a class="reference external" href="https://github.com/sferes2/sferes2/blob/master/tests/ea/rank_simple.cpp">tests/ea/rank_simple.cpp</a></li>
-<li><strong>Typical typename:</strong>:</li>
+objective. It is equivalent to an elitist, rank-based algorithm.</p></li>
+<li><p><strong>File:</strong>
+<a class="reference external" href="https://github.com/sferes2/sferes2/blob/master/sferes/ea/rank_simple.hpp">sferes/ea/rank_simple.hpp</a></p></li>
+<li><p><strong>Unit test:</strong>
+<a class="reference external" href="https://github.com/sferes2/sferes2/blob/master/tests/ea/rank_simple.cpp">tests/ea/rank_simple.cpp</a></p></li>
+<li><p><strong>Typical typename:</strong>:</p></li>
 </ul>
-<div class="highlight-c++"><div class="highlight"><pre><span></span><span class="k">typedef</span> <span class="n">sferes</span><span class="o">::</span><span class="n">ea</span><span class="o">::</span><span class="n">RankSimple</span><span class="o">&lt;</span><span class="n">phen_t</span><span class="p">,</span> <span class="n">eval_t</span><span class="p">,</span> <span class="n">stat_t</span><span class="p">,</span> <span class="n">modifier_t</span><span class="p">,</span> <span class="n">Params</span><span class="o">&gt;</span> <span class="n">ea_t</span><span class="p">;</span>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="k">typedef</span><span class="w"> </span><span class="n">sferes</span><span class="o">::</span><span class="n">ea</span><span class="o">::</span><span class="n">RankSimple</span><span class="o">&lt;</span><span class="n">phen_t</span><span class="p">,</span><span class="w"> </span><span class="n">eval_t</span><span class="p">,</span><span class="w"> </span><span class="n">stat_t</span><span class="p">,</span><span class="w"> </span><span class="n">modifier_t</span><span class="p">,</span><span class="w"> </span><span class="n">Params</span><span class="o">&gt;</span><span class="w"> </span><span class="n">ea_t</span><span class="p">;</span><span class="w"></span>
 </pre></div>
 </div>
 <ul class="simple">
-<li><strong>Description:</strong> A rank-based single-objective evolutionary
-algorithm. Individuals are selected using the following formula:<ul>
-<li>n = k_r × p</li>
-<li>κ = c^n + 1 - 1</li>
-<li>f = n / (<em>κ</em> + 1)</li>
-<li>i = p - f × log(r × <em>κ</em> + 1)</li>
-<li>where<ul>
-<li>c = Params::pop::coeff</li>
-<li>k_r = Params::pop::keep_rate</li>
-<li>p = Params::pop::size</li>
-<li>r = a random number in [0,1[</li>
-<li>i = index of the selected individual</li>
+<li><p><strong>Description:</strong> A rank-based single-objective evolutionary
+algorithm. Individuals are selected using the following formula:</p>
+<ul>
+<li><p>n = k_r × p</p></li>
+<li><p>κ = c^n + 1 - 1</p></li>
+<li><p>f = n / (<em>κ</em> + 1)</p></li>
+<li><p>i = p - f × log(r × <em>κ</em> + 1)</p></li>
+<li><p>where</p>
+<ul>
+<li><p>c = Params::pop::coeff</p></li>
+<li><p>k_r = Params::pop::keep_rate</p></li>
+<li><p>p = Params::pop::size</p></li>
+<li><p>r = a random number in [0,1[</p></li>
+<li><p>i = index of the selected individual</p></li>
 </ul>
 </li>
 </ul>
 </li>
-<li>parameters:<ul>
-<li>SFERES_CONST float Params::pop::coeff = a internal
-parameter (see the previous formula); typical value : 1.1</li>
-<li>SFERES_CONST float Params::pop::keep_rate = proportion
+<li><p>parameters:</p>
+<ul>
+<li><p>SFERES_CONST float Params::pop::coeff = a internal
+parameter (see the previous formula); typical value : 1.1</p></li>
+<li><p>SFERES_CONST float Params::pop::keep_rate = proportion
 of individuals kept from a generation to the next one; typical
-value: 0.2 to 0.6</li>
+value: 0.2 to 0.6</p></li>
 </ul>
 </li>
 </ul>
-</div>
-<div class="section" id="nsga2">
+</section>
+<section id="nsga2">
 <h3>Nsga2<a class="headerlink" href="#nsga2" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
-<li><strong>File:</strong>
-<a class="reference external" href="https://github.com/sferes2/sferes2/blob/master/sferes/ea/nsga2.hpp">sferes/ea/nsga2.hpp</a></li>
-<li><strong>Unit test:</strong>
-<a class="reference external" href="https://github.com/sferes2/sferes2/blob/master/tests/ea/nsga2.cpp">tests/ea/nsga2.cpp</a></li>
-<li>Example:
-<a class="reference external" href="https://github.com/sferes2/sferes2/blob/master/sferes/examples/ex_nsga2.cpp">examples/ex_nsga2.cpp</a></li>
-<li><strong>Typical typename:</strong>:</li>
+<li><p><strong>File:</strong>
+<a class="reference external" href="https://github.com/sferes2/sferes2/blob/master/sferes/ea/nsga2.hpp">sferes/ea/nsga2.hpp</a></p></li>
+<li><p><strong>Unit test:</strong>
+<a class="reference external" href="https://github.com/sferes2/sferes2/blob/master/tests/ea/nsga2.cpp">tests/ea/nsga2.cpp</a></p></li>
+<li><p>Example:
+<a class="reference external" href="https://github.com/sferes2/sferes2/blob/master/sferes/examples/ex_nsga2.cpp">examples/ex_nsga2.cpp</a></p></li>
+<li><p><strong>Typical typename:</strong>:</p></li>
 </ul>
-<div class="highlight-c++"><div class="highlight"><pre><span></span><span class="k">typedef</span> <span class="n">sferes</span><span class="o">::</span><span class="n">ea</span><span class="o">::</span><span class="n">Nsga2</span><span class="o">&lt;</span><span class="n">phen_t</span><span class="p">,</span> <span class="n">eval_t</span><span class="p">,</span> <span class="n">stat_t</span><span class="p">,</span> <span class="n">modifier_t</span><span class="p">,</span> <span class="n">Params</span><span class="o">&gt;</span> <span class="n">ea_t</span><span class="p">;</span>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="k">typedef</span><span class="w"> </span><span class="n">sferes</span><span class="o">::</span><span class="n">ea</span><span class="o">::</span><span class="n">Nsga2</span><span class="o">&lt;</span><span class="n">phen_t</span><span class="p">,</span><span class="w"> </span><span class="n">eval_t</span><span class="p">,</span><span class="w"> </span><span class="n">stat_t</span><span class="p">,</span><span class="w"> </span><span class="n">modifier_t</span><span class="p">,</span><span class="w"> </span><span class="n">Params</span><span class="o">&gt;</span><span class="w"> </span><span class="n">ea_t</span><span class="p">;</span><span class="w"></span>
 </pre></div>
 </div>
 <ul class="simple">
-<li><strong>Description:</strong> Implementation of the NSGA-II multiobjective
-evolutionary algorithm. See:<ul>
-<li>Deb, K. (2001). Multi-Objective Optimization Using Evolutionary
-Algorithms. <em>Wiley</em>.</li>
-<li>Deb, K., Pratap, A., Agarwal, S. and Meyarivan, T. (2002). A fast
+<li><p><strong>Description:</strong> Implementation of the NSGA-II multiobjective
+evolutionary algorithm. See:</p>
+<ul>
+<li><p>Deb, K. (2001). Multi-Objective Optimization Using Evolutionary
+Algorithms. <em>Wiley</em>.</p></li>
+<li><p>Deb, K., Pratap, A., Agarwal, S. and Meyarivan, T. (2002). A fast
 and elitist multiobjective genetic algorithm: NSGA-II. In <em>IEEE
-transactions on evolutionary computation</em>, 6:2:182-197</li>
+transactions on evolutionary computation</em>, 6:2:182-197</p></li>
 </ul>
 </li>
-<li><strong>Parameters:</strong> <cite>pop_size</cite> must be divisible by 4</li>
-<li><strong>Note:</strong> NSGA-II can be effective for a basic, single-objective optimization
+<li><p><strong>Parameters:</strong> <cite>pop_size</cite> must be divisible by 4</p></li>
+<li><p><strong>Note:</strong> NSGA-II can be effective for a basic, single-objective optimization
 as it corresponds to a classic tournament-based evolutionary
 algorithm. In sferes2, a 1-sized <cite>_objs</cite> vector in the fitness
-can be employed (don’t use <cite>_value</cite>).</li>
+can be employed (don’t use <cite>_value</cite>).</p></li>
 </ul>
-</div>
-<div class="section" id="epsmoea">
+</section>
+<section id="epsmoea">
 <h3>EpsMOEA<a class="headerlink" href="#epsmoea" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
-<li><strong>Status:</strong> working but no user (we might remove it in the future
+<li><p><strong>Status:</strong> working but no user (we might remove it in the future
 because it is hard to trust the current implementation when nobody
-uses it).</li>
-<li><strong>File:</strong>
-<a class="reference external" href="https://github.com/sferes2/sferes2/blob/master/sferes/ea/eps_moea.hpp">sferes/ea/eps_moea.hpp</a></li>
-<li><strong>Unit test:</strong>
-<a class="reference external" href="https://github.com/sferes2/sferes2/blob/master/tests/ea/eps_moea.cpp">tests/ea/eps_moea.cpp</a></li>
-<li><strong>Typical typename:</strong>:</li>
+uses it).</p></li>
+<li><p><strong>File:</strong>
+<a class="reference external" href="https://github.com/sferes2/sferes2/blob/master/sferes/ea/eps_moea.hpp">sferes/ea/eps_moea.hpp</a></p></li>
+<li><p><strong>Unit test:</strong>
+<a class="reference external" href="https://github.com/sferes2/sferes2/blob/master/tests/ea/eps_moea.cpp">tests/ea/eps_moea.cpp</a></p></li>
+<li><p><strong>Typical typename:</strong>:</p></li>
 </ul>
-<div class="highlight-c++"><div class="highlight"><pre><span></span><span class="k">typedef</span> <span class="n">sferes</span><span class="o">::</span><span class="n">ea</span><span class="o">::</span><span class="n">EpsMOEA</span><span class="o">&lt;</span><span class="n">phen_t</span><span class="p">,</span> <span class="n">eval_t</span><span class="p">,</span> <span class="n">stat_t</span><span class="p">,</span> <span class="n">modifier_t</span><span class="p">,</span> <span class="n">Params</span><span class="o">&gt;</span> <span class="n">ea_t</span>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="k">typedef</span><span class="w"> </span><span class="n">sferes</span><span class="o">::</span><span class="n">ea</span><span class="o">::</span><span class="n">EpsMOEA</span><span class="o">&lt;</span><span class="n">phen_t</span><span class="p">,</span><span class="w"> </span><span class="n">eval_t</span><span class="p">,</span><span class="w"> </span><span class="n">stat_t</span><span class="p">,</span><span class="w"> </span><span class="n">modifier_t</span><span class="p">,</span><span class="w"> </span><span class="n">Params</span><span class="o">&gt;</span><span class="w"> </span><span class="n">ea_t</span><span class="w"></span>
 </pre></div>
 </div>
 <ul class="simple">
-<li><strong>Description:</strong> Implementation of the <em>ε</em>-MOEA multiobjective
-evolutionary algorithm. See:<ul>
-<li>Deb, K., Mohan, M. and Mishra, S. (2005). Evaluating the
+<li><p><strong>Description:</strong> Implementation of the <em>ε</em>-MOEA multiobjective
+evolutionary algorithm. See:</p>
+<ul>
+<li><p>Deb, K., Mohan, M. and Mishra, S. (2005). Evaluating the
 <em>ε</em>-domination based multi-objective evolutionary algorithm for a
 quick computation of pareto-optimal solutions. In <em>Evolutionary
-Computation</em>, 13:4:501-525.</li>
+Computation</em>, 13:4:501-525.</p></li>
 </ul>
 </li>
-<li>Parameters<ul>
-<li>SFERES_ARRAY(float, eps, 0.0075f, 0.0075f) = values of
+<li><p>Parameters</p>
+<ul>
+<li><p>SFERES_ARRAY(float, eps, 0.0075f, 0.0075f) = values of
 <em>ε</em> for each objective. There should be as many values as
-objectives.</li>
-<li>SFERES_ARRAY(float, min_fit`, 0.0f, 0.0f) =
+objectives.</p></li>
+<li><p>SFERES_ARRAY(float, min_fit`, 0.0f, 0.0f) =
 minimum value of fitness for each objective.There should as many
-values as objectives</li>
-<li>SFERES_CONST size_t` grain = <em>ε</em>-MOEA is a
+values as objectives</p></li>
+<li><p>SFERES_CONST size_t` grain = <em>ε</em>-MOEA is a
 steady-state algorithm which adds individuals one by one. A basic
 implementation would prevent the parallelization of individuals’
 evaluation. The parameter grain allows to generate and evaluate
 <em>grain</em> indidividuals in paralell at each generation. Typical
-value is size / 4.</li>
+value is size / 4.</p></li>
 </ul>
 </li>
-<li><strong>Notes:</strong><ul>
-<li><em>ε</em>-MOEA employs <em>ε</em>-dominance to sort individuals. This allows
+<li><p><strong>Notes:</strong></p>
+<ul>
+<li><p><em>ε</em>-MOEA employs <em>ε</em>-dominance to sort individuals. This allows
 users to tune the precision of the pareto front for each objective
-and often results in better performance than NSGA-II.</li>
-<li>EpsMOEA should not be used with a modifier (because it uses an
-archive). You should always use fit::ModifierDummy</li>
+and often results in better performance than NSGA-II.</p></li>
+<li><p>EpsMOEA should not be used with a modifier (because it uses an
+archive). You should always use fit::ModifierDummy</p></li>
 </ul>
 </li>
 </ul>
-</div>
-<div class="section" id="defining-your-own-ea">
+</section>
+<section id="defining-your-own-ea">
 <h3>Defining your own EA<a class="headerlink" href="#defining-your-own-ea" title="Permalink to this headline">¶</a></h3>
 <p>To define your own EA, you should use the macro
 SFERES_EA(Class, Parent). Mandatory methods:</p>
 <ul class="simple">
-<li>random_pop(): fill this-&gt;_pop with random
-individuals</li>
-<li>epoch(): main loop of the algorithm</li>
+<li><p>random_pop(): fill this-&gt;_pop with random
+individuals</p></li>
+<li><p>epoch(): main loop of the algorithm</p></li>
 </ul>
 <p>Defined types (these types will be available in your class):</p>
 <ul class="simple">
-<li>Phen: phenotype</li>
-<li>Eval: evaluator</li>
-<li>Stat: statistics vector</li>
-<li>FitModifier: modifier</li>
-<li>Params: parameters</li>
+<li><p>Phen: phenotype</p></li>
+<li><p>Eval: evaluator</p></li>
+<li><p>Stat: statistics vector</p></li>
+<li><p>FitModifier: modifier</p></li>
+<li><p>Params: parameters</p></li>
 </ul>
-<div class="highlight-c++"><div class="highlight"><pre><span></span><span class="n">SFERES_EA</span><span class="p">(</span><span class="n">Test</span><span class="p">,</span> <span class="n">Ea</span><span class="p">)</span>
-<span class="p">{</span>
- <span class="k">public</span><span class="o">:</span>
- <span class="n">Test</span><span class="p">()</span> <span class="p">{}</span>
- <span class="kt">void</span> <span class="n">random_pop</span><span class="p">()</span>
- <span class="p">{</span> <span class="cm">/* your code */</span> <span class="p">}</span>
- <span class="kt">void</span> <span class="n">epoch</span><span class="p">()</span>
- <span class="p">{</span> <span class="cm">/* your code */</span> <span class="p">}</span>
-<span class="p">};</span>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="n">SFERES_EA</span><span class="p">(</span><span class="n">Test</span><span class="p">,</span><span class="w"> </span><span class="n">Ea</span><span class="p">)</span><span class="w"></span>
+<span class="p">{</span><span class="w"></span>
+<span class="w"> </span><span class="k">public</span><span class="o">:</span><span class="w"></span>
+<span class="w"> </span><span class="n">Test</span><span class="p">()</span><span class="w"> </span><span class="p">{}</span><span class="w"></span>
+<span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="n">random_pop</span><span class="p">()</span><span class="w"></span>
+<span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="cm">/* your code */</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
+<span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="n">epoch</span><span class="p">()</span><span class="w"></span>
+<span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="cm">/* your code */</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
+<span class="p">};</span><span class="w"></span>
 </pre></div>
 </div>
 <p>Multiobjective EA must also define a pareto_front() method,
 see <em>ParetoFront</em>.</p>
-</div>
-</div>
-<div class="section" id="statistics">
+</section>
+</section>
+<section id="statistics">
 <h2>Statistics<a class="headerlink" href="#statistics" title="Permalink to this headline">¶</a></h2>
 <p>Statistics should be combined in a boost::fusion::vector (see:
 http://www.boost.org/doc/libs/1_40_0/libs/fusion/doc/html/fusion/container/vector.html)
 before being passed to a EA. For instance:</p>
-<div class="highlight-c++"><div class="highlight"><pre><span></span><span class="k">typedef</span> <span class="n">boost</span><span class="o">::</span><span class="n">fusion</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">stat</span><span class="o">::</span><span class="n">BestFit</span><span class="o">&lt;</span><span class="n">phen_t</span><span class="p">,</span> <span class="n">Params</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">stat</span><span class="o">::</span><span class="n">MeanFit</span><span class="o">&lt;</span><span class="n">Params</span><span class="o">&gt;</span> <span class="o">&gt;</span>  <span class="n">stat_t</span><span class="p">;</span>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="k">typedef</span><span class="w"> </span><span class="n">boost</span><span class="o">::</span><span class="n">fusion</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">stat</span><span class="o">::</span><span class="n">BestFit</span><span class="o">&lt;</span><span class="n">phen_t</span><span class="p">,</span><span class="w"> </span><span class="n">Params</span><span class="o">&gt;</span><span class="p">,</span><span class="w"> </span><span class="n">stat</span><span class="o">::</span><span class="n">MeanFit</span><span class="o">&lt;</span><span class="n">Params</span><span class="o">&gt;</span><span class="w"> </span><span class="o">&gt;</span><span class="w">  </span><span class="n">stat_t</span><span class="p">;</span><span class="w"></span>
 </pre></div>
 </div>
 <p>(yes, it is a vector of <em>typenames</em>). You can put in the vector as many
 statistics types as you desire.</p>
-<div class="section" id="bestfit">
+<section id="bestfit">
 <h3>BestFit<a class="headerlink" href="#bestfit" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
-<li><strong>File:</strong>
-<a class="reference external" href="https://github.com/sferes2/sferes2/blob/master/sferes/stat/best_fit.hpp">sferes/stat/best_fit.hpp</a></li>
-<li><strong>Typical typename:</strong></li>
+<li><p><strong>File:</strong>
+<a class="reference external" href="https://github.com/sferes2/sferes2/blob/master/sferes/stat/best_fit.hpp">sferes/stat/best_fit.hpp</a></p></li>
+<li><p><strong>Typical typename:</strong></p></li>
 </ul>
-<div class="highlight-c++"><div class="highlight"><pre><span></span><span class="k">typedef</span> <span class="n">boost</span><span class="o">::</span><span class="n">fusion</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">sferes</span><span class="o">::</span><span class="n">ea</span><span class="o">::</span><span class="n">BestFit</span><span class="o">&lt;</span><span class="n">phen_t</span><span class="p">,</span> <span class="n">Params</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">stat_t</span><span class="p">;</span>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="k">typedef</span><span class="w"> </span><span class="n">boost</span><span class="o">::</span><span class="n">fusion</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">sferes</span><span class="o">::</span><span class="n">ea</span><span class="o">::</span><span class="n">BestFit</span><span class="o">&lt;</span><span class="n">phen_t</span><span class="p">,</span><span class="w"> </span><span class="n">Params</span><span class="o">&gt;</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">stat_t</span><span class="p">;</span><span class="w"></span>
 </pre></div>
 </div>
 <ul class="simple">
-<li><strong>Description:</strong><ul>
-<li>stores the individual with the highest fitness in this-&gt;_best
+<li><p><strong>Description:</strong></p>
+<ul>
+<li><p>stores the individual with the highest fitness in this-&gt;_best
 (getter: BestFit::best() ). <em>This assumes that the population is
 sorted</em> and consequently this statistics stores the first
-individual of the population.</li>
-<li>This class is designed for single objective optimization and
+individual of the population.</p></li>
+<li><p>This class is designed for single objective optimization and
 consequently works using <cite>Fitness::_value</cite> (and not
-<cite>Fitness::_objs</cite>)</li>
-<li>writes the value of the best fitness in the file
+<cite>Fitness::_objs</cite>)</p></li>
+<li><p>writes the value of the best fitness in the file
 &lt;result_directory&gt;/bestfit.dat; this file should be easily
-plotted with gnuplot, matplotlib/numpy or R.</li>
+plotted with gnuplot, matplotlib/numpy or R.</p></li>
 </ul>
 </li>
 </ul>
-</div>
-<div class="section" id="meanfit">
+</section>
+<section id="meanfit">
 <h3>MeanFit<a class="headerlink" href="#meanfit" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
-<li><strong>File:</strong>
-<a class="reference external" href="https://github.com/sferes2/sferes2/blob/master/sferes/stat/mean_fit.hpp">sferes/stat/mean_fit.hpp</a></li>
-<li><strong>Typical typename:</strong></li>
+<li><p><strong>File:</strong>
+<a class="reference external" href="https://github.com/sferes2/sferes2/blob/master/sferes/stat/mean_fit.hpp">sferes/stat/mean_fit.hpp</a></p></li>
+<li><p><strong>Typical typename:</strong></p></li>
 </ul>
-<div class="highlight-c++"><div class="highlight"><pre><span></span><span class="k">typedef</span> <span class="n">boost</span><span class="o">::</span><span class="n">fusion</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">sferes</span><span class="o">::</span><span class="n">ea</span><span class="o">::</span><span class="n">MeanFit</span><span class="o">&lt;</span><span class="n">phen_t</span><span class="p">,</span> <span class="n">Params</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">stat_t</span><span class="p">;</span>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="k">typedef</span><span class="w"> </span><span class="n">boost</span><span class="o">::</span><span class="n">fusion</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">sferes</span><span class="o">::</span><span class="n">ea</span><span class="o">::</span><span class="n">MeanFit</span><span class="o">&lt;</span><span class="n">phen_t</span><span class="p">,</span><span class="w"> </span><span class="n">Params</span><span class="o">&gt;</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">stat_t</span><span class="p">;</span><span class="w"></span>
 </pre></div>
 </div>
 <ul class="simple">
-<li><strong>Description:</strong> computes the mean fitness (single objective, based
+<li><p><strong>Description:</strong> computes the mean fitness (single objective, based
 on Fitness::_value). This class is mainly aimed at providing
-a simple example of statistics.</li>
+a simple example of statistics.</p></li>
 </ul>
-</div>
-<div class="section" id="paretofront">
+</section>
+<section id="paretofront">
 <h3>ParetoFront<a class="headerlink" href="#paretofront" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
-<li><strong>File:</strong>
-<a class="reference external" href="https://github.com/sferes2/sferes2/blob/master/sferes/stat/pareto_front.hpp">sferes/stat/pareto_front.hpp</a></li>
-<li><strong>Typical typename:</strong></li>
+<li><p><strong>File:</strong>
+<a class="reference external" href="https://github.com/sferes2/sferes2/blob/master/sferes/stat/pareto_front.hpp">sferes/stat/pareto_front.hpp</a></p></li>
+<li><p><strong>Typical typename:</strong></p></li>
 </ul>
-<div class="highlight-c++"><div class="highlight"><pre><span></span><span class="k">typedef</span> <span class="n">boost</span><span class="o">::</span><span class="n">fusion</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">sferes</span><span class="o">::</span><span class="n">ea</span><span class="o">::</span><span class="n">ParetoFront</span><span class="o">&lt;</span><span class="n">phen_t</span><span class="p">,</span> <span class="n">Params</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">stat_t</span><span class="p">;</span>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="k">typedef</span><span class="w"> </span><span class="n">boost</span><span class="o">::</span><span class="n">fusion</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">sferes</span><span class="o">::</span><span class="n">ea</span><span class="o">::</span><span class="n">ParetoFront</span><span class="o">&lt;</span><span class="n">phen_t</span><span class="p">,</span><span class="w"> </span><span class="n">Params</span><span class="o">&gt;</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">stat_t</span><span class="p">;</span><span class="w"></span>
 </pre></div>
 </div>
 <ul class="simple">
-<li><strong>Description:</strong> stores the set of non-dominated individuals by
+<li><p><strong>Description:</strong> stores the set of non-dominated individuals by
 copying the list returned by ea_t::pareto_front().
 ParetoFront does not compute the pareto front; this class assumes
 that the EA computed it. This implies that multiobjective EA classes
-should define the following method:</li>
+should define the following method:</p></li>
 </ul>
-<div class="highlight-c++"><div class="highlight"><pre><span></span><span class="n">SFERES_EA</span><span class="p">(</span><span class="n">MyEA</span><span class="p">,</span> <span class="n">Ea</span><span class="p">)</span>
-<span class="p">{</span>
- <span class="k">public</span><span class="o">:</span>
-  <span class="nl">std</span><span class="p">:</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">Indiv</span><span class="o">&gt;</span> <span class="o">&amp;</span><span class="n">pareto_front</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="cm">/* your code */</span> <span class="p">}</span>
-<span class="p">};</span>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="n">SFERES_EA</span><span class="p">(</span><span class="n">MyEA</span><span class="p">,</span><span class="w"> </span><span class="n">Ea</span><span class="p">)</span><span class="w"></span>
+<span class="p">{</span><span class="w"></span>
+<span class="w"> </span><span class="k">public</span><span class="o">:</span><span class="w"></span>
+<span class="w">  </span><span class="nl">std</span><span class="p">:</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">Indiv</span><span class="o">&gt;</span><span class="w"> </span><span class="o">&amp;</span><span class="n">pareto_front</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="cm">/* your code */</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
+<span class="p">};</span><span class="w"></span>
 </pre></div>
 </div>
 <ul class="simple">
-<li><strong>Note:</strong> since this statistic can store many individuals, to load a
+<li><p><strong>Note:</strong> since this statistic can store many individuals, to load a
 result file you must give the identifier (the rank in the Pareto
 front) to your executable. For instance, assuming that ParetoFront in
 the first (0th) statistics in the stat vector, loading the 10th
-individual should look like:</li>
+individual should look like:</p></li>
 </ul>
-<div class="code shell highlight-c++"><div class="highlight"><pre><span></span><span class="p">.</span><span class="o">/</span><span class="n">my_exp</span> <span class="o">--</span><span class="n">load</span> <span class="n">gen_100</span> <span class="o">-</span><span class="n">s</span> <span class="mi">0</span> <span class="o">-</span><span class="n">n</span> <span class="mi">10</span> <span class="o">-</span><span class="n">o</span> <span class="n">output</span>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>./my_exp --load gen_100 -s <span class="m">0</span> -n <span class="m">10</span> -o output
 </pre></div>
 </div>
-</div>
-<div class="section" id="defining-your-own-statistics">
+</section>
+<section id="defining-your-own-statistics">
 <h3>Defining your own statistics<a class="headerlink" href="#defining-your-own-statistics" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-c++"><div class="highlight"><pre><span></span><span class="n">SFERES_STAT</span><span class="p">(</span><span class="n">MyStat</span><span class="p">,</span> <span class="n">Stat</span><span class="p">)</span>
-<span class="p">{</span>
-  <span class="c1">// examines the population (via the EA) to update the statistics</span>
-  <span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">E</span><span class="o">&gt;</span> <span class="kt">void</span> <span class="n">refresh</span><span class="p">(</span><span class="k">const</span> <span class="n">E</span><span class="o">&amp;</span> <span class="n">ea</span><span class="p">)</span> <span class="p">{</span> <span class="cm">/* your code */</span> <span class="p">}</span>
-  <span class="c1">// writes the content of the statistics in the stream; k is the number</span>
-  <span class="c1">// of the individual in the statistics (e.g. in a Pareto front, the</span>
-  <span class="c1">// statistics contains many individuals)</span>
-  <span class="kt">void</span> <span class="n">show</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">ostream</span><span class="o">&amp;</span> <span class="n">os</span><span class="p">,</span> <span class="kt">size_t</span> <span class="n">k</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span> <span class="cm">/* your code */</span> <span class="p">}</span>
-  <span class="c1">// serializes the statistics using boost::serialization</span>
-  <span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">Archive</span><span class="o">&gt;</span> <span class="kt">void</span> <span class="n">serialize</span><span class="p">(</span><span class="n">Archive</span> <span class="o">&amp;</span> <span class="n">ar</span><span class="p">,</span> <span class="k">const</span> <span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">version</span><span class="p">)</span>
-  <span class="p">{</span> <span class="cm">/* your code */</span> <span class="p">}</span>
-<span class="p">}</span>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="n">SFERES_STAT</span><span class="p">(</span><span class="n">MyStat</span><span class="p">,</span><span class="w"> </span><span class="n">Stat</span><span class="p">)</span><span class="w"></span>
+<span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="c1">// examines the population (via the EA) to update the statistics</span>
+<span class="w">  </span><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span><span class="w"> </span><span class="nc">E</span><span class="o">&gt;</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="n">refresh</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">E</span><span class="o">&amp;</span><span class="w"> </span><span class="n">ea</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="cm">/* your code */</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
+<span class="w">  </span><span class="c1">// writes the content of the statistics in the stream; k is the number</span>
+<span class="w">  </span><span class="c1">// of the individual in the statistics (e.g. in a Pareto front, the</span>
+<span class="w">  </span><span class="c1">// statistics contains many individuals)</span>
+<span class="w">  </span><span class="kt">void</span><span class="w"> </span><span class="n">show</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">ostream</span><span class="o">&amp;</span><span class="w"> </span><span class="n">os</span><span class="p">,</span><span class="w"> </span><span class="kt">size_t</span><span class="w"> </span><span class="n">k</span><span class="p">)</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="cm">/* your code */</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
+<span class="w">  </span><span class="c1">// serializes the statistics using boost::serialization</span>
+<span class="w">  </span><span class="k">template</span><span class="o">&lt;</span><span class="k">class</span><span class="w"> </span><span class="nc">Archive</span><span class="o">&gt;</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="n">serialize</span><span class="p">(</span><span class="n">Archive</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="n">ar</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">version</span><span class="p">)</span><span class="w"></span>
+<span class="w">  </span><span class="p">{</span><span class="w"> </span><span class="cm">/* your code */</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
 </pre></div>
 </div>
-</div>
-</div>
-<div class="section" id="genotypes">
+</section>
+</section>
+<section id="genotypes">
 <h2>Genotypes<a class="headerlink" href="#genotypes" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="bitstring">
+<section id="bitstring">
 <h3>BitString<a class="headerlink" href="#bitstring" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
-<li><strong>File:</strong>
-<a class="reference external" href="https://github.com/sferes2/sferes2/blob/master/sferes/gen/bit_string.hpp">sferes/gen/bit_string.hpp</a></li>
-<li><strong>Unit test:</strong>
-<a class="reference external" href="../../tests/gen/bit_string.hpp">sferes/gen/bit_string.hpp</a></li>
-<li><strong>Description:</strong> vector of bitstrings which can be used to represent
+<li><p><strong>File:</strong>
+<a class="reference external" href="https://github.com/sferes2/sferes2/blob/master/sferes/gen/bit_string.hpp">sferes/gen/bit_string.hpp</a></p></li>
+<li><p><strong>Unit test:</strong>
+<a class="reference external" href="../../tests/gen/bit_string.hpp">sferes/gen/bit_string.hpp</a></p></li>
+<li><p><strong>Description:</strong> vector of bitstrings which can be used to represent
 a vector of integer parameters or a vector of discrete parameters.
 Cross-over is a simple one point cross-over (it always happens). The
 data can be easily converted to int (in the range 0..2^b,
 where b is the number of bits for each bitstring) via
 BitString&lt;&gt;::int_data(i) or to float (in the range 0..1)
-via BitString&lt;&gt;::data(i)</li>
-<li><strong>Template parameter:</strong> the number of bitstrings</li>
-<li><strong>Parameters (struct bit_string`):</strong><ul>
-<li>SFERES_CONST size_t nb_bits -&gt; number of
-bits for each bitstring</li>
-<li>SFERES_CONST float mutation_rate -&gt; the mutation
+via BitString&lt;&gt;::data(i)</p></li>
+<li><p><strong>Template parameter:</strong> the number of bitstrings</p></li>
+<li><p><strong>Parameters (struct bit_string`):</strong></p>
+<ul>
+<li><p>SFERES_CONST size_t nb_bits -&gt; number of
+bits for each bitstring</p></li>
+<li><p>SFERES_CONST float mutation_rate -&gt; the mutation
 rate for a bitstring (the bitstring i is mutated if a random real
-is belows <cite>mutation_rate</cite>)</li>
-<li>SFERES_CONST` float mutation_ratebit -&gt; the
+is belows <cite>mutation_rate</cite>)</p></li>
+<li><p>SFERES_CONST` float mutation_ratebit -&gt; the
 mutation rate <em>for each bit</em>. In pseudo-code, here is the mutation
-procedure:</li>
+procedure:</p></li>
 </ul>
 </li>
 </ul>
-<div class="highlight-c++"><div class="highlight"><pre><span></span><span class="n">foreach</span><span class="p">(</span><span class="n">bitstring</span> <span class="n">b</span> <span class="n">in</span> <span class="n">genotype</span><span class="p">)</span>
-  <span class="k">if</span> <span class="p">(</span><span class="n">rand</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">Params</span><span class="o">::</span><span class="n">bit_string</span><span class="o">::</span><span class="n">mutation_rate</span><span class="p">)</span>
-    <span class="n">foreach</span><span class="p">(</span><span class="n">bit</span> <span class="n">i</span> <span class="n">in</span> <span class="n">b</span><span class="p">)</span>
-      <span class="k">if</span> <span class="p">(</span><span class="n">rand</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">Params</span><span class="o">::</span><span class="n">bit_string</span><span class="o">::</span><span class="n">mutation_bit</span><span class="p">)</span>
-        <span class="n">flip</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="n">foreach</span><span class="p">(</span><span class="n">bitstring</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="n">in</span><span class="w"> </span><span class="n">genotype</span><span class="p">)</span><span class="w"></span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">rand</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">Params</span><span class="o">::</span><span class="n">bit_string</span><span class="o">::</span><span class="n">mutation_rate</span><span class="p">)</span><span class="w"></span>
+<span class="w">    </span><span class="n">foreach</span><span class="p">(</span><span class="n">bit</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="n">in</span><span class="w"> </span><span class="n">b</span><span class="p">)</span><span class="w"></span>
+<span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">rand</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">Params</span><span class="o">::</span><span class="n">bit_string</span><span class="o">::</span><span class="n">mutation_bit</span><span class="p">)</span><span class="w"></span>
+<span class="w">        </span><span class="n">flip</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="w"></span>
 </pre></div>
 </div>
 <ul class="simple">
-<li><strong>Typical parameters:</strong></li>
+<li><p><strong>Typical parameters:</strong></p></li>
 </ul>
-<div class="highlight-c++"><div class="highlight"><pre><span></span><span class="k">struct</span> <span class="n">Params</span>
-<span class="p">{</span>
-  <span class="k">struct</span> <span class="n">bit_string</span>
-  <span class="p">{</span>
-    <span class="n">SFERES_CONST</span> <span class="kt">size_t</span> <span class="n">nb_bits</span> <span class="o">=</span> <span class="mi">8</span><span class="p">;</span>
-    <span class="n">SFERES_CONST</span> <span class="kt">float</span> <span class="n">mutate_rate</span> <span class="o">=</span> <span class="mf">0.1f</span><span class="p">;</span>
-    <span class="n">SFERES_CONST</span> <span class="kt">float</span> <span class="n">mutate_rate_bit</span> <span class="o">=</span> <span class="mf">0.1f</span><span class="p">;</span>
-  <span class="p">};</span>
-<span class="p">};</span>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="k">struct</span><span class="w"> </span><span class="nc">Params</span><span class="w"></span>
+<span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="k">struct</span><span class="w"> </span><span class="nc">bit_string</span><span class="w"></span>
+<span class="w">  </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="n">SFERES_CONST</span><span class="w"> </span><span class="kt">size_t</span><span class="w"> </span><span class="n">nb_bits</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">8</span><span class="p">;</span><span class="w"></span>
+<span class="w">    </span><span class="n">SFERES_CONST</span><span class="w"> </span><span class="kt">float</span><span class="w"> </span><span class="n">mutate_rate</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.1f</span><span class="p">;</span><span class="w"></span>
+<span class="w">    </span><span class="n">SFERES_CONST</span><span class="w"> </span><span class="kt">float</span><span class="w"> </span><span class="n">mutate_rate_bit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.1f</span><span class="p">;</span><span class="w"></span>
+<span class="w">  </span><span class="p">};</span><span class="w"></span>
+<span class="p">};</span><span class="w"></span>
 </pre></div>
 </div>
 <ul class="simple">
-<li><strong>Typical typename:</strong></li>
+<li><p><strong>Typical typename:</strong></p></li>
 </ul>
-<div class="highlight-c++"><div class="highlight"><pre><span></span><span class="k">typedef</span> <span class="n">BitString</span><span class="o">&lt;</span><span class="mi">10</span><span class="p">,</span> <span class="n">Params</span><span class="o">&gt;</span> <span class="n">gen_t</span><span class="p">;</span>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="k">typedef</span><span class="w"> </span><span class="n">BitString</span><span class="o">&lt;</span><span class="mi">10</span><span class="p">,</span><span class="w"> </span><span class="n">Params</span><span class="o">&gt;</span><span class="w"> </span><span class="n">gen_t</span><span class="p">;</span><span class="w"></span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="evofloat">
+</section>
+<section id="evofloat">
 <h3>EvoFloat<a class="headerlink" href="#evofloat" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
-<li><strong>File:</strong>
-<a class="reference external" href="https://github.com/sferes2/sferes2/blob/master/sferes/gen/evo_float.hpp">sferes/gen/evo_float.hpp</a></li>
-<li><strong>Unit test:</strong>
-<a class="reference external" href="https://github.com/sferes2/sferes2/blob/master/tests/gen/evo_float.cpp">sferes/tests/gen/evo_float.cpp</a></li>
-<li><strong>Description:</strong> This genotype is a n-sized vector of real (float)
-numbers. It is designed for real optimization.</li>
-<li>Three mutation types are available:<ul>
-<li>polynomial: polynomial mutation, as defined in Deb(200)1, p 124</li>
-<li>gaussian: adds a gaussian noise to the current value; the variance
-is a user-specified parameter</li>
-<li>uniform: adds a uniform noise to the current value; the range is a
-user-specified parameter</li>
+<li><p><strong>File:</strong>
+<a class="reference external" href="https://github.com/sferes2/sferes2/blob/master/sferes/gen/evo_float.hpp">sferes/gen/evo_float.hpp</a></p></li>
+<li><p><strong>Unit test:</strong>
+<a class="reference external" href="https://github.com/sferes2/sferes2/blob/master/tests/gen/evo_float.cpp">sferes/tests/gen/evo_float.cpp</a></p></li>
+<li><p><strong>Description:</strong> This genotype is a n-sized vector of real (float)
+numbers. It is designed for real optimization.</p></li>
+<li><p>Three mutation types are available:</p>
+<ul>
+<li><p>polynomial: polynomial mutation, as defined in Deb(200)1, p 124</p></li>
+<li><p>gaussian: adds a gaussian noise to the current value; the variance
+is a user-specified parameter</p></li>
+<li><p>uniform: adds a uniform noise to the current value; the range is a
+user-specified parameter</p></li>
 </ul>
 </li>
-<li>Two cross-over types are available (you can disable cross-over by
-using a cross_rate` equals to 0)<ul>
-<li>recombination:<ul>
-<li>a number k is randomly chosen</li>
-<li>the first child is made of the [0, k[ values of the first
-parent and of the [k, n-1[ values of the second parent</li>
-<li>the second child is made of the [0, k[ values of the second
-parent and of the [k, n-1] values of the first parent</li>
+<li><p>Two cross-over types are available (you can disable cross-over by
+using a cross_rate` equals to 0)</p>
+<ul>
+<li><p>recombination:</p>
+<ul>
+<li><p>a number k is randomly chosen</p></li>
+<li><p>the first child is made of the [0, k[ values of the first
+parent and of the [k, n-1[ values of the second parent</p></li>
+<li><p>the second child is made of the [0, k[ values of the second
+parent and of the [k, n-1] values of the first parent</p></li>
 </ul>
 </li>
-<li>SBX (simulated binary cross-over, cf Deb (2001), p 113). Warning:
+<li><p>SBX (simulated binary cross-over, cf Deb (2001), p 113). Warning:
 the current implementation is copied from Deb’s code and is
-slightly different from the original paper.</li>
+slightly different from the original paper.</p></li>
 </ul>
 </li>
-<li><strong>Parameters:</strong><ul>
-<li>Any variant:<ul>
-<li>(<cite>mutation_t</cite> and <cite>cross_over_t</cite> are defined in the
-namespace sferes::gen::evo_float`)</li>
-<li>SFERES_CONST mutation_t mutation_type:
-polynomial, gaussian or uniform;</li>
-<li>SFERES_CONST cross_overt cross_overtype
--&gt; sbx or recombination;</li>
-<li>SFERES_CONST float mutation_rate -&gt; the rate of
-mutation of one member of the vectorf</li>
-<li>SFERES_CONST float cross_rate -&gt; the rate of
+<li><p><strong>Parameters:</strong></p>
+<ul>
+<li><p>Any variant:</p>
+<ul>
+<li><p>(<cite>mutation_t</cite> and <cite>cross_over_t</cite> are defined in the
+namespace sferes::gen::evo_float`)</p></li>
+<li><p>SFERES_CONST mutation_t mutation_type:
+polynomial, gaussian or uniform;</p></li>
+<li><p>SFERES_CONST cross_overt cross_overtype
+-&gt; sbx or recombination;</p></li>
+<li><p>SFERES_CONST float mutation_rate -&gt; the rate of
+mutation of one member of the vectorf</p></li>
+<li><p>SFERES_CONST float cross_rate -&gt; the rate of
 cross-over (if no cross-over is applied, parents are copied to
-children)</li>
+children)</p></li>
 </ul>
 </li>
-<li>polynomial mutation:<ul>
-<li>SFERES_CONST float eta_m -&gt; η_m is a
+<li><p>polynomial mutation:</p>
+<ul>
+<li><p>SFERES_CONST float eta_m -&gt; η_m is a
 parameter which controls the polynomial distribution. See Deb’s
-paper or book.</li>
+paper or book.</p></li>
 </ul>
 </li>
-<li>gaussian mutation:<ul>
-<li>SFERES_CONST float sigma -&gt; the standard deviation of
-the gaussian</li>
+<li><p>gaussian mutation:</p>
+<ul>
+<li><p>SFERES_CONST float sigma -&gt; the standard deviation of
+the gaussian</p></li>
 </ul>
 </li>
-<li>uniform mutation:<ul>
-<li>SFERES_CONST float max -&gt; maximum change of the current
-value</li>
+<li><p>uniform mutation:</p>
+<ul>
+<li><p>SFERES_CONST float max -&gt; maximum change of the current
+value</p></li>
 </ul>
 </li>
-<li>sbx:<ul>
-<li>SFERES_CONST float eta_c -&gt; see Deb’s paper or
-book.</li>
+<li><p>sbx:</p>
+<ul>
+<li><p>SFERES_CONST float eta_c -&gt; see Deb’s paper or
+book.</p></li>
 </ul>
 </li>
 </ul>
 </li>
-<li><strong>Typical typename:</strong></li>
+<li><p><strong>Typical typename:</strong></p></li>
 </ul>
-<div class="highlight-c++"><div class="highlight"><pre><span></span><span class="k">typedef</span> <span class="n">sferes</span><span class="o">::</span><span class="n">gen</span><span class="o">::</span><span class="n">EvoFloat</span><span class="o">&lt;</span><span class="mi">10</span><span class="p">,</span> <span class="n">Params1</span><span class="o">&gt;</span> <span class="n">gen_t</span><span class="p">;</span>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="k">typedef</span><span class="w"> </span><span class="n">sferes</span><span class="o">::</span><span class="n">gen</span><span class="o">::</span><span class="n">EvoFloat</span><span class="o">&lt;</span><span class="mi">10</span><span class="p">,</span><span class="w"> </span><span class="n">Params1</span><span class="o">&gt;</span><span class="w"> </span><span class="n">gen_t</span><span class="p">;</span><span class="w"></span>
 </pre></div>
 </div>
 <ul class="simple">
-<li><strong>Typical parameters:</strong></li>
+<li><p><strong>Typical parameters:</strong></p></li>
 </ul>
-<div class="highlight-c++"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="k">namespace</span> <span class="n">sferes</span><span class="o">::</span><span class="n">gen</span><span class="o">::</span><span class="n">evo_float</span><span class="p">;</span>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="k">using</span><span class="w"> </span><span class="k">namespace</span><span class="w"> </span><span class="nn">sferes</span><span class="o">::</span><span class="nn">gen</span><span class="o">::</span><span class="nn">evo_float</span><span class="p">;</span><span class="w"></span>
 
-<span class="k">struct</span> <span class="n">Params1</span>
-<span class="p">{</span>
-  <span class="k">struct</span> <span class="n">evo_float</span>
-  <span class="p">{</span>
-    <span class="n">SFERES_CONST</span> <span class="kt">float</span> <span class="n">mutation_rate</span> <span class="o">=</span> <span class="mf">0.1f</span><span class="p">;</span>
-    <span class="n">SFERES_CONST</span> <span class="kt">float</span> <span class="n">cross_rate</span> <span class="o">=</span> <span class="mf">0.1f</span><span class="p">;</span>
-    <span class="n">SFERES_CONST</span> <span class="n">mutation_t</span> <span class="n">mutation_type</span> <span class="o">=</span> <span class="n">polynomial</span><span class="p">;</span>
-    <span class="n">SFERES_CONST</span> <span class="n">cross_over_t</span> <span class="n">cross_over_type</span> <span class="o">=</span> <span class="n">sbx</span><span class="p">;</span>
-    <span class="n">SFERES_CONST</span> <span class="kt">float</span> <span class="n">eta_m</span> <span class="o">=</span> <span class="mf">15.0f</span><span class="p">;</span>
-    <span class="n">SFERES_CONST</span> <span class="kt">float</span> <span class="n">eta_c</span> <span class="o">=</span> <span class="mf">15.0f</span><span class="p">;</span>
-  <span class="p">};</span>
-<span class="p">};</span>
+<span class="k">struct</span><span class="w"> </span><span class="nc">Params1</span><span class="w"></span>
+<span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="k">struct</span><span class="w"> </span><span class="nc">evo_float</span><span class="w"></span>
+<span class="w">  </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="n">SFERES_CONST</span><span class="w"> </span><span class="kt">float</span><span class="w"> </span><span class="n">mutation_rate</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.1f</span><span class="p">;</span><span class="w"></span>
+<span class="w">    </span><span class="n">SFERES_CONST</span><span class="w"> </span><span class="kt">float</span><span class="w"> </span><span class="n">cross_rate</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.1f</span><span class="p">;</span><span class="w"></span>
+<span class="w">    </span><span class="n">SFERES_CONST</span><span class="w"> </span><span class="n">mutation_t</span><span class="w"> </span><span class="n">mutation_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">polynomial</span><span class="p">;</span><span class="w"></span>
+<span class="w">    </span><span class="n">SFERES_CONST</span><span class="w"> </span><span class="n">cross_over_t</span><span class="w"> </span><span class="n">cross_over_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sbx</span><span class="p">;</span><span class="w"></span>
+<span class="w">    </span><span class="n">SFERES_CONST</span><span class="w"> </span><span class="kt">float</span><span class="w"> </span><span class="n">eta_m</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">15.0f</span><span class="p">;</span><span class="w"></span>
+<span class="w">    </span><span class="n">SFERES_CONST</span><span class="w"> </span><span class="kt">float</span><span class="w"> </span><span class="n">eta_c</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">15.0f</span><span class="p">;</span><span class="w"></span>
+<span class="w">  </span><span class="p">};</span><span class="w"></span>
+<span class="p">};</span><span class="w"></span>
 
-<span class="k">struct</span> <span class="n">Params2</span>
-<span class="p">{</span>
-  <span class="k">struct</span> <span class="n">evo_float</span>
-  <span class="p">{</span>
-    <span class="n">SFERES_CONST</span> <span class="kt">float</span> <span class="n">mutation_rate</span> <span class="o">=</span> <span class="mf">0.1f</span><span class="p">;</span>
-    <span class="n">SFERES_CONST</span> <span class="kt">float</span> <span class="n">cross_rate</span> <span class="o">=</span> <span class="mf">0.1f</span><span class="p">;</span>
-    <span class="n">SFERES_CONST</span> <span class="n">mutation_t</span> <span class="n">mutation_type</span> <span class="o">=</span> <span class="n">gaussian</span><span class="p">;</span>
-    <span class="n">SFERES_CONST</span> <span class="n">cross_over_t</span> <span class="n">cross_over_type</span> <span class="o">=</span> <span class="n">recombination</span><span class="p">;</span>
-    <span class="n">SFERES_CONST</span> <span class="kt">float</span> <span class="n">sigma</span> <span class="o">=</span> <span class="mf">0.3f</span><span class="p">;</span>
-  <span class="p">};</span>
-<span class="p">};</span>
+<span class="k">struct</span><span class="w"> </span><span class="nc">Params2</span><span class="w"></span>
+<span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="k">struct</span><span class="w"> </span><span class="nc">evo_float</span><span class="w"></span>
+<span class="w">  </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="n">SFERES_CONST</span><span class="w"> </span><span class="kt">float</span><span class="w"> </span><span class="n">mutation_rate</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.1f</span><span class="p">;</span><span class="w"></span>
+<span class="w">    </span><span class="n">SFERES_CONST</span><span class="w"> </span><span class="kt">float</span><span class="w"> </span><span class="n">cross_rate</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.1f</span><span class="p">;</span><span class="w"></span>
+<span class="w">    </span><span class="n">SFERES_CONST</span><span class="w"> </span><span class="n">mutation_t</span><span class="w"> </span><span class="n">mutation_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">gaussian</span><span class="p">;</span><span class="w"></span>
+<span class="w">    </span><span class="n">SFERES_CONST</span><span class="w"> </span><span class="n">cross_over_t</span><span class="w"> </span><span class="n">cross_over_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">recombination</span><span class="p">;</span><span class="w"></span>
+<span class="w">    </span><span class="n">SFERES_CONST</span><span class="w"> </span><span class="kt">float</span><span class="w"> </span><span class="n">sigma</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.3f</span><span class="p">;</span><span class="w"></span>
+<span class="w">  </span><span class="p">};</span><span class="w"></span>
+<span class="p">};</span><span class="w"></span>
 
 
-<span class="k">struct</span> <span class="n">Params3</span>
-<span class="p">{</span>
-  <span class="k">struct</span> <span class="n">evo_float</span>
-  <span class="p">{</span>
-    <span class="n">SFERES_CONST</span> <span class="kt">float</span> <span class="n">mutation_rate</span> <span class="o">=</span> <span class="mf">0.1f</span><span class="p">;</span>
-    <span class="n">SFERES_CONST</span> <span class="kt">float</span> <span class="n">cross_rate</span> <span class="o">=</span> <span class="mf">0.1f</span><span class="p">;</span>
-    <span class="n">SFERES_CONST</span> <span class="n">mutation_t</span> <span class="n">mutation_type</span> <span class="o">=</span> <span class="n">uniform</span><span class="p">;</span>
-    <span class="n">SFERES_CONST</span> <span class="n">cross_over_t</span> <span class="n">cross_over_type</span> <span class="o">=</span> <span class="n">sbx</span><span class="p">;</span>
-    <span class="n">SFERES_CONST</span> <span class="kt">float</span> <span class="n">max</span> <span class="o">=</span> <span class="mf">0.3f</span><span class="p">;</span>
-    <span class="n">SFERES_CONST</span> <span class="kt">float</span> <span class="n">eta_c</span> <span class="o">=</span> <span class="mf">15.0f</span><span class="p">;</span>
-  <span class="p">};</span>
-<span class="p">};</span>
+<span class="k">struct</span><span class="w"> </span><span class="nc">Params3</span><span class="w"></span>
+<span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="k">struct</span><span class="w"> </span><span class="nc">evo_float</span><span class="w"></span>
+<span class="w">  </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="n">SFERES_CONST</span><span class="w"> </span><span class="kt">float</span><span class="w"> </span><span class="n">mutation_rate</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.1f</span><span class="p">;</span><span class="w"></span>
+<span class="w">    </span><span class="n">SFERES_CONST</span><span class="w"> </span><span class="kt">float</span><span class="w"> </span><span class="n">cross_rate</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.1f</span><span class="p">;</span><span class="w"></span>
+<span class="w">    </span><span class="n">SFERES_CONST</span><span class="w"> </span><span class="n">mutation_t</span><span class="w"> </span><span class="n">mutation_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">uniform</span><span class="p">;</span><span class="w"></span>
+<span class="w">    </span><span class="n">SFERES_CONST</span><span class="w"> </span><span class="n">cross_over_t</span><span class="w"> </span><span class="n">cross_over_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sbx</span><span class="p">;</span><span class="w"></span>
+<span class="w">    </span><span class="n">SFERES_CONST</span><span class="w"> </span><span class="kt">float</span><span class="w"> </span><span class="n">max</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.3f</span><span class="p">;</span><span class="w"></span>
+<span class="w">    </span><span class="n">SFERES_CONST</span><span class="w"> </span><span class="kt">float</span><span class="w"> </span><span class="n">eta_c</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">15.0f</span><span class="p">;</span><span class="w"></span>
+<span class="w">  </span><span class="p">};</span><span class="w"></span>
+<span class="p">};</span><span class="w"></span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="defining-your-own-genotype">
+</section>
+<section id="defining-your-own-genotype">
 <h3>Defining your own genotype<a class="headerlink" href="#defining-your-own-genotype" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-c++"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;sferes/stc/stc.hpp&gt;</span><span class="cp"></span>
-<span class="k">namespace</span> <span class="n">sferes</span>
-<span class="p">{</span>
-  <span class="k">namespace</span> <span class="n">gen</span>
-  <span class="p">{</span>
-    <span class="n">SFERES_CLASS</span><span class="p">(</span><span class="n">MyGenotype</span><span class="p">)</span>
-    <span class="p">{</span>
-    <span class="k">public</span><span class="o">:</span>
-      <span class="c1">// generates a random genotype</span>
-      <span class="kt">void</span> <span class="n">random</span><span class="p">()</span>
-      <span class="p">{</span>
-      <span class="c1">// your code</span>
-      <span class="p">}</span>
-      <span class="c1">// mutates an individual</span>
-      <span class="kt">void</span> <span class="n">mutate</span><span class="p">()</span>
-      <span class="p">{</span>
-      <span class="c1">// your code to mutate (you have to handle your own mutation_rate)</span>
-      <span class="p">}</span>
-      <span class="c1">// WARNING: the arguments of this method are of the same type</span>
-      <span class="c1">// than your genotype</span>
-      <span class="kt">void</span> <span class="n">cross</span><span class="p">(</span><span class="k">const</span> <span class="n">MyGenotype</span><span class="o">&amp;</span> <span class="n">o</span><span class="p">,</span> <span class="n">MyGenotype</span><span class="o">&amp;</span> <span class="n">c1</span><span class="p">,</span> <span class="n">MyGenotype</span><span class="o">&amp;</span> <span class="n">c2</span><span class="p">)</span>
-      <span class="p">{</span>
-      <span class="c1">// if you don&#39;t know what to do, simply use:</span>
-      <span class="k">if</span> <span class="p">(</span><span class="n">misc</span><span class="o">::</span><span class="n">flip_coin</span><span class="p">())</span>
-        <span class="p">{</span>
-          <span class="n">c1</span> <span class="o">=</span> <span class="o">*</span><span class="k">this</span><span class="p">;</span>
-          <span class="n">c2</span> <span class="o">=</span> <span class="n">o</span><span class="p">;</span>
-          <span class="p">}</span>
-        <span class="k">else</span>
-          <span class="p">{</span>
-            <span class="n">c2</span> <span class="o">=</span> <span class="o">*</span><span class="k">this</span><span class="p">;</span>
-            <span class="n">c1</span> <span class="o">=</span> <span class="n">o</span><span class="p">;</span>
-          <span class="p">}</span>
-      <span class="p">}</span>
-    <span class="k">protected</span><span class="o">:</span>
-      <span class="c1">// your data here (your genotype)</span>
-    <span class="p">};</span>
-  <span class="p">}</span>
-<span class="p">}</span>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;sferes/stc/stc.hpp&gt;</span><span class="cp"></span>
+<span class="k">namespace</span><span class="w"> </span><span class="nn">sferes</span><span class="w"></span>
+<span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="k">namespace</span><span class="w"> </span><span class="nn">gen</span><span class="w"></span>
+<span class="w">  </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="n">SFERES_CLASS</span><span class="p">(</span><span class="n">MyGenotype</span><span class="p">)</span><span class="w"></span>
+<span class="w">    </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="k">public</span><span class="o">:</span><span class="w"></span>
+<span class="w">      </span><span class="c1">// generates a random genotype</span>
+<span class="w">      </span><span class="kt">void</span><span class="w"> </span><span class="n">random</span><span class="p">()</span><span class="w"></span>
+<span class="w">      </span><span class="p">{</span><span class="w"></span>
+<span class="w">      </span><span class="c1">// your code</span>
+<span class="w">      </span><span class="p">}</span><span class="w"></span>
+<span class="w">      </span><span class="c1">// mutates an individual</span>
+<span class="w">      </span><span class="kt">void</span><span class="w"> </span><span class="n">mutate</span><span class="p">()</span><span class="w"></span>
+<span class="w">      </span><span class="p">{</span><span class="w"></span>
+<span class="w">      </span><span class="c1">// your code to mutate (you have to handle your own mutation_rate)</span>
+<span class="w">      </span><span class="p">}</span><span class="w"></span>
+<span class="w">      </span><span class="c1">// WARNING: the arguments of this method are of the same type</span>
+<span class="w">      </span><span class="c1">// than your genotype</span>
+<span class="w">      </span><span class="kt">void</span><span class="w"> </span><span class="n">cross</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">MyGenotype</span><span class="o">&amp;</span><span class="w"> </span><span class="n">o</span><span class="p">,</span><span class="w"> </span><span class="n">MyGenotype</span><span class="o">&amp;</span><span class="w"> </span><span class="n">c1</span><span class="p">,</span><span class="w"> </span><span class="n">MyGenotype</span><span class="o">&amp;</span><span class="w"> </span><span class="n">c2</span><span class="p">)</span><span class="w"></span>
+<span class="w">      </span><span class="p">{</span><span class="w"></span>
+<span class="w">      </span><span class="c1">// if you don&#39;t know what to do, simply use:</span>
+<span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">misc</span><span class="o">::</span><span class="n">flip_coin</span><span class="p">())</span><span class="w"></span>
+<span class="w">        </span><span class="p">{</span><span class="w"></span>
+<span class="w">          </span><span class="n">c1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">*</span><span class="k">this</span><span class="p">;</span><span class="w"></span>
+<span class="w">          </span><span class="n">c2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">o</span><span class="p">;</span><span class="w"></span>
+<span class="w">          </span><span class="p">}</span><span class="w"></span>
+<span class="w">        </span><span class="k">else</span><span class="w"></span>
+<span class="w">          </span><span class="p">{</span><span class="w"></span>
+<span class="w">            </span><span class="n">c2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">*</span><span class="k">this</span><span class="p">;</span><span class="w"></span>
+<span class="w">            </span><span class="n">c1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">o</span><span class="p">;</span><span class="w"></span>
+<span class="w">          </span><span class="p">}</span><span class="w"></span>
+<span class="w">      </span><span class="p">}</span><span class="w"></span>
+<span class="w">    </span><span class="k">protected</span><span class="o">:</span><span class="w"></span>
+<span class="w">      </span><span class="c1">// your data here (your genotype)</span>
+<span class="w">    </span><span class="p">};</span><span class="w"></span>
+<span class="w">  </span><span class="p">}</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
 </pre></div>
 </div>
-</div>
-</div>
-<div class="section" id="phenotypes-individuals">
+</section>
+</section>
+<section id="phenotypes-individuals">
 <h2>Phenotypes (Individuals)<a class="headerlink" href="#phenotypes-individuals" title="Permalink to this headline">¶</a></h2>
 <p>Phenotypes are the expression of the genotypes: it is often useful to
 develop a genotype into a structure which is easier to evaluate. For
@@ -927,192 +951,193 @@ several times), then developped into a standard neural network
 <p>Phenotypes are also the bridge between the fitness function and the
 genotype. In sferes2, a phenotype is the composition of a <cite>fit_t</cite>
 and a <cite>gen_t</cite>.</p>
-<div class="section" id="indiv">
+<section id="indiv">
 <h3>Indiv<a class="headerlink" href="#indiv" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
-<li><strong>File:</strong>
-<a class="reference external" href="https://github.com/sferes2/sferes2/blob/master/sferes/indiv.hpp">sferes/phen/indiv.hpp</a></li>
-<li><strong>Description:</strong> The abstract base class for phenotypes.</li>
-<li><strong>Main public methods:</strong></li>
+<li><p><strong>File:</strong>
+<a class="reference external" href="https://github.com/sferes2/sferes2/blob/master/sferes/indiv.hpp">sferes/phen/indiv.hpp</a></p></li>
+<li><p><strong>Description:</strong> The abstract base class for phenotypes.</p></li>
+<li><p><strong>Main public methods:</strong></p></li>
 </ul>
-<div class="highlight-c++"><div class="highlight"><pre><span></span><span class="c1">// returns the fitness</span>
-<span class="n">Fit</span><span class="o">&amp;</span> <span class="n">fit</span><span class="p">();</span>
-<span class="k">const</span> <span class="n">Fit</span><span class="o">&amp;</span> <span class="n">fit</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="c1">// returns the fitness</span>
+<span class="n">Fit</span><span class="o">&amp;</span><span class="w"> </span><span class="nf">fit</span><span class="p">();</span><span class="w"></span>
+<span class="k">const</span><span class="w"> </span><span class="n">Fit</span><span class="o">&amp;</span><span class="w"> </span><span class="nf">fit</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="p">;</span><span class="w"></span>
 <span class="c1">// returns the genotype</span>
-<span class="n">Gen</span><span class="o">&amp;</span> <span class="n">gen</span><span class="p">()</span>  <span class="p">{</span> <span class="k">return</span> <span class="n">_gen</span><span class="p">;</span> <span class="p">}</span>
-<span class="k">const</span> <span class="n">Gen</span><span class="o">&amp;</span> <span class="n">gen</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_gen</span><span class="p">;</span> <span class="p">}</span>
+<span class="n">Gen</span><span class="o">&amp;</span><span class="w"> </span><span class="nf">gen</span><span class="p">()</span><span class="w">  </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_gen</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
+<span class="k">const</span><span class="w"> </span><span class="n">Gen</span><span class="o">&amp;</span><span class="w"> </span><span class="nf">gen</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_gen</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
 <span class="c1">// develops the genotype, called by the evalutar before evaluating</span>
 <span class="c1">// the individual</span>
-<span class="kt">void</span> <span class="n">develop</span><span class="p">();</span>
+<span class="kt">void</span><span class="w"> </span><span class="nf">develop</span><span class="p">();</span><span class="w"></span>
 <span class="c1">// you can also override the following methods (although in most</span>
 <span class="c1">// cases, you should override their equivalent in the genotype)</span>
-<span class="kt">void</span> <span class="nf">mutate</span><span class="p">();</span>
-<span class="kt">void</span> <span class="nf">random</span><span class="p">();</span>
-<span class="kt">void</span> <span class="nf">cross</span><span class="p">(</span><span class="k">const</span> <span class="n">boost</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">Exact</span><span class="o">&gt;</span> <span class="n">i2</span><span class="p">,</span>
-         <span class="n">boost</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">Exact</span><span class="o">&gt;&amp;</span> <span class="n">o1</span><span class="p">,</span>
-         <span class="n">boost</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">Exact</span><span class="o">&gt;&amp;</span> <span class="n">o2</span><span class="p">);</span>
+<span class="kt">void</span><span class="w"> </span><span class="nf">mutate</span><span class="p">();</span><span class="w"></span>
+<span class="kt">void</span><span class="w"> </span><span class="nf">random</span><span class="p">();</span><span class="w"></span>
+<span class="kt">void</span><span class="w"> </span><span class="nf">cross</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">boost</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">Exact</span><span class="o">&gt;</span><span class="w"> </span><span class="n">i2</span><span class="p">,</span><span class="w"></span>
+<span class="w">         </span><span class="n">boost</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">Exact</span><span class="o">&gt;&amp;</span><span class="w"> </span><span class="n">o1</span><span class="p">,</span><span class="w"></span>
+<span class="w">         </span><span class="n">boost</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">Exact</span><span class="o">&gt;&amp;</span><span class="w"> </span><span class="n">o2</span><span class="p">);</span><span class="w"></span>
 <span class="c1">// this method is not implemented in Indiv but it must be in all the</span>
 <span class="c1">// concrete genotypes. It should describe this particular individual</span>
 <span class="c1">// in the stream os (see the Parameter source code for an example)</span>
-<span class="kt">void</span> <span class="n">show</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">ostream</span><span class="o">&amp;</span> <span class="n">os</span><span class="p">)</span> <span class="k">const</span>
+<span class="kt">void</span><span class="w"> </span><span class="n">show</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">ostream</span><span class="o">&amp;</span><span class="w"> </span><span class="n">os</span><span class="p">)</span><span class="w"> </span><span class="k">const</span><span class="w"></span>
 </pre></div>
 </div>
 <ul class="simple">
-<li><strong>Defined types:</strong><ul>
-<li>Fit -&gt; the fitness functor</li>
-<li>Gen -&gt; genotype</li>
+<li><p><strong>Defined types:</strong></p>
+<ul>
+<li><p>Fit -&gt; the fitness functor</p></li>
+<li><p>Gen -&gt; genotype</p></li>
 </ul>
 </li>
 </ul>
-</div>
-<div class="section" id="parameters">
+</section>
+<section id="parameters">
 <h3>Parameters<a class="headerlink" href="#parameters" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
-<li><strong>File:</strong>
-<a class="reference external" href="https://github.com/sferes2/sferes2/blob/master/sferes/phen/parameters.hpp">sferes/gen/parameters.hpp</a></li>
-<li><strong>Unit test:</strong>
-<a class="reference external" href="https://github.com/sferes2/sferes2/blob/master/tests/phen/parameters.cpp">sferes/tests/phen/parameters.cpp</a></li>
-<li><strong>Description:</strong> This phenotype transforms a list of parameters in
+<li><p><strong>File:</strong>
+<a class="reference external" href="https://github.com/sferes2/sferes2/blob/master/sferes/phen/parameters.hpp">sferes/gen/parameters.hpp</a></p></li>
+<li><p><strong>Unit test:</strong>
+<a class="reference external" href="https://github.com/sferes2/sferes2/blob/master/tests/phen/parameters.cpp">sferes/tests/phen/parameters.cpp</a></p></li>
+<li><p><strong>Description:</strong> This phenotype transforms a list of parameters in
 [0, 1[ (typically a gen::Bitstring or a gen::EvoFloat) to a list of
-parameter in [min, max[. The genotype class must define a method:</li>
+parameter in [min, max[. The genotype class must define a method:</p></li>
 </ul>
-<div class="highlight-c++"><div class="highlight"><pre><span></span><span class="n">cont</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;&amp;</span> <span class="n">data</span><span class="p">()</span> <span class="k">const</span> <span class="p">();</span>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="n">cont</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;&amp;</span><span class="w"> </span><span class="n">data</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">();</span><span class="w"></span>
 </pre></div>
 </div>
 <ul class="simple">
-<li><strong>Typical typename:</strong></li>
+<li><p><strong>Typical typename:</strong></p></li>
 </ul>
-<div class="highlight-c++"><div class="highlight"><pre><span></span><span class="k">typedef</span> <span class="n">eval</span><span class="o">::</span><span class="n">Parameters</span><span class="o">&lt;</span><span class="n">gen_t</span><span class="p">,</span> <span class="n">fit_t</span><span class="p">,</span> <span class="n">Params</span><span class="o">&gt;</span> <span class="n">phen_t</span><span class="p">;</span>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="k">typedef</span><span class="w"> </span><span class="n">eval</span><span class="o">::</span><span class="n">Parameters</span><span class="o">&lt;</span><span class="n">gen_t</span><span class="p">,</span><span class="w"> </span><span class="n">fit_t</span><span class="p">,</span><span class="w"> </span><span class="n">Params</span><span class="o">&gt;</span><span class="w"> </span><span class="n">phen_t</span><span class="p">;</span><span class="w"></span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="defining-your-own-phenotype">
+</section>
+<section id="defining-your-own-phenotype">
 <h3>Defining your own phenotype<a class="headerlink" href="#defining-your-own-phenotype" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-c++"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;sferes/phen/indiv.hpp&gt;</span><span class="cp"></span>
-<span class="k">namespace</span> <span class="n">sferes</span>
-<span class="p">{</span>
-  <span class="k">namespace</span> <span class="n">phen</span>
-  <span class="p">{</span>
-    <span class="n">SFERES_INDIV</span><span class="p">(</span><span class="n">MyPhenotype</span><span class="p">,</span> <span class="n">Indiv</span><span class="p">)</span>
-    <span class="p">{</span>
-    <span class="k">public</span><span class="o">:</span>
-      <span class="c1">// constructor</span>
-      <span class="n">MyPhenotype</span><span class="p">()</span> <span class="p">{</span> <span class="cm">/* your code */</span> <span class="p">}</span>
-      <span class="c1">// develop the genotype to whatever you want</span>
-      <span class="kt">void</span> <span class="n">develop</span><span class="p">(){</span> <span class="cm">/* your code */</span> <span class="p">}</span>
-      <span class="c1">// describe this individual</span>
-      <span class="kt">void</span> <span class="n">show</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">ostream</span><span class="o">&amp;</span> <span class="n">os</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span> <span class="cm">/* your code */</span> <span class="p">}</span>
-    <span class="k">protected</span><span class="o">:</span>
-      <span class="c1">// your data</span>
-    <span class="p">};</span>
-  <span class="p">}</span>
-<span class="p">}</span>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;sferes/phen/indiv.hpp&gt;</span><span class="cp"></span>
+<span class="k">namespace</span><span class="w"> </span><span class="nn">sferes</span><span class="w"></span>
+<span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="k">namespace</span><span class="w"> </span><span class="nn">phen</span><span class="w"></span>
+<span class="w">  </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="n">SFERES_INDIV</span><span class="p">(</span><span class="n">MyPhenotype</span><span class="p">,</span><span class="w"> </span><span class="n">Indiv</span><span class="p">)</span><span class="w"></span>
+<span class="w">    </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="k">public</span><span class="o">:</span><span class="w"></span>
+<span class="w">      </span><span class="c1">// constructor</span>
+<span class="w">      </span><span class="n">MyPhenotype</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="cm">/* your code */</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
+<span class="w">      </span><span class="c1">// develop the genotype to whatever you want</span>
+<span class="w">      </span><span class="kt">void</span><span class="w"> </span><span class="n">develop</span><span class="p">(){</span><span class="w"> </span><span class="cm">/* your code */</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
+<span class="w">      </span><span class="c1">// describe this individual</span>
+<span class="w">      </span><span class="kt">void</span><span class="w"> </span><span class="n">show</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">ostream</span><span class="o">&amp;</span><span class="w"> </span><span class="n">os</span><span class="p">)</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="cm">/* your code */</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
+<span class="w">    </span><span class="k">protected</span><span class="o">:</span><span class="w"></span>
+<span class="w">      </span><span class="c1">// your data</span>
+<span class="w">    </span><span class="p">};</span><span class="w"></span>
+<span class="w">  </span><span class="p">}</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
 </pre></div>
 </div>
-</div>
-</div>
-<div class="section" id="evaluators">
+</section>
+</section>
+<section id="evaluators">
 <h2>Evaluators<a class="headerlink" href="#evaluators" title="Permalink to this headline">¶</a></h2>
 <p>Evaluators are in charge of evalutating a vector of individuals (i.e.
 running phen_t::fit::eval() for each individual).</p>
-<div class="section" id="eval">
+<section id="eval">
 <h3>Eval<a class="headerlink" href="#eval" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
-<li><strong>File:</strong>
-<a class="reference external" href="https://github.com/sferes2/sferes2/blob/master/sferes/eval/eval.hpp">sferes/eval/eval.hpp</a></li>
-<li>A basic evaluator (no multiprocessing, no MPI, etc.), i.e. a basic
-loop.</li>
-<li><strong>Typical typename:</strong></li>
+<li><p><strong>File:</strong>
+<a class="reference external" href="https://github.com/sferes2/sferes2/blob/master/sferes/eval/eval.hpp">sferes/eval/eval.hpp</a></p></li>
+<li><p>A basic evaluator (no multiprocessing, no MPI, etc.), i.e. a basic
+loop.</p></li>
+<li><p><strong>Typical typename:</strong></p></li>
 </ul>
-<div class="highlight-c++"><div class="highlight"><pre><span></span><span class="k">typedef</span> <span class="n">eval</span><span class="o">::</span><span class="n">Eval</span><span class="o">&lt;</span><span class="n">Params</span><span class="o">&gt;</span> <span class="n">eval_t</span><span class="p">;</span>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="k">typedef</span><span class="w"> </span><span class="n">eval</span><span class="o">::</span><span class="n">Eval</span><span class="o">&lt;</span><span class="n">Params</span><span class="o">&gt;</span><span class="w"> </span><span class="n">eval_t</span><span class="p">;</span><span class="w"></span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="parallel">
+</section>
+<section id="parallel">
 <h3>Parallel<a class="headerlink" href="#parallel" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
-<li><strong>File:</strong>
-<a class="reference external" href="https://github.com/sferes2/sferes2/blob/master/sferes/eval/parallel.hpp">sferes/eval/parallel.hpp</a></li>
-<li><strong>Description:</strong> A SMP/multicore evaluator based on TBB
+<li><p><strong>File:</strong>
+<a class="reference external" href="https://github.com/sferes2/sferes2/blob/master/sferes/eval/parallel.hpp">sferes/eval/parallel.hpp</a></p></li>
+<li><p><strong>Description:</strong> A SMP/multicore evaluator based on TBB
 (<a class="reference external" href="http://www.threadingbuildingblocks.org/">http://www.threadingbuildingblocks.org/</a>). <strong>Your fitness should be
-thread-safe!</strong></li>
-<li><strong>Typical typename:</strong></li>
+thread-safe!</strong></p></li>
+<li><p><strong>Typical typename:</strong></p></li>
 </ul>
-<div class="highlight-c++"><div class="highlight"><pre><span></span><span class="k">typedef</span> <span class="n">eval</span><span class="o">::</span><span class="n">Parallel</span><span class="o">&lt;</span><span class="n">Params</span><span class="o">&gt;</span> <span class="n">eval_t</span><span class="p">;</span>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="k">typedef</span><span class="w"> </span><span class="n">eval</span><span class="o">::</span><span class="n">Parallel</span><span class="o">&lt;</span><span class="n">Params</span><span class="o">&gt;</span><span class="w"> </span><span class="n">eval_t</span><span class="p">;</span><span class="w"></span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="mpi">
+</section>
+<section id="mpi">
 <h3>Mpi<a class="headerlink" href="#mpi" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
-<li><strong>File:</strong> <a class="reference external" href="sferes/eval/mpi.hpp">sferes/eval/mpi.hpp</a></li>
-<li><strong>Description:</strong> A MPI evaluator based on boost::mpi. It works on
-clusters but keep in mind that every cluster is different!</li>
-<li><strong>Typical typename:</strong></li>
+<li><p><strong>File:</strong> <a class="reference external" href="sferes/eval/mpi.hpp">sferes/eval/mpi.hpp</a></p></li>
+<li><p><strong>Description:</strong> A MPI evaluator based on boost::mpi. It works on
+clusters but keep in mind that every cluster is different!</p></li>
+<li><p><strong>Typical typename:</strong></p></li>
 </ul>
-<div class="highlight-c++"><div class="highlight"><pre><span></span><span class="k">typedef</span> <span class="n">eval</span><span class="o">::</span><span class="n">Mpi</span><span class="o">&lt;</span><span class="n">Params</span><span class="o">&gt;</span> <span class="n">eval_t</span><span class="p">;</span>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="k">typedef</span><span class="w"> </span><span class="n">eval</span><span class="o">::</span><span class="n">Mpi</span><span class="o">&lt;</span><span class="n">Params</span><span class="o">&gt;</span><span class="w"> </span><span class="n">eval_t</span><span class="p">;</span><span class="w"></span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="defining-your-own-evaluator">
+</section>
+<section id="defining-your-own-evaluator">
 <h3>Defining your own evaluator<a class="headerlink" href="#defining-your-own-evaluator" title="Permalink to this headline">¶</a></h3>
 <p>The only required method is eval. It should call
 phen_t::develop() then phen_t::fit::eval() for each
 individual.</p>
-<div class="highlight-c++"><div class="highlight"><pre><span></span><span class="k">namespace</span> <span class="n">sferes</span>
-<span class="p">{</span>
-  <span class="k">namespace</span> <span class="n">eval</span>
-  <span class="p">{</span>
-    <span class="n">SFERES_EVAL</span><span class="p">(</span><span class="n">Eval</span><span class="p">)</span>
-    <span class="p">{</span>
-    <span class="k">public</span><span class="o">:</span>
-      <span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">Phen</span><span class="o">&gt;</span>
-        <span class="kt">void</span> <span class="n">eval</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">boost</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">Phen</span><span class="o">&gt;</span> <span class="o">&gt;&amp;</span> <span class="n">pop</span><span class="p">,</span> <span class="kt">size_t</span> <span class="n">begin</span><span class="p">,</span> <span class="kt">size_t</span> <span class="n">end</span><span class="p">)</span>
-      <span class="p">{</span>
-        <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span> <span class="o">=</span> <span class="n">begin</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">end</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span>
-          <span class="p">{</span>
-            <span class="n">pop</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">-&gt;</span><span class="n">develop</span><span class="p">();</span>
-            <span class="n">pop</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">-&gt;</span><span class="n">fit</span><span class="p">().</span><span class="n">eval</span><span class="p">(</span><span class="o">*</span><span class="n">pop</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
-          <span class="p">}</span>
-      <span class="p">}</span>
-    <span class="k">protected</span><span class="o">:</span>
-    <span class="p">};</span>
-  <span class="p">}</span>
-<span class="p">}</span>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="k">namespace</span><span class="w"> </span><span class="nn">sferes</span><span class="w"></span>
+<span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="k">namespace</span><span class="w"> </span><span class="nn">eval</span><span class="w"></span>
+<span class="w">  </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="n">SFERES_EVAL</span><span class="p">(</span><span class="n">Eval</span><span class="p">)</span><span class="w"></span>
+<span class="w">    </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="k">public</span><span class="o">:</span><span class="w"></span>
+<span class="w">      </span><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span><span class="w"> </span><span class="nc">Phen</span><span class="o">&gt;</span><span class="w"></span>
+<span class="w">        </span><span class="kt">void</span><span class="w"> </span><span class="n">eval</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">boost</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">Phen</span><span class="o">&gt;</span><span class="w"> </span><span class="o">&gt;&amp;</span><span class="w"> </span><span class="n">pop</span><span class="p">,</span><span class="w"> </span><span class="kt">size_t</span><span class="w"> </span><span class="n">begin</span><span class="p">,</span><span class="w"> </span><span class="kt">size_t</span><span class="w"> </span><span class="n">end</span><span class="p">)</span><span class="w"></span>
+<span class="w">      </span><span class="p">{</span><span class="w"></span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">size_t</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">begin</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">end</span><span class="p">;</span><span class="w"> </span><span class="o">++</span><span class="n">i</span><span class="p">)</span><span class="w"></span>
+<span class="w">          </span><span class="p">{</span><span class="w"></span>
+<span class="w">            </span><span class="n">pop</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">-&gt;</span><span class="n">develop</span><span class="p">();</span><span class="w"></span>
+<span class="w">            </span><span class="n">pop</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">-&gt;</span><span class="n">fit</span><span class="p">().</span><span class="n">eval</span><span class="p">(</span><span class="o">*</span><span class="n">pop</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span><span class="w"></span>
+<span class="w">          </span><span class="p">}</span><span class="w"></span>
+<span class="w">      </span><span class="p">}</span><span class="w"></span>
+<span class="w">    </span><span class="k">protected</span><span class="o">:</span><span class="w"></span>
+<span class="w">    </span><span class="p">};</span><span class="w"></span>
+<span class="w">  </span><span class="p">}</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
 </pre></div>
 </div>
-</div>
-</div>
-<div class="section" id="modifiers">
+</section>
+</section>
+<section id="modifiers">
 <h2>Modifiers<a class="headerlink" href="#modifiers" title="Permalink to this headline">¶</a></h2>
 <p>Modifiers are run once all the individuals have been evaluated but
 before any sorting. They are designed to allow to modify the fitness
 values to implement niching strategies, diversity preservation
 mechanisms, etc.</p>
-<div class="section" id="dummy">
+<section id="dummy">
 <h3>Dummy<a class="headerlink" href="#dummy" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
-<li><strong>File:</strong>
-<a class="reference external" href="https://github.com/sferes2/sferes2/blob/master/sferes/modif/dummy.hpp">sferes/modif/dummy.hpp</a></li>
-<li><strong>Description:</strong> basic modifier which does nothing.</li>
+<li><p><strong>File:</strong>
+<a class="reference external" href="https://github.com/sferes2/sferes2/blob/master/sferes/modif/dummy.hpp">sferes/modif/dummy.hpp</a></p></li>
+<li><p><strong>Description:</strong> basic modifier which does nothing.</p></li>
 </ul>
-</div>
-<div class="section" id="diversity">
+</section>
+<section id="diversity">
 <h3>Diversity<a class="headerlink" href="#diversity" title="Permalink to this headline">¶</a></h3>
-</div>
-<div class="section" id="novelty">
+</section>
+<section id="novelty">
 <h3>Novelty<a class="headerlink" href="#novelty" title="Permalink to this headline">¶</a></h3>
-</div>
-</div>
-<div class="section" id="misc">
+</section>
+</section>
+<section id="misc">
 <h2>Misc<a class="headerlink" href="#misc" title="Permalink to this headline">¶</a></h2>
 <p>The misc namespace contains useful small functions for:</p>
 <ul class="simple">
-<li>system access (e.g getpid())</li>
-<li>random number generation</li>
+<li><p>system access (e.g getpid())</p></li>
+<li><p>random number generation</p></li>
 </ul>
-</div>
-</div>
+</section>
+</section>
 
 
            </div>
@@ -1180,10 +1205,10 @@ mechanisms, etc.</p>
             HAS_SOURCE:  true
         };
     </script>
+      <script type="text/javascript" src="_static/documentation_options.js"></script>
       <script type="text/javascript" src="_static/jquery.js"></script>
       <script type="text/javascript" src="_static/underscore.js"></script>
       <script type="text/javascript" src="_static/doctools.js"></script>
-      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 
   
 

@@ -5,7 +5,8 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  
+  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
   <title>Sferes_v2 – documentation &mdash; Sferes_v2 0.1 alpha documentation</title>
@@ -24,6 +25,10 @@
 
   <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
 
+  
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   
 
   
@@ -111,14 +116,20 @@
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Sferes_v2 – documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="compilation.html">Compilation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial (basics)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="qd.html">Quality-Diversity Framework</a></li>
 <li class="toctree-l1"><a class="reference internal" href="concepts.html">Main concepts</a></li>
 <li class="toctree-l1"><a class="reference internal" href="reference.html">Reference manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="clusters.html">Sferes on clusters (OAR)</a></li>
 </ul>
 
             
 
             
             
+              
+                <a class="caption" href="http://www.resibots.eu/limbo">Limbo (BO library)</a>
+              
+                <a class="caption" href="http://www.resibots.eu/libdynamixel">Libdynamixel</a>
               
                 <a class="caption" href="http://github.com/resibots">github</a>
               
@@ -148,7 +159,7 @@
 
 <div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
-    <li><a href="#">Fferes_v2</a> &raquo;</li>
+    <li><a href="#">Sferes_v2</a> &raquo;</li>
     
     <li>Sferes_v2 – documentation</li>
     <li class="wy-breadcrumbs-aside">
@@ -164,23 +175,23 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="sferes-v2-documentation">
+  <section id="sferes-v2-documentation">
 <h1>Sferes_v2 – documentation<a class="headerlink" href="#sferes-v2-documentation" title="Permalink to this headline">¶</a></h1>
 <p>Sferes_v2 is a generic framework for evolutionary computation research. It provides the basic infrastructure to implement new evolution algorithms and new repesentations. The framework is voluntarily kept simple (less than 5000 lines of code).</p>
 <p>Main features:</p>
 <ul class="simple">
-<li>modern, effective C++ (C++11)</li>
-<li>multi-core support (via Intel TBB)</li>
-<li>MPI support (via boost::mpi)</li>
-<li>main algorithms: NSGA-II, MAP-Elites (Quality Diversity)</li>
-<li>native support of behavioral diversity and novelty search</li>
+<li><p>modern, effective C++ (C++11)</p></li>
+<li><p>multi-core support (via Intel TBB)</p></li>
+<li><p>MPI support (via boost::mpi)</p></li>
+<li><p>main algorithms: NSGA-II, MAP-Elites (Quality Diversity)</p></li>
+<li><p>native support of behavioral diversity and novelty search</p></li>
 </ul>
 <p>Additional modules:</p>
 <ul class="simple">
-<li>nn2: neuro-evolution</li>
-<li>fastsim: 2D simulator for mobile robot (e.g. Khepera or roomba)</li>
+<li><p>nn2: neuro-evolution</p></li>
+<li><p>fastsim: 2D simulator for mobile robot (e.g. Khepera or roomba)</p></li>
 </ul>
-<div class="section" id="license">
+<section id="license">
 <h2>License<a class="headerlink" href="#license" title="Permalink to this headline">¶</a></h2>
 <p>Sferes_v2 is currently licensed with a CeCILL License (equivalent to GPL-v2). If you use
 Sferes_v2 in a scientific paper, please cite:</p>
@@ -188,8 +199,8 @@ Sferes_v2 in a scientific paper, please cite:</p>
 Multi-Core World. <em>WCCI 2010 IEEE World Congress on Computational
 Intelligence, Congress on Evolutionary Computation (CEC)</em>. Pages
 4079–4086. <a class="reference external" href="http://www.isir.upmc.fr/files/2010ACTI1524.pdf">{pdf}</a></p>
-</div>
-<div class="section" id="contents">
+</section>
+<section id="contents">
 <h2>Contents:<a class="headerlink" href="#contents" title="Permalink to this headline">¶</a></h2>
 <div class="toctree-wrapper compound">
 </div>
@@ -206,6 +217,15 @@ Intelligence, Congress on Evolutionary Computation (CEC)</em>. Pages
 <li class="toctree-l2"><a class="reference internal" href="tutorial.html#running-a-sferes2-executable">Running a sferes2 executable</a></li>
 <li class="toctree-l2"><a class="reference internal" href="tutorial.html#loading-a-result-file">Loading a result file</a></li>
 <li class="toctree-l2"><a class="reference internal" href="tutorial.html#building-your-own-experiment">Building your own experiment</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="qd.html">Quality-Diversity Framework</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="qd.html#qualitydiversity">QualityDiversity</a></li>
+<li class="toctree-l2"><a class="reference internal" href="qd.html#container">Container</a></li>
+<li class="toctree-l2"><a class="reference internal" href="qd.html#storage">Storage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="qd.html#selector">Selector</a></li>
+<li class="toctree-l2"><a class="reference internal" href="qd.html#qd-fitness">QD Fitness</a></li>
+<li class="toctree-l2"><a class="reference internal" href="qd.html#qd-statistics">QD Statistics</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="concepts.html">Main concepts</a><ul>
@@ -229,18 +249,22 @@ Intelligence, Congress on Evolutionary Computation (CEC)</em>. Pages
 <li class="toctree-l2"><a class="reference internal" href="reference.html#misc">Misc</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="clusters.html">Sferes on clusters (OAR)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="clusters.html#oar-scheduler-resibots-inria-cluster">OAR Scheduler (ResiBots / Inria cluster)</a></li>
+</ul>
+</li>
 </ul>
 </div>
-</div>
-</div>
-<div class="section" id="indices-and-tables">
+</section>
+</section>
+<section id="indices-and-tables">
 <h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h1>
 <ul class="simple">
-<li><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></li>
-<li><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></li>
-<li><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></li>
+<li><p><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></p></li>
+<li><p><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></p></li>
+<li><p><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></p></li>
 </ul>
-</div>
+</section>
 
 
            </div>
@@ -306,10 +330,10 @@ Intelligence, Congress on Evolutionary Computation (CEC)</em>. Pages
             HAS_SOURCE:  true
         };
     </script>
+      <script type="text/javascript" src="_static/documentation_options.js"></script>
       <script type="text/javascript" src="_static/jquery.js"></script>
       <script type="text/javascript" src="_static/underscore.js"></script>
       <script type="text/javascript" src="_static/doctools.js"></script>
-      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 
   
 

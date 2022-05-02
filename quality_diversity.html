@@ -1,0 +1,955 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Reference manual &mdash; Sferes_v2 0.1 alpha documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+
+  
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+        <link rel="index" title="Index"
+              href="genindex.html"/>
+        <link rel="search" title="Search" href="search.html"/>
+    <link rel="top" title="Sferes_v2 0.1 alpha documentation" href="index.html"/>
+        <link rel="next" title="Main concepts" href="concepts.html"/>
+        <link rel="prev" title="Tutorial (basics)" href="tutorial.html"/>
+<style type="text/css">
+/* This CSS displays small logos at the bottom of the page, on one line */
+
+.wy-footer-logo-container {
+  margin-top: 50px;
+  text-align: center;
+}
+
+.wy-footer-logo {
+  display: inline-block;
+  width: 60px;
+}
+</style>
+
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+          
+
+          
+            <a href="http://www.resibots.eu">
+          
+
+          
+            
+            <img src="_static/resibots_logo_black_200px.png" class="logo" />
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                2.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="resibots-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+                  <a class="caption" href="http://www.resibots.eu">Back to resiBots' website</a>
+              
+            
+
+            
+            
+                <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="index.html">Sferes_v2 – documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="compilation.html">Compilation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial (basics)</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Reference manual</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#qualitydiversity">QualityDiversity</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#container">Container</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#grid">Grid</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#cvt">CVT</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#archive">Archive</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#defining-your-own-container">Defining your own container</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#storage">Storage</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#sortbasedstorage">SortBasedStorage</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#kdtreestorage">KdtreeStorage</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#selector">Selector</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#uniform">Uniform</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#noselection">NoSelection</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#paretobased">ParetoBased</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#valueselector">ValueSelector</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#valueselector-based-scoreproportionate">ValueSelector-based: ScoreProportionate</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#valueselector-based-tournament">ValueSelector-based: Tournament</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#meta-selector-populationbased">Meta-Selector: PopulationBased</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#defining-your-own-selector">Defining your own selector</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#qd-fitness">QD Fitness</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#fitqd">FitQD</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#defining-your-own-qd-fitness">Defining your own QD Fitness</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#qd-statistics">QD Statistics</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#qdcontainer">QdContainer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#qdprogress">QdProgress</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#qdselection">QdSelection</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="concepts.html">Main concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="reference.html">Reference manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="clusters.html">Sferes on clusters (OAR)</a></li>
+</ul>
+
+            
+
+            
+            
+              
+                <a class="caption" href="http://www.resibots.eu/limbo">Limbo (BO library)</a>
+              
+                <a class="caption" href="http://www.resibots.eu/libdynamixel">Libdynamixel</a>
+              
+                <a class="caption" href="http://github.com/resibots">github</a>
+              
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="index.html">Sferes_v2</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="index.html">Fferes_v2</a> &raquo;</li>
+    
+    <li>Reference manual</li>
+    <li class="wy-breadcrumbs-aside">
+      
+        
+          <a href="_sources/quality_diversity.rst.txt" rel="nofollow"> View page source</a>
+        
+      
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <section id="reference-manual">
+<h1>Reference manual<a class="headerlink" href="#reference-manual" title="Permalink to this headline">¶</a></h1>
+<p>The QD framework introduces 4 new types to consider:</p>
+<ul class="simple">
+<li><p><cite>qd_t</cite> : type of Quality Diversity (QD) algorithm (e.g. qd::QualityDiversity, which is itself a subclass of ea::Ea).</p></li>
+<li><p><cite>selector_t</cite> : type of selector, used for selecting individuals from the container (e.g. qd::selector::Uniform)</p></li>
+<li><p><cite>container_t</cite> : type of QD container (e.g. qd::container::Grid). The container may rely on a specific storage for its individuals.</p></li>
+<li><p><cite>storage_t</cite> : type of storage; may be used for organising the individuals of the container. Some containers require such a storage (e.g. unstructured containers: qd::container::Archive).</p></li>
+</ul>
+<p>The QD framework relies on a Fitness definition which is specific to QD (FitQD).
+Also, some additional statistics were defined to generate logs for QD algorithms.</p>
+<section id="qualitydiversity">
+<h2>QualityDiversity<a class="headerlink" href="#qualitydiversity" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><strong>File:</strong>
+<a class="reference external" href="https://github.com/sferes2/sferes2/blob/master/sferes/qd/quality_diversity.hpp">sferes/qd/quality_diversity.hpp</a></p></li>
+<li><dl class="simple">
+<dt><strong>Description:</strong> General implementation of a Quality Diversity algorithm. At each iteration:</dt><dd><ol class="arabic simple">
+<li><p>Parents are selected from the Container based by using the Selector</p></li>
+<li><p>The offspring is generated via cross-overs and mutations of parents</p></li>
+<li><p>The offspring is evaluated</p></li>
+<li><p>We apply the Modifiers.</p></li>
+<li><p>We attempt to add the individuals in the offspring to the Container.</p></li>
+</ol>
+</dd>
+</dl>
+</li>
+<li><p><strong>Example:</strong>
+<a class="reference external" href="https://github.com/sferes2/sferes2/blob/master/examples/ex_qd.cpp">sferes/qd/quality_diversity.hpp</a></p></li>
+<li><p><strong>Typical typename:</strong></p></li>
+</ul>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="k">typedef</span><span class="w"> </span><span class="n">qd</span><span class="o">::</span><span class="n">QualityDiversity</span><span class="o">&lt;</span><span class="n">phen_t</span><span class="p">,</span><span class="w"> </span><span class="n">eval_t</span><span class="p">,</span><span class="w"> </span><span class="n">stat_t</span><span class="p">,</span><span class="w"> </span><span class="n">modifier_t</span><span class="p">,</span><span class="w"> </span><span class="n">selector_t</span><span class="p">,</span><span class="w"> </span><span class="n">container_t</span><span class="p">,</span><span class="w"> </span><span class="n">Params</span><span class="o">&gt;</span><span class="w"> </span><span class="n">qd_t</span><span class="p">;</span><span class="w"></span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><dl class="simple">
+<dt><strong>Parameters:</strong></dt><dd><ul>
+<li><p><cite>SFERES_CONST size_t Params::pop::size</cite>: Number of individuals selected from the container at each QD iteration (also used as an initial population size)</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</section>
+<section id="container">
+<h2>Container<a class="headerlink" href="#container" title="Permalink to this headline">¶</a></h2>
+<p>The container is used to gather a collection of diverse and high-performing solutions.
+Each type of container presents its own rules for preserving the behavioural diversity and local performance of the solutions.</p>
+<section id="grid">
+<h3>Grid<a class="headerlink" href="#grid" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p><strong>File:</strong></p></li>
+</ul>
+<p><a class="reference external" href="https://github.com/sferes2/sferes2/blob/qd/sferes/qd/container/grid.hpp">sferes/qd/container/grid.hpp</a></p>
+<ul class="simple">
+<li><dl class="simple">
+<dt><strong>Description:</strong></dt><dd><ul>
+<li><p>This type of container creates a grid container (e.g. as seen in  MAP Elites). The idea is to discretize the Behavioural Descriptor space in evenly sized cells and then fill these up with a qd algorithm.</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><strong>Example:</strong></dt><dd><ul>
+<li><p><a class="reference external" href="https://github.com/sferes2/sferes2/blob/qd/examples/ex_map_elites.cpp">sferes/qd/examples/ex_map_elites.cpp</a></p></li>
+<li><p><a class="reference external" href="https://gitlab.doc.ic.ac.uk/AIRL/examples/cpp/standard/robotdart-example/-/blob/master/src/dart_exp.cpp">AIRL/examples/cpp/standard/robotdart-example/src/dart_exp.cpp</a></p></li>
+<li><p><a class="reference external" href="https://github.com/sferes2/sferes2/blob/qd/tests/qd/test_qd.cpp">tests/qd/test_qd.cpp</a></p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><p><strong>Typical typename:</strong></p></li>
+</ul>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="k">typedef</span><span class="w"> </span><span class="n">qd</span><span class="o">::</span><span class="n">container</span><span class="o">::</span><span class="n">Grid</span><span class="o">&lt;</span><span class="n">phen_t</span><span class="p">,</span><span class="w"> </span><span class="n">Params</span><span class="o">&gt;</span><span class="w"> </span><span class="n">container_t</span><span class="p">;</span><span class="w"></span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><dl class="simple">
+<dt><strong>Parameters:</strong></dt><dd><ul>
+<li><p><cite>Params::qd::grid_shape</cite>: size of the grid in each dimension</p></li>
+<li><p><cite>Params::qd::behav_dim</cite>: Dimensions of the Behavioral Descriptor</p></li>
+<li><p><cite>Params::nov::deep</cite>:  this parameter defines how deep we should go around our cell to calculate the novelty</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><p><strong>Notes:</strong></p></li>
+</ul>
+</section>
+<section id="cvt">
+<h3>CVT<a class="headerlink" href="#cvt" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p><strong>File:</strong></p></li>
+</ul>
+<p><a class="reference external" href="https://github.com/sferes2/sferes2/blob/qd/sferes/qd/container/cvt.hpp">sferes/qd/container/cvt.hpp</a></p>
+<ul class="simple">
+<li><dl class="simple">
+<dt><strong>Description:</strong></dt><dd><ul>
+<li><p>This type of container discretises the feature space with a Centroidal Voronoi Tessellation (CVT), e.g. as seen in <a class="reference external" href="https://ieeexplore.ieee.org/document/8000667">CVT-MAP-Elites</a>. That CVT splits the Behavioural Descriptor space in evenly sized cells and then fill these up with a QD algorithm.</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><strong>Example:</strong></dt><dd><ul>
+<li><p><a class="reference external" href="https://github.com/sferes2/sferes2/blob/qd/tests/qd/test_qd.cpp">tests/qd/test_qd.cpp</a></p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><p><strong>Typical typename:</strong></p></li>
+</ul>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="k">typedef</span><span class="w"> </span><span class="n">qd</span><span class="o">::</span><span class="n">container</span><span class="o">::</span><span class="n">CVT</span><span class="o">&lt;</span><span class="n">phen_t</span><span class="p">,</span><span class="w"> </span><span class="n">storage_t</span><span class="p">,</span><span class="w"> </span><span class="n">Params</span><span class="o">&gt;</span><span class="w"> </span><span class="n">container_t</span><span class="p">;</span><span class="w"></span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><dl class="simple">
+<dt><strong>Parameters:</strong></dt><dd><ul>
+<li><p><cite>Params::qd::n_niches</cite> (e.g, 10000): number of niches</p></li>
+<li><p><cite>Params::qd::behav_dim</cite> (e.g, 2): number of feature dimensions</p></li>
+<li><p><cite>Params::qd::cvt::n_samples</cite> (e.g, 100000): number of samples for CVT (more than n_niches); ignored if using a cached CVT</p></li>
+<li><p><cite>Params::qd::cvt::max_iterations</cite> (e.g, 100): number of iterations of the CVT algorithm; ignored if using a cached CVT</p></li>
+<li><p><cite>Params::qd::cvt::n_restarts</cite> (e.g, 1):  number of restarts of the CVT algorithm; ignored if using a cached CVT</p></li>
+<li><p><cite>Params::qd::cvt::tolerance</cite> (e.g, 1e-8):  when to stop the CVT algorithm; ignored if using a cached CVT</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><strong>Notes:</strong></dt><dd><ul>
+<li><dl class="simple">
+<dt>During initialisation, the presence of cached centroids <cite>cache_centroids_&lt;dim&gt;_&lt;n_niches&gt;.bin</cite> is checked.</dt><dd><ul>
+<li><p>If that file is not present, then the file <a class="reference external" href="https://github.com/sferes2/sferes2/blob/qd/sferes/qd/container/compute_cvt.hpp">sferes/qd/container/compute_cvt.hpp</a> is used to compute the CVT that partitions the feature space.</p></li>
+<li><p>If that file is present, then the CVT centroids are directly loaded from it. The parameters in <cite>Params::qd::cvt::</cite> are then ignored.</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><p>The centroids are stored in a specific storage of type &lt;storage_t&gt;, which facilitates the computation of k-Nearest Neighbours (kNN). The different types of possible storages are detailed below.</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</section>
+<section id="archive">
+<h3>Archive<a class="headerlink" href="#archive" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p><strong>File:</strong></p></li>
+</ul>
+<p><a class="reference external" href="https://github.com/sferes2/sferes2/blob/qd/sferes/qd/container/archive.hpp">sferes/qd/container/archive.hpp</a></p>
+<ul class="simple">
+<li><dl class="simple">
+<dt><strong>Description:</strong></dt><dd><ul>
+<li><p>The Archive corresponds to an unstructured container, here called <cite>Archive</cite> (e.g. as introduced in the <a class="reference external" href="https://ieeexplore.ieee.org/document/7959075">QD framework paper</a>). The idea is to avoid discretising the Behavioural Descriptor (BD) space. Instead, solutions may be added depending on the distance between their BDs and their kNNs.</p></li>
+<li><p>More precisely, a solution <cite>i</cite> is added to the container if the distance between its BD and its nearest neighbour is inferior to <cite>Params::nov::l</cite>.</p></li>
+<li><dl class="simple">
+<dt>Also, a solution <cite>i</cite> may replace its nearest neighbour <cite>nn</cite> if the following conditions hold:</dt><dd><ul>
+<li><p><cite>N(i) &gt;= (1-eps) N(nn)</cite>, where <cite>N(.)</cite> represents the novelty score (average distance to kNNs).</p></li>
+<li><p><cite>F(i) &gt;= (1-eps) F(nn)</cite>, where <cite>F(.)</cite> represents the fitness score (supposed positive in this description).</p></li>
+<li><p><cite>(N(i) - N(nn)) / N(nn) &gt; -(F(i) - F(nn)) / F(nn)</cite></p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><strong>Example:</strong></dt><dd><ul>
+<li><p>see <cite>qd_archive_sortbased</cite> and <cite>qd_archive_kdtree</cite> in <a class="reference external" href="https://github.com/sferes2/sferes2/blob/qd/tests/qd/test_qd.cpp">tests/qd/test_qd.cpp</a></p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><p><strong>Typical typename:</strong></p></li>
+</ul>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="k">typedef</span><span class="w"> </span><span class="n">qd</span><span class="o">::</span><span class="n">container</span><span class="o">::</span><span class="n">Archive</span><span class="o">&lt;</span><span class="n">phen_t</span><span class="p">,</span><span class="w"> </span><span class="n">storage_t</span><span class="p">,</span><span class="w"> </span><span class="n">Params</span><span class="o">&gt;</span><span class="w"> </span><span class="n">container_t</span><span class="p">;</span><span class="w"></span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><dl class="simple">
+<dt><strong>Parameters:</strong></dt><dd><ul>
+<li><p><cite>Params::nov::k</cite>: number of nearest neighbours to consider for computing the novelty score.</p></li>
+<li><p><cite>Params::nov::l</cite>: minimal distance for adding a new individual to the container.</p></li>
+<li><p><cite>Params::nov::eps</cite>: used to set the conditions for epsilon dominance, as detailed above.</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><strong>Notes:</strong></dt><dd><ul>
+<li><p>The individuals are stored in a specific storage of type &lt;storage_t&gt;, which facilitates the computation of k-Nearest Neighbours (kNN) and novelty scores. The different types of possible storages are detailed below.</p></li>
+<li><p>When the container is updated (at each iteration of the QD algorithm), the novelty scores and local quality scores are re-computed for all individuals.</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</section>
+<section id="defining-your-own-container">
+<h3>Defining your own container<a class="headerlink" href="#defining-your-own-container" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="k">template</span><span class="w"> </span><span class="o">&lt;</span><span class="k">typename</span><span class="w"> </span><span class="nc">Phen</span><span class="p">,</span><span class="w"> </span><span class="k">typename</span><span class="w"> </span><span class="nc">Params</span><span class="o">&gt;</span><span class="w"></span>
+<span class="k">class</span><span class="w"> </span><span class="nc">CustomContainer</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="k">public</span><span class="o">:</span><span class="w"></span>
+<span class="w">    </span><span class="k">typedef</span><span class="w"> </span><span class="n">boost</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">Phen</span><span class="o">&gt;</span><span class="w"> </span><span class="n">indiv_t</span><span class="p">;</span><span class="w"></span>
+<span class="w">    </span><span class="k">typedef</span><span class="w"> </span><span class="k">typename</span><span class="w"> </span><span class="nc">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">indiv_t</span><span class="o">&gt;</span><span class="w"> </span><span class="n">pop_t</span><span class="p">;</span><span class="w"></span>
+
+<span class="w">    </span><span class="n">CustomContainer</span><span class="p">()</span><span class="w"> </span><span class="p">{}</span><span class="w"></span>
+
+<span class="w">    </span><span class="c1">// Adds all the individuals/solutions of the container to the population `content`</span>
+<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="n">get_full_content</span><span class="p">(</span><span class="n">pop_t</span><span class="o">&amp;</span><span class="w"> </span><span class="n">content</span><span class="p">)</span><span class="w"> </span><span class="k">const</span><span class="w"></span>
+<span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="cm">/* your code */</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
+
+<span class="w">    </span><span class="c1">// Adds an individual `i1` to the container if all the container conditions are verified</span>
+<span class="w">    </span><span class="kt">bool</span><span class="w"> </span><span class="n">add</span><span class="p">(</span><span class="n">indiv_t</span><span class="w"> </span><span class="n">i1</span><span class="p">)</span><span class="w"></span>
+<span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="cm">/* your code */</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
+
+<span class="w">    </span><span class="c1">// Adds an individual `i1` to the container regardless of the container conditions</span>
+<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="n">direct_add</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">indiv_t</span><span class="o">&amp;</span><span class="w"> </span><span class="n">i1</span><span class="p">)</span><span class="w"></span>
+<span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="cm">/* your code */</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
+
+<span class="w">    </span><span class="c1">// Updates attributes of the container, and of individuals from `offspring` and `parents`</span>
+<span class="w">    </span><span class="c1">// such attributes may include the novelty score, and the local quality score</span>
+<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="n">update</span><span class="p">(</span><span class="n">pop_t</span><span class="o">&amp;</span><span class="w"> </span><span class="n">offspring</span><span class="p">,</span><span class="w"> </span><span class="n">pop_t</span><span class="o">&amp;</span><span class="w"> </span><span class="n">parents</span><span class="p">)</span><span class="w"></span>
+<span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="cm">/* your code */</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
+<span class="p">};</span><span class="w"></span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="storage">
+<h2>Storage<a class="headerlink" href="#storage" title="Permalink to this headline">¶</a></h2>
+<p>The purpose of the storage is to provide an interface facilitating the computation of k-Nearest Neighbours (kNN) and novelty scores.</p>
+<section id="sortbasedstorage">
+<h3>SortBasedStorage<a class="headerlink" href="#sortbasedstorage" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p><strong>File:</strong></p></li>
+</ul>
+<p><a class="reference external" href="https://github.com/sferes2/sferes2/blob/qd/sferes/qd/container/sort_based_storage.hpp">sferes/qd/container/sort_based_storage.hpp</a></p>
+<ul class="simple">
+<li><dl class="simple">
+<dt><strong>Description:</strong></dt><dd><ul>
+<li><p>Relies on <cite>std::partial_sort</cite> to compute the k-nearest neighbors.</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><strong>Example:</strong></dt><dd><ul>
+<li><p><a class="reference external" href="https://github.com/sferes2/sferes2/blob/qd/tests/qd/test_qd.cpp">tests/qd/test_qd.cpp</a></p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><p><strong>Typical typename:</strong></p></li>
+</ul>
+<p>typedef sferes::qd::container::SortBasedStorage&lt;boost::shared_ptr&lt;phen_t&gt;&gt; storage_t;</p>
+<ul class="simple">
+<li><dl class="simple">
+<dt><strong>Parameters:</strong></dt><dd><ul>
+<li><p>None</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><strong>Notes:</strong></dt><dd><ul>
+<li><p>With the above typename, the storage stores pairs <cite>(bd, indiv_t)</cite> where <cite>indiv_t = boost::shared_ptr&lt;phen_t&gt;</cite></p></li>
+<li><p>This is not effective in low-dimensional spaces (dim(bd) &lt; 10); but it works better than a kd-tree for more than 10-dimensional spaces</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</section>
+<section id="kdtreestorage">
+<h3>KdtreeStorage<a class="headerlink" href="#kdtreestorage" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p><strong>File:</strong></p></li>
+</ul>
+<p><a class="reference external" href="https://github.com/sferes2/sferes2/blob/qd/sferes/qd/container/kdtree_storage.hpp">sferes/qd/container/kdtree_storage.hpp</a></p>
+<ul class="simple">
+<li><dl class="simple">
+<dt><strong>Description:</strong></dt><dd><ul>
+<li><p>Computes the k-nearest neighbors using a <a class="reference external" href="https://en.wikipedia.org/wiki/K-d_tree">kd-tree</a> (optional external library).</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><strong>Example:</strong></dt><dd><ul>
+<li><p><a class="reference external" href="https://github.com/sferes2/sferes2/blob/qd/tests/qd/test_qd.cpp">tests/qd/test_qd.cpp</a></p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><p><strong>Typical typename:</strong></p></li>
+</ul>
+<p>typedef sferes::qd::container::KdtreeStorage&lt;boost::shared_ptr&lt;phen_t&gt;, Params::qd::behav_dim&gt; storage_t;</p>
+<ul class="simple">
+<li><dl class="simple">
+<dt><strong>Parameters:</strong></dt><dd><ul>
+<li><p>None</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><strong>Notes:</strong></dt><dd><ul>
+<li><p>With the above typename, the storage stores pairs <cite>(bd, indiv_t)</cite> where <cite>indiv_t = boost::shared_ptr&lt;phen_t&gt;</cite></p></li>
+<li><p>This is effective in low-dimensional spaces (dim(bd) &lt; 10); but not in high-dimensional spaces (dim(bd) &gt; 10)</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</section>
+</section>
+<section id="selector">
+<h2>Selector<a class="headerlink" href="#selector" title="Permalink to this headline">¶</a></h2>
+<section id="uniform">
+<h3>Uniform<a class="headerlink" href="#uniform" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p><strong>File:</strong> <a class="reference external" href="https://github.com/sferes2/sferes2/blob/qd/sferes/qd/selector/uniform.hpp">sferes/qd/selector/uniform.hpp</a></p></li>
+<li><p><strong>Description:</strong> This selector selects individuals from the population of the algorithm with uniform probability. All individuals from the population have the exact same probability to be selected.</p></li>
+<li><p><strong>Example:</strong> <a class="reference external" href="https://github.com/sferes2/sferes2/blob/qd/examples/ex_qd.cpp">sferes/qd/examples/ex_qd.cpp</a></p></li>
+<li><p><strong>Typical typename:</strong></p></li>
+</ul>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="k">typedef</span><span class="w"> </span><span class="n">qd</span><span class="o">::</span><span class="n">selector</span><span class="o">::</span><span class="n">Uniform</span><span class="o">&lt;</span><span class="n">phen_t</span><span class="p">,</span><span class="w"> </span><span class="n">Params</span><span class="o">&gt;</span><span class="w"> </span><span class="n">select_t</span><span class="p">;</span><span class="w"></span>
+</pre></div>
+</div>
+</section>
+<section id="noselection">
+<h3>NoSelection<a class="headerlink" href="#noselection" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p><strong>File:</strong> <a class="reference external" href="https://github.com/sferes2/sferes2/blob/qd/sferes/qd/selector/noselection.hpp">sferes/qd/selector/noselection.hpp</a></p></li>
+<li><p><strong>Description:</strong> This selector returns a population of random individuals. In other words, it is not performing any selection from the existing algorithm population, but returns new individuals.</p></li>
+<li><p><strong>Example:</strong> None</p></li>
+<li><p><strong>Typical typename:</strong></p></li>
+</ul>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="k">typedef</span><span class="w"> </span><span class="n">qd</span><span class="o">::</span><span class="n">selector</span><span class="o">::</span><span class="n">NoSelection</span><span class="o">&lt;</span><span class="n">phen_t</span><span class="p">,</span><span class="w"> </span><span class="n">Params</span><span class="o">&gt;</span><span class="w"> </span><span class="n">select_t</span><span class="p">;</span><span class="w"></span>
+</pre></div>
+</div>
+</section>
+<section id="paretobased">
+<h3>ParetoBased<a class="headerlink" href="#paretobased" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p><strong>File:</strong> <a class="reference external" href="https://github.com/sferes2/sferes2/blob/qd/sferes/qd/selector/pareto_based.hpp">sferes/qd/selector/pareto_based.hpp</a></p></li>
+<li><p><strong>Description:</strong> This selector selects individuals in the joint parents and offspring populations based on pareto-dominance. It selects individuals from this joint-population uniformly, and then performs tournament to keep the bests according to pareto-dominance. The template parameters ObjSelector determines which objectives defined in the fitness class are used to compute the pareto-dominance.</p></li>
+<li><p><strong>Notes:</strong> This selector relies on the definition of the different objectives in the fitness class. It also relies on multiple classes define in <a class="reference external" href="https://github.com/sferes2/sferes2/blob/qd/sferes/ea/crowd.hpp">sferes/ea/crowd.hpp</a> to approximate the pareto front.</p></li>
+<li><p><strong>Parameters:</strong> <cite>Params::pareto::genoDiv</cite>: boolean to choose if the crowding distance should be based on the distance in genotype space (true) or in objective space (false).</p></li>
+<li><p><strong>Example:</strong> None</p></li>
+<li><p><strong>Typical typename:</strong></p></li>
+</ul>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="k">typedef</span><span class="w"> </span><span class="n">qd</span><span class="o">::</span><span class="n">selector</span><span class="o">::</span><span class="n">ParetoBased</span><span class="o">&lt;</span><span class="n">phen_t</span><span class="p">,</span><span class="w"> </span><span class="n">objselector_t</span><span class="p">,</span><span class="w"> </span><span class="n">Params</span><span class="o">&gt;</span><span class="w"> </span><span class="n">select_t</span><span class="p">;</span><span class="w"></span>
+</pre></div>
+</div>
+</section>
+<section id="valueselector">
+<h3>ValueSelector<a class="headerlink" href="#valueselector" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p><strong>File:</strong> <a class="reference external" href="https://github.com/sferes2/sferes2/blob/qd/sferes/qd/selector/value_selector.hpp">sferes/qd/selector/value_selector.hpp</a></p></li>
+<li><dl class="simple">
+<dt><strong>Description:</strong> Some selectors, described later in this section, are based on a score allocated to each individual. ValueSelector structs allow to choose which score is used by these selectors. One can choose among the followings:</dt><dd><ul>
+<li><p><strong>getFitness:</strong> use the fitness of each individual given by the evaluation.</p></li>
+<li><p><strong>getNovelty:</strong> use the novelty of each individual with respect to the task.</p></li>
+<li><p><strong>getCuriosity:</strong> use the curiosity of each individual, computed based on the performance of its offspring.</p></li>
+<li><p><strong>getLocalQuality:</strong> use the local quality of each individual with respect to the task.</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</section>
+<section id="valueselector-based-scoreproportionate">
+<h3>ValueSelector-based: ScoreProportionate<a class="headerlink" href="#valueselector-based-scoreproportionate" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p><strong>File:</strong> <a class="reference external" href="https://github.com/sferes2/sferes2/blob/qd/sferes/qd/selector/noselection.hpp">sferes/qd/selector/noselection.hpp</a></p></li>
+<li><p><strong>Description:</strong> This selector selects individuals in the algorithm population with a probability proportional to a given score. The score used for this selection is determined by the ValueSelector given as template parameters. The individual of the population with the lower score has a 0 probability to be chosen, and all other individuals have consequent probability based on their score values.</p></li>
+<li><p><strong>Notes:</strong> This selector is based on ValueSelector, see previous sub-section “ValueSelector” for more information.</p></li>
+<li><p><strong>Example:</strong> None</p></li>
+<li><p><strong>Typical typename:</strong></p></li>
+</ul>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="k">typedef</span><span class="w"> </span><span class="n">qd</span><span class="o">::</span><span class="n">selector</span><span class="o">::</span><span class="n">ScoreProportionate</span><span class="o">&lt;</span><span class="n">phen_t</span><span class="p">,</span><span class="w"> </span><span class="n">valueselector_t</span><span class="p">,</span><span class="w"> </span><span class="n">Params</span><span class="o">&gt;</span><span class="w"> </span><span class="n">select_t</span><span class="p">;</span><span class="w"></span>
+</pre></div>
+</div>
+</section>
+<section id="valueselector-based-tournament">
+<h3>ValueSelector-based: Tournament<a class="headerlink" href="#valueselector-based-tournament" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p><strong>File:</strong> <a class="reference external" href="https://github.com/sferes2/sferes2/blob/qd/sferes/qd/selector/tournament.hpp">sferes/qd/selector/tournament.hpp</a></p></li>
+<li><p><strong>Description:</strong> This selector selects individuals in the algorithm population with tournaments based on a given score. The score is determined by the ValueSelector given as template parameters. To perform tournaments, the selector uniformly selects two individuals from the population and keeps the one that has the highest score.</p></li>
+<li><p><strong>Notes:</strong> This selector is based on ValueSelector, see previous sub-section “ValueSelector” for more information.</p></li>
+<li><p><strong>Example:</strong> None</p></li>
+<li><p><strong>Typical typename:</strong></p></li>
+</ul>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="k">typedef</span><span class="w"> </span><span class="n">qd</span><span class="o">::</span><span class="n">selector</span><span class="o">::</span><span class="n">Tournament</span><span class="o">&lt;</span><span class="n">phen_t</span><span class="p">,</span><span class="w"> </span><span class="n">valueselector_t</span><span class="p">,</span><span class="w"> </span><span class="n">Params</span><span class="o">&gt;</span><span class="w"> </span><span class="n">select_t</span><span class="p">;</span><span class="w"></span>
+</pre></div>
+</div>
+</section>
+<section id="meta-selector-populationbased">
+<h3>Meta-Selector: PopulationBased<a class="headerlink" href="#meta-selector-populationbased" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p><strong>File:</strong> <a class="reference external" href="https://github.com/sferes2/sferes2/blob/qd/sferes/qd/selector/population_based.hpp">sferes/qd/selector/population_based.hpp</a></p></li>
+<li><p><strong>Description:</strong> This meta-selector allows to select from the joint offspring and parents populations of the algorithm, instead of its current population. The selector that is applied on this joint-population is given as the second template parameter.</p></li>
+<li><p><strong>Notes:</strong> This selector is a meta-selector: it takes as template argument another selector and acts as a wrapper around it.</p></li>
+<li><p><strong>Example:</strong> None</p></li>
+<li><p><strong>Typical typename:</strong></p></li>
+</ul>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="k">typedef</span><span class="w"> </span><span class="n">qd</span><span class="o">::</span><span class="n">selector</span><span class="o">::</span><span class="n">PopulationBased</span><span class="o">&lt;</span><span class="n">phen_t</span><span class="p">,</span><span class="w"> </span><span class="n">sub_select_t</span><span class="p">,</span><span class="w"> </span><span class="n">Params</span><span class="o">&gt;</span><span class="w"> </span><span class="n">select_t</span><span class="p">;</span><span class="w"></span>
+</pre></div>
+</div>
+</section>
+<section id="defining-your-own-selector">
+<h3>Defining your own selector<a class="headerlink" href="#defining-your-own-selector" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="k">template</span><span class="w"> </span><span class="o">&lt;</span><span class="k">typename</span><span class="w"> </span><span class="nc">Phen</span><span class="p">,</span><span class="w"> </span><span class="k">typename</span><span class="w"> </span><span class="nc">Params</span><span class="o">&gt;</span><span class="w"></span>
+<span class="k">struct</span><span class="w"> </span><span class="nc">CustomSelector</span><span class="w"></span>
+<span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="k">typedef</span><span class="w"> </span><span class="n">boost</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">Phen</span><span class="o">&gt;</span><span class="w"> </span><span class="n">indiv_t</span><span class="p">;</span><span class="w"></span>
+
+<span class="w">    </span><span class="k">template</span><span class="w"> </span><span class="o">&lt;</span><span class="k">typename</span><span class="w"> </span><span class="nc">EA</span><span class="o">&gt;</span><span class="w"></span>
+<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="k">operator</span><span class="p">()(</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">indiv_t</span><span class="o">&gt;&amp;</span><span class="w"> </span><span class="n">pop</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">EA</span><span class="o">&amp;</span><span class="w"> </span><span class="n">ea</span><span class="p">)</span><span class="w"> </span><span class="k">const</span><span class="w"></span>
+<span class="w">    </span><span class="p">{</span><span class="w"></span>
+<span class="w">        </span><span class="cm">/* your code that</span>
+<span class="cm">           (1) selects individuals based on `ea` object</span>
+<span class="cm">           (2) places those individuals in the vector of selected individuals `pop`</span>
+<span class="cm">        */</span><span class="w"></span>
+<span class="w">    </span><span class="p">}</span><span class="w"></span>
+<span class="p">};</span><span class="w"></span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="qd-fitness">
+<h2>QD Fitness<a class="headerlink" href="#qd-fitness" title="Permalink to this headline">¶</a></h2>
+<section id="fitqd">
+<h3>FitQD<a class="headerlink" href="#fitqd" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p><strong>File:</strong></p></li>
+</ul>
+<p><a class="reference external" href="https://github.com/sferes2/sferes2/blob/qd/sferes/fit/fit_qd.hpp">sferes/fit/fit_qd.hpp</a></p>
+<ul>
+<li><dl>
+<dt><strong>Description:</strong></dt><dd><ul class="simple">
+<li><p>The fitness function has the purpose of evaluating your individual and attributing it a Behavioral Descriptor and a fitness value (if needed).</p></li>
+</ul>
+<p>You can define what you want in the fitness function but the eval function needs to be defined since it is used after each offspring generation to evaluate the new individuals.</p>
+</dd>
+</dl>
+</li>
+<li><p><strong>Example:</strong></p></li>
+</ul>
+<p><a class="reference external" href="https://github.com/sferes2/sferes2/blob/qd/examples/ex_qd.cpp">sferes/qd/examples/ex_qd.hpp</a></p>
+<ul class="simple">
+<li><p><strong>Typical typename:</strong></p></li>
+</ul>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="k">typedef</span><span class="w"> </span><span class="n">Fitness_Function_Name</span><span class="o">&lt;</span><span class="n">Params</span><span class="o">&gt;</span><span class="w"> </span><span class="n">fit_t</span><span class="p">;</span><span class="w"></span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><dl class="simple">
+<dt><strong>Parameters:</strong></dt><dd><ul>
+<li><p><cite>Params::qd::behav_dim</cite> : Dimensions of the Behavioral Descriptor</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><p><strong>Notes:</strong></p></li>
+</ul>
+</section>
+<section id="defining-your-own-qd-fitness">
+<h3>Defining your own QD Fitness<a class="headerlink" href="#defining-your-own-qd-fitness" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="n">FIT_QD</span><span class="p">(</span><span class="n">CustomFitnessQD</span><span class="p">)</span><span class="w"></span>
+<span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="c1">// (optional) constructor</span>
+<span class="w">    </span><span class="n">CustomFitnessQD</span><span class="p">()</span><span class="w"></span>
+<span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="cm">/* your code */</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
+
+<span class="w">    </span><span class="c1">// evaluation</span>
+<span class="w">    </span><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span><span class="w"> </span><span class="nc">Indiv</span><span class="o">&gt;</span><span class="w"></span>
+<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="n">eval</span><span class="p">(</span><span class="n">Indiv</span><span class="o">&amp;</span><span class="w"> </span><span class="n">indiv</span><span class="p">)</span><span class="w"></span>
+<span class="w">    </span><span class="p">{</span><span class="w"></span>
+<span class="w">        </span><span class="k">this</span><span class="o">-&gt;</span><span class="n">_value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">-42</span><span class="p">;</span><span class="w"> </span><span class="c1">// Set fitness score</span>
+<span class="w">        </span><span class="k">this</span><span class="o">-&gt;</span><span class="n">set_desc</span><span class="p">({</span><span class="mf">0.3</span><span class="p">,</span><span class="w"> </span><span class="mf">0.7</span><span class="p">,</span><span class="w"> </span><span class="mf">0.1</span><span class="p">});</span><span class="w"> </span><span class="c1">// Set behavioural descriptor, supposing Params::qd::behav_dim == 3</span>
+<span class="w">    </span><span class="p">}</span><span class="w"></span>
+<span class="p">};</span><span class="w"></span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="qd-statistics">
+<h2>QD Statistics<a class="headerlink" href="#qd-statistics" title="Permalink to this headline">¶</a></h2>
+<section id="qdcontainer">
+<h3>QdContainer<a class="headerlink" href="#qdcontainer" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p><strong>File:</strong></p></li>
+</ul>
+<p><a class="reference external" href="https://github.com/sferes2/sferes2/blob/qd/sferes/stat/qd_container.hpp">sferes/stat/qd_container.hpp</a></p>
+<ul class="simple">
+<li><dl class="simple">
+<dt><strong>Description:</strong></dt><dd><ul>
+<li><dl class="simple">
+<dt>Every <cite>dump_period</cite>, writes a file <cite>archive_&lt;gen&gt;.dat</cite> (where <cite>gen</cite> is the generation number), with some information related to all individuals present in the archive at generation <cite>gen</cite>. Every line of such a file presents some information related to one individual. For each individual, the following values are saved (in order):</dt><dd><ul>
+<li><p>Index</p></li>
+<li><p>Behavioural Descriptor</p></li>
+<li><p>Fitness Score</p></li>
+<li><p>Genotype</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><strong>Example:</strong></dt><dd><ul>
+<li><p><a class="reference external" href="https://github.com/sferes2/sferes2/blob/qd/examples/ex_qd.cpp">examples/ex_qd.cpp</a></p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><p><strong>Typical typename:</strong></p></li>
+</ul>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="k">typedef</span><span class="w"> </span><span class="n">boost</span><span class="o">::</span><span class="n">fusion</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="w"></span>
+<span class="w">            </span><span class="c1">// Other Stats, ...,</span>
+<span class="w">            </span><span class="n">stat</span><span class="o">::</span><span class="n">QdContainer</span><span class="o">&lt;</span><span class="n">phen_t</span><span class="p">,</span><span class="w"> </span><span class="n">Params</span><span class="o">&gt;</span><span class="w"></span>
+<span class="w">        </span><span class="o">&gt;</span><span class="w"></span>
+<span class="w">        </span><span class="n">stat_t</span><span class="p">;</span><span class="w"></span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><dl class="simple">
+<dt><strong>Parameters:</strong></dt><dd><ul>
+<li><p><cite>Params::pop::dump_period</cite> : Generation period for writing a file <cite>archive_&lt;gen&gt;.dat</cite></p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</section>
+<section id="qdprogress">
+<h3>QdProgress<a class="headerlink" href="#qdprogress" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p><strong>File:</strong></p></li>
+</ul>
+<p><a class="reference external" href="https://github.com/sferes2/sferes2/blob/qd/sferes/stat/qd_container.hpp">sferes/stat/qd_container.hpp</a></p>
+<ul class="simple">
+<li><dl class="simple">
+<dt><strong>Description:</strong></dt><dd><ul>
+<li><dl class="simple">
+<dt>Every <cite>dump_period</cite>, writes a line at the end of the file <cite>progress.dat</cite> with some information related to the state of the container at generation <cite>gen</cite>. For each line, the following values are saved (in order):</dt><dd><ul>
+<li><p>Generation number</p></li>
+<li><p>Archive size</p></li>
+<li><p>Maximum fitness score from the archive</p></li>
+<li><p>Sum of the fitness scores from the archive (also known as <cite>QD score</cite>)</p></li>
+<li><p>Sum of the novelty scores from the archive</p></li>
+<li><p>Variance of the novelty scores from the archive</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><strong>Example:</strong></dt><dd><ul>
+<li><p><a class="reference external" href="https://github.com/sferes2/sferes2/blob/qd/examples/ex_qd.cpp">examples/ex_qd.cpp</a></p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><p><strong>Typical typename:</strong></p></li>
+</ul>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="k">typedef</span><span class="w"> </span><span class="n">boost</span><span class="o">::</span><span class="n">fusion</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="w"></span>
+<span class="w">            </span><span class="c1">// Other Stats, ...,</span>
+<span class="w">            </span><span class="n">stat</span><span class="o">::</span><span class="n">QdProgress</span><span class="o">&lt;</span><span class="n">phen_t</span><span class="p">,</span><span class="w"> </span><span class="n">Params</span><span class="o">&gt;</span><span class="w"></span>
+<span class="w">        </span><span class="o">&gt;</span><span class="w"></span>
+<span class="w">        </span><span class="n">stat_t</span><span class="p">;</span><span class="w"></span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><dl class="simple">
+<dt><strong>Parameters:</strong></dt><dd><ul>
+<li><p><cite>Params::pop::dump_period</cite> : Generation period for writing a file <cite>archive_&lt;gen&gt;.dat</cite></p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</section>
+<section id="qdselection">
+<h3>QdSelection<a class="headerlink" href="#qdselection" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p><strong>File:</strong></p></li>
+</ul>
+<p><a class="reference external" href="https://github.com/sferes2/sferes2/blob/qd/sferes/stat/qd_selection.hpp">sferes/stat/qd_selection.hpp</a></p>
+<ul class="simple">
+<li><dl class="simple">
+<dt><strong>Description:</strong></dt><dd><ul>
+<li><dl class="simple">
+<dt>Every generation <cite>gen</cite>, writes several lines at the end of the file <cite>selection.dat</cite> with some information related to the state of the parents and offspring populations at generation <cite>gen</cite>. At each generation, <cite>n</cite> lines are written. For each <cite>i</cite> between <cite>0</cite> and <cite>n</cite>, the following values are saved (in order):</dt><dd><ul>
+<li><p>Generation number</p></li>
+<li><p>Behavioural Descriptor of individual having index <cite>i</cite> in the parents population</p></li>
+<li><p>Fitness score of parent <cite>i</cite></p></li>
+<li><p>Novelty score of parent <cite>i</cite></p></li>
+<li><p>Local Quality score of parent <cite>i</cite></p></li>
+<li><p>Curiosity score of parent <cite>i</cite></p></li>
+<li><p>Behavioural Descriptor of individual having index <cite>i</cite> in the offspring population</p></li>
+<li><p>Fitness score of offspring individual <cite>i</cite></p></li>
+<li><p>Novelty score of offspring individual <cite>i</cite></p></li>
+<li><p>Local Quality score of offspring individual <cite>i</cite></p></li>
+<li><p>Curiosity score of offspring individual <cite>i</cite></p></li>
+<li><p>Boolean indicating if offspring individual <cite>i</cite> was added to the container</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><p><strong>Typical typename:</strong></p></li>
+</ul>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="k">typedef</span><span class="w"> </span><span class="n">boost</span><span class="o">::</span><span class="n">fusion</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="w"></span>
+<span class="w">            </span><span class="c1">// Other Stats, ...,</span>
+<span class="w">            </span><span class="n">stat</span><span class="o">::</span><span class="n">QdSelection</span><span class="o">&lt;</span><span class="n">phen_t</span><span class="p">,</span><span class="w"> </span><span class="n">Params</span><span class="o">&gt;</span><span class="w"></span>
+<span class="w">        </span><span class="o">&gt;</span><span class="w"></span>
+<span class="w">        </span><span class="n">stat_t</span><span class="p">;</span><span class="w"></span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><dl class="simple">
+<dt><strong>Parameters:</strong></dt><dd><ul>
+<li><p><cite>Params::qd::behav_dim</cite>: Dimensions of the Behavioral Descriptor</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><strong>Notes:</strong></dt><dd><ul>
+<li><p>the populations <cite>ea.parents()</cite>, <cite>ea.offspring()</cite> and the vector of booleans <cite>ea.added()</cite> need to have the same size.</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="concepts.html" class="btn btn-neutral float-right" title="Main concepts" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="tutorial.html" class="btn btn-neutral" title="Tutorial (basics)" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo" class="wy-footer">
+    <div role="contentinfo">
+      <p>
+          &copy; Copyright 2008-2018, UPMC / Inria.
+
+      
+      
+        <br/>
+        <a href="mailto:jean-baptiste.mouret@inria.fr"> Contact us </a>
+      
+      </p>
+    </div>
+    <div class="wy-footer-aside">
+      Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> modified for <a href="http://resibots.eu">Resibots</a>.
+    </div>
+    <div style="clear: both;"></div>
+  </div>
+<div class="wy-footer-logo-container">
+  <div class="wy-footer-logo"><img src="_static/logos/logo_eu.png"/></div>
+  <div class="wy-footer-logo"><img src="_static/logos/logo_erc_nonofficial.svg"/></div>
+  <div class="wy-footer-logo"><img src="_static/logos/logo_loria.jpg"/></div>
+  <div class="wy-footer-logo"><img src="_static/logos/logo-inria.svg"/></div>
+  <div class="wy-footer-logo"><img src="_static/logos/logo_cnrs.png"/></div>
+  <div class="wy-footer-logo"><img src="_static/logos/logo_universite_lorraine.jpg"/></div>
+</div>
+
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'0.1 alpha',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="_static/documentation_options.js"></script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  <script type="text/javascript" src="_static/js/theme.js"></script>
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxResibotsTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

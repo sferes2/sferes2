@@ -5,7 +5,8 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  
+  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
   <title>Main concepts &mdash; Sferes_v2 0.1 alpha documentation</title>
@@ -25,6 +26,10 @@
   <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
 
   
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
 
   
         <link rel="index" title="Index"
@@ -32,7 +37,7 @@
         <link rel="search" title="Search" href="search.html"/>
     <link rel="top" title="Sferes_v2 0.1 alpha documentation" href="index.html"/>
         <link rel="next" title="Reference manual" href="reference.html"/>
-        <link rel="prev" title="Tutorial (basics)" href="tutorial.html"/>
+        <link rel="prev" title="Quality-Diversity Framework" href="qd.html"/>
 <style type="text/css">
 /* This CSS displays small logos at the bottom of the page, on one line */
 
@@ -112,6 +117,7 @@
 <li class="toctree-l1"><a class="reference internal" href="index.html">Sferes_v2 – documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="compilation.html">Compilation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial (basics)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="qd.html">Quality-Diversity Framework</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Main concepts</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#static-object-oriented-paradigm">Static object-oriented paradigm</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#static-parameters">Static parameters</a></li>
@@ -127,12 +133,17 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="reference.html">Reference manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="clusters.html">Sferes on clusters (OAR)</a></li>
 </ul>
 
             
 
             
             
+              
+                <a class="caption" href="http://www.resibots.eu/limbo">Limbo (BO library)</a>
+              
+                <a class="caption" href="http://www.resibots.eu/libdynamixel">Libdynamixel</a>
               
                 <a class="caption" href="http://github.com/resibots">github</a>
               
@@ -162,7 +173,7 @@
 
 <div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
-    <li><a href="index.html">Fferes_v2</a> &raquo;</li>
+    <li><a href="index.html">Sferes_v2</a> &raquo;</li>
     
     <li>Main concepts</li>
     <li class="wy-breadcrumbs-aside">
@@ -178,41 +189,41 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="main-concepts">
+  <section id="main-concepts">
 <h1>Main concepts<a class="headerlink" href="#main-concepts" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="static-object-oriented-paradigm">
+<section id="static-object-oriented-paradigm">
 <h2>Static object-oriented paradigm<a class="headerlink" href="#static-object-oriented-paradigm" title="Permalink to this headline">¶</a></h2>
 <p>Object-oriented programming (OOP) has many advantages which are
 desirable for complex high-level code. However, classic OOP (e.g. in
 C++) heavily relies on virtual methods to implement abstraction and
 polymorphism. Such an approach has a significant run-time overhead:</p>
 <ul class="simple">
-<li>selecting the good method to call adds an indirection (the software
-have to check the virtual table)</li>
-<li>abstract/virtual methods cannot be inlined, resulting in a overhead
-for very simple methods (e.g. setters/getters).</li>
+<li><p>selecting the good method to call adds an indirection (the software
+have to check the virtual table)</p></li>
+<li><p>abstract/virtual methods cannot be inlined, resulting in a overhead
+for very simple methods (e.g. setters/getters).</p></li>
 </ul>
 <p>In a few word, we want the main benefits of OOP (abstraction,
 re-usability) and the efficiency of low-level languages.</p>
 <p>One solution in C++ is to use the “curiously recurring template pattern”
 (<a class="reference external" href="http://en.wikipedia.org/wiki/Curiously_Recurring_Template_Pattern">http://en.wikipedia.org/wiki/Curiously_Recurring_Template_Pattern</a>).
 Here is the idea:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">Derived</span><span class="o">&gt;</span> <span class="n">struct</span> <span class="n">Base</span>
-<span class="p">{</span>
-    <span class="n">void</span> <span class="n">interface</span><span class="p">()</span>
-    <span class="p">{</span>
-        <span class="n">static_cast</span><span class="o">&lt;</span><span class="n">Derived</span><span class="o">*&gt;</span><span class="p">(</span><span class="n">this</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">implementation</span><span class="p">();</span>
-    <span class="p">}</span>
-    <span class="n">void</span> <span class="n">f</span><span class="p">()</span>
-    <span class="p">{</span>
-       <span class="k">for</span><span class="p">(</span><span class="nb">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">3</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="n">interface</span><span class="p">();</span>
-    <span class="p">}</span>
-<span class="p">};</span>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="k">template</span><span class="w"> </span><span class="o">&lt;</span><span class="k">class</span><span class="w"> </span><span class="nc">Derived</span><span class="o">&gt;</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">Base</span><span class="w"></span>
+<span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="nf">interface</span><span class="p">()</span><span class="w"></span>
+<span class="w">    </span><span class="p">{</span><span class="w"></span>
+<span class="w">        </span><span class="k">static_cast</span><span class="o">&lt;</span><span class="n">Derived</span><span class="o">*&gt;</span><span class="p">(</span><span class="k">this</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">implementation</span><span class="p">();</span><span class="w"></span>
+<span class="w">    </span><span class="p">}</span><span class="w"></span>
+<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="nf">f</span><span class="p">()</span><span class="w"></span>
+<span class="w">    </span><span class="p">{</span><span class="w"></span>
+<span class="w">       </span><span class="k">for</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">3</span><span class="p">;</span><span class="w"> </span><span class="o">++</span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="n">interface</span><span class="p">();</span><span class="w"></span>
+<span class="w">    </span><span class="p">}</span><span class="w"></span>
+<span class="p">};</span><span class="w"></span>
 
-<span class="n">struct</span> <span class="n">Derived</span> <span class="p">:</span> <span class="n">public</span> <span class="n">Base</span><span class="o">&lt;</span><span class="n">Derived</span><span class="o">&gt;</span>
-<span class="p">{</span>
-    <span class="n">void</span> <span class="n">implementation</span><span class="p">()</span> <span class="p">{</span> <span class="n">std</span><span class="p">::</span><span class="n">cout</span><span class="o">&lt;&lt;</span><span class="s2">&quot;impl&quot;</span><span class="o">&lt;&lt;</span><span class="n">std</span><span class="p">::</span><span class="n">endl</span><span class="p">;</span> <span class="p">}</span>
-<span class="p">};</span>
+<span class="k">struct</span><span class="w"> </span><span class="nc">Derived</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">Base</span><span class="o">&lt;</span><span class="n">Derived</span><span class="o">&gt;</span><span class="w"></span>
+<span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="nf">implementation</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="o">&lt;&lt;</span><span class="s">&quot;impl&quot;</span><span class="o">&lt;&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
+<span class="p">};</span><span class="w"></span>
 </pre></div>
 </div>
 <p>This code mimics a virtual call of an abstract method: in the abstract
@@ -224,11 +235,11 @@ the following paper:</p>
 Raphaël Poss. A Static C++ Object-Oriented Programming (SCOOP) Paradigm
 Mixing Benefits of Traditional OOP and Generic Programming. In
 <em>Proceedings of the Workshop on Multiple Paradigm with OO Languages
-(MPOOL‘03)</em>, 2003. <a class="reference external" href="http://www.lrde.epita.fr/dload/papers/mpool03.pdf">http://www.lrde.epita.fr/dload/papers/mpool03.pdf</a></p>
+(MPOOL’03)</em>, 2003. <a class="reference external" href="http://www.lrde.epita.fr/dload/papers/mpool03.pdf">http://www.lrde.epita.fr/dload/papers/mpool03.pdf</a></p>
 <p>This mechanics is hidden in sferes2 behind some macros (see section
 <em>macros</em>)</p>
-</div>
-<div class="section" id="static-parameters">
+</section>
+<section id="static-parameters">
 <h2>Static parameters<a class="headerlink" href="#static-parameters" title="Permalink to this headline">¶</a></h2>
 <p>Evolutionary algorithms have a lot of parameters (e.g. population size,
 mutation rate, etc.) and we need a convenient way to set them. A
@@ -236,11 +247,11 @@ configuration file (e.g. an XML or JSON or YML file) is often used;
 however, such a
 method has two drawbacks:</p>
 <ul class="simple">
-<li>some code to read the files has to be written and kept synchronized
-with the objects;</li>
-<li>parameters are unknown at compile time so some checks (e.g. if
+<li><p>some code to read the files has to be written and kept synchronized
+with the objects;</p></li>
+<li><p>parameters are unknown at compile time so some checks (e.g. if
 (mutation_type = x) {} else { } …) have to be done many times
-whereas they are useless.</li>
+whereas they are useless.</p></li>
 </ul>
 <p>In sferes2, parameters are defined at compile time using a structure
 which contains only constants. This structure is passed to all sferes2
@@ -253,91 +264,91 @@ We believe it is a minor issue (given the benefits above) for algorithm
 developpers who are working on their algorithms (since they are recompiling
 very often anyway). This would be a bigger issue for users who wish to use
 sferes as a “black-box” evolutionary algorithm and simply play with the parameters.</p>
-</div>
-<div class="section" id="macros-and-special-functions">
+</section>
+<section id="macros-and-special-functions">
 <h2>Macros and special functions<a class="headerlink" href="#macros-and-special-functions" title="Permalink to this headline">¶</a></h2>
 <p>To simplify the writing of “static virtual functions” and the definition
 of static parameters, sferes2 provides several macros which are defined
 in
 <a class="reference external" href="https://github.com/jbmouret/sferes2/blob/master/sferes/stc.hpp">stc.hpp</a>.</p>
-<div class="section" id="classes">
+<section id="classes">
 <h3>Classes<a class="headerlink" href="#classes" title="Permalink to this headline">¶</a></h3>
 <blockquote>
 <div><ul class="simple">
-<li><cite>SFERES_CLASS(Name)</cite>: defines the base class Name ; this
+<li><p><cite>SFERES_CLASS(Name)</cite>: defines the base class Name ; this
 class uses the “static” inheritance scheme and takes a Param
-template parameter.</li>
-<li><cite>SFERES_CLASSD(Name, Parent)</cite>: derives the class Name from
-Parent</li>
-<li><cite>SFERES_PARENT(Name, Parent)::method()</cite>: calls <cite>method()</cite> in
-the parent class</li>
-<li><cite>stc::exact(this)-&gt;method()</cite>: calls an abstract <cite>method()</cite> which is
-defined in the derived classes</li>
+template parameter.</p></li>
+<li><p><cite>SFERES_CLASSD(Name, Parent)</cite>: derives the class Name from
+Parent</p></li>
+<li><p><cite>SFERES_PARENT(Name, Parent)::method()</cite>: calls <cite>method()</cite> in
+the parent class</p></li>
+<li><p><cite>stc::exact(this)-&gt;method()</cite>: calls an abstract <cite>method()</cite> which is
+defined in the derived classes</p></li>
 </ul>
 </div></blockquote>
 <p>Moreover, sferes2 provides special macros to define specific classes
 (<cite>SFERES_FITNESS</cite>, <cite>SFERES_INDIV</cite>, <cite>SFERES_EA</cite>, etc.). See <em>ref</em>.</p>
 <blockquote>
 <div><p>Example:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">SFERES_CLASS</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
-<span class="p">{</span>
-  <span class="n">X</span><span class="p">()</span> <span class="p">{</span> <span class="n">std</span><span class="p">::</span><span class="n">cout</span><span class="o">&lt;&lt;</span><span class="s2">&quot;X&quot;</span><span class="o">&lt;&lt;</span><span class="n">std</span><span class="p">::</span><span class="n">endl</span><span class="p">;</span> <span class="p">}</span>
-  <span class="n">void</span> <span class="n">test</span><span class="p">()</span> <span class="p">{</span> <span class="n">stc</span><span class="p">::</span><span class="n">exact</span><span class="p">(</span><span class="n">this</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">blah</span><span class="p">();</span> <span class="p">}</span>
-  <span class="n">void</span> <span class="n">test2</span><span class="p">()</span> <span class="p">{</span> <span class="n">std</span><span class="p">::</span><span class="n">cout</span><span class="o">&lt;&lt;</span><span class="s2">&quot;test2&quot;</span><span class="o">&lt;&lt;</span><span class="n">std</span><span class="p">::</span><span class="n">endl</span><span class="p">;</span> <span class="p">}</span>
-<span class="p">};</span>
-<span class="o">//</span> <span class="n">Y</span> <span class="n">derives</span> <span class="kn">from</span> <span class="nn">X</span>
-<span class="n">SFERES_CLASS_D</span><span class="p">(</span><span class="n">Y</span><span class="p">,</span> <span class="n">X</span><span class="p">)</span>
-<span class="p">{</span>
-  <span class="n">Y</span><span class="p">()</span> <span class="p">{</span> <span class="n">std</span><span class="p">::</span><span class="n">cout</span><span class="o">&lt;&lt;</span><span class="s2">&quot;Y&quot;</span><span class="o">&lt;&lt;</span><span class="n">std</span><span class="p">::</span><span class="n">endl</span><span class="p">;</span> <span class="p">}</span>
-  <span class="n">void</span> <span class="n">blah</span><span class="p">()</span>
-  <span class="p">{</span>
-    <span class="n">std</span><span class="p">::</span><span class="n">cout</span><span class="o">&lt;&lt;</span><span class="s2">&quot;param::test::x&quot;</span><span class="o">&lt;&lt;</span><span class="n">Param</span><span class="p">::</span><span class="n">test</span><span class="p">::</span><span class="n">x</span><span class="o">&lt;&lt;</span><span class="n">std</span><span class="p">::</span><span class="n">endl</span><span class="p">;</span>
-    <span class="n">SFERES_PARENT</span><span class="p">(</span><span class="n">Y</span><span class="p">,</span> <span class="n">X</span><span class="p">)::</span><span class="n">test2</span><span class="p">();</span>
-  <span class="p">}</span>
-<span class="p">};</span>
-<span class="o">//</span> <span class="n">Z</span> <span class="n">derives</span> <span class="kn">from</span> <span class="nn">Y</span>
-<span class="n">SFERES_CLASS_D</span><span class="p">(</span><span class="n">Z</span><span class="p">,</span> <span class="n">Y</span><span class="p">)</span>
-<span class="p">{</span>
-  <span class="n">Z</span><span class="p">()</span> <span class="p">{</span> <span class="n">std</span><span class="p">::</span><span class="n">cout</span><span class="o">&lt;&lt;</span><span class="s2">&quot;Z&quot;</span><span class="o">&lt;&lt;</span><span class="n">std</span><span class="p">::</span><span class="n">endl</span><span class="p">;</span> <span class="p">}</span>
-  <span class="n">void</span> <span class="n">blah</span><span class="p">()</span>
-  <span class="p">{</span>
-    <span class="n">std</span><span class="p">::</span><span class="n">cout</span><span class="o">&lt;&lt;</span><span class="s2">&quot;Z&quot;</span><span class="o">&lt;&lt;</span><span class="n">std</span><span class="p">::</span><span class="n">endl</span><span class="p">;</span>
-  <span class="p">}</span>
-<span class="p">};</span>
-<span class="o">//</span> <span class="n">sample</span> <span class="n">parameter</span> <span class="p">(</span><span class="n">see</span> <span class="nb">next</span> <span class="n">subsection</span><span class="p">)</span>
-<span class="n">struct</span> <span class="n">Params_test</span>
-<span class="p">{</span>
-  <span class="n">struct</span> <span class="n">test</span>
-  <span class="p">{</span>
-    <span class="n">SFERES_CONST</span> <span class="nb">float</span> <span class="n">x</span> <span class="o">=</span> <span class="mf">0.1</span><span class="n">f</span><span class="p">;</span>
-  <span class="p">};</span>
-<span class="p">};</span>
-<span class="o">//</span> <span class="n">to</span> <span class="n">instantiate</span> <span class="n">Y</span> <span class="ow">and</span> <span class="n">Z</span> <span class="p">(</span><span class="n">X</span> <span class="ow">is</span> <span class="n">abstract</span><span class="p">):</span>
-<span class="nb">int</span> <span class="n">main</span><span class="p">()</span>
-<span class="p">{</span>
-  <span class="o">//</span> <span class="n">Y</span> <span class="n">uses</span> <span class="n">a</span> <span class="n">parameter</span>
-  <span class="n">Y</span><span class="o">&lt;</span><span class="n">Param_test</span><span class="o">&gt;</span> <span class="n">y</span><span class="p">;</span>
-  <span class="o">//</span> <span class="n">Z</span> <span class="n">doesn</span><span class="s1">&#39;t use any parameter, these two forms are possible:</span>
-  <span class="n">Z</span><span class="o">&lt;&gt;</span> <span class="n">z1</span><span class="p">;</span>
-  <span class="n">Z</span><span class="o">&lt;</span><span class="n">Param_test</span><span class="o">&gt;</span> <span class="n">z2</span><span class="p">;</span>
-  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
-<span class="p">}</span>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="n">SFERES_CLASS</span><span class="p">(</span><span class="n">X</span><span class="p">)</span><span class="w"></span>
+<span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="n">X</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="o">&lt;&lt;</span><span class="s">&quot;X&quot;</span><span class="o">&lt;&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
+<span class="w">  </span><span class="kt">void</span><span class="w"> </span><span class="n">test</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">stc</span><span class="o">::</span><span class="n">exact</span><span class="p">(</span><span class="k">this</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">blah</span><span class="p">();</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
+<span class="w">  </span><span class="kt">void</span><span class="w"> </span><span class="n">test2</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="o">&lt;&lt;</span><span class="s">&quot;test2&quot;</span><span class="o">&lt;&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
+<span class="p">};</span><span class="w"></span>
+<span class="c1">// Y derives from X</span>
+<span class="n">SFERES_CLASS_D</span><span class="p">(</span><span class="n">Y</span><span class="p">,</span><span class="w"> </span><span class="n">X</span><span class="p">)</span><span class="w"></span>
+<span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="n">Y</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="o">&lt;&lt;</span><span class="s">&quot;Y&quot;</span><span class="o">&lt;&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
+<span class="w">  </span><span class="kt">void</span><span class="w"> </span><span class="n">blah</span><span class="p">()</span><span class="w"></span>
+<span class="w">  </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="o">&lt;&lt;</span><span class="s">&quot;param::test::x&quot;</span><span class="o">&lt;&lt;</span><span class="n">Param</span><span class="o">::</span><span class="n">test</span><span class="o">::</span><span class="n">x</span><span class="o">&lt;&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span><span class="w"></span>
+<span class="w">    </span><span class="n">SFERES_PARENT</span><span class="p">(</span><span class="n">Y</span><span class="p">,</span><span class="w"> </span><span class="n">X</span><span class="p">)</span><span class="o">::</span><span class="n">test2</span><span class="p">();</span><span class="w"></span>
+<span class="w">  </span><span class="p">}</span><span class="w"></span>
+<span class="p">};</span><span class="w"></span>
+<span class="c1">// Z derives from Y</span>
+<span class="n">SFERES_CLASS_D</span><span class="p">(</span><span class="n">Z</span><span class="p">,</span><span class="w"> </span><span class="n">Y</span><span class="p">)</span><span class="w"></span>
+<span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="n">Z</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="o">&lt;&lt;</span><span class="s">&quot;Z&quot;</span><span class="o">&lt;&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
+<span class="w">  </span><span class="kt">void</span><span class="w"> </span><span class="n">blah</span><span class="p">()</span><span class="w"></span>
+<span class="w">  </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="o">&lt;&lt;</span><span class="s">&quot;Z&quot;</span><span class="o">&lt;&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span><span class="w"></span>
+<span class="w">  </span><span class="p">}</span><span class="w"></span>
+<span class="p">};</span><span class="w"></span>
+<span class="c1">// sample parameter (see next subsection)</span>
+<span class="k">struct</span><span class="w"> </span><span class="nc">Params_test</span><span class="w"></span>
+<span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="k">struct</span><span class="w"> </span><span class="nc">test</span><span class="w"></span>
+<span class="w">  </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="n">SFERES_CONST</span><span class="w"> </span><span class="kt">float</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.1f</span><span class="p">;</span><span class="w"></span>
+<span class="w">  </span><span class="p">};</span><span class="w"></span>
+<span class="p">};</span><span class="w"></span>
+<span class="c1">// to instantiate Y and Z (X is abstract):</span>
+<span class="kt">int</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span><span class="w"></span>
+<span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="c1">// Y uses a parameter</span>
+<span class="w">  </span><span class="n">Y</span><span class="o">&lt;</span><span class="n">Param_test</span><span class="o">&gt;</span><span class="w"> </span><span class="n">y</span><span class="p">;</span><span class="w"></span>
+<span class="w">  </span><span class="c1">// Z doesn&#39;t use any parameter, these two forms are possible:</span>
+<span class="w">  </span><span class="n">Z</span><span class="o">&lt;&gt;</span><span class="w"> </span><span class="n">z1</span><span class="p">;</span><span class="w"></span>
+<span class="w">  </span><span class="n">Z</span><span class="o">&lt;</span><span class="n">Param_test</span><span class="o">&gt;</span><span class="w"> </span><span class="n">z2</span><span class="p">;</span><span class="w"></span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
 </pre></div>
 </div>
 </div></blockquote>
-</div>
-<div class="section" id="parameter-handling">
+</section>
+<section id="parameter-handling">
 <h3>Parameter handling<a class="headerlink" href="#parameter-handling" title="Permalink to this headline">¶</a></h3>
 <p>The basic parameter format employs <cite>SFERES_CONST</cite> members in nested structures. For instance:</p>
 <blockquote>
-<div><div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">struct</span> <span class="n">Param</span>
-<span class="p">{</span>
-  <span class="n">struct</span> <span class="n">pop</span>
-  <span class="p">{</span>
-    <span class="n">SFERES_CONST</span> <span class="n">size_t</span> <span class="n">size</span> <span class="o">=</span> <span class="mi">100</span><span class="p">;</span>
-    <span class="n">SFERES_CONST</span> <span class="nb">float</span> <span class="n">x</span> <span class="o">=</span> <span class="mf">0.2</span><span class="n">f</span><span class="p">;</span>
-  <span class="p">};</span>
-<span class="p">};</span>
+<div><div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="k">struct</span><span class="w"> </span><span class="nc">Param</span><span class="w"></span>
+<span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="k">struct</span><span class="w"> </span><span class="nc">pop</span><span class="w"></span>
+<span class="w">  </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="n">SFERES_CONST</span><span class="w"> </span><span class="kt">size_t</span><span class="w"> </span><span class="n">size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">100</span><span class="p">;</span><span class="w"></span>
+<span class="w">    </span><span class="n">SFERES_CONST</span><span class="w"> </span><span class="kt">float</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.2f</span><span class="p">;</span><span class="w"></span>
+<span class="w">  </span><span class="p">};</span><span class="w"></span>
+<span class="p">};</span><span class="w"></span>
 </pre></div>
 </div>
 </div></blockquote>
@@ -346,66 +357,66 @@ arrays in these structures. To solve this problem, sferes2 provides
 two macros:</p>
 <blockquote>
 <div><ul class="simple">
-<li><cite>SFERES_ARRAY (type, name, val1, val2, …)</cite></li>
-<li><cite>SFERES_STRING(name, “string”)</cite></li>
+<li><p><cite>SFERES_ARRAY (type, name, val1, val2, …)</cite></p></li>
+<li><p><cite>SFERES_STRING(name, “string”)</cite></p></li>
 </ul>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">struct</span> <span class="n">Param</span>
-<span class="p">{</span>
-  <span class="n">struct</span> <span class="n">test</span>
-  <span class="p">{</span>
-    <span class="n">SFERES_ARRAY</span><span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="n">my_array</span><span class="p">,</span> <span class="mf">1.0</span><span class="n">f</span><span class="p">,</span> <span class="mf">2.0</span><span class="n">f</span><span class="p">,</span> <span class="mf">3.0</span><span class="n">f</span><span class="p">);</span>
-    <span class="n">SFERES_STRING</span><span class="p">(</span><span class="n">my_string</span><span class="p">,</span> <span class="s2">&quot;hello world&quot;</span><span class="p">);</span>
-  <span class="p">};</span>
-<span class="p">};</span>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="k">struct</span><span class="w"> </span><span class="nc">Param</span><span class="w"></span>
+<span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="k">struct</span><span class="w"> </span><span class="nc">test</span><span class="w"></span>
+<span class="w">  </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="n">SFERES_ARRAY</span><span class="p">(</span><span class="kt">float</span><span class="p">,</span><span class="w"> </span><span class="n">my_array</span><span class="p">,</span><span class="w"> </span><span class="mf">1.0f</span><span class="p">,</span><span class="w"> </span><span class="mf">2.0f</span><span class="p">,</span><span class="w"> </span><span class="mf">3.0f</span><span class="p">);</span><span class="w"></span>
+<span class="w">    </span><span class="n">SFERES_STRING</span><span class="p">(</span><span class="n">my_string</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;hello world&quot;</span><span class="p">);</span><span class="w"></span>
+<span class="w">  </span><span class="p">};</span><span class="w"></span>
+<span class="p">};</span><span class="w"></span>
 </pre></div>
 </div>
 </div></blockquote>
 <p>These parameters can then be retrieved in the source code in the following way:</p>
 <blockquote>
-<div><div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">...</span>
-<span class="o">//</span> <span class="n">size</span>
-<span class="n">size_t</span> <span class="n">s</span> <span class="o">=</span> <span class="n">Params</span><span class="p">::</span><span class="n">test</span><span class="p">::</span><span class="n">my_array_size</span><span class="p">();</span>
-<span class="o">//</span> <span class="mi">2</span><span class="n">nd</span> <span class="n">element</span>
-<span class="nb">float</span> <span class="n">v</span> <span class="o">=</span> <span class="n">Param</span><span class="p">::</span><span class="n">test</span><span class="p">::</span><span class="n">my_array</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
-<span class="o">//</span> <span class="n">string</span>
-<span class="n">const</span> <span class="n">char</span><span class="o">*</span> <span class="n">c</span> <span class="o">=</span> <span class="n">Params</span><span class="p">::</span><span class="n">test</span><span class="p">::</span><span class="n">my_string</span><span class="p">();</span>
+<div><div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="p">...</span><span class="w"></span>
+<span class="c1">// size</span>
+<span class="kt">size_t</span><span class="w"> </span><span class="n">s</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Params</span><span class="o">::</span><span class="n">test</span><span class="o">::</span><span class="n">my_array_size</span><span class="p">();</span><span class="w"></span>
+<span class="c1">// 2nd element</span>
+<span class="kt">float</span><span class="w"> </span><span class="n">v</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Param</span><span class="o">::</span><span class="n">test</span><span class="o">::</span><span class="n">my_array</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span><span class="w"></span>
+<span class="c1">// string</span>
+<span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="o">*</span><span class="w"> </span><span class="n">c</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Params</span><span class="o">::</span><span class="n">test</span><span class="o">::</span><span class="n">my_string</span><span class="p">();</span><span class="w"></span>
 </pre></div>
 </div>
 </div></blockquote>
-</div>
-</div>
-<div class="section" id="more-information">
+</section>
+</section>
+<section id="more-information">
 <h2>More information<a class="headerlink" href="#more-information" title="Permalink to this headline">¶</a></h2>
 <p>A general introduction of the concepts is the Sferes2 paper:</p>
 <p>Mouret, J.-B. and Doncieux, S. (2010). SFERESv2: Evolvin’ in the
 Multi-Core World. <em>WCCI 2010 IEEE World Congress on Computational
 Intelligence, Congress on Evolutionary Computation (CEC)</em>. Pages
 4079–4086. <a class="reference external" href="http://www.isir.upmc.fr/files/2010ACTI1524.pdf">{pdf}</a></p>
-<div class="section" id="mastering-boost">
+<section id="mastering-boost">
 <h3>Mastering boost<a class="headerlink" href="#mastering-boost" title="Permalink to this headline">¶</a></h3>
 <p>Sferes2 heavily relies on boost libraries (see <a class="reference external" href="http://www.boost.org">http://www.boost.org</a>). To
 implement your own algorithms in the Sferes_v2 framework, you should be
 familiar enough with the following libraries:</p>
 <ul class="simple">
-<li><cite>boost::shared_ptr</cite>: <a class="reference external" href="http://www.boost.org/doc/libs/1_40_0/libs/smart_ptr/shared_ptr.html">http://www.boost.org/doc/libs/1_40_0/libs/smart_ptr/shared_ptr.html</a></li>
-<li><cite>boost::serialization</cite> (useful to define your own genotypes and
-statistics): <a class="reference external" href="http://www.boost.org/doc/libs/1_40_0/libs/serialization/doc/index.html">http://www.boost.org/doc/libs/1_40_0/libs/serialization/doc/index.html</a></li>
+<li><p><cite>boost::shared_ptr</cite>: <a class="reference external" href="http://www.boost.org/doc/libs/1_40_0/libs/smart_ptr/shared_ptr.html">http://www.boost.org/doc/libs/1_40_0/libs/smart_ptr/shared_ptr.html</a></p></li>
+<li><p><cite>boost::serialization</cite> (useful to define your own genotypes and
+statistics): <a class="reference external" href="http://www.boost.org/doc/libs/1_40_0/libs/serialization/doc/index.html">http://www.boost.org/doc/libs/1_40_0/libs/serialization/doc/index.html</a></p></li>
 </ul>
 <p>The following libraries are used in sferes2 but you might never notice
 them:</p>
 <ul class="simple">
-<li><cite>BOOST_FOREACH</cite> (to simplify loops):
-<a class="reference external" href="http://www.boost.org/doc/libs/1_40_0/doc/html/foreach.html">http://www.boost.org/doc/libs/1_40_0/doc/html/foreach.html</a></li>
-<li><cite>boost::filesystem</cite> (to create directories, etc.):
-<a class="reference external" href="http://www.boost.org/doc/libs/1_40_0/libs/filesystem/doc/index.htm">http://www.boost.org/doc/libs/1_40_0/libs/filesystem/doc/index.htm</a></li>
-<li><cite>boost::fusion</cite> (list of statistics and list of modifiers):
-<a class="reference external" href="http://www.boost.org/doc/libs/1_40_0/libs/fusion/doc/html/index.html">http://www.boost.org/doc/libs/1_40_0/libs/fusion/doc/html/index.html</a></li>
-<li><cite>boost::mpi</cite> (MPI evaluator, optional):
-<a class="reference external" href="http://www.boost.org/doc/libs/1_40_0/doc/html/mpi.html">http://www.boost.org/doc/libs/1_40_0/doc/html/mpi.html</a></li>
+<li><p><cite>BOOST_FOREACH</cite> (to simplify loops):
+<a class="reference external" href="http://www.boost.org/doc/libs/1_40_0/doc/html/foreach.html">http://www.boost.org/doc/libs/1_40_0/doc/html/foreach.html</a></p></li>
+<li><p><cite>boost::filesystem</cite> (to create directories, etc.):
+<a class="reference external" href="http://www.boost.org/doc/libs/1_40_0/libs/filesystem/doc/index.htm">http://www.boost.org/doc/libs/1_40_0/libs/filesystem/doc/index.htm</a></p></li>
+<li><p><cite>boost::fusion</cite> (list of statistics and list of modifiers):
+<a class="reference external" href="http://www.boost.org/doc/libs/1_40_0/libs/fusion/doc/html/index.html">http://www.boost.org/doc/libs/1_40_0/libs/fusion/doc/html/index.html</a></p></li>
+<li><p><cite>boost::mpi</cite> (MPI evaluator, optional):
+<a class="reference external" href="http://www.boost.org/doc/libs/1_40_0/doc/html/mpi.html">http://www.boost.org/doc/libs/1_40_0/doc/html/mpi.html</a></p></li>
 </ul>
-</div>
-</div>
-</div>
+</section>
+</section>
+</section>
 
 
            </div>
@@ -417,7 +428,7 @@ them:</p>
         <a href="reference.html" class="btn btn-neutral float-right" title="Reference manual" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="tutorial.html" class="btn btn-neutral" title="Tutorial (basics)" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="qd.html" class="btn btn-neutral" title="Quality-Diversity Framework" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -473,10 +484,10 @@ them:</p>
             HAS_SOURCE:  true
         };
     </script>
+      <script type="text/javascript" src="_static/documentation_options.js"></script>
       <script type="text/javascript" src="_static/jquery.js"></script>
       <script type="text/javascript" src="_static/underscore.js"></script>
       <script type="text/javascript" src="_static/doctools.js"></script>
-      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 
   
 
