@@ -47,7 +47,8 @@ Contents:
   self
   compilation
   tutorial
-  concepts  
+  qd
+  concepts
   reference
   clusters
 

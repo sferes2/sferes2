@@ -10,18 +10,14 @@ Ubuntu / Debian
 
 We list here the Ubuntu package names:
 
--  [required] libboost-dev >= 1.35 (including test, serialization,
-   graph, program\ :sub:`options`, filesystem); see
+-  [required] libboost-all-dev >= 1.35 (including test, serialization, graph,
+  program_options, filesystem); see [[http://www.boost.org]]; >
    http://www.boost.org;
--  [required] libboost-test-dev >= 1.35
--  [required] libboost-filesystem-dev >= 1.35
--  [required] libboost-program-options-dev >= 1.35
--  [required] libboost-graph-parallel-dev >= 1.35
--  [required] python >= 2.4;
--  [required] g++ >= 4.2 (this should work with icc and clang too);
+-  [required] python >= 3.x
+-  [required] g++ >= 4.2 or clang (defaut on mac);
 -  [optional but highly recommended] libtbb-dev; see
    http://www.threadingbuildingblocks.org/
--  [optional but recommended] libeigen3-dev ; see
+-  [optional but highly recommended] libeigen3-dev ; see
    http://eigen.tuxfamily.org/
 -  [optional but recommended] python-simplejson;
 -  [optional] libboost-mpi-dev , if you need the optional MPI support
@@ -62,7 +58,7 @@ You should then run the unit tests:
 
 .. code:: shell
 
-    ./waf check
+    ./waf --tests
 
 If everything is green, sferes2 is working! If not, please send an
 e-mail to the authors with as many details as possible about your
@@ -78,7 +74,7 @@ to describe the compilation process in python.
 The main wscript of sferes2 accepts the following configuration options:
 
 -  –-boost-includes=BOOSTINCLUDES : path to the boost directory where the
-   includes are e.g. /usr/local/include/boost-1\\:sub:`35`
+   includes are e.g. /usr/local/include/boost-1_35`
 -  –-boost-libs=BOOSTLIBS: path to the directory where the boost libs are
    e.g. /usr/local/lib
 -  --eigen=EIGEN: path to eigen (if not in the default directory)
@@ -140,5 +136,5 @@ You can then run the tests by using waf check:
 
 .. code:: shell
 
-    ./waf check
+    ./waf --tests
 
