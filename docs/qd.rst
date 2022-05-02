@@ -1,4 +1,4 @@
-Reference manual
+Quality-Diversity Framework
 =================
 .. highlight:: c++
 
@@ -50,8 +50,7 @@ Each type of container presents its own rules for preserving the behavioural div
 Grid
 ~~~~
 
--  **File:**
-`sferes/qd/container/grid.hpp <https://github.com/sferes2/sferes2/blob/qd/sferes/qd/container/grid.hpp>`__
+-  **File:** `sferes/qd/container/grid.hpp <https://github.com/sferes2/sferes2/blob/qd/sferes/qd/container/grid.hpp>`__
 
 -  **Description:**
     - This type of container creates a grid container (e.g. as seen in  MAP Elites). The idea is to discretize the Behavioural Descriptor space in evenly sized cells and then fill these up with a qd algorithm.
@@ -78,8 +77,7 @@ Grid
 CVT
 ~~~
 
--  **File:**
-`sferes/qd/container/cvt.hpp <https://github.com/sferes2/sferes2/blob/qd/sferes/qd/container/cvt.hpp>`__
+-  **File:** `sferes/qd/container/cvt.hpp <https://github.com/sferes2/sferes2/blob/qd/sferes/qd/container/cvt.hpp>`__
 
 -  **Description:**
     - This type of container discretises the feature space with a Centroidal Voronoi Tessellation (CVT), e.g. as seen in `CVT-MAP-Elites <https://ieeexplore.ieee.org/document/8000667>`__. That CVT splits the Behavioural Descriptor space in evenly sized cells and then fill these up with a QD algorithm.
@@ -110,8 +108,7 @@ CVT
 Archive
 ~~~~~~~
 
--  **File:**
-`sferes/qd/container/archive.hpp <https://github.com/sferes2/sferes2/blob/qd/sferes/qd/container/archive.hpp>`__
+-  **File:** `sferes/qd/container/archive.hpp <https://github.com/sferes2/sferes2/blob/qd/sferes/qd/container/archive.hpp>`__
 
 -  **Description:**
     - The Archive corresponds to an unstructured container, here called `Archive` (e.g. as introduced in the `QD framework paper <https://ieeexplore.ieee.org/document/7959075>`__). The idea is to avoid discretising the Behavioural Descriptor (BD) space. Instead, solutions may be added depending on the distance between their BDs and their kNNs.
@@ -180,8 +177,7 @@ The purpose of the storage is to provide an interface facilitating the computati
 SortBasedStorage
 ~~~~~~~~~~~~~~~~
 
--  **File:**
-`sferes/qd/container/sort_based_storage.hpp <https://github.com/sferes2/sferes2/blob/qd/sferes/qd/container/sort_based_storage.hpp>`__
+-  **File:** `sferes/qd/container/sort_based_storage.hpp <https://github.com/sferes2/sferes2/blob/qd/sferes/qd/container/sort_based_storage.hpp>`__
 
 -  **Description:**
     - Relies on `std::partial_sort` to compute the k-nearest neighbors.
@@ -192,7 +188,6 @@ SortBasedStorage
 -  **Typical typename:**
 
 ::
-
 typedef sferes::qd::container::SortBasedStorage<boost::shared_ptr<phen_t>> storage_t;
 
 
@@ -208,8 +203,7 @@ KdtreeStorage
 ~~~~~~~~~~~~~
 
 
--  **File:**
-`sferes/qd/container/kdtree_storage.hpp <https://github.com/sferes2/sferes2/blob/qd/sferes/qd/container/kdtree_storage.hpp>`__
+-  **File:** `sferes/qd/container/kdtree_storage.hpp <https://github.com/sferes2/sferes2/blob/qd/sferes/qd/container/kdtree_storage.hpp>`__
 
 -  **Description:**
     - Computes the k-nearest neighbors using a `kd-tree <https://en.wikipedia.org/wiki/K-d_tree>`__ (optional external library).
@@ -220,7 +214,6 @@ KdtreeStorage
 -  **Typical typename:**
 
 ::
-
 typedef sferes::qd::container::KdtreeStorage<boost::shared_ptr<phen_t>, Params::qd::behav_dim> storage_t;
 
 
@@ -245,8 +238,8 @@ Uniform
 -  **Example:** `sferes/qd/examples/ex_qd.cpp <https://github.com/sferes2/sferes2/blob/qd/examples/ex_qd.cpp>`__
 
 -  **Typical typename:**
-::
 
+::
  typedef qd::selector::Uniform<phen_t, Params> select_t;
 
 NoSelection
@@ -259,8 +252,8 @@ NoSelection
 -  **Example:** None
 
 -  **Typical typename:**
-::
 
+::
  typedef qd::selector::NoSelection<phen_t, Params> select_t;
 
 ParetoBased
@@ -277,8 +270,8 @@ ParetoBased
 -  **Example:** None
 
 -  **Typical typename:**
-::
 
+::
  typedef qd::selector::ParetoBased<phen_t, objselector_t, Params> select_t;
 
 ValueSelector
@@ -304,8 +297,8 @@ ValueSelector-based: ScoreProportionate
 -  **Example:** None
 
 -  **Typical typename:**
-::
 
+::
  typedef qd::selector::ScoreProportionate<phen_t, valueselector_t, Params> select_t;
 
 ValueSelector-based: Tournament
@@ -320,8 +313,8 @@ ValueSelector-based: Tournament
 -  **Example:** None
 
 -  **Typical typename:**
-::
 
+::
  typedef qd::selector::Tournament<phen_t, valueselector_t, Params> select_t;
 
 Meta-Selector: PopulationBased
@@ -336,8 +329,8 @@ Meta-Selector: PopulationBased
 -  **Example:** None
 
 -  **Typical typename:**
-::
 
+::
  typedef qd::selector::PopulationBased<phen_t, sub_select_t, Params> select_t;
 
 Defining your own selector
@@ -367,14 +360,11 @@ QD Fitness
 FitQD
 ~~~~~
 
--  **File:**
-`sferes/fit/fit_qd.hpp <https://github.com/sferes2/sferes2/blob/qd/sferes/fit/fit_qd.hpp>`__
+-  **File:** `sferes/fit/fit_qd.hpp <https://github.com/sferes2/sferes2/blob/qd/sferes/fit/fit_qd.hpp>`__
 
 -  **Description:**
-    - The fitness function has the purpose of evaluating your individual and attributing it a Behavioral Descriptor and a fitness value (if needed).
-    You can define what you want in the fitness function but the eval function needs to be defined since it is used after each offspring generation to evaluate the new individuals.
--  **Example:**
-`sferes/qd/examples/ex_qd.hpp <https://github.com/sferes2/sferes2/blob/qd/examples/ex_qd.cpp>`__
+    - The fitness function has the purpose of evaluating your individual and attributing it a Behavioral Descriptor and a fitness value (if needed). You can define what you want in the fitness function but the eval function needs to be defined since it is used after each offspring generation to evaluate the new individuals.
+-  **Example:** `sferes/qd/examples/ex_qd.hpp <https://github.com/sferes2/sferes2/blob/qd/examples/ex_qd.cpp>`__
 
 -  **Typical typename:**
 
@@ -416,8 +406,7 @@ QdContainer
 ~~~~~~~~~~~
 
 
--  **File:**
-`sferes/stat/qd_container.hpp <https://github.com/sferes2/sferes2/blob/qd/sferes/stat/qd_container.hpp>`__
+-  **File:** `sferes/stat/qd_container.hpp <https://github.com/sferes2/sferes2/blob/qd/sferes/stat/qd_container.hpp>`__
 
 -  **Description:**
     - Every `dump_period`, writes a file `archive_<gen>.dat` (where `gen` is the generation number), with some information related to all individuals present in the archive at generation `gen`. Every line of such a file presents some information related to one individual. For each individual, the following values are saved (in order):
@@ -447,8 +436,7 @@ QdProgress
 ~~~~~~~~~~
 
 
--  **File:**
-`sferes/stat/qd_container.hpp <https://github.com/sferes2/sferes2/blob/qd/sferes/stat/qd_container.hpp>`__
+-  **File:** `sferes/stat/qd_container.hpp <https://github.com/sferes2/sferes2/blob/qd/sferes/stat/qd_container.hpp>`__
 
 -  **Description:**
     - Every `dump_period`, writes a line at the end of the file `progress.dat` with some information related to the state of the container at generation `gen`. For each line, the following values are saved (in order):
@@ -480,8 +468,7 @@ QdProgress
 QdSelection
 ~~~~~~~~~~~
 
--  **File:**
-`sferes/stat/qd_selection.hpp <https://github.com/sferes2/sferes2/blob/qd/sferes/stat/qd_selection.hpp>`__
+-  **File:** `sferes/stat/qd_selection.hpp <https://github.com/sferes2/sferes2/blob/qd/sferes/stat/qd_selection.hpp>`__
 
 -  **Description:**
     - Every generation `gen`, writes several lines at the end of the file `selection.dat` with some information related to the state of the parents and offspring populations at generation `gen`. At each generation, `n` lines are written. For each `i` between `0` and `n`, the following values are saved (in order):
