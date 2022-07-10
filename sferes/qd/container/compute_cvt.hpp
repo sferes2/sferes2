@@ -9,6 +9,7 @@
 #include <iostream>
 #include <numeric> //for iota
 #include <vector>
+#include <tbb/queuing_mutex.h>
 
 #include <Eigen/Core>
 #include <boost/program_options.hpp>
@@ -53,7 +54,7 @@ namespace cvt {
         {
             size_t nb_points = data.rows();
             double sum = 0.0;
-            static tbb::mutex sm;
+            static tbb::queuing_mutex sm;
 #ifndef NO_PARALLEL
             tbb::parallel_for(size_t(0), nb_points, size_t(1),
                 [&](size_t i) {
@@ -78,7 +79,7 @@ namespace cvt {
                             break;
                     }
 #ifndef NO_PARALLEL // for the lock
-                    tbb::mutex::scoped_lock lock; // create a lock
+                    tbb::queuing_mutex::scoped_lock lock; // create a lock
                     lock.acquire(sm);
 #endif
                     sum += min_distance;

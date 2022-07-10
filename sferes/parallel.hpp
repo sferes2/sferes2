@@ -39,7 +39,6 @@
 #define PARALLEL_HPP_
 
 #ifndef NO_PARALLEL
-#include <tbb/task_scheduler_init.h>
 #include <tbb/parallel_for.h>
 #include <tbb/blocked_range.h>
 #include <tbb/partitioner.h>
@@ -58,11 +57,11 @@ namespace sferes {
 
 #ifdef NB_THREADS
     static void init() {
-      static tbb::task_scheduler_init init(NB_THREADS);
+   //   static tbb::task_scheduler_init init(NB_THREADS);
     }
 #else
     static void init() {
-      static tbb::task_scheduler_init init;
+//      static tbb::task_scheduler_init init;
     }
 #endif
 
