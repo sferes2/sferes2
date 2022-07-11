@@ -37,20 +37,18 @@
 
 import sys
 import subprocess
+import fnmatch
 
 sys.path.insert(0, './waf_tools')
 
-try:
-    VERSION = str(subprocess.check_output(['git', 'rev-parse', 'HEAD'])).replace('\n', '')
-except:
-    VERSION = "0.x"
+VERSION = '2022'
 
 APPNAME='sferes2'
 
 srcdir = '.'
 blddir = 'build'
 
-import copy
+import re
 import os, glob, types
 import sferes
 from waflib.Build import BuildContext
@@ -74,7 +72,6 @@ def options(opt):
     opt.add_option('--rpath', type='string', help='set rpath', dest='rpath')
     opt.add_option('--includes', action='append', type='string', help='add an include path, e.g. /home/mandor/include', dest='includes')
     opt.add_option('--libs', action='append', type='string', help='add a lib path, e.g. /home/mandor/lib', dest='libs')
-    opt.add_option('--cpp14', type='string', help='force / disable c++-14 compilation [--cpp14=yes]', dest='cpp14')
 
     opt.add_option('--no-asserts', action='store_true', default=False, help='disable asserts [--no-asserts]', dest='no_asserts')
 
@@ -185,10 +182,8 @@ def configure(conf):
             except:
                 Logs.warn('%s -> no configuration found' % i, 'YELLOW')
 
-    # we need c++11
-    conf.env['CXXFLAGS'] += ['-std=c++11']
-    if conf.options.cpp14 == 'yes':
-        conf.env['CXXFLAGS'] += ['-std=c++14']
+    # we need c++14
+    conf.env['CXXFLAGS'] += ['-std=c++14']
     if conf.options.includes :
         for inlcude_dir in conf.options.includes:
             conf.env['CXXFLAGS'] += [" -I" + inlcude_dir]
@@ -272,6 +267,43 @@ def build(bld):
     for i in modules:
         Logs.info('Building module: ' + i)
         bld.recurse(i)
+
+    # installation
+    prefix = bld.get_env()['PREFIX']
+    install_files = []
+    for root, dirnames, filenames in os.walk(bld.path.abspath()+'/sferes/'):
+        for filename in fnmatch.filter(filenames, '*.hpp'):
+            install_files.append(os.path.join(root, filename))
+    install_files = [f[len(bld.path.abspath())+1:] for f in install_files]
+    for f in install_files:
+        end_index = f.rfind('/')
+        if end_index == -1:
+            end_index = len(f)
+        bld.install_files('${PREFIX}/include/sferes/' + f[6:end_index], f)
+    bld.install_files('${PREFIX}/lib', blddir + '/sferes/libsferes2.a')
+
+
+    # installation of cmake files
+    defs = ""
+    for i in bld.env['CXXFLAGS']:
+        if i[0:2] == '-D':
+            defs += i + " "
+    print(defs)
+    with open('cmake/sferes2Config.cmake.in') as f:
+        newText=f.read() \
+            .replace('@sferes2_INCLUDE_DIRS@', prefix + "/include")\
+            .replace('@sferes2_CMAKE_MODULE_PATH@', prefix + "/lib/cmake/sferes2/")\
+            .replace('@sferes2_DEFINITIONS@', defs)# there is a -D added by cmake...
+
+    with open(blddir + '/sferes2Config.cmake', "w") as f:
+        f.write(newText)
+    with open('cmake/sferes2ConfigVersion.cmake.in') as f:
+        newText = f.read().replace('@sferes2_VERSION@', str(VERSION))
+    with open(blddir + '/sferes2ConfigVersion.cmake', "w") as f:
+        f.write(newText)
+
+    bld.install_files('${PREFIX}/lib/cmake/sferes2/', blddir + '/sferes2Config.cmake')
+    bld.install_files('${PREFIX}/lib/cmake/sferes2/', blddir + '/sferes2ConfigVersion.cmake')
 
     bld.add_post_fun(summary)
 

@@ -1,0 +1,36 @@
+# - Config file for the sferes2 package
+# example:
+# find_package(sferes2 REQUIRED)
+# add_executable(your_example example.cpp)
+# target_link_libraries(your_example sferes2)
+
+include_guard(DIRECTORY)
+
+include(CMakeFindDependencyMacro)
+include(FindPackageHandleStandardArgs)
+
+# CMAKE_MODULE_PATH
+set(CMAKE_MODULE_PATH "@sferes2_CMAKE_MODULE_PATH@")
+
+find_package(Boost REQUIRED filesystem serialization program_options)
+find_package(TBB CONFIG)
+find_package(Eigen3 REQUIRED CONFIG)
+
+set(sferes2_INCLUDE_DIRS "@sferes2_INCLUDE_DIRS@")
+
+set(sferes2_LIBRARIES Boost::filesystem Boost::serialization Boost::program_options TBB::tbb Eigen3::Eigen)
+
+add_library(sferes2 INTERFACE IMPORTED)
+set_target_properties(sferes2 PROPERTIES
+  INTERFACE_LINK_LIBRARIES "${sferes2_LIBRARIES}"
+  INTERFACE_INCLUDE_DIRECTORIES "${sferes2_INCLUDE_DIRS}")
+target_compile_definitions(sferes2 INTERFACE @sferes2_DEFINITIONS@)
+
+# Handle the QUIET and REQUIRED arguments
+find_package_handle_standard_args(
+    sferes2 #Package name
+    DEFAULT_MSG
+    # Variables required to evaluate as TRUE
+    sferes2_INCLUDE_DIRS)
+
+mark_as_advanced(sferes2_INCLUDE_DIRS sferes2_FOUND)

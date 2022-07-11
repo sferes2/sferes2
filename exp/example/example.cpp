@@ -32,6 +32,14 @@ struct Params {
   };
 };
 
+struct Params2 : Params {
+  struct  XX {};
+};
+
+struct Params3 : Params {
+  struct  XX {};
+};
+
 
 template<typename Indiv>
 float _g(const Indiv &ind) {
@@ -65,7 +73,7 @@ public:
 int main(int argc, char **argv) {
   std::cout<<"running "<<argv[0]<<" ... try --help for options (verbose)"<<std::endl;
 
-  typedef gen::EvoFloat<30, Params> gen_t;
+  typedef gen::EvoFloat<30, Params2> gen_t;
   typedef phen::Parameters<gen_t, FitZDT2<Params>, Params> phen_t;
   typedef eval::Eval<Params> eval_t;
   typedef boost::fusion::vector<stat::ParetoFront<phen_t, Params> >  stat_t;

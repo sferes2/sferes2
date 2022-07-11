@@ -26,7 +26,7 @@ namespace sferes {
 
                 CVT()
                 {
-		  SFERES_CONST int dim = Params::qd::behav_dim;
+		            SFERES_CONST int dim = Params::qd::behav_dim;
                     SFERES_CONST int n_niches = Params::qd::n_niches;
                     _archive.resize(n_niches);
                     _archive_parents.resize(n_niches);
