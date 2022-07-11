@@ -40,6 +40,7 @@ def build(bld):
     os.environ['BOOST_TEST_LOG_LEVEL'] = 'all'
     # compile & run every *.cpp automagically
     files = glob.glob("tests/*/*.cpp")
+    print(files)
     for f in files:
         fname = f.replace('/', '_')
         fname = fname[0:-4]
@@ -49,5 +50,5 @@ def build(bld):
                        source = '../' + f,
                        includes = '../',
                        target = fname,
-                       uselib = 'TBB BOOST EIGEN PTHREAD MPI',
+                       uselib = 'TBB BOOST EIGEN PTHREAD MPI KDTREE',
                        use = 'sferes2')

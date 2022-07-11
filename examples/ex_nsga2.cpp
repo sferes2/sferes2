@@ -6,6 +6,7 @@
 #include <sferes/modif/dummy.hpp>
 #include <sferes/run.hpp>
 #include <boost/program_options.hpp>
+#include <future>
 
 #ifdef GRAPHIC
 #define NO_PARALLEL
@@ -53,6 +54,28 @@ float _g(const Indiv &ind) {
   return g;
 }
 
+
+
+template<typename Indiv>
+float my_function(const Indiv &ind) {
+  int i = 0;
+  while(true) {
+    if (rand() < RAND_MAX / 2000.)
+      return i;
+    ++i;
+  }
+  return 0;
+}
+
+template<typename F, typename Indiv>
+float run_with_timeout(const F& f, const Indiv& indiv, int timeout_ms) {
+  auto future = std::async(std::launch::async, f, indiv);
+  auto timeout = std::chrono::milliseconds(timeout_ms);
+  if (future.wait_for(timeout)==std::future_status::ready)
+    return future.get();
+  return 0; // or a very bad value
+}
+
 SFERES_FITNESS(FitZDT2, sferes::fit::Fitness) {
 public:
   FitZDT2()  {}
@@ -60,8 +83,8 @@ public:
   void eval(Indiv& ind) {
     this->_objs.resize(2);
     float f1 = ind.data(0);
-    float g = _g(ind);
-    float h = 1.0f - pow((f1 / g), 2.0);
+    float g = run_with_timeout(my_function<Indiv>, ind, 2000); 
+    float h = g;//1.0f - pow((f1 / g), 1);
     float f2 = g * h;
     this->_objs[0] = -f1;
     this->_objs[1] = -f2;
@@ -144,6 +167,6 @@ int main(int argc, char **argv) {
   ea_t ea;
 
   run_ea(argc, argv, ea);
-
+  std::cout<<"finished"<<std::endl;
   return 0;
 }
